@@ -22,7 +22,7 @@
         <p class="text-gray-400 mt-2 font-bold tracking-widest text-sm">EMPIRE OF UC - SUDAN 🇸🇩</p>
     </header>
 
-    <div id="adminPanel" class="admin-panel glass p-6 rounded-[2rem] mb-10 glow-red max-w-2xl mx-auto">
+    <div id="adminPanel" class="admin-panel glass p-6 rounded-[2rem] mb-10 glow-red max-w-2xl mx-au
         <h2 class="text-red-500 font-black mb-6 text-center text-2xl uppercase tracking-tighter">لوحة إدارة المتجر 👑</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -56,79 +56,4 @@
         // بياناتك السرية اللي ربطناها
         const firebaseConfig = {
             apiKey: "AIzaSyC0jzecEwKgHpxHpTi8Y-_bwwfzVdtgf3E",
-            authDomain: "khasmshop.firebaseapp.com",
-            databaseURL: "https://khasmshop-default-rtdb.firebaseio.com",
-            projectId: "khasmshop",
-            storageBucket: "khasmshop.firebasestorage.app",
-            messagingSenderId: "238182001615",
-            appId: "1:238182001615:web:4c7ddea335df2111b440ba"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-        const auth = getAuth(app);
-        const provider = new GoogleAuthProvider();
-
-        const ADMIN_EMAIL = "mhmdfthu98@gmail.com";
-
-        // تسجيل الدخول
-        window.login = () => {
-            signInWithPopup(auth, provider).catch(err => {
-                alert("تأكد من إضافة الرابط الجديد في Firebase Authorized Domains");
-            });
-        };
-
-        // التحقق من المستخدم
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                document.getElementById('loginSection').style.display = 'none';
-                if (user.email === ADMIN_EMAIL) {
-                    document.getElementById('adminPanel').style.display = 'block';
-                }
-            }
-        });
-
-        // إضافة منتج
-        window.addProduct = () => {
-            const uc = document.getElementById('ucAmount').value;
-            const price = document.getElementById('ucPrice').value;
-            if (uc && price) {
-                push(ref(db, 'products'), { uc, price });
-                alert("تم النشر بنجاح!");
-                document.getElementById('ucAmount').value = '';
-                document.getElementById('ucPrice').value = '';
-            }
-        };
-
-        // عرض المنتجات
-        onValue(ref(db, 'products'), (snapshot) => {
-            const grid = document.getElementById('productsGrid');
-            grid.innerHTML = '';
-            snapshot.forEach((child) => {
-                const data = child.val();
-                grid.innerHTML += `
-                    <div class="product-card glass p-8 rounded-[3rem] text-center relative overflow-hidden">
-                        <div class="text-xs font-black text-red-500 mb-2 tracking-tighter uppercase italic">Original UC</div>
-                        <h3 class="text-6xl font-black mb-2 italic tracking-tighter">${data.uc}<span class="text-sm text-red-600 ml-1 italic font-normal">UC</span></h3>
-                        <p class="text-xl text-gray-400 mb-8 font-bold tracking-widest">${data.price} <span class="text-[10px]">SDG</span></p>
-                        <input type="number" id="id-${child.key}" placeholder="ID اللاعب" class="w-full p-4 mb-4 rounded-2xl bg-white/5 border border-white/10 text-center font-bold outline-none focus:border-red-600">
-                        <button onclick="orderNow('${data.uc}', '${data.price}', '${child.key}')" class="w-full bg-red-600 hover:bg-white hover:text-red-600 py-4 rounded-2xl font-black text-xl transition-all shadow-xl">اطلب الآن ⚡</button>
-                        ${auth.currentUser?.email === ADMIN_EMAIL ? `<button onclick="deleteItem('${child.key}')" class="mt-4 text-xs text-red-900 underline block mx-auto italic">حذف العرض</button>` : ''}
-                    </div>
-                `;
-            });
-        });
-
-        // الحذف
-        window.deleteItem = (key) => { if(confirm('حذف؟')) remove(ref(db, `products/${key}`)); };
-
-        // إرسال للواتساب
-        window.orderNow = (uc, price, key) => {
-            const id = document.getElementById(`id-${key}`).value;
-            if (!id) return alert("اكتب الـ ID يا بطل!");
-            const msg = `مرحباً إمبراطور الخصم، أريد شحن ${uc} شدة للـ ID: ${id}. السعر: ${price} ج.س`;
-            window.open(`https://wa.me/249916581517?text=${encodeURIComponent(msg)}`);
-        };
-    </script>
-</body>
-</html>
+        
