@@ -3,67 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إمبراطورية الخصم | KHASM SHOP</title>
+    <title>منصة الإمبراطور الشاملة | EMPROR SHOP v3</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Cairo', sans-serif; background-color: #050505; color: white; margin: 0; }
-        .bg-gradient-custom { background: linear-gradient(135deg, #dc2626 0%, #16a34a 100%); }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .admin-panel { display: none; border: 2px solid #dc2626; background: rgba(220, 38, 38, 0.05); }
-        .marquee { overflow: hidden; white-space: nowrap; background: #dc2626; color: white; padding: 5px 0; font-weight: bold; font-size: 14px; }
+        :root { --p: #dc2626; --s: #16a34a; }
+        body { font-family: 'Cairo', sans-serif; background: #000; color: white; margin: 0; overflow-x: hidden; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.05); }
+        #bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; width: 100%; height: 100%; opacity: 0.5; }
+        .marquee { overflow: hidden; white-space: nowrap; background: linear-gradient(90deg, #dc2626, #16a34a); padding: 8px 0; font-size: 12px; font-weight: 900; }
         .marquee-content { display: inline-block; animation: marquee 20s linear infinite; }
         @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-        .whatsapp-float { position: fixed; bottom: 20px; left: 20px; background: #25d366; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 1000; transition: 0.3s; }
-        .whatsapp-float:hover { transform: scale(1.1); }
+        .btn-neon { transition: 0.3s; box-shadow: 0 0 15px rgba(220, 38, 38, 0.2); }
+        .btn-neon:hover { box-shadow: 0 0 25px rgba(22, 163, 74, 0.4); transform: translateY(-2px); }
     </style>
 </head>
 <body>
 
-    <div class="marquee">
-        <div class="marquee-content">
-             🚀 شحن فوري خلال 5 دقائق فقط — ✅ نضمن لك أقل سعر في السودان — 💳 متوفر الدفع عبر بنكك و ماي كاشي — 👑 إمبراطورية الخصم ترحب بكم
+    <canvas id="bg-canvas"></canvas>
+
+    <div class="marquee border-b border-white/10">
+        <div id="adContainer" class="marquee-content uppercase">
+            👑 مرحباً بكم في منصة الإمبراطور المعتمدة — ⚡ سرعة في التنفيذ وأمان تام — 💳 متوفر بنكك و ماي كاشي
         </div>
     </div>
 
-    <header class="text-center py-10 bg-gradient-custom rounded-b-[3rem] shadow-2xl shadow-red-900/20">
-        <h1 class="text-5xl font-black text-white tracking-tighter italic uppercase drop-shadow-lg">KHASM SHOP</h1>
-        <p class="text-white/80 mt-2 font-bold tracking-widest text-sm">أقوى متجر شحن في السودان 🇸🇩</p>
+    <header class="p-6 glass sticky top-0 z-50 flex justify-between items-center">
+        <div class="font-black text-2xl italic tracking-tighter">EMPROR<span class="text-red-600">98</span></div>
+        <div id="userInfo" class="hidden flex items-center gap-3">
+            <div class="text-right">
+                <p id="userName" class="text-[10px] font-bold"></p>
+                <p id="userPoints" class="text-[9px] bg-yellow-600 px-2 rounded text-black font-black">0 نقطة</p>
+            </div>
+            <img id="userImg" src="" class="w-10 h-10 rounded-full border-2 border-green-600">
+        </div>
     </header>
 
-    <div class="flex justify-center gap-4 mt-[-25px]">
-        <div class="bg-white text-blue-800 px-4 py-2 rounded-xl font-black shadow-lg text-sm border-2 border-blue-100">بـنـكـك 💳</div>
-        <div class="bg-yellow-400 text-black px-4 py-2 rounded-xl font-black shadow-lg text-sm border-2 border-yellow-500">ماي كاشي 💰</div>
-    </div>
+    <main class="p-4 max-w-5xl mx-auto">
+        <div id="adminPanel" class="hidden glass p-8 rounded-[3rem] mb-10 border-2 border-red-600/20 shadow-2xl">
+            <h2 class="text-center font-black text-red-500 mb-8 text-2xl italic">غرفة القيادة الملكية 👑</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="space-y-4">
+                    <h3 class="text-sm font-bold border-b border-white/10 pb-2">📦 إضافة بضاعة</h3>
+                    <input id="ucAmount" type="number" placeholder="كمية الـ UC" class="w-full p-4 rounded-2xl bg-black border border-white/10">
+                    <input id="ucPrice" type="number" placeholder="السعر" class="w-full p-4 rounded-2xl bg-black border border-white/10">
+                    <button onclick="addProduct()" class="w-full bg-red-600 py-4 rounded-2xl font-black btn-neon">نشر العرض 🚀</button>
+                </div>
 
-    <main class="p-4 mt-6">
-        <div id="adminPanel" class="admin-panel glass p-6 rounded-[2rem] mb-10 max-w-2xl mx-auto shadow-2xl">
-            <h2 class="text-red-500 font-black mb-6 text-center text-xl">إضافة عرض جديد للمتجر 👑</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input id="ucAmount" type="number" placeholder="كمية الـ UC" class="w-full p-4 rounded-2xl bg-black border border-gray-800 text-white outline-none focus:border-green-500">
-                <input id="ucPrice" type="number" placeholder="السعر بالجنيه" class="w-full p-4 rounded-2xl bg-black border border-gray-800 text-white outline-none focus:border-red-500">
+                <div id="ownerOnly" class="hidden space-y-4 border-r border-white/5 pr-4">
+                    <h3 class="text-sm font-bold border-b border-white/10 pb-2">👥 إدارة الموظفين والإعلانات</h3>
+                    <input id="staffEmail" type="email" placeholder="إيميل الموظف الجديد" class="w-full p-4 rounded-2xl bg-black border border-white/10 text-xs text-green-500">
+                    <button onclick="addStaff()" class="w-full bg-green-700 py-3 rounded-2xl font-black text-xs">إضافة موظف +</button>
+                    
+                    <input id="adInput" type="text" placeholder="نص الإعلان الجديد" class="w-full p-4 rounded-2xl bg-black border border-white/10 text-xs">
+                    <button onclick="updateAd()" class="w-full bg-blue-700 py-3 rounded-2xl font-black text-xs">تحديث شريط الإعلانات 📢</button>
+                </div>
             </div>
-            <button onclick="addProduct()" class="w-full bg-gradient-custom text-white font-black py-4 mt-6 rounded-2xl shadow-xl hover:opacity-90 transition">نـشـر الـعرض الآن ✅</button>
+
+            <div class="mt-10">
+                <h3 class="text-sm font-bold mb-4">🔔 تتبع الطلبات الواردة:</h3>
+                <div id="adminOrdersList" class="grid gap-4"></div>
+            </div>
         </div>
 
-        <div id="loginSection" class="text-center py-12 glass rounded-[3rem] max-w-md mx-auto">
-            <h3 class="text-2xl font-black mb-6 italic">سجل دخولك لبدء الشحن</h3>
-            <button onclick="login()" class="bg-white text-black font-black py-4 px-10 rounded-2xl shadow-xl hover:bg-gray-100 transition flex items-center justify-center mx-auto gap-3">
-                <img src="https://www.google.com/favicon.ico" class="w-5 h-5"> دخول عبر جوجل
+        <div id="userSection" class="hidden">
+            <div class="glass p-6 rounded-[2.5rem] mb-10 border border-white/5">
+                <h3 class="font-black mb-4">سجل طلباتك الذكي 📂</h3>
+                <div id="userOrdersList" class="space-y-3"></div>
+            </div>
+
+            <div id="productsGrid" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20"></div>
+        </div>
+
+        <div id="loginSection" class="glass p-16 rounded-[4rem] text-center my-20 border-white/5">
+            <h2 class="text-4xl font-black mb-4 italic">دخول الإمبراطورية</h2>
+            <p class="text-gray-500 text-sm mb-10">سجل دخولك عبر جوجل لتفعيل نظام النقاط والتتبع</p>
+            <button onclick="login()" class="bg-white text-black w-full py-5 rounded-[2rem] font-black flex items-center justify-center gap-4 shadow-2xl hover:bg-red-600 hover:text-white transition-all">
+                <img src="https://www.google.com/favicon.ico" class="w-6"> الدخول الآمن
             </button>
         </div>
-
-        <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto pb-20">
-            </div>
     </main>
 
-    <a href="https://wa.me/249916581517" class="whatsapp-float">
-        <svg fill="currentColor" width="35" height="35" viewBox="0 0 24 24"><path d="M12.031 6.172c-2.32 0-4.519.903-6.16 2.544-3.399 3.4-3.4 8.923-.002 12.321l1.157 1.155L5.65 26l3.997-1.013 1.174.677c1.666.96 3.545 1.468 5.426 1.468 6.137 0 11.129-4.992 11.129-11.129 0-2.97-1.157-5.763-3.257-7.863-2.102-2.1-4.896-3.257-7.867-3.257m0 2.193c2.383 0 4.623.928 6.308 2.612 1.685 1.685 2.612 3.925 2.612 6.308 0 4.927-4.007 8.935-8.935 8.935-1.503 0-2.984-.377-4.304-1.088l-.309-.166-2.368.601.611-2.302-.181-.291c-.754-1.21-1.152-2.612-1.152-4.053 0-4.354 3.542-7.9 7.9-7.9 1.103 0 2.179.223 3.178.653l-.83 1.916c-.732-.315-1.523-.478-2.348-.478-3.143 0-5.707 2.564-5.707 5.707 0 1.25.402 2.455 1.161 3.456l.241.315-.407 1.535 1.571-.399.324.192c1.002.593 2.149.907 3.321.907 3.658 0 6.635-2.977 6.635-6.635 0-1.771-.69-3.435-1.942-4.688s-2.917-1.942-4.688-1.942c-1.328 0-2.585.385-3.649 1.104l-1.221-1.826c1.428-.968 3.123-1.488 4.887-1.488z"/></svg>
+    <a href="https://wa.me/249916581517" class="fixed bottom-6 left-6 z-[1000] bg-green-600 p-4 rounded-full shadow-2xl animate-bounce">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" class="w-10 h-10">
     </a>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getDatabase, ref, push, onValue, set, get, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
         const firebaseConfig = {
@@ -80,53 +108,145 @@
         const db = getDatabase(app);
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
+        const SUPER_ADMIN = "mhmdfthu98@gmail.com";
 
-        const ADMIN_EMAIL = "mhmdfthu98@gmail.com";
+        window.login = () => signInWithPopup(auth, provider);
 
-        window.login = () => { signInWithPopup(auth, provider); };
-
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
-                document.getElementById('loginSection').style.display = 'none';
-                if (user.email === ADMIN_EMAIL) document.getElementById('adminPanel').style.display = 'block';
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('userSection').classList.remove('hidden');
+                document.getElementById('userInfo').classList.remove('hidden');
+                document.getElementById('userName').innerText = user.displayName;
+                document.getElementById('userImg').src = user.photoURL;
+
+                // التحقق من الصلاحيات
+                if (user.email === SUPER_ADMIN) {
+                    document.getElementById('adminPanel').classList.remove('hidden');
+                    document.getElementById('ownerOnly').classList.remove('hidden');
+                } else {
+                    const staffCheck = await get(ref(db, 'staff/' + user.email.replace('.', ',')));
+                    if (staffCheck.exists()) document.getElementById('adminPanel').classList.remove('hidden');
+                }
+
+                loadPoints(user.uid);
+                loadUserOrders(user.uid);
+                loadAllOrders();
             }
         });
 
+        // إدارة الموظفين (للملك فقط)
+        window.addStaff = () => {
+            const email = document.getElementById('staffEmail').value;
+            if (email) set(ref(db, 'staff/' + email.replace('.', ',')), { email, role: "STAFF" }).then(() => alert("تم تعيين الموظف بنجاح!"));
+        };
+
+        // إدارة الإعلانات
+        window.updateAd = () => {
+            const txt = document.getElementById('adInput').value;
+            if (txt) set(ref(db, 'settings/marquee'), txt).then(() => alert("تم تحديث الإعلان!"));
+        };
+
+        onValue(ref(db, 'settings/marquee'), (s) => {
+            if (s.exists()) document.getElementById('adContainer').innerText = s.val();
+        });
+
+        // إضافة العروض
         window.addProduct = () => {
             const uc = document.getElementById('ucAmount').value;
             const price = document.getElementById('ucPrice').value;
-            if (uc && price) {
-                push(ref(db, 'products'), { uc, price });
-                alert("تم النشر في المتجر! 🔥");
-            }
+            if (uc && price) push(ref(db, 'products'), { uc, price });
         };
 
-        onValue(ref(db, 'products'), (snapshot) => {
+        // عرض العروض للزبائن
+        onValue(ref(db, 'products'), (s) => {
             const grid = document.getElementById('productsGrid');
             grid.innerHTML = '';
-            snapshot.forEach((child) => {
-                const data = child.val();
+            s.forEach(c => {
+                const d = c.val();
                 grid.innerHTML += `
-                    <div class="glass p-6 rounded-[2.5rem] text-center relative border-b-4 border-green-600 shadow-xl">
-                        <div class="bg-red-600 text-white text-[10px] font-black px-4 py-1 rounded-full absolute top-4 right-4 italic shadow-lg">OFFER</div>
-                        <h3 class="text-5xl font-black mb-1 italic text-white">${data.uc}<span class="text-sm text-green-500 ml-1">UC</span></h3>
-                        <p class="text-2xl text-gray-300 mb-6 font-bold tracking-widest">${data.price} <span class="text-xs">ج.س</span></p>
-                        <input type="number" id="id-${child.key}" placeholder="ID اللاعب" class="w-full p-4 mb-4 rounded-2xl bg-black border border-white/10 text-center font-bold focus:border-green-600 outline-none">
-                        <button onclick="orderNow('${data.uc}', '${data.price}', '${child.key}')" class="w-full bg-green-600 hover:bg-white hover:text-green-700 py-4 rounded-2xl font-black text-xl transition-all shadow-xl">شـحـن فـوري ⚡</button>
-                        ${auth.currentUser?.email === ADMIN_EMAIL ? `<button onclick="deleteItem('${child.key}')" class="mt-4 text-[10px] text-red-500 block mx-auto underline italic">حذف العرض</button>` : ''}
-                    </div>
-                `;
+                    <div class="glass p-8 rounded-[3rem] text-center relative border border-white/5 hover:border-green-600 transition">
+                        <img src="https://www.pubgmobile.com/common/images/icon_unipin.png" class="w-14 mx-auto mb-4">
+                        <h3 class="text-4xl font-black italic">${d.uc} <span class="text-[10px] text-green-500">UC</span></h3>
+                        <p class="text-xl text-gray-500 mb-6 font-bold">${d.price} SDG</p>
+                        <input id="id-${c.key}" type="number" placeholder="ID اللاعب" class="w-full p-4 mb-4 rounded-2xl bg-black border border-white/10 text-center font-bold">
+                        <button onclick="orderNow('${d.uc}', '${d.price}', '${c.key}')" class="w-full bg-gradient-to-r from-red-600 to-green-600 py-4 rounded-2xl font-black text-sm uppercase tracking-widest">شحن فوري ⚡</button>
+                    </div>`;
             });
         });
 
-        window.deleteItem = (key) => { if(confirm('حذف؟')) remove(ref(db, `products/${key}`)); };
+        // تنفيذ الطلب
+        window.orderNow = async (uc, price, key) => {
+            const pid = document.getElementById(`id-${key}`).value;
+            if (!pid) return alert("أدخل الـ ID!");
+            const orderId = "#EM-" + Math.floor(1000 + Math.random() * 9000);
+            const user = auth.currentUser;
+            const orderData = { orderId, uc, price, pid, date: new Date().toLocaleString('ar-EG'), status: "قيد المراجعة ⏳", userId: user.uid, userName: user.displayName };
+            
+            push(ref(db, 'orders'), orderData);
+            
+            // إضافة نقاط
+            const pRef = ref(db, `users/${user.uid}/points`);
+            get(pRef).then(s => set(pRef, (s.val() || 0) + 5));
 
-        window.orderNow = (uc, price, key) => {
-            const id = document.getElementById(`id-${key}`).value;
-            if (!id) return alert("اكتب الـ ID!");
-            const msg = `مرحباً إمبراطور الخصم، أريد شحن ${uc} شدة للـ ID: ${id}. السعر: ${price} ج.س. الدفع عبر (بنكك/ماي كاشي)`;
+            const msg = `👑 *إمبراطورية الخصم للشحن* 👑\n\n*الزبون:* ${user.displayName}\n*رقم الطلب:* ${orderId}\n*العملية:* شحن ${uc} شدة\n*ID اللاعب:* ${pid}\n*السعر:* ${price} ج.س\n\n✅ *يرجى إرسال الإشعار الآن لتأكيد الطلب.*`;
             window.open(`https://wa.me/249916581517?text=${encodeURIComponent(msg)}`);
         };
+
+        function loadUserOrders(uid) {
+            onValue(ref(db, 'orders'), (s) => {
+                const list = document.getElementById('userOrdersList');
+                list.innerHTML = '';
+                s.forEach(c => {
+                    const d = c.val();
+                    if (d.userId === uid) {
+                        list.innerHTML += `<div class="p-4 bg-white/5 rounded-2xl border-r-4 border-red-600 mb-2">
+                            <p class="text-[10px] text-gray-500">${d.orderId} | ${d.date}</p>
+                            <p class="font-bold">${d.uc} شدة - <span class="text-yellow-500">${d.status}</span></p>
+                        </div>`;
+                    }
+                });
+            });
+        }
+
+        function loadAllOrders() {
+            onValue(ref(db, 'orders'), (s) => {
+                const list = document.getElementById('adminOrdersList');
+                list.innerHTML = '';
+                s.forEach(c => {
+                    const d = c.val();
+                    list.innerHTML += `<div class="p-4 glass rounded-2xl border-r-4 border-green-600 flex justify-between items-center">
+                        <div>
+                            <p class="text-[10px] text-red-500 font-bold">${d.userName} (${d.orderId})</p>
+                            <p class="text-sm font-black">${d.uc} شدة | ID: ${d.pid}</p>
+                        </div>
+                        <button onclick="deleteOrder('${c.key}')" class="text-[10px] bg-red-900 px-2 py-1 rounded">حذف</button>
+                    </div>`;
+                });
+            });
+        }
+
+        window.deleteOrder = (key) => { if(confirm('حذف الطلب نهائياً؟')) remove(ref(db, `orders/${key}`)); };
+        function loadPoints(uid) { onValue(ref(db, `users/${uid}/points`), s => { document.getElementById('userPoints').innerText = (s.val() || 0) + " نقطة إمبراطورية"; }); }
+
+        // خلفية متحركة
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        let dots = [];
+        for(let i=0; i<70; i++) dots.push({x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: Math.random()*1.5, dx: Math.random()*0.4, dy: Math.random()*0.4});
+        function animate() {
+            ctx.clearRect(0,0,canvas.width, canvas.height);
+            ctx.fillStyle = "rgba(255,255,255,0.3)";
+            dots.forEach(d => {
+                ctx.beginPath(); ctx.arc(d.x, d.y, d.r, 0, Math.PI*2); ctx.fill();
+                d.x += d.dx; d.y += d.dy;
+                if(d.x > canvas.width || d.x < 0) d.dx *= -1;
+                if(d.y > canvas.height || d.y < 0) d.dy *= -1;
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
     </script>
 </body>
-</html>
+    </html>
