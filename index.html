@@ -3,60 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إمبراطورية الشحن | EMPROR ADMIN</title>
+    <title>منصة الإمبراطور | EMPROR v6</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { font-family: 'Cairo', sans-serif; background: #050505; color: white; margin: 0; }
+        body { font-family: 'Cairo', sans-serif; background: #0a0a0a; color: white; margin: 0; overflow-x: hidden; }
         .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.05); }
-        .admin-card { border-right: 4px solid #dc2626; background: rgba(220, 38, 38, 0.05); }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+        
+        /* شريط جانبي (Sidebar) */
+        #sidebar { 
+            position: fixed; top: 0; right: -300px; width: 300px; height: 100%; 
+            background: #111; z-index: 1000; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: -10px 0 30px rgba(0,0,0,0.5); overflow-y: auto;
+        }
+        #sidebar.active { right: 0; }
+        .overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.7); display: none; z-index: 999; 
+        }
+
+        /* أزرار ثلاثية الأبعاد */
+        .btn-3d {
+            background: linear-gradient(145deg, #dc2626, #991b1b);
+            box-shadow: 0 4px 0 #7f1d1d, 0 8px 15px rgba(0,0,0,0.3);
+            border-radius: 12px; transition: 0.1s;
+        }
+        .btn-3d:active { transform: translateY(3px); box-shadow: 0 1px 0 #7f1d1d; }
+
+        .nav-item { padding: 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; gap: 12px; transition: 0.3s; }
+        .nav-item:hover { background: rgba(220, 38, 38, 0.1); color: #ef4444; }
+
+        #bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; width: 100%; height: 100%; opacity: 0.3; }
     </style>
 </head>
 <body>
 
-    <main class="p-4 max-w-6xl mx-auto">
-        <div id="adminPanel" class="hidden glass p-6 rounded-[2.5rem] mb-10 border-2 border-red-600/20 shadow-2xl">
-            <h2 class="text-center font-black text-red-500 mb-6 italic text-2xl">غرفة القيادة والرقابة 👑</h2>
+    <canvas id="bg-canvas"></canvas>
+    <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+    <aside id="sidebar">
+        <div class="p-6 text-center border-b border-white/5">
+            <img id="sideUserImg" src="" class="w-20 h-20 rounded-full mx-auto border-4 border-red-600 mb-3 shadow-2xl">
+            <h3 id="sideUserName" class="font-black text-sm mb-1">...</h3>
+            <div class="bg-yellow-600/20 text-yellow-500 rounded-full py-1 px-4 text-xs font-black border border-yellow-500/30 inline-block">
+                ⭐ <span id="sideUserPoints">0</span> نقطة
+            </div>
+        </div>
+
+        <nav class="mt-4">
+            <div class="px-6 py-2 text-[10px] text-gray-500 font-bold uppercase tracking-widest">المستخدم</div>
+            <a href="#" onclick="toggleSidebar()" class="nav-item"><i class="fas fa-shopping-cart"></i> متجر الشحن</a>
+            <a href="#ordersSection" onclick="toggleSidebar()" class="nav-item"><i class="fas fa-history"></i> سجل طلباتي</a>
             
-            <div id="ownerOnlySection" class="hidden mb-10 p-6 glass rounded-3xl border border-green-600/20">
-                <h3 class="text-xs font-bold text-green-500 mb-4 border-b border-white/5 pb-2">📊 إحصائيات أداء الموظفين (للإمبراطور فقط)</h3>
-                <div id="staffStats" class="stats-grid">
-                    </div>
+            <div id="adminNav" class="hidden">
+                <div class="px-6 py-2 mt-4 text-[10px] text-red-500 font-bold uppercase tracking-widest">لوحة الإدارة 👑</div>
+                <a href="#" onclick="showAdminSection('orders')" class="nav-item"><i class="fas fa-bell"></i> الطلبات الواردة</a>
+                <a href="#" onclick="showAdminSection('packages')" class="nav-item"><i class="fas fa-plus-circle"></i> إضافة حزم</a>
+                <a href="#" onclick="showAdminSection('stats')" class="nav-item"><i class="fas fa-chart-line"></i> أداء الموظفين</a>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="space-y-4 bg-white/5 p-6 rounded-3xl">
-                    <h3 class="text-xs font-bold text-gray-400">📦 إدارة الحزم</h3>
-                    <input id="pkgName" type="text" placeholder="اسم الحزمة" class="w-full p-4 rounded-xl bg-black border border-white/10 outline-none focus:border-red-600">
-                    <div class="flex gap-2">
-                        <input id="pkgAmount" type="number" placeholder="UC" class="w-1/2 p-4 rounded-xl bg-black border border-white/10">
-                        <input id="pkgPrice" type="number" placeholder="السعر" class="w-1/2 p-4 rounded-xl bg-black border border-white/10">
-                    </div>
-                    <button onclick="addPackage()" class="w-full bg-red-600 py-4 rounded-xl font-black">إضافة الحزمة 🚀</button>
-                </div>
+            <div class="px-6 py-2 mt-4 text-[10px] text-green-500 font-bold uppercase tracking-widest">تواصل مع الإدارة</div>
+            <a href="https://wa.me/249907760989" target="_blank" class="nav-item text-xs"><i class="fab fa-whatsapp"></i> م. فتحي (المدير العام)</a>
+            <a href="https://wa.me/249914178935" target="_blank" class="nav-item text-xs"><i class="fab fa-whatsapp"></i> مهند ياسر (خدمة العملاء)</a>
+            <a href="https://wa.me/249916581517" target="_blank" class="nav-item text-xs"><i class="fab fa-whatsapp"></i> محمد التاج (الدعم)</a>
+            <a href="https://wa.me/201550165993" target="_blank" class="nav-item text-xs"><i class="fab fa-whatsapp"></i> الإدارة - مصر</a>
+        </nav>
+    </aside>
 
-                <div class="space-y-4">
-                    <h3 class="text-xs font-bold text-gray-400">🔔 الطلبات الواردة</h3>
-                    <div id="adminOrdersList" class="space-y-3 max-h-[500px] overflow-y-auto pr-2"></div>
-                </div>
+    <header class="p-5 flex justify-between items-center glass sticky top-0 z-[500]">
+        <button onclick="toggleSidebar()" class="text-2xl text-white focus:outline-none">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="font-black text-2xl italic">EMPROR<span class="text-red-600">98</span></div>
+        <div class="w-10"></div> </header>
+
+    <main class="p-4 max-w-6xl mx-auto">
+        
+        <div id="userStatsHeader" class="hidden grid grid-cols-2 gap-4 mb-8">
+            <div class="glass p-5 rounded-3xl text-center border-b-4 border-yellow-600">
+                <p class="text-[10px] text-gray-500 mb-1">نقاطك الحالية</p>
+                <h4 id="mainPoints" class="text-2xl font-black text-yellow-500">0</h4>
+            </div>
+            <div class="glass p-5 rounded-3xl text-center border-b-4 border-red-600">
+                <p class="text-[10px] text-gray-500 mb-1">إجمالي طلباتك</p>
+                <h4 id="mainOrdersCount" class="text-2xl font-black text-red-500">0</h4>
             </div>
         </div>
 
-        <div id="userSection" class="hidden">
-            <div id="packagesGrid" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20"></div>
-            <div class="glass p-6 rounded-[2.5rem] mb-10 border border-white/5">
-                <h3 class="font-black mb-4 italic text-sm text-gray-400">سجل طلباتك 📂</h3>
-                <div id="userOrdersList" class="space-y-3"></div>
+        <div id="adminContent" class="hidden mb-12 animate-fade-in">
             </div>
+
+        <div id="shopSection" class="hidden">
+            <h2 class="text-xl font-black mb-6 italic border-r-4 border-red-600 pr-3">حزم الشحن الملكية</h2>
+            <div id="packagesGrid" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16"></div>
         </div>
 
-        <div id="loginSection" class="glass p-20 rounded-[4rem] text-center my-10 border-white/10 shadow-2xl">
-            <h1 class="text-5xl font-black mb-10 italic">EMPROR<span class="text-red-600 italic">98</span></h1>
-            <button onclick="login()" class="bg-white text-black px-10 py-5 rounded-2xl font-black flex items-center justify-center gap-3 mx-auto shadow-2xl">
-                <img src="https://www.google.com/favicon.ico" class="w-6"> الدخول للمنصة
+        <div id="ordersSection" class="hidden pt-10">
+            <h2 class="text-xl font-black mb-6 italic border-r-4 border-green-600 pr-3">سجل طلباتي (جديدة وقديمة)</h2>
+            <div id="userOrdersList" class="space-y-4"></div>
+        </div>
+
+        <div id="loginSection" class="glass p-16 rounded-[4rem] text-center my-10 border-white/10 shadow-2xl max-w-lg mx-auto">
+            <h1 class="text-5xl font-black mb-6 italic">EMPROR<span class="text-red-600">98</span></h1>
+            <p class="text-gray-500 mb-10 text-xs leading-relaxed">أهلاً بك في منصة الشحن الأولى. سجل دخولك لمتابعة نقاطك وطلباتك.</p>
+            <button onclick="login()" class="bg-white text-black w-full py-5 rounded-3xl font-black flex items-center justify-center gap-3 hover:bg-red-600 hover:text-white transition-all shadow-xl">
+                <img src="https://www.google.com/favicon.ico" class="w-6"> دخول عبر جوجل
             </button>
         </div>
+
     </main>
 
     <script type="module">
@@ -64,7 +119,6 @@
         import { getDatabase, ref, push, onValue, set, get, remove, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-        // ... إعدادات Firebase (نفس التي استخدمناها سابقاً) ...
         const firebaseConfig = {
             apiKey: "AIzaSyC0jzecEwKgHpxHpTi8Y-_bwwfzVdtgf3E",
             authDomain: "khasmshop.firebaseapp.com",
@@ -81,107 +135,56 @@
         const provider = new GoogleAuthProvider();
         const SUPER_ADMIN = "mhmdfthu98@gmail.com";
 
+        window.toggleSidebar = () => {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.toggle('active');
+            overlay.style.display = sidebar.classList.contains('active') ? 'block' : 'none';
+        };
+
         window.login = () => signInWithPopup(auth, provider);
 
-        onAuthStateChanged(auth, async (user) => {
+        onAuthStateChanged(auth, (user) => {
             if (user) {
                 document.getElementById('loginSection').classList.add('hidden');
-                document.getElementById('userSection').classList.remove('hidden');
+                document.getElementById('shopSection').classList.remove('hidden');
+                document.getElementById('ordersSection').classList.remove('hidden');
+                document.getElementById('userStatsHeader').classList.remove('hidden');
                 
+                // تحديث بيانات السايد بار
+                document.getElementById('sideUserName').innerText = user.displayName;
+                document.getElementById('sideUserImg').src = user.photoURL;
+
                 if (user.email === SUPER_ADMIN) {
-                    document.getElementById('adminPanel').classList.remove('hidden');
-                    document.getElementById('ownerOnlySection').classList.remove('hidden');
-                    loadStaffStats(); // تحميل إحصائيات الموظفين
+                    document.getElementById('adminNav').classList.remove('hidden');
                 }
-                loadUserOrders(user.uid);
-                loadAllOrders();
+                
+                loadUserData(user.uid);
                 loadPackages();
+                loadUserOrders(user.uid);
             }
         });
 
-        // دالة تحديث حالة الطلب مع "بصمة الموظف"
-        window.updateStatus = async (key, status, amount) => {
-            const user = auth.currentUser;
-            await update(ref(db, `orders/${key}`), { 
-                status: status,
-                executedBy: user.displayName,
-                executedEmail: user.email,
-                executionDate: new Date().toLocaleString('ar-EG')
-            });
-            alert("تم التنفيذ وتسجيل اسمك في النظام! ✅");
-        };
-
-        // دالة حساب إحصائيات الموظفين (للإمبراطور فقط)
-        function loadStaffStats() {
-            onValue(ref(db, 'orders'), (s) => {
-                const stats = {};
-                s.forEach(c => {
-                    const d = c.val();
-                    if (d.status === '✅ تم الشحن بنجاح' && d.executedBy) {
-                        if (!stats[d.executedBy]) stats[d.executedBy] = { count: 0, totalUC: 0 };
-                        stats[d.executedBy].count++;
-                        stats[d.executedBy].totalUC += parseInt(d.amount);
-                    }
-                });
-
-                const container = document.getElementById('staffStats');
-                container.innerHTML = '';
-                for (const name in stats) {
-                    container.innerHTML += `
-                        <div class="bg-white/5 p-4 rounded-2xl border border-white/10 text-center">
-                            <p class="text-[10px] text-red-500 font-bold mb-1">${name}</p>
-                            <p class="text-xl font-black">${stats[name].count} <span class="text-[8px] text-gray-500 text-xs">طلب</span></p>
-                            <p class="text-[9px] text-green-500 font-bold mt-1">${stats[name].totalUC} UC شحنها</p>
-                        </div>
-                    `;
-                }
+        // تحميل بيانات المستخدم (نقاط وإحصائيات)
+        function loadUserData(uid) {
+            onValue(ref(db, `users/${uid}/points`), s => {
+                const pts = s.val() || 0;
+                document.getElementById('sideUserPoints').innerText = pts;
+                document.getElementById('mainPoints').innerText = pts;
             });
         }
 
-        // عرض كل الطلبات في لوحة الإدارة
-        function loadAllOrders() {
-            onValue(ref(db, 'orders'), (s) => {
-                const list = document.getElementById('adminOrdersList');
-                list.innerHTML = '';
-                s.forEach(c => {
-                    const d = c.val();
-                    const executor = d.executedBy ? `<p class="text-[9px] text-green-400 font-bold mt-1 italic underline">بصمة المنفذ: ${d.executedBy}</p>` : '';
-                    list.innerHTML += `
-                        <div class="p-4 glass rounded-3xl border-r-4 ${d.executedBy ? 'border-green-600' : 'border-red-600'} mb-3">
-                            <p class="text-[10px] text-red-500 font-bold">${d.userName} (${d.orderId})</p>
-                            <p class="font-black text-sm">${d.amount} UC | ID: ${d.pid}</p>
-                            <p class="text-[9px] text-yellow-500 font-bold">المرجع: ${d.pRef}</p>
-                            ${executor}
-                            <div class="flex gap-2 mt-4">
-                                <button onclick="updateStatus('${c.key}', '✅ تم الشحن بنجاح', ${d.amount})" class="flex-1 bg-green-700 py-2 rounded-xl text-[9px] font-bold">تم الشحن ✅</button>
-                                <button onclick="updateStatus('${c.key}', '❌ فشل (تواصل معنا)')" class="flex-1 bg-red-700 py-2 rounded-xl text-[9px] font-bold">فشل ❌</button>
-                                <button onclick="deleteOrder('${c.key}')" class="bg-gray-800 p-2 rounded-xl text-red-500">حذف</button>
-                            </div>
-                        </div>`;
-                });
-            });
-        }
-
-        // ... بقية الدوال (إضافة حزم، شحن، إلخ) ...
-        window.addPackage = () => {
-            const name = document.getElementById('pkgName').value;
-            const amount = document.getElementById('pkgAmount').value;
-            const price = document.getElementById('pkgPrice').value;
-            if(name && amount && price) push(ref(db, 'packages'), { name, amount, price });
-        };
-
+        // عرض الحزم للزبائن
         function loadPackages() {
             onValue(ref(db, 'packages'), (s) => {
-                const grid = document.getElementById('packagesGrid');
-                grid.innerHTML = '';
+                const grid = document.getElementById('packagesGrid'); grid.innerHTML = '';
                 s.forEach(c => {
                     const d = c.val();
-                    grid.innerHTML += `<div class="glass p-6 rounded-[2.5rem] text-center border border-white/5">
-                        <h3 class="text-sm text-gray-500 mb-1">${d.name}</h3>
-                        <h2 class="text-3xl font-black mb-6">${d.amount} UC</h2>
-                        <input id="id-${c.key}" type="number" placeholder="ID اللاعب" class="w-full p-4 mb-2 rounded-xl bg-black border border-white/10 text-center font-bold outline-none">
-                        <input id="ref-${c.key}" type="text" placeholder="رقم المرجع" class="w-full p-4 mb-4 rounded-xl bg-white/5 border border-dashed border-white/20 text-center text-xs outline-none">
-                        <button onclick="orderNow('${d.amount}', '${d.price}', '${c.key}')" class="w-full bg-red-600 py-4 rounded-xl font-black shadow-lg">شحن الآن ⚡</button>
+                    grid.innerHTML += `<div class="glass p-6 rounded-[2.5rem] text-center relative group">
+                        <h2 class="text-3xl font-black italic mb-2">${d.amount} UC</h2>
+                        <p class="text-sm text-gray-500 mb-6">${d.price} SDG</p>
+                        <input id="id-${c.key}" type="number" placeholder="ID اللاعب" class="w-full p-4 mb-2 rounded-2xl bg-black border border-white/10 text-center font-bold outline-none focus:border-red-600">
+                        <button onclick="orderNow('${d.amount}', '${d.price}', '${c.key}')" class="w-full btn-3d py-4 text-xs font-black">شحن فوري ⚡</button>
                     </div>`;
                 });
             });
@@ -189,33 +192,45 @@
 
         window.orderNow = (amount, price, key) => {
             const pid = document.getElementById(`id-${key}`).value;
-            const pref = document.getElementById(`ref-${key}`).value;
-            if(!pid || !pref) return alert("البيانات ناقصة!");
+            if(!pid) return alert("أدخل الـ ID!");
             const user = auth.currentUser;
-            push(ref(db, 'orders'), { 
-                amount, price, pid, pRef: pref, userId: user.uid, userName: user.displayName, 
-                orderId: "#EM-"+Math.floor(Math.random()*9999), date: new Date().toLocaleString('ar-EG'), status: "⏳ قيد المراجعة" 
+            const orderId = "#EM-" + Math.floor(Math.random()*9999);
+            push(ref(db, 'orders'), {
+                amount, price, pid, userId: user.uid, userName: user.displayName,
+                orderId, date: new Date().toLocaleString('ar-EG'), status: "⏳ قيد المراجعة"
             });
-            window.open(`https://wa.me/249916581517?text=طلب شحن جديد رقم ${pid}`);
+            window.open(`https://wa.me/249916581517?text=طلب شحن ${amount} UC للـ ID: ${pid}`);
         };
 
         function loadUserOrders(uid) {
             onValue(ref(db, 'orders'), (s) => {
-                const list = document.getElementById('userOrdersList');
-                list.innerHTML = '';
+                const list = document.getElementById('userOrdersList'); list.innerHTML = '';
+                let count = 0;
                 s.forEach(c => {
                     if (c.val().userId === uid) {
-                        list.innerHTML += `<div class="p-4 bg-white/5 rounded-2xl border-r-2 border-red-600 mb-2 flex justify-between items-center text-xs">
-                            <span>${c.val().amount} UC - ${c.val().orderId}</span>
-                            <span class="font-bold text-green-500">${c.val().status}</span>
+                        count++;
+                        const d = c.val();
+                        list.innerHTML += `<div class="p-5 bg-white/5 rounded-3xl border-r-2 border-red-600 flex justify-between items-center">
+                            <div><p class="text-[8px] text-gray-500">${d.orderId}</p><p class="font-bold text-sm">${d.amount} UC</p><p class="text-[9px] text-gray-400">${d.date}</p></div>
+                            <span class="text-[10px] font-black italic text-green-500">${d.status}</span>
                         </div>`;
                     }
                 });
+                document.getElementById('mainOrdersCount').innerText = count;
             });
         }
-        window.deleteOrder = (key) => confirm('حذف؟') && remove(ref(db, `orders/${key}`));
 
+        // خلفية بسيطة
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        function animate() {
+            ctx.clearRect(0,0,canvas.width, canvas.height);
+            ctx.fillStyle = "rgba(220,38,38,0.2)";
+            ctx.beginPath(); ctx.arc(100, 100, 50, 0, Math.PI*2); ctx.fill();
+            requestAnimationFrame(animate);
+        }
+        animate();
     </script>
 </body>
 </html>
-
