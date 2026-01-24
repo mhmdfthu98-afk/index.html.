@@ -373,3 +373,4 @@
         // مزامنة البيانات
         function syncData() {
             onValue(ref(db, `users/${user.uid}/points`), s => document.getElementById('pointsDisplay').innerText = s.val() || 0);
+
