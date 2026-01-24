@@ -8,36 +8,47 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { font-family: 'Cairo', sans-serif; background: #f8fafc; color: #1e293b; }
+        body { font-family: 'Cairo', sans-serif; background: #f8fafc; color: #1e293b; overflow-x: hidden; }
         .glass-card { background: white; border-radius: 24px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
-        .status-pill { padding: 4px 12px; border-radius: 50px; font-size: 10px; font-weight: bold; }
-        .khasm-btn { background: #16a34a; color: white; border-radius: 12px; transition: 0.3s; cursor: pointer; }
+        .khasm-btn { background: #16a34a; color: white; border-radius: 12px; transition: 0.3s; cursor: pointer; text-align: center; }
         .khasm-btn:hover { background: #15803d; transform: scale(1.02); }
-        .admin-sub.hidden { display: none; }
         .page.hidden { display: none; }
+        .admin-sub.hidden { display: none; }
+        /* أنيميشن الإعلان السداسي */
+        .marquee { white-space: nowrap; overflow: hidden; position: relative; background: #16a34a; color: white; padding: 10px 0; font-weight: bold; font-size: 12px; }
+        .marquee div { display: inline-block; padding-left: 100%; animation: marquee 30s linear infinite; }
+        @keyframes marquee { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
     </style>
 </head>
 <body>
+
+    <div class="marquee">
+        <div id="hexAds">
+            ⚡ شحن فوري وآمن لجميع الألعاب • 💎 نظام نقاط ذكي (60 شدة بـ 30 نقطة) • 🏦 ادفع بـ "بنكك" أو "ماي كاش" • 🤝 انضم لشبكة وكلائنا المعتمدين • 🛰️ خدمة تجديد ستارلينك متوفرة الآن • 🛡️ ضمان تنفيذ الطلب خلال دقائق أو استرجع نقودك
+        </div>
+    </div>
 
     <div id="notificationZone" class="fixed top-20 left-1/2 -translate-x-1/2 z-[9999] w-80"></div>
 
     <header class="bg-white border-b p-4 sticky top-0 z-[1000] flex justify-between items-center">
         <div class="text-xl font-black text-green-600 italic">KHASM SHOP</div>
-        <div id="userLabel" class="text-[10px] font-bold bg-gray-100 px-3 py-1 rounded-full">جاري التحميل...</div>
-        <div id="userPointsDisplay" class="text-[10px] font-bold bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full">نقاطك: 0</div>
+        <div class="flex gap-2">
+            <div id="userLabel" class="text-[10px] font-bold bg-gray-100 px-3 py-1 rounded-full">...</div>
+            <div id="userPointsDisplay" class="text-[10px] font-bold bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full">النقاط: 0</div>
+        </div>
     </header>
 
-    <nav class="flex justify-around bg-white p-4 border-b text-xs font-bold text-gray-500">
-        <div onclick="showPage('shop')" class="cursor-pointer hover:text-green-600">المتجر</div>
-        <div onclick="showPage('myOrders')" class="cursor-pointer hover:text-green-600">طلباتي</div>
-        <div id="adminTab" onclick="showPage('admin')" class="cursor-pointer text-red-600 hidden">لوحة التحكم 👑</div>
+    <nav class="flex justify-around bg-white p-4 border-b text-xs font-bold text-gray-500 shadow-sm">
+        <div onclick="showPage('shop')" class="cursor-pointer hover:text-green-600"><i class="fas fa-store ml-1"></i> المتجر</div>
+        <div onclick="showPage('myOrders')" class="cursor-pointer hover:text-green-600"><i class="fas fa-box ml-1"></i> طلباتي</div>
+        <div id="adminTab" onclick="showPage('admin')" class="cursor-pointer text-red-600 hidden"><i class="fas fa-crown ml-1"></i> الإدارة</div>
     </nav>
 
     <main class="p-4 max-w-4xl mx-auto mb-20">
         
         <div id="shopPage" class="page">
             <div id="promos" class="flex gap-3 overflow-x-auto py-4 mb-6"></div>
-            <h2 class="font-black mb-4">باقات الشحن الفوري ⚡</h2>
+            <h2 class="font-black mb-4">باقات UC والجواهر ⚡</h2>
             <div id="packagesGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
         </div>
 
@@ -48,31 +59,30 @@
 
         <div id="adminPage" class="page hidden">
             <div class="flex gap-2 mb-6 overflow-x-auto pb-2">
-                <button onclick="showAdminTab('orders')" class="bg-gray-200 px-4 py-2 rounded-lg text-[10px] font-bold">إدارة الطلبات</button>
+                <button onclick="showAdminTab('orders')" class="bg-green-600 text-white px-4 py-2 rounded-lg text-[10px] font-bold">الطلبات</button>
                 <button id="managePkgBtn" onclick="showAdminTab('pkg')" class="bg-gray-200 px-4 py-2 rounded-lg text-[10px] font-bold hidden">المنتجات</button>
                 <button id="managePromoBtn" onclick="showAdminTab('promo')" class="bg-gray-200 px-4 py-2 rounded-lg text-[10px] font-bold hidden">الإعلانات</button>
             </div>
 
             <div id="admin-orders" class="admin-sub">
-                <h3 class="font-bold mb-4 text-sm">إدارة عمليات الشحن</h3>
                 <div id="allOrdersList" class="space-y-4"></div>
             </div>
 
             <div id="admin-pkg" class="admin-sub hidden">
-                <div class="glass-card p-4 mb-4">
-                    <input id="pName" type="text" placeholder="اسم اللعبة (ببجي/فري فاير)" class="w-full mb-2 p-2 border rounded">
-                    <input id="pAmount" type="number" placeholder="كمية الشحن (مثلاً 60)" class="w-full mb-2 p-2 border rounded">
-                    <input id="pPrice" type="number" placeholder="السعر بالجنيه" class="w-full mb-2 p-2 border rounded">
-                    <input id="pPoints" type="number" placeholder="السعر بالنقاط" class="w-full mb-2 p-2 border rounded">
-                    <button onclick="addNewPkg()" class="w-full khasm-btn py-2 text-sm">إضافة منتج</button>
+                <div class="glass-card p-4 mb-4 border-2 border-green-500">
+                    <h3 class="font-bold mb-2">إضافة منتج جديد</h3>
+                    <input id="pName" type="text" placeholder="اسم اللعبة" class="w-full mb-2 p-2 border rounded text-sm">
+                    <input id="pAmount" type="text" placeholder="الكمية (60 شدة)" class="w-full mb-2 p-2 border rounded text-sm">
+                    <input id="pPrice" type="number" placeholder="السعر بالجنية" class="w-full mb-2 p-2 border rounded text-sm">
+                    <button onclick="addNewPkg()" class="w-full khasm-btn py-2 text-sm font-bold">إضافة للمتجر</button>
                 </div>
                 <div id="adminPkgList" class="space-y-2"></div>
             </div>
 
             <div id="admin-promo" class="admin-sub hidden">
                 <div class="glass-card p-4 mb-4">
-                    <input id="proText" type="text" placeholder="نص الإعلان" class="w-full mb-2 p-2 border rounded">
-                    <button onclick="addNewPromo()" class="w-full khasm-btn py-2 text-sm">إضافة إعلان</button>
+                    <input id="proText" type="text" placeholder="نص الإعلان السريع" class="w-full mb-2 p-2 border rounded text-sm">
+                    <button onclick="addNewPromo()" class="w-full khasm-btn py-2 text-sm font-bold">نشر الإعلان</button>
                 </div>
                 <div id="adminPromoList" class="space-y-2"></div>
             </div>
@@ -81,20 +91,17 @@
 
     <div id="paymentModal" class="fixed inset-0 bg-black/50 z-[2000] hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl p-6 w-full max-w-sm">
-            <h3 class="font-black mb-2">تأكيد عملية الشحن</h3>
-            
-            <div class="bg-green-50 p-3 rounded-2xl mb-4 border border-green-200 text-[11px]">
-                <p class="font-bold text-green-700 mb-1">🏦 حسابات الدفع الرسمية:</p>
-                <p>• بنكك: <span class="font-bold">4845744</span> (امنه محمد علي)</p>
-                <p>• ماي كاش: <span class="font-bold">401793722</span> (محمد فتحي حمزه)</p>
+            <h3 class="font-black mb-2">تأكيد الشراء</h3>
+            <div class="bg-yellow-50 p-3 rounded-2xl mb-4 text-[11px] border border-yellow-200">
+                <b>🏦 الحسابات الرسمية للتحويل:</b><br>
+                بنكك: 4845744 (امنه محمد علي)<br>
+                ماي كاش: 401793722 (محمد فتحي)
             </div>
-
-            <input id="ingameName" type="text" placeholder="اسمك في اللعبة" class="w-full p-3 border rounded-xl mb-2 outline-none">
-            <input id="transId" type="text" placeholder="رقم العملية / الإشعار" class="w-full p-3 border rounded-xl mb-4 outline-none">
-            
+            <input id="ingameName" type="text" placeholder="اسمك داخل اللعبة" class="w-full p-3 border rounded-xl mb-2 outline-none">
+            <input id="transId" type="text" placeholder="رقم الإشعار المرجعي" class="w-full p-3 border rounded-xl mb-4 outline-none">
             <div class="flex gap-2">
                 <button onclick="closePayment()" class="flex-1 bg-gray-100 py-3 rounded-xl font-bold">إلغاء</button>
-                <button onclick="confirmOrder()" class="flex-1 khasm-btn py-3 font-bold">تأكيد</button>
+                <button onclick="confirmOrder()" class="flex-1 khasm-btn py-3 font-bold">إرسال الطلب</button>
             </div>
         </div>
     </div>
@@ -102,7 +109,7 @@
     <div id="loginOverlay" class="fixed inset-0 bg-white z-[9999] flex flex-col items-center justify-center p-6 hidden">
         <h1 class="text-3xl font-black text-green-600 mb-8 italic">KHASM SHOP</h1>
         <button onclick="login()" class="w-full max-w-xs bg-black text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-4">
-            <img src="https://www.google.com/favicon.ico" class="w-5"> الدخول بجوجل
+             الدخول بواسطة جوجل
         </button>
     </div>
 
@@ -111,7 +118,6 @@
         import { getDatabase, ref, push, onValue, update, remove, set, get, onChildAdded } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-        // إعدادات Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyC0jzecEwKgHpxHpTi8Y-_bwwfzVdtgf3E",
             authDomain: "khasmshop.firebaseapp.com",
@@ -139,7 +145,6 @@
                 document.getElementById('loginOverlay').classList.add('hidden');
                 setupPermissions(user.email);
                 loadData();
-                listenForNewOrders();
             } else {
                 document.getElementById('loginOverlay').classList.remove('hidden');
             }
@@ -150,14 +155,12 @@
         function setupPermissions(email) {
             const isAdmin = email === ADMIN_EMAIL;
             const isStaff = STAFF_EMAILS.includes(email);
-            
             if(isAdmin || isStaff) {
                 document.getElementById('adminTab').classList.remove('hidden');
-                document.getElementById('userLabel').innerText = isAdmin ? "المدير العام 👑" : "وكيل معتمد 🤝";
+                document.getElementById('userLabel').innerText = isAdmin ? "المدير 👑" : "وكيل معتمد 🤝";
             } else {
                 document.getElementById('userLabel').innerText = "عميل مميز ⭐";
             }
-
             if(isAdmin) {
                 document.getElementById('managePkgBtn').classList.remove('hidden');
                 document.getElementById('managePromoBtn').classList.remove('hidden');
@@ -174,15 +177,17 @@
             document.getElementById('admin-' + id).classList.remove('hidden');
         };
 
-        // إدارة الطلبات والحالات
-        window.updateStatus = (orderId, status, userId, pointsToAward) => {
+        // وظائف المدير (مع إصلاح الحذف)
+        window.deletePkg = (key) => { if(confirm("هل أنت متأكد من حذف هذا المنتج؟")) remove(ref(db, `packages/${key}`)); };
+        window.deletePromo = (key) => { if(confirm("هل أنت متأكد من حذف هذا الإعلان؟")) remove(ref(db, `promos/${key}`)); };
+        window.deleteOrder = (key) => { if(confirm("حذف الطلب نهائياً؟")) remove(ref(db, `orders/${key}`)); };
+
+        window.updateStatus = (orderId, status, userId, price) => {
             update(ref(db, `orders/${orderId}`), { status, processedBy: currentUser.displayName });
-            
-            // إذا اكتمل الطلب، نمنح النقاط تلقائياً (1000 جنيه = نقطتين)
             if(status === '✅ مكتمل') {
+                const pointsToAward = Math.floor(price / 1000) * 2;
                 get(ref(db, `users/${userId}/points`)).then(s => {
-                    const currentPoints = s.val() || 0;
-                    set(ref(db, `users/${userId}/points`), currentPoints + parseInt(pointsToAward));
+                    set(ref(db, `users/${userId}/points`), (s.val() || 0) + pointsToAward);
                 });
             }
         };
@@ -191,8 +196,10 @@
             const name = document.getElementById('pName').value;
             const amount = document.getElementById('pAmount').value;
             const price = document.getElementById('pPrice').value;
-            const points = document.getElementById('pPoints').value;
-            if(name && amount && price) push(ref(db, 'packages'), {name, amount, price, points});
+            if(name && amount && price) {
+                push(ref(db, 'packages'), {name, amount, price});
+                alert("تمت إضافة المنتج!");
+            }
         };
 
         window.addNewPromo = () => {
@@ -200,10 +207,10 @@
             if(text) push(ref(db, 'promos'), {text});
         };
 
-        window.openPayment = (amount, price, points, i) => {
+        window.openPayment = (amount, price, name, i) => {
             const idInput = document.getElementById(`id-${i}`).value;
-            if(!idInput) return alert("الرجاء إدخال الـ ID الخاص بك!");
-            selectedPackage = { amount, price, points, pid: idInput };
+            if(!idInput) return alert("الرجاء إدخال ID اللاعب!");
+            selectedPackage = { amount, price, name, pid: idInput };
             document.getElementById('paymentModal').classList.remove('hidden');
         };
 
@@ -212,7 +219,7 @@
         window.confirmOrder = () => {
             const igName = document.getElementById('ingameName').value;
             const trans = document.getElementById('transId').value;
-            if(!igName || !trans) return alert("أكمل بيانات الدفع أولاً!");
+            if(!igName || !trans) return alert("أكمل بيانات التحويل!");
 
             const orderId = "KH-" + Math.floor(1000 + Math.random() * 9000);
             const orderData = {
@@ -227,94 +234,68 @@
             };
 
             push(ref(db, 'orders'), orderData);
-            
-            // رسالة واتساب الموحدة
-            const msg = `✨ *طلب جديد من متجر KHASM SHOP* ✨\n\n*العميل:* ${currentUser.displayName}\n*رقم الطلب:* #${orderId}\n*الخدمة:* شحن ${selectedPackage.amount} ${selectedPackage.name}\n*ID اللاعب:* ${selectedPackage.pid}\n*المبلغ:* ${selectedPackage.price} ج.س\n*رقم الإشعار:* ${trans}\n\n⚠️ تم استلام طلبك وبانتظار تأكيد الإشعار من الحسابات الرسمية.`;
-            window.open(`https://wa.me/249916581517?text=${encodeURIComponent(msg)}`);
-            
+            window.open(`https://wa.me/249916581517?text=${encodeURIComponent("تم تنفيذ طلب جديد برقم: " + orderId)}`);
             closePayment();
-            alert("تم إرسال طلبك! سيتم الشحن خلال دقائق.");
+            alert("تم إرسال الطلب بنجاح!");
         };
 
-        function listenForNewOrders() {
-            if(currentUser.email === ADMIN_EMAIL || STAFF_EMAILS.includes(currentUser.email)) {
-                onChildAdded(ref(db, 'orders'), (snapshot) => {
-                    const order = snapshot.val();
-                    if(order.status === "⏳ قيد المراجعة") {
-                        const notify = document.createElement('div');
-                        notify.className = "bg-green-600 text-white p-4 rounded-2xl mb-2 shadow-xl animate-pulse text-xs font-bold border-2 border-white";
-                        notify.innerHTML = `💰 طلب جديد: ${order.userName} بـ ${order.price} ج.س`;
-                        document.getElementById('notificationZone').appendChild(notify);
-                        setTimeout(() => notify.remove(), 6000);
-                    }
-                });
-            }
-        }
-
         function loadData() {
-            // تحميل النقاط للمستخدم الحالي
-            onValue(ref(db, `users/${currentUser.uid}/points`), (s) => {
-                document.getElementById('userPointsDisplay').innerText = `نقاطك: ${s.val() || 0}`;
+            onValue(ref(db, `users/${currentUser.uid}/points`), s => {
+                document.getElementById('userPointsDisplay').innerText = `النقاط: ${s.val() || 0}`;
             });
 
-            // تحميل الباقات
-            onValue(ref(db, 'packages'), (s) => {
+            onValue(ref(db, 'packages'), s => {
                 const grid = document.getElementById('packagesGrid');
                 const adminL = document.getElementById('adminPkgList');
                 grid.innerHTML = ''; adminL.innerHTML = '';
                 s.forEach(c => {
                     const d = c.val();
-                    grid.innerHTML += `<div class="glass-card p-6 text-center border-t-4 border-green-500">
-                        <h3 class="text-2xl font-black">${d.amount} ${d.name || ''}</h3>
-                        <p class="text-green-600 font-bold">${d.price} SDG</p>
-                        <p class="text-[10px] text-yellow-600 mb-4">يعطيك ${Math.floor(d.price/1000)*2} نقطة 🎁</p>
-                        <input id="id-${c.key}" type="number" placeholder="ID اللاعب" class="w-full p-3 border rounded-xl mb-3 text-center outline-none">
-                        <button onclick="openPayment('${d.amount}','${d.price}','${d.points}','${c.key}')" class="w-full khasm-btn py-3 font-bold">شحن فوري ⚡</button>
+                    grid.innerHTML += `<div class="glass-card p-6 text-center border-b-4 border-green-500">
+                        <h3 class="text-2xl font-black">${d.amount}</h3>
+                        <p class="text-gray-500 text-xs mb-2">${d.name}</p>
+                        <p class="text-green-600 font-bold mb-4">${d.price} SDG</p>
+                        <input id="id-${c.key}" type="text" placeholder="ID اللاعب" class="w-full p-3 border rounded-xl mb-3 text-center outline-none bg-gray-50">
+                        <button onclick="openPayment('${d.amount}','${d.price}','${d.name}','${c.key}')" class="w-full khasm-btn py-3 font-bold">شحن الآن ⚡</button>
                     </div>`;
-                    adminL.innerHTML += `<div class="flex justify-between p-2 border-b text-xs"><span>${d.amount} - ${d.price} ج.س</span><button onclick="remove(ref(db,'packages/${c.key}'))" class="text-red-500">حذف</button></div>`;
+                    adminL.innerHTML += `<div class="flex justify-between items-center p-3 glass-card mb-2 text-xs">
+                        <span>${d.amount} (${d.price} ج.س)</span>
+                        <button onclick="deletePkg('${c.key}')" class="text-red-500 font-bold"><i class="fas fa-trash"></i></button>
+                    </div>`;
                 });
             });
 
-            // تحميل الطلبات
-            onValue(ref(db, 'orders'), (s) => {
+            onValue(ref(db, 'orders'), s => {
                 const uL = document.getElementById('userOrdersList');
                 const aL = document.getElementById('allOrdersList');
                 uL.innerHTML = ''; aL.innerHTML = '';
-                
                 s.forEach(c => {
                     const d = c.val();
                     const statusClass = d.status.includes('تم') ? 'bg-green-100 text-green-700' : (d.status.includes('فشل') ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700');
-                    const ptsToAward = Math.floor(d.price / 1000) * 2;
-
                     const card = `<div class="glass-card p-4 flex justify-between items-center">
-                        <div><p class="font-black text-sm">${d.amount} UC/جواهر</p><p class="text-[9px] text-gray-400">#${d.orderId} - ${d.date}</p></div>
+                        <div><p class="font-black text-sm">${d.amount}</p><p class="text-[9px] text-gray-400">#${d.orderId}</p></div>
                         <span class="status-pill ${statusClass}">${d.status}</span>
                     </div>`;
-                    
                     if(d.userId === currentUser.uid) uL.innerHTML += card;
-
                     if(currentUser.email === ADMIN_EMAIL || STAFF_EMAILS.includes(currentUser.email)) {
-                        aL.innerHTML += `<div class="glass-card p-4 border-r-4 ${d.status.includes('مراجعة') ? 'border-yellow-400' : 'border-gray-200'}">
-                            <div class="flex justify-between items-start mb-2">
-                                <div class="text-[10px]"><b>${d.userName}</b><br>ID: ${d.pid}<br>إشعار: ${d.transactionId}<br>السعر: ${d.price}ج.س</div>
-                                <span class="status-pill ${statusClass}">${d.status}</span>
-                            </div>
-                            <div class="flex gap-2 mt-3">
-                                <button onclick="updateStatus('${c.key}','✅ مكتمل','${d.userId}','${ptsToAward}')" class="bg-green-500 text-white px-3 py-1 rounded-lg text-[10px]">تم الشحن</button>
-                                <button onclick="updateStatus('${c.key}','❌ فشل','','')" class="bg-red-500 text-white px-3 py-1 rounded-lg text-[10px]">فشل</button>
-                                <button onclick="remove(ref(db,'orders/${c.key}'))" class="bg-gray-200 px-3 py-1 rounded-lg text-[10px]">حذف</button>
+                        aL.innerHTML += `<div class="glass-card p-4 border-r-4 ${d.status.includes('مراجعة') ? 'border-yellow-400' : 'border-gray-300'}">
+                            <div class="text-[10px] mb-3"><b>${d.userName}</b> | ID: ${d.pid} | الإشعار: ${d.transactionId}</div>
+                            <div class="flex gap-2">
+                                <button onclick="updateStatus('${c.key}','✅ مكتمل','${d.userId}',${d.price})" class="bg-green-500 text-white px-3 py-1 rounded-lg text-[9px]">تم</button>
+                                <button onclick="updateStatus('${c.key}','❌ فشل','','')" class="bg-red-500 text-white px-3 py-1 rounded-lg text-[9px]">فشل</button>
+                                <button onclick="deleteOrder('${c.key}')" class="bg-gray-200 px-3 py-1 rounded-lg text-[9px]">حذف</button>
                             </div>
                         </div>`;
                     }
                 });
             });
 
-            // تحميل الإعلانات
             onValue(ref(db, 'promos'), s => {
                 const pDiv = document.getElementById('promos');
-                pDiv.innerHTML = '';
+                const aDiv = document.getElementById('adminPromoList');
+                pDiv.innerHTML = ''; aDiv.innerHTML = '';
                 s.forEach(c => {
-                    pDiv.innerHTML += `<div class="min-w-[200px] bg-green-600 text-white p-4 rounded-2xl text-[10px] font-bold shadow-lg border-b-4 border-green-800">🔥 ${c.val().text}</div>`;
+                    pDiv.innerHTML += `<div class="min-w-[220px] bg-green-600 text-white p-4 rounded-2xl text-[10px] font-bold shadow-lg">🔥 ${c.val().text}</div>`;
+                    aDiv.innerHTML += `<div class="flex justify-between p-2 glass-card mb-2 text-xs"><span>${c.val().text}</span><button onclick="deletePromo('${c.key}')" class="text-red-500"><i class="fas fa-trash"></i></button></div>`;
                 });
             });
         }
