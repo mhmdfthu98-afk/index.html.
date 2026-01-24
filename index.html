@@ -15,19 +15,16 @@
             border-radius: 40px; border: 1px solid rgba(255,255,255,0.05);
             padding: 30px; transition: 0.6s cubic-bezier(0.19, 1, 0.22, 1);
         }
-        .glass-card:hover { border-color: var(--neon); transform: translateY(-5px); }
         .khasm-btn {
             background: linear-gradient(135deg, #16a34a, #065f46);
             border-radius: 20px; padding: 18px; font-weight: 900;
-            text-align: center; cursor: pointer; transition: 0.4s; border: none; color: white;
+            text-align: center; cursor: pointer; transition: 0.4s; border: none; color: white; width: 100%;
         }
-        .khasm-btn:hover { box-shadow: 0 0 30px var(--neon); }
-        .khasm-btn:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); }
+        .khasm-btn:disabled { opacity: 0.5; cursor: not-allowed; }
         .status-pill { padding: 6px 16px; border-radius: 50px; font-size: 11px; font-weight: 900; }
-        .page.hidden { display: none; }
+        .page.hidden, .admin-sub.hidden { display: none; }
         .modal-bg { background: rgba(0,0,0,0.96); backdrop-filter: blur(20px); }
-        .admin-sub.hidden { display: none; }
-        #adSlider { display: flex; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+        #adSlider { display: flex; transition: transform 0.6s ease-in-out; }
     </style>
 </head>
 <body>
@@ -37,7 +34,7 @@
             <h1 class="text-3xl font-black text-green-500 italic tracking-tighter">KHASM SHOP</h1>
             <span class="text-[9px] text-gray-500 font-bold tracking-[0.4em] mt-1">ROYAL SYSTEM</span>
         </div>
-        <div class="bg-white/5 px-5 py-2 rounded-2xl border border-white/10">
+        <div class="bg-white/5 px-5 py-2 rounded-2xl border border-white/10 text-center">
             <span id="userPointsDisplay" class="text-2xl font-black text-yellow-400">0 ⭐</span>
         </div>
     </header>
@@ -45,37 +42,28 @@
     <div class="relative max-w-lg mx-auto mt-4 px-6 overflow-hidden">
         <div id="adSlider">
             <div class="min-w-full px-2">
-                <div class="h-32 bg-gradient-to-r from-green-600 to-green-900 rounded-[30px] p-6 flex items-center justify-between border border-white/10 shadow-2xl text-white">
-                    <div>
-                        <h4 class="text-xl font-black italic">خصم الـ 50% 🔥</h4>
-                        <p class="text-[10px] opacity-80 uppercase font-bold">على أول عملية شحن شدات</p>
-                    </div>
+                <div class="h-32 bg-gradient-to-r from-green-600 to-green-900 rounded-[30px] p-6 flex items-center justify-between border border-white/10">
+                    <div><h4 class="text-xl font-black">خصم الـ 50% 🔥</h4><p class="text-[10px] opacity-80 uppercase">على أول عملية شحن</p></div>
                     <i class="fas fa-fire text-4xl text-yellow-400 animate-bounce"></i>
                 </div>
             </div>
             <div class="min-w-full px-2">
-                <div class="h-32 bg-gradient-to-r from-blue-600 to-indigo-900 rounded-[30px] p-6 flex items-center justify-between border border-white/10 shadow-2xl text-white">
-                    <div>
-                        <h4 class="text-xl font-black italic">نظام النقاط 💎</h4>
-                        <p class="text-[10px] opacity-80 uppercase font-bold">اشحن واجمع النجوم واستبدلها</p>
-                    </div>
+                <div class="h-32 bg-gradient-to-r from-blue-600 to-indigo-900 rounded-[30px] p-6 flex items-center justify-between border border-white/10">
+                    <div><h4 class="text-xl font-black">نظام النقاط 💎</h4><p class="text-[10px] opacity-80">اجمع النجوم واستبدلها</p></div>
                     <i class="fas fa-star text-4xl text-yellow-400"></i>
                 </div>
             </div>
             <div class="min-w-full px-2">
-                <div class="h-32 bg-gradient-to-r from-red-600 to-red-900 rounded-[30px] p-6 flex items-center justify-between border border-white/10 shadow-2xl text-white">
-                    <div>
-                        <h4 class="text-xl font-black italic">تحذير هام ⚠️</h4>
-                        <p class="text-[10px] opacity-80 uppercase font-bold">لا تشارك كود التحقق مع أحد</p>
-                    </div>
+                <div class="h-32 bg-gradient-to-r from-red-600 to-red-900 rounded-[30px] p-6 flex items-center justify-between border border-white/10">
+                    <div><h4 class="text-xl font-black">تحذير هام ⚠️</h4><p class="text-[10px] opacity-80">لا تشارك كودك مع أحد</p></div>
                     <i class="fas fa-shield-alt text-4xl text-white"></i>
                 </div>
             </div>
         </div>
         <div class="flex justify-center gap-2 mt-3">
-            <div class="dot w-2 h-1 bg-green-500 rounded-full transition-all duration-300"></div>
-            <div class="dot w-1 h-1 bg-gray-600 rounded-full transition-all duration-300"></div>
-            <div class="dot w-1 h-1 bg-gray-600 rounded-full transition-all duration-300"></div>
+            <div class="dot w-2 h-1 bg-green-500 rounded-full transition-all"></div>
+            <div class="dot w-1 h-1 bg-gray-600 rounded-full transition-all"></div>
+            <div class="dot w-1 h-1 bg-gray-600 rounded-full transition-all"></div>
         </div>
     </div>
 
@@ -91,73 +79,62 @@
 
         <div id="adminPage" class="page hidden">
             <div class="flex gap-4 mb-8">
-                <button onclick="showAdminTab('orders')" class="flex-1 khasm-btn py-4 text-xs">إدارة الطلبات</button>
-                <button onclick="showAdminTab('pkg')" class="flex-1 bg-gray-900 rounded-[20px] text-[10px] font-black">المخزن</button>
+                <button onclick="showAdminTab('orders')" class="flex-1 bg-green-600 rounded-2xl py-4 font-black text-xs">الطلبات</button>
+                <button onclick="showAdminTab('pkg')" class="flex-1 bg-gray-900 rounded-2xl py-4 font-black text-xs">المخزن</button>
             </div>
             <div id="admin-orders" class="admin-sub space-y-4"></div>
             <div id="admin-pkg" class="admin-sub hidden bg-white/5 p-8 rounded-[40px] border border-white/10">
-                <input id="pName" type="text" placeholder="اسم اللعبة" class="w-full mb-4 p-4 bg-black rounded-2xl outline-none border border-white/5 text-white">
-                <input id="pAmount" type="text" placeholder="الكمية" class="w-full mb-4 p-4 bg-black rounded-2xl outline-none border border-white/5 text-white">
-                <input id="pPrice" type="number" placeholder="السعر" class="w-full mb-8 p-4 bg-black rounded-2xl outline-none border border-white/5 text-white">
-                <button id="addPkgBtn" onclick="addNewPkg()" class="w-full khasm-btn">إضافة منتج 🚀</button>
+                <input id="pName" type="text" placeholder="اسم اللعبة" class="w-full mb-4 p-4 bg-black rounded-2xl border border-white/10">
+                <input id="pAmount" type="text" placeholder="الكمية" class="w-full mb-4 p-4 bg-black rounded-2xl border border-white/10">
+                <input id="pPrice" type="number" placeholder="السعر" class="w-full mb-8 p-4 bg-black rounded-2xl border border-white/10">
+                <button id="addPkgBtn" onclick="addNewPkg()" class="khasm-btn">إضافة منتج 🚀</button>
                 <div id="adminPkgList" class="mt-10 space-y-3"></div>
             </div>
         </div>
     </main>
 
-    <nav class="fixed bottom-8 left-8 right-8 h-22 bg-black/40 backdrop-blur-3xl border border-white/10 rounded-[40px] flex justify-around items-center z-[2000]">
+    <nav class="fixed bottom-8 left-8 right-8 h-20 bg-black/40 backdrop-blur-3xl border border-white/10 rounded-[40px] flex justify-around items-center z-[2000]">
         <button onclick="showPage('shop')" class="flex flex-col items-center gap-1 text-green-500">
-            <i class="fas fa-home-lg-alt text-xl"></i>
-            <span class="text-[9px] font-black">المتجر</span>
+            <i class="fas fa-home-lg-alt text-xl"></i><span class="text-[9px] font-black">المتجر</span>
         </button>
         <button onclick="openAgentsModal('whatsapp')" class="w-16 h-16 bg-green-500 rounded-full -mt-12 border-[6px] border-[#030303] flex items-center justify-center shadow-2xl">
             <i class="fab fa-whatsapp text-3xl text-white"></i>
         </button>
         <button id="adminTab" onclick="showPage('admin')" class="hidden flex flex-col items-center gap-1 text-red-500">
-            <i class="fas fa-crown text-xl"></i>
-            <span class="text-[9px] font-black text-red-500">الإدارة</span>
+            <i class="fas fa-crown text-xl"></i><span class="text-[9px] font-black text-red-500 uppercase">الإدارة</span>
         </button>
         <button onclick="showPage('myOrders')" class="flex flex-col items-center gap-1 text-gray-500">
-            <i class="fas fa-compass text-xl"></i>
-            <span class="text-[9px] font-black">التتبع</span>
+            <i class="fas fa-compass text-xl"></i><span class="text-[9px] font-black">التتبع</span>
         </button>
     </nav>
 
     <div id="successModal" class="fixed inset-0 z-[6000] hidden flex items-center justify-center p-8 modal-bg">
         <div class="glass-card w-full max-w-sm text-center">
             <i class="fas fa-check-circle text-6xl text-green-500 mb-4"></i>
-            <h3 class="text-2xl font-black mb-2">تم إرسال الطلب!</h3>
-            <p class="text-gray-400 text-sm mb-6">سيتم التواصل معك عبر الواتساب لتأكيد الدفع.</p>
-            <button onclick="goToOrders()" class="w-full khasm-btn">تتبع طلبي الآن</button>
+            <h3 class="text-2xl font-black mb-6">تم إرسال الطلب!</h3>
+            <button onclick="goToOrders()" class="khasm-btn text-white">تتبع طلبي</button>
         </div>
     </div>
 
     <div id="agentsModal" class="fixed inset-0 z-[5000] hidden flex items-center justify-center p-8 modal-bg">
         <div class="glass-card w-full max-w-sm text-center">
-            <h3 class="text-2xl font-black mb-8 italic text-green-500">اختر الوكيل</h3>
+            <h3 class="text-2xl font-black mb-8 text-green-500">اختر الوكيل</h3>
             <div id="agentsList" class="space-y-4">
-                <button onclick="selectAgent('محمد التاج حمزه', '249916581517')" class="agent-btn w-full p-5 bg-white/5 rounded-[25px] border border-white/5 flex justify-between items-center hover:border-green-500 text-white">
-                    <div class="text-right"><div class="font-black text-sm">محمد التاج حمزه</div><div class="text-[9px] text-gray-500">وكيل معتمد ✅</div></div>
+                <button onclick="selectAgent('محمد التاج حمزه', '249916581517')" class="agent-btn w-full p-5 bg-white/5 rounded-3xl border border-white/5 flex justify-between items-center text-white">
+                    <div class="text-right"><div class="font-bold">محمد التاج</div><div class="text-[9px] opacity-50">وكيل معتمد ✅</div></div>
                     <i class="fas fa-chevron-left text-green-500"></i>
                 </button>
-                <button onclick="selectAgent('مهند ياسر بلوله', '249914178935')" class="agent-btn w-full p-5 bg-white/5 rounded-[25px] border border-white/5 flex justify-between items-center hover:border-green-500 text-white">
-                    <div class="text-right"><div class="font-black text-sm">مهند ياسر بلوله</div><div class="text-[9px] text-gray-500">وكيل معتمد ✅</div></div>
-                    <i class="fas fa-chevron-left text-green-500"></i>
-                </button>
-                <button onclick="selectAgent('محمد فتحي حمزه', '249907760989')" class="agent-btn w-full p-5 bg-white/5 rounded-[25px] border border-white/5 flex justify-between items-center hover:border-green-500 text-white">
-                    <div class="text-right"><div class="font-black text-sm">محمد فتحي حمزه</div><div class="text-[9px] text-gray-500">المدير العام 👑</div></div>
+                <button onclick="selectAgent('مهند ياسر بلوله', '249914178935')" class="agent-btn w-full p-5 bg-white/5 rounded-3xl border border-white/5 flex justify-between items-center text-white">
+                    <div class="text-right"><div class="font-bold">مهند ياسر</div><div class="text-[9px] opacity-50">وكيل معتمد ✅</div></div>
                     <i class="fas fa-chevron-left text-green-500"></i>
                 </button>
             </div>
-            <button onclick="closeModal('agentsModal')" class="mt-8 text-gray-600 text-[10px] font-black uppercase">إغلاق</button>
+            <button onclick="closeModal('agentsModal')" class="mt-8 text-gray-500 text-xs font-black uppercase">إغلاق</button>
         </div>
     </div>
 
     <div id="loginOverlay" class="fixed inset-0 bg-[#030303] z-[9999] flex flex-col items-center justify-center p-8">
-        <div class="w-24 h-24 bg-white p-5 rounded-[40px] mb-8 shadow-2xl animate-pulse">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Google_Play_Arrow_logo.svg" alt="GP">
-        </div>
-        <h2 class="text-3xl font-black mb-16 italic text-green-500">KHASM SHOP</h2>
+        <h2 class="text-4xl font-black mb-16 text-green-500 italic">KHASM SHOP</h2>
         <button onclick="login()" class="w-full max-w-xs bg-white text-black py-5 rounded-[25px] font-black flex items-center justify-center gap-4">
             <i class="fab fa-google text-xl"></i> الدخول للإمبراطورية
         </button>
@@ -183,152 +160,138 @@
 
         const ADMIN_EMAIL = "mhmdfthu98@gmail.com";
         let currentUser = null;
-        let selectedPkg = null;
+        let selectedPkgData = null;
         let currentMode = 'whatsapp';
-        let localPackages = {};
+        let localPkgs = {};
 
-        // مراقبة الدخول
         onAuthStateChanged(auth, user => {
             if(user) {
                 currentUser = user;
                 document.getElementById('loginOverlay').classList.add('hidden');
                 if(user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) document.getElementById('adminTab').classList.remove('hidden');
-                loadData();
+                loadAllData();
             } else { document.getElementById('loginOverlay').classList.remove('hidden'); }
         });
 
         window.login = () => signInWithPopup(auth, provider);
-        
         window.showPage = id => {
             document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
             document.getElementById(id + 'Page').classList.remove('hidden');
         };
-
         window.showAdminTab = id => {
             document.querySelectorAll('.admin-sub').forEach(s => s.classList.add('hidden'));
             document.getElementById('admin-' + id).classList.remove('hidden');
         };
+        window.closeModal = id => document.getElementById(id).classList.add('hidden');
+        window.goToOrders = () => { closeModal('successModal'); showPage('myOrders'); };
 
-        window.handleOrder = (key) => {
-            const pid = document.getElementById(`id-${key}`).value;
-            if(!pid || pid.length < 5) return alert("يرجى إدخال ID لاعب صحيح!");
-            selectedPkg = { ...localPackages[key], key, pid };
-            window.openAgentsModal('order');
-        };
-
-        window.openAgentsModal = (mode) => {
+        window.openAgentsModal = (mode, pkgKey = null) => {
             currentMode = mode;
+            if(pkgKey) {
+                const pidInput = document.getElementById(`id-${pkgKey}`);
+                if(!pidInput.value) return alert("أدخل ID اللاعب أولاً!");
+                selectedPkgData = { ...localPkgs[pkgKey], pid: pidInput.value, key: pkgKey };
+            }
             document.getElementById('agentsModal').classList.remove('hidden');
         };
 
         window.selectAgent = (name, phone) => {
-            const btns = document.querySelectorAll('.agent-btn');
-            btns.forEach(b => b.disabled = true);
-
             if(currentMode === 'order') {
-                const orderId = "EM-" + Math.floor(1000 + Math.random() * 9000);
                 const orderData = {
-                    ...selectedPkg, orderId, agent: name,
-                    userId: currentUser.uid, userName: currentUser.displayName, 
+                    ...selectedPkgData, agent: name,
+                    userId: currentUser.uid, userName: currentUser.displayName,
                     status: "⏳ قيد المراجعة", date: new Date().toLocaleString('ar-EG')
                 };
-
                 push(ref(db, 'orders'), orderData).then(() => {
-                    const msg = `👑 *إمبراطورية الخصم*\n*الزبون:* ${currentUser.displayName}\n*الطلب:* ${selectedPkg.amount}\n*ID:* ${selectedPkg.pid}\n*المبلغ:* ${selectedPkg.price}\n\n✅ يرجى إرسال صورة الإشعار الآن.`;
+                    const msg = `👑 *إمبراطورية الخصم*\n*الزبون:* ${currentUser.displayName}\n*الطلب:* ${selectedPkgData.amount}\n*ID:* ${selectedPkgData.pid}\n\n✅ يرجى إرسال الإشعار.`;
                     window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`);
-                    window.closeModal('agentsModal');
+                    closeModal('agentsModal');
                     document.getElementById('successModal').classList.remove('hidden');
-                    btns.forEach(b => b.disabled = false);
                 });
             } else {
                 window.open(`https://wa.me/${phone}?text=مرحباً، أحتاج مساعدة`);
-                window.closeModal('agentsModal');
-                btns.forEach(b => b.disabled = false);
+                closeModal('agentsModal');
             }
         };
 
-        window.goToOrders = () => {
-            window.closeModal('successModal');
-            window.showPage('myOrders');
+        window.addNewPkg = () => {
+            const n = document.getElementById('pName'), a = document.getElementById('pAmount'), p = document.getElementById('pPrice');
+            if(n.value && a.value && p.value) {
+                push(ref(db, 'packages'), { name: n.value, amount: a.value, price: p.value });
+                n.value = ''; a.value = ''; p.value = '';
+            }
         };
 
         window.updateStatus = (key, status, userId, amount) => {
-            if(status === '✅ مكتمل' && !confirm("تنبيه: عند جعل الطلب مكتمل، سيتم قفله نهائياً وإضافة النقاط. هل أنت متأكد؟")) return;
-            
             update(ref(db, `orders/${key}`), { status }).then(() => {
                 if(status === '✅ مكتمل') {
-                    let ptsToAdd = amount.toString().includes('60') ? 2 : 1;
+                    let pts = amount.toString().includes('60') ? 2 : 1;
                     const pRef = ref(db, `users/${userId}/points`);
-                    get(pRef).then(s => set(pRef, (s.val() || 0) + ptsToAdd));
+                    get(pRef).then(s => set(pRef, (s.val() || 0) + pts));
                 }
             });
         };
 
-        window.addNewPkg = () => {
-            const btn = document.getElementById('addPkgBtn');
-            const n = document.getElementById('pName'), a = document.getElementById('pAmount'), p = document.getElementById('pPrice');
-            if(!n.value || !a.value || !p.value) return alert("أكمل البيانات");
-            
-            btn.disabled = true;
-            push(ref(db, 'packages'), { name: n.value, amount: a.value, price: p.value }).then(() => {
-                n.value = ''; a.value = ''; p.value = '';
-                btn.disabled = false;
-            });
-        };
-
-        window.closeModal = id => document.getElementById(id).classList.add('hidden');
-        window.removeData = path => { if(confirm("حذف نهائي؟")) remove(ref(db, path)); };
-
-        function loadData() {
-            // تحميل النقاط
+        function loadAllData() {
             onValue(ref(db, `users/${currentUser.uid}/points`), s => {
                 document.getElementById('userPointsDisplay').innerText = `${s.val() || 0} ⭐`;
             });
 
-            // تحميل المنتجات
             onValue(ref(db, 'packages'), s => {
-                const grid = document.getElementById('packagesGrid');
-                const adminL = document.getElementById('adminPkgList');
+                const grid = document.getElementById('packagesGrid'), adminL = document.getElementById('adminPkgList');
                 grid.innerHTML = ''; adminL.innerHTML = '';
                 s.forEach(c => {
-                    const d = c.val();
-                    localPackages[c.key] = d;
+                    const d = c.val(); localPkgs[c.key] = d;
                     grid.innerHTML += `
                     <div class="glass-card">
-                        <h3 class="text-4xl font-black mb-1 italic text-green-500">${d.amount}</h3>
-                        <p class="text-[10px] text-gray-500 mb-8 font-black uppercase">${d.name}</p>
-                        <div class="text-2xl font-black mb-10 italic">${d.price} ج.س</div>
+                        <h3 class="text-4xl font-black mb-1 text-green-500 italic">${d.amount}</h3>
+                        <p class="text-[10px] text-gray-500 mb-8 uppercase font-bold">${d.name}</p>
+                        <div class="text-2xl font-black mb-10">${d.price} ج.س</div>
                         <input id="id-${c.key}" type="number" placeholder="ID اللاعب" class="w-full p-5 mb-5 bg-black/50 border border-white/5 rounded-3xl text-center outline-none focus:border-green-500 text-white">
-                        <button onclick="handleOrder('${c.key}')" class="w-full khasm-btn italic">شحن فوري ⚡</button>
+                        <button onclick="openAgentsModal('order', '${c.key}')" class="khasm-btn italic">شحن فوري ⚡</button>
                     </div>`;
-                    adminL.innerHTML += `<div class="flex justify-between bg-white/5 p-4 rounded-2xl mb-2 text-xs"><span>${d.amount}</span><button onclick="removeData('packages/${c.key}')" class="text-red-500 font-bold uppercase">حذف</button></div>`;
+                    adminL.innerHTML += `<div class="flex justify-between bg-white/5 p-4 rounded-2xl mb-2 text-xs"><span>${d.amount}</span><button onclick="remove(ref(db,'packages/${c.key}'))" class="text-red-500">حذف</button></div>`;
                 });
             });
 
-            // تحميل الطلبات
             onValue(ref(db, 'orders'), s => {
                 const uL = document.getElementById('userOrdersList'), aL = document.getElementById('admin-orders');
                 uL.innerHTML = ''; aL.innerHTML = '';
                 s.forEach(c => {
                     const d = c.val();
                     const isDone = d.status === '✅ مكتمل';
-                    const sClass = isDone ? 'bg-green-600' : d.status.includes('فشل') ? 'bg-red-600' : d.status.includes('جاري') ? 'bg-blue-600' : 'bg-yellow-600';
+                    const color = isDone ? 'bg-green-600' : d.status.includes('فشل') ? 'bg-red-600' : d.status.includes('جاري') ? 'bg-blue-600' : 'bg-yellow-600';
                     
                     if(d.userId === currentUser.uid) {
                         uL.innerHTML += `<div class="glass-card p-6 flex justify-between items-center opacity-${isDone?'70':'100'}">
-                            <div><p class="font-black text-sm">${d.amount}</p><p class="text-[9px] text-gray-500 mt-2 uppercase">${d.date}</p></div>
-                            <span class="status-pill ${sClass}">${d.status}</span>
+                            <div><p class="font-black text-sm">${d.amount}</p><p class="text-[9px] text-gray-500 mt-2">${d.date}</p></div>
+                            <span class="status-pill ${color}">${d.status}</span>
                         </div>`;
                     }
 
                     if(currentUser.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
-                        aL.innerHTML += `
-                        <div class="glass-card p-5 text-[11px] border-l-4 ${isDone?'border-green-500':'border-yellow-500'}">
-                            <div class="mb-3">👤 <b>${d.userName}</b> | 🆔 ${d.pid} | 💰 ${d.price}ج.س</div>
-                            <div class="text-[9px] text-gray-400 mb-4 font-bold uppercase">الوكيل: ${d.agent}</div>
+                        aL.innerHTML += `<div class="glass-card p-5 text-[11px] border-l-4 ${isDone?'border-green-500':'border-yellow-500'}">
+                            <div class="mb-3">👤 ${d.userName} | 🆔 ${d.pid}</div>
                             ${!isDone ? `
                             <div class="flex gap-2">
-                                <button onclick="updateStatus('${c.key}','✅ مكتمل','${d.userId}','${d.amount}')" class="bg-green-600 flex-1 py-3 rounded-xl font-black">إكمال</button>
-                                <button onclick="updateStatus('${c.key}','🔄 جاري التنفيذ','','')" class="bg-blue-600 flex-1 py-3 rounded-xl font-black text-[9px]">جاري</button>
-                                <button onclick="updateStatus('${c.key}','❌ فشل الطلب','','')" class="bg-red-600 flex-1 py-3 rounded-xl font-black text-[9px]">فشل</button>
-                                <button onclick="removeData('orders/${c.key}')" class="bg-gray-700 px-4 rounded-xl"><i class="fas fa-trash"></i></button>
+                                <button onclick="updateStatus('${c.key}','✅ مكتمل','${d.userId}','${d.amount}')" class="bg-green-600 flex-1 py-2 rounded-xl font-black">إكمال</button>
+                                <button onclick="updateStatus('${c.key}','❌ فشل','','')" class="bg-red-600 flex-1 py-2 rounded-xl font-black">فشل</button>
+                                <button onclick="remove(ref(db,'orders/${c.key}'))" class="bg-gray-700 px-3 rounded-xl"><i class="fas fa-trash"></i></button>
+                            </div>` : `<div class="text-center text-green-500 font-black italic">تم التسليم نهائياً 🔒 <button onclick="remove(ref(db,'orders/${c.key}'))" class="text-gray-600 mr-4">حذف</button></div>`}
+                        </div>`;
+                    }
+                });
+            });
+        }
+
+        let adIdx = 0;
+        setInterval(() => {
+            adIdx = (adIdx + 1) % 3;
+            document.getElementById('adSlider').style.transform = `translateX(${adIdx * 100}%)`;
+            document.querySelectorAll('.dot').forEach((d, i) => {
+                d.className = `dot rounded-full transition-all ${i === adIdx ? 'w-2 h-1 bg-green-500' : 'w-1 h-1 bg-gray-600'}`;
+            });
+        }, 4000);
+    </script>
+</body>
+                    </html>
