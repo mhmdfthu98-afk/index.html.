@@ -3,66 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إمبراطورية الخصم FINAL</title>
+    <title>إمبراطورية الخصم | KHASM SHOP</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --neon: #22c55e; --bg: #030303; }
-        body { font-family: 'Cairo', sans-serif; background: var(--bg); color: white; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-        .glass-card { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(20px); border-radius: 30px; border: 1px solid rgba(255,255,255,0.08); }
-        .khasm-btn { background: linear-gradient(135deg, #16a34a, #065f46); border-radius: 22px; padding: 18px; font-weight: 900; color: white; width: 100%; border: none; cursor: pointer; }
+        body { font-family: 'Cairo', sans-serif; background: var(--bg); color: white; margin: 0; padding: 0; }
+        .glass-card { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(20px); border-radius: 25px; border: 1px solid rgba(255,255,255,0.08); }
+        .khasm-btn { background: linear-gradient(135deg, #16a34a, #065f46); border-radius: 18px; padding: 15px; font-weight: 900; color: white; width: 100%; cursor: pointer; border: none; }
         .page { display: none; } .page.active { display: block; animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        #slider-container { display: flex; transition: transform 0.8s ease-in-out; }
-        .slide-item { min-width: 100%; padding: 0 15px; }
         nav button.active { color: var(--neon); }
-        input { background: rgba(255,255,255,0.05) !important; color: white !important; border: 1px solid rgba(255,255,255,0.1) !important; border-radius: 15px; padding: 12px; }
+        input { background: rgba(255,255,255,0.05) !important; color: white !important; border: 1px solid rgba(255,255,255,0.1) !important; border-radius: 12px; padding: 10px; width: 100%; outline: none; }
     </style>
 </head>
 <body>
 
-    <div id="loginOverlay" class="fixed inset-0 bg-[#030303] z-[10000] flex flex-col items-center justify-center p-8">
-        <h1 class="text-6xl font-black text-green-500 italic mb-8">KHASM SHOP</h1>
-        <button id="loginBtn" class="w-full max-w-xs bg-white text-black py-5 rounded-full font-black flex items-center justify-center gap-4">
-            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" width="20"> دخول الإمبراطورية
+    <div id="loginOverlay" class="fixed inset-0 bg-black z-[9999] flex flex-col items-center justify-center p-8">
+        <h1 class="text-5xl font-black text-green-500 mb-8 italic">KHASM SHOP</h1>
+        <button id="loginBtn" class="w-full max-w-xs bg-white text-black py-4 rounded-full font-black flex items-center justify-center gap-3">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" width="18"> دخول الإمبراطورية
         </button>
     </div>
 
-    <header class="p-6 sticky top-0 z-[5000] backdrop-blur-3xl border-b border-white/5 flex justify-between items-center">
-        <div><h2 class="text-2xl font-black text-green-500 italic">KHASM SHOP</h2><p id="welcomeMsg" class="text-[9px] text-gray-500 font-bold uppercase"></p></div>
-        <div class="bg-yellow-500/10 px-4 py-2 rounded-2xl border border-yellow-500/20 flex items-center gap-2">
-            <span id="pointsDisplay" class="text-xl font-black text-yellow-400">0</span><i class="fas fa-crown text-yellow-400 text-xs"></i>
+    <header class="p-5 sticky top-0 z-[5000] backdrop-blur-3xl border-b border-white/5 flex justify-between items-center">
+        <h2 class="text-xl font-black text-green-500 italic">KHASM SHOP</h2>
+        <div class="bg-yellow-500/10 px-4 py-2 rounded-xl border border-yellow-500/20 flex items-center gap-2">
+            <span id="pointsDisplay" class="text-lg font-black text-yellow-400">0</span><i class="fas fa-crown text-yellow-400 text-xs"></i>
         </div>
     </header>
 
-    <main class="p-6 max-w-lg mx-auto mb-32">
-        <section id="shopPage" class="page active space-y-6"><div id="pkgsGrid" class="space-y-6"></div></section>
-        
-        <section id="ordersPage" class="page"><div id="userOrdersList" class="space-y-4"></div></section>
-
+    <main class="p-5 max-w-lg mx-auto mb-28">
+        <section id="shopPage" class="page active space-y-5"><div id="pkgsGrid" class="space-y-5"></div></section>
+        <section id="ordersPage" class="page"><div id="userOrdersList" class="space-y-4 text-center opacity-50 pt-10">لا توجد طلبات قديمة</div></section>
         <section id="adminPage" class="page">
-            <div class="flex gap-2 mb-6">
-                <button onclick="showAdmTab('orders')" class="flex-1 py-3 bg-green-600 rounded-xl font-black text-xs">الطلبات</button>
-                <button id="invTabBtn" onclick="showAdmTab('inv')" class="flex-1 py-3 bg-white/5 rounded-xl font-black text-xs hidden">المخزن</button>
+            <div class="flex gap-2 mb-5">
+                <button onclick="showTab('ord')" class="flex-1 py-3 bg-green-600 rounded-xl font-black text-[10px]">الطلبات</button>
+                <button id="invBtn" onclick="showTab('inv')" class="flex-1 py-3 bg-white/5 rounded-xl font-black text-[10px] hidden">المخزن</button>
             </div>
-            <div id="adm-orders" class="adm-content space-y-4"></div>
-            <div id="adm-inv" class="adm-content hidden space-y-4">
-                <div class="glass-card p-6 space-y-3">
-                    <input id="nName" type="text" placeholder="اسم المنتج" class="w-full">
-                    <input id="nAmt" type="number" placeholder="الكمية" class="w-full">
-                    <input id="nPrice" type="number" placeholder="السعر" class="w-full">
-                    <button onclick="addPkg()" class="khasm-btn">إضافة الآن 🚀</button>
+            <div id="tab-ord" class="tab-content space-y-4"></div>
+            <div id="tab-inv" class="tab-content hidden space-y-4">
+                <div class="glass-card p-5 space-y-3">
+                    <input id="nN" type="text" placeholder="اسم المنتج">
+                    <input id="nA" type="number" placeholder="الكمية">
+                    <input id="nP" type="number" placeholder="السعر">
+                    <button onclick="addPkg()" class="khasm-btn">إضافة منتج 🚀</button>
                 </div>
                 <div id="adminInvList" class="space-y-2"></div>
             </div>
         </section>
     </main>
 
-    <nav class="fixed bottom-6 inset-x-6 h-20 bg-black/80 backdrop-blur-3xl border border-white/10 rounded-[40px] flex justify-around items-center z-[8000]">
-        <button onclick="changePage('shop')" id="nav-shop" class="active"><i class="fas fa-shopping-cart text-xl"></i></button>
-        <button id="nav-admin" onclick="changePage('admin')" class="hidden text-red-500"><i class="fas fa-crown text-xl"></i></button>
-        <button onclick="changePage('orders')" id="nav-orders"><i class="fas fa-history text-xl"></i></button>
+    <nav class="fixed bottom-6 inset-x-6 h-16 bg-black/90 backdrop-blur-xl border border-white/10 rounded-full flex justify-around items-center z-[8000]">
+        <button onclick="changePage('shop')" id="nav-shop" class="active"><i class="fas fa-shopping-cart text-lg"></i></button>
+        <button id="nav-admin" onclick="changePage('admin')" class="hidden text-red-500"><i class="fas fa-crown text-lg"></i></button>
+        <button onclick="changePage('orders')" id="nav-orders"><i class="fas fa-history text-lg"></i></button>
     </nav>
 
     <script type="module">
@@ -72,19 +68,19 @@
 
         const conf = { apiKey: "AIzaSyC0jzecEwKgHpxHpTi8Y-_bwwfzVdtgf3E", authDomain: "khasmshop.firebaseapp.com", databaseURL: "https://khasmshop-default-rtdb.firebaseio.com", projectId: "khasmshop" };
         const app = initializeApp(conf); const db = getDatabase(app); const auth = getAuth(app); const prov = new GoogleAuthProvider();
-        const ADMIN = "mhmdfthu98@gmail.com"; const AGENTS = ["mohnadyasir43@gmail.com", "muhammedaltaj111@gmail.com"];
+        const ADM = "mhmdfthu98@gmail.com"; const AGT = ["mohnadyasir43@gmail.com", "muhammedaltaj111@gmail.com"];
         let user = null;
 
         document.getElementById('loginBtn').onclick = () => signInWithRedirect(auth, prov);
         onAuthStateChanged(auth, u => { 
             if(u) { 
                 user = u; document.getElementById('loginOverlay').style.display='none';
-                document.getElementById('welcomeMsg').innerText = u.displayName;
-                if(u.email.toLowerCase()===ADMIN || AGENTS.includes(u.email.toLowerCase())) {
+                const email = u.email.toLowerCase();
+                if(email===ADM || AGT.includes(email)) {
                     document.getElementById('nav-admin').classList.remove('hidden');
-                    if(u.email.toLowerCase()===ADMIN) document.getElementById('invTabBtn').classList.remove('hidden');
+                    if(email===ADM) document.getElementById('invBtn').classList.remove('hidden');
                 }
-                loadData();
+                startSync();
             } 
         });
 
@@ -93,61 +89,58 @@
             document.getElementById(id+'Page').classList.add('active');
         };
 
-        window.showAdmTab = t => {
-            document.querySelectorAll('.adm-content').forEach(c => c.classList.add('hidden'));
-            document.getElementById('adm-'+t).classList.remove('hidden');
+        window.showTab = t => {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+            document.getElementById('tab-'+t).classList.remove('hidden');
         };
 
         window.addPkg = () => {
-            const name = document.getElementById('nName').value, amt = document.getElementById('nAmt').value, pr = document.getElementById('nPrice').value;
-            if(name && amt && pr) push(ref(db, 'packages'), { name, amount: amt, price: pr });
+            const n = document.getElementById('nN').value, a = document.getElementById('nA').value, p = document.getElementById('nP').value;
+            if(n && a && p) push(ref(db, 'packages'), { name: n, amount: a, price: p });
         };
 
-        window.deletePkg = key => { if(confirm("حذف المنتج؟")) remove(ref(db, `packages/${key}`)); };
-        
-        window.hideOrder = key => { if(confirm("إخفاء الطلب؟")) set(ref(db, `hidden/${user.uid}/${key}`), true); };
+        window.delPkg = k => { if(confirm("حذف نهائي؟")) remove(ref(db, `packages/${k}`)); };
+        window.hideOrd = k => { if(confirm("إخفاء من اللوحة؟")) set(ref(db, `hidden/${user.uid}/${k}`), true); };
 
-        window.completeOrder = (key, uid, amt) => {
-            update(ref(db, `orders/${key}`), { status: '✅ مكتمل' });
-            const sRef = ref(db, `users/${uid}/stars`);
-            get(sRef).then(s => set(sRef, (s.val()||0) + Math.floor(amt/30)));
+        window.doneOrd = (k, uid, amt) => {
+            update(ref(db, `orders/${k}`), { status: '✅ مكتمل' });
+            const sR = ref(db, `users/${uid}/stars`);
+            get(sR).then(s => set(sR, (s.val()||0) + Math.floor(amt/30)));
         };
 
-        window.orderNow = (name, amt, pr, key) => {
-            const pid = document.getElementById('pid-'+key).value;
-            if(!pid) return alert("أدخل الـ ID");
-            const oNum = "EM-"+Math.floor(Math.random()*90000);
-            push(ref(db, 'orders'), { userName: user.displayName, userId: user.uid, amount: amt, pid: pid, status: '⏳ معلق', orderID: oNum });
-            window.open(`https://wa.me/249916581517?text=طلب جديد: ${amt} شدة | ID: ${pid}`);
+        window.order = (amt, pr, k) => {
+            const id = document.getElementById('id-'+k).value;
+            if(!id) return alert("ضع الـ ID أولاً");
+            push(ref(db, 'orders'), { userName: user.displayName, userId: user.uid, amount: amt, pid: id, status: '⏳ معلق' });
+            window.open(`https://wa.me/249916581517?text=طلب: ${amt} شدة | ID: ${id}`);
         };
 
-        function loadData() {
+        function startSync() {
             onValue(ref(db, 'packages'), snap => {
                 const g = document.getElementById('pkgsGrid'), i = document.getElementById('adminInvList');
                 g.innerHTML = ''; i.innerHTML = '';
                 snap.forEach(c => {
                     const d = c.val();
                     g.innerHTML += `<div class="glass-card p-6 text-center">
-                        <h3 class="text-4xl font-black">${d.amount} UC</h3>
-                        <p class="text-xl my-2">${d.price} ج.س</p>
-                        <input id="pid-${c.key}" type="number" placeholder="ID اللاعب" class="w-full mb-3 text-center">
-                        <button onclick="orderNow('${d.name}','${d.amount}','${d.price}','${c.key}')" class="khasm-btn">شحن سريع ⚡</button>
+                        <h3 class="text-4xl font-black">${d.amount} UC</h3><p class="text-xl my-2">${d.price} ج.س</p>
+                        <input id="id-${c.key}" type="number" placeholder="ID اللاعب" class="mb-3 text-center">
+                        <button onclick="order('${d.amount}','${d.price}','${c.key}')" class="khasm-btn">اشحن الآن ⚡</button>
                     </div>`;
-                    i.innerHTML += `<div class="flex justify-between p-3 bg-white/5 rounded-xl"><span>${d.amount} UC</span><button onclick="deletePkg('${c.key}')" class="text-red-500 font-bold">حذف 🗑️</button></div>`;
+                    if(user.email.toLowerCase()===ADM) i.innerHTML += `<div class="flex justify-between p-3 bg-white/5 rounded-xl text-xs"><span>${d.amount} UC</span><button onclick="delPkg('${c.key}')" class="text-red-500">حذف</button></div>`;
                 });
             });
 
             onValue(ref(db, 'orders'), async snap => {
-                const aL = document.getElementById('adm-orders');
-                const hSnap = await get(ref(db, `hidden/${user.uid}`));
-                const hData = hSnap.val() || {};
+                const aL = document.getElementById('tab-ord');
+                const hS = await get(ref(db, `hidden/${user.uid}`));
+                const hD = hS.val() || {};
                 aL.innerHTML = '';
                 snap.forEach(c => {
-                    const v = c.val(); if(!hData[c.key]) {
+                    const v = c.val(); if(!hD[c.key]) {
                         aL.innerHTML += `<div class="glass-card p-4 space-y-2">
-                            <div class="flex justify-between text-xs font-bold"><span>👤 ${v.userName}</span><button onclick="hideOrder('${c.key}')" class="text-red-500">إخفاء 👁️‍🗨️</button></div>
-                            <p class="text-xs">ID: <span class="select-all font-black text-green-500">${v.pid}</span> | الكمية: ${v.amount}</p>
-                            ${v.status !== '✅ مكتمل' ? `<button onclick="completeOrder('${c.key}','${v.userId}',${v.amount})" class="w-full py-2 bg-green-600 rounded-lg text-[10px] font-black">إتمام العملية ✅</button>` : `<div class="text-center text-green-500 text-[10px] font-black">اكتملت</div>`}
+                            <div class="flex justify-between text-[10px]"><span>👤 ${v.userName}</span><button onclick="hideOrd('${c.key}')" class="text-red-500 font-bold">إخفاء</button></div>
+                            <p class="text-xs">ID: <span class="select-all font-black">${v.pid}</span> | الكمية: ${v.amount}</p>
+                            ${v.status !== '✅ مكتمل' ? `<button onclick="doneOrd('${c.key}','${v.userId}',${v.amount})" class="w-full py-2 bg-green-600 rounded-lg text-[10px] font-black">إتمام ✅</button>` : `<div class="text-center text-green-500 text-[10px]">مكتمل</div>`}
                         </div>`;
                     }
                 });
