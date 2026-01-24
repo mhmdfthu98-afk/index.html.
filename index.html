@@ -8,118 +8,105 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --neon: #22c55e; --gold: #facc15; --card-bg: rgba(20, 20, 25, 0.8); }
+        :root { --neon: #22c55e; --bg: #050505; }
+        body { font-family: 'Cairo', sans-serif; background: var(--bg); color: white; }
         
-        /* خلفية الكسوف الملكي */
-        body { 
-            font-family: 'Cairo', sans-serif; background: #050505; color: white; overflow-x: hidden;
-            background-image: radial-gradient(circle at center, #0f172a 0%, #050505 100%);
+        .glass-card {
+            background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(20px);
+            border-radius: 35px; border: 1px solid rgba(255,255,255,0.05);
+            padding: 25px; transition: 0.5s;
         }
-
-        .price-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(25px);
-            border-radius: 40px; border: 1px solid rgba(255,255,255,0.03);
-            padding: 35px; transition: 0.7s cubic-bezier(0.19, 1, 0.22, 1);
-            position: relative;
-        }
-        .price-card:hover {
-            transform: translateY(-15px) scale(1.02);
-            border-color: var(--neon);
-            box-shadow: 0 30px 60px rgba(0,0,0,0.8), 0 0 20px rgba(34, 197, 94, 0.1);
-        }
+        .glass-card:hover { border-color: var(--neon); transform: translateY(-5px); }
 
         .khasm-btn {
             background: linear-gradient(135deg, #16a34a, #065f46);
-            border-radius: 22px; padding: 20px; font-weight: 900;
-            transition: 0.5s; text-align: center; cursor: pointer;
-            box-shadow: 0 10px 30px rgba(22, 163, 74, 0.2);
+            border-radius: 18px; padding: 15px; font-weight: 900;
+            text-align: center; cursor: pointer; transition: 0.3s;
         }
-        .khasm-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(22, 163, 74, 0.4); }
+        .khasm-btn:hover { box-shadow: 0 0 20px rgba(34, 197, 94, 0.4); }
 
-        .upload-area {
-            border: 2px dashed rgba(255,255,255,0.1);
-            border-radius: 20px; padding: 20px; cursor: pointer;
-            transition: 0.3s;
-        }
-        .upload-area:hover { border-color: var(--neon); background: rgba(34, 197, 94, 0.05); }
-
-        .status-pill { padding: 5px 15px; border-radius: 50px; font-size: 10px; font-weight: 900; }
+        .status-pill { padding: 4px 12px; border-radius: 50px; font-size: 10px; font-weight: 900; }
         .page.hidden { display: none; }
+        .modal { background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); }
     </style>
 </head>
 <body>
 
-    <header class="p-8 flex justify-between items-center sticky top-0 z-[1000] backdrop-blur-3xl border-b border-white/5">
-        <div class="flex flex-col">
-            <span class="text-3xl font-black text-green-500 italic tracking-tighter">KHASM SHOP</span>
-            <span id="userRank" class="text-[9px] text-gray-500 font-bold tracking-[0.3em]">ROYAL MEMBER</span>
+    <header class="p-6 sticky top-0 z-[1000] backdrop-blur-3xl border-b border-white/5 flex justify-between items-center">
+        <div>
+            <h1 class="text-2xl font-black text-green-500 italic">KHASM SHOP</h1>
+            <p id="userLabel" class="text-[10px] text-gray-500 font-bold uppercase">الرتبة: برونزي 🥉</p>
         </div>
-        <div class="flex items-center gap-4">
-            <div class="text-left bg-white/5 px-4 py-2 rounded-2xl border border-white/5">
-                <span id="userPointsDisplay" class="text-xl font-black text-yellow-400">0 ⭐</span>
-            </div>
+        <div class="bg-white/5 px-4 py-2 rounded-2xl border border-white/5">
+            <span id="userPointsDisplay" class="text-xl font-black text-yellow-400">0 ⭐</span>
         </div>
     </header>
 
     <main class="p-6 max-w-lg mx-auto mb-32">
         <div id="shopPage" class="page">
-            <div id="packagesGrid" class="grid grid-cols-1 gap-10">
-                </div>
+            <div id="packagesGrid" class="space-y-8"></div>
         </div>
 
-        <div id="myOrdersPage" class="page hidden space-y-4">
-            <h2 class="text-2xl font-black mb-6 text-green-500 italic">سجل العمليات 🛰️</h2>
+        <div id="myOrdersPage" class="page hidden">
+            <h2 class="text-xl font-black mb-6 text-green-500">تتبع عملياتك 🛰️</h2>
             <div id="userOrdersList" class="space-y-4"></div>
         </div>
 
         <div id="adminPage" class="page hidden">
-            <div class="flex gap-4 mb-10">
-                <button onclick="showAdminTab('orders')" class="flex-1 khasm-btn py-4 text-xs">طلبات الإمبراطورية</button>
-                <button onclick="showAdminTab('pkg')" class="flex-1 bg-gray-900 rounded-3xl text-[10px] font-black">المخزن</button>
+            <div class="flex gap-2 mb-6">
+                <button onclick="showAdminTab('orders')" class="flex-1 khasm-btn py-3 text-xs">إدارة الطلبات</button>
+                <button onclick="showAdminTab('pkg')" class="flex-1 bg-gray-800 rounded-2xl text-[10px] font-black">المخزن</button>
             </div>
             <div id="admin-orders" class="admin-sub space-y-4"></div>
-            <div id="admin-pkg" class="admin-sub hidden bg-white/5 p-8 rounded-[40px] border border-white/5">
-                <input id="pName" type="text" placeholder="اسم المنتج" class="w-full mb-4 p-4 bg-black rounded-2xl outline-none border border-white/5">
-                <input id="pAmount" type="text" placeholder="الكمية (مثال: 60 شدة)" class="w-full mb-4 p-4 bg-black rounded-2xl outline-none border border-white/5">
-                <input id="pPrice" type="number" placeholder="السعر" class="w-full mb-8 p-4 bg-black rounded-2xl outline-none border border-white/5">
-                <button onclick="addNewPkg()" class="w-full khasm-btn italic">إضافة للمتجر 🚀</button>
-                <div id="adminPkgList" class="mt-10 space-y-2"></div>
+            <div id="admin-pkg" class="admin-sub hidden bg-white/5 p-6 rounded-3xl border border-white/5">
+                <input id="pName" type="text" placeholder="اسم اللعبة" class="w-full mb-3 p-4 bg-black rounded-xl outline-none">
+                <input id="pAmount" type="text" placeholder="الكمية (60 شدة)" class="w-full mb-3 p-4 bg-black rounded-xl outline-none">
+                <input id="pPrice" type="number" placeholder="السعر" class="w-full mb-6 p-4 bg-black rounded-xl outline-none">
+                <button onclick="addNewPkg()" class="w-full khasm-btn">إضافة المنتج ✅</button>
+                <div id="adminPkgList" class="mt-6 space-y-2"></div>
             </div>
         </div>
     </main>
 
-    <nav class="fixed bottom-8 left-8 right-8 h-20 bg-black/40 backdrop-blur-3xl border border-white/10 rounded-[35px] flex justify-around items-center z-[2000]">
+    <nav class="fixed bottom-6 left-6 right-6 h-20 bg-black/40 backdrop-blur-3xl border border-white/10 rounded-[30px] flex justify-around items-center z-[2000]">
         <button onclick="showPage('shop')" class="flex flex-col items-center gap-1 text-green-500">
-            <i class="fas fa-gem text-xl"></i>
-            <span class="text-[9px] font-bold">الرئيسية</span>
+            <i class="fas fa-store text-xl"></i>
+            <span class="text-[9px] font-bold">المتجر</span>
         </button>
-        <button onclick="window.open('https://wa.me/249916581517')" class="w-16 h-16 bg-green-500 rounded-full -mt-12 border-[6px] border-[#050505] flex items-center justify-center shadow-2xl">
+        <button onclick="openAgentsModal('whatsapp')" class="w-16 h-16 bg-green-500 rounded-full -mt-10 border-[6px] border-[#050505] flex items-center justify-center shadow-2xl">
             <i class="fab fa-whatsapp text-3xl text-white"></i>
         </button>
-        <button id="adminTab" onclick="showPage('admin')" class="hidden flex flex-col items-center gap-1 text-red-500">
-            <i class="fas fa-crown text-xl"></i>
-        </button>
+        <button id="adminTab" onclick="showPage('admin')" class="hidden flex flex-col items-center gap-1 text-red-500"><i class="fas fa-crown text-xl"></i></button>
         <button onclick="showPage('myOrders')" class="flex flex-col items-center gap-1 text-gray-500">
-            <i class="fas fa-history text-xl"></i>
-            <span class="text-[9px] font-bold">الطلبات</span>
+            <i class="fas fa-search-location text-xl"></i>
+            <span class="text-[9px] font-bold">تتبع الطلب</span>
         </button>
     </nav>
 
-    <div id="paymentModal" class="fixed inset-0 bg-black/95 z-[3000] hidden flex items-center justify-center p-6 backdrop-blur-2xl">
-        <div class="price-card w-full max-w-sm border-green-500/20">
-            <h3 class="text-2xl font-black mb-8 text-green-500 italic">تأكيد العملية 👑</h3>
-            <input id="ingameName" type="text" placeholder="اسمك داخل اللعبة" class="w-full p-4 mb-4 bg-black rounded-2xl border border-white/10 outline-none text-center">
-            
-            <label class="upload-area flex flex-col items-center gap-2 mb-8" for="screenshotInput">
-                <i class="fas fa-camera text-2xl text-gray-500"></i>
-                <span class="text-[10px] text-gray-400 font-bold uppercase">إرفاق صورة الإشعار</span>
-                <input type="file" id="screenshotInput" class="hidden" accept="image/*">
-            </label>
-
-            <button onclick="confirmOrder()" class="w-full khasm-btn italic uppercase tracking-tighter">إرسال الطلب الآن 🛒</button>
-            <button onclick="closePayment()" class="w-full mt-4 text-gray-600 text-[10px] font-bold">تراجع</button>
+    <div id="agentsModal" class="fixed inset-0 z-[5000] hidden flex items-center justify-center p-6 modal">
+        <div class="glass-card w-full max-w-sm text-center">
+            <h3 class="text-xl font-black mb-6 text-green-500">اختر الوكيل المتاح 👤</h3>
+            <div class="space-y-3">
+                <button onclick="selectAgent('محمد فتحي', '249916581517')" class="w-full p-4 bg-white/5 rounded-2xl border border-white/5 flex justify-between items-center hover:border-green-500">
+                    <span>محمد فتحي</span><i class="fas fa-chevron-left text-xs text-gray-500"></i>
+                </button>
+                <button onclick="selectAgent('مهند ياسر', '249912345678')" class="w-full p-4 bg-white/5 rounded-2xl border border-white/5 flex justify-between items-center hover:border-green-500">
+                    <span>مهند ياسر</span><i class="fas fa-chevron-left text-xs text-gray-500"></i>
+                </button>
+            </div>
+            <button onclick="closeModal('agentsModal')" class="mt-6 text-gray-500 text-xs font-bold uppercase">إغلاق</button>
         </div>
+    </div>
+
+    <div id="loginOverlay" class="fixed inset-0 bg-[#050505] z-[9999] flex flex-col items-center justify-center p-8">
+        <div class="w-20 h-20 bg-white p-4 rounded-3xl mb-6 shadow-2xl">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Google_Play_Arrow_logo.svg" alt="GP">
+        </div>
+        <h2 class="text-2xl font-black mb-2">تسجيل الدخول</h2>
+        <p class="text-gray-500 text-sm mb-12">استخدم حساب Google Play للمتابعة</p>
+        <button onclick="login()" class="w-full max-w-xs bg-white text-black py-4 rounded-2xl font-black flex items-center justify-center gap-4">
+            <i class="fab fa-google"></i> تسجيل بواسطة Google
+        </button>
     </div>
 
     <script type="module">
@@ -132,8 +119,6 @@
             authDomain: "khasmshop.firebaseapp.com",
             databaseURL: "https://khasmshop-default-rtdb.firebaseio.com",
             projectId: "khasmshop",
-            storageBucket: "khasmshop.firebasestorage.app",
-            messagingSenderId: "238182001615",
             appId: "1:238182001615:web:4c7ddea335df2111b440ba"
         };
 
@@ -145,14 +130,18 @@
         const ADMIN_EMAIL = "mhmdfthu98@gmail.com";
         let currentUser = null;
         let selectedPkg = null;
+        let currentMode = 'whatsapp'; // whatsapp or order
 
         onAuthStateChanged(auth, user => {
             if(user) {
                 currentUser = user;
+                document.getElementById('loginOverlay').classList.add('hidden');
                 if(user.email === ADMIN_EMAIL) document.getElementById('adminTab').classList.remove('hidden');
                 loadData();
-            } else { signInWithPopup(auth, provider); }
+            } else { document.getElementById('loginOverlay').classList.remove('hidden'); }
         });
+
+        window.login = () => signInWithPopup(auth, provider);
 
         window.showPage = id => {
             document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
@@ -164,6 +153,34 @@
             document.getElementById('admin-' + id).classList.remove('hidden');
         };
 
+        window.openAgentsModal = (mode, pkgData = null) => {
+            currentMode = mode;
+            if(pkgData) {
+                const pid = document.getElementById(`id-${pkgData.key}`).value;
+                if(!pid) return alert("أدخل ID اللاعب!");
+                selectedPkg = {...pkgData, pid};
+            }
+            document.getElementById('agentsModal').classList.remove('hidden');
+        };
+
+        window.closeModal = id => document.getElementById(id).classList.add('hidden');
+
+        window.selectAgent = (name, phone) => {
+            if(currentMode === 'order') {
+                const orderId = "EM-" + Math.floor(1000 + Math.random() * 9000);
+                const orderData = {
+                    ...selectedPkg, orderId, agent: name,
+                    userId: currentUser.uid, userName: currentUser.displayName, status: "⏳ قيد المراجعة", date: new Date().toLocaleString('ar-EG')
+                };
+                push(ref(db, 'orders'), orderData);
+                const msg = `👑 *إمبراطورية الخصم للشحن*\n\n*الزبون:* ${currentUser.displayName}\n*الوكيل:* ${name}\n*رقم الطلب:* #${orderId}\n*العملية:* شحن ${selectedPkg.amount}\n*ID اللاعب:* ${selectedPkg.pid}\n*السعر:* ${selectedPkg.price} ج.س\n\n✅ *يرجى إرسال صورة الإشعار الآن لتأكيد الطلب.*`;
+                window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`);
+            } else {
+                window.open(`https://wa.me/${phone}?text=مرحباً، أريد الاستفسار عن خدماتكم`);
+            }
+            closeModal('agentsModal');
+        };
+
         window.addNewPkg = () => {
             const name = document.getElementById('pName').value;
             const amount = document.getElementById('pAmount').value;
@@ -171,37 +188,10 @@
             if(name && amount && price) push(ref(db, 'packages'), { name, amount, price });
         };
 
-        window.openPayment = (amount, price, name, i) => {
-            const pid = document.getElementById(`id-${i}`).value;
-            if(!pid) return alert("أدخل ID اللاعب!");
-            selectedPkg = { amount, price, name, pid };
-            document.getElementById('paymentModal').classList.remove('hidden');
-        };
-
-        window.closePayment = () => document.getElementById('paymentModal').classList.add('hidden');
-
-        window.confirmOrder = () => {
-            const igName = document.getElementById('ingameName').value;
-            const file = document.getElementById('screenshotInput').files[0];
-            if(!igName || !file) return alert("أكمل البيانات وارفع صورة الإشعار!");
-
-            const orderId = "EM-" + Math.floor(1000 + Math.random() * 9000);
-            push(ref(db, 'orders'), {
-                ...selectedPkg, orderId, ingameName: igName,
-                userId: currentUser.uid, userName: currentUser.displayName, status: "⏳ قيد المراجعة", date: new Date().toLocaleString('ar-EG')
-            });
-
-            const waMsg = `👑 *إمبراطورية الخصم للشحن* 👑\n\n*الزبون:* ${currentUser.displayName}\n*رقم الطلب:* #${orderId}\n*العملية:* شحن ${selectedPkg.amount}\n*ID اللاعب:* ${selectedPkg.pid}\n*السعر:* ${selectedPkg.price} ج.س\n\n✅ *يرجى إرسال الإشعار الآن لتأكيد الطلب.*`;
-            window.open(`https://wa.me/249916581517?text=${encodeURIComponent(waMsg)}`);
-            closePayment();
-        };
-
-        // نظام النقاط التلقائي المطور (60 شدة = 2 نقطة)
         window.updateStatus = (key, status, userId, amount) => {
             update(ref(db, `orders/${key}`), { status }).then(() => {
                 if(status === '✅ مكتمل') {
-                    // حساب النقاط بناءً على الطلب (إذا كان 60 شدة يأخذ 2 نقطة)
-                    let pts = amount.includes('60') ? 2 : 1; 
+                    let pts = amount.includes('60') ? 2 : 1;
                     const pRef = ref(db, `users/${userId}/points`);
                     get(pRef).then(s => set(pRef, (s.val() || 0) + pts));
                 }
@@ -210,28 +200,29 @@
 
         function loadData() {
             onValue(ref(db, `users/${currentUser.uid}/points`), s => {
-                document.getElementById('userPointsDisplay').innerText = `${s.val() || 0} ⭐`;
+                const pts = s.val() || 0;
+                document.getElementById('userPointsDisplay').innerText = `${pts} ⭐`;
+                document.getElementById('userLabel').innerText = pts > 100 ? "الرتبة: ملكي 👑" : pts > 50 ? "الرتبة: ذهبي 🏆" : "الرتبة: برونزي 🥉";
             });
 
             onValue(ref(db, 'packages'), s => {
                 const grid = document.getElementById('packagesGrid');
-                grid.innerHTML = '';
+                const adminL = document.getElementById('adminPkgList');
+                grid.innerHTML = ''; adminL.innerHTML = '';
                 s.forEach(c => {
                     const d = c.val();
                     grid.innerHTML += `
-                    <div class="price-card">
-                        <div class="absolute -top-4 right-8 bg-yellow-400 text-black px-6 py-1 rounded-full text-[10px] font-black shadow-xl animate-bounce">
-                            ${d.amount.includes('60') ? '+2 نقطة ⭐' : '+1 نقطة ⭐'}
+                    <div class="glass-card">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-3xl font-black text-green-500 italic">${d.amount}</h3>
+                            <span class="bg-yellow-400 text-black px-3 py-1 rounded-lg text-[9px] font-black">${d.amount.includes('60')?'+2 ⭐':'+1 ⭐'}</span>
                         </div>
-                        <h3 class="text-4xl font-black mb-1 italic text-green-500">${d.amount}</h3>
-                        <p class="text-[10px] text-gray-500 mb-8 font-black uppercase tracking-widest">${d.name}</p>
-                        <div class="flex items-end gap-2 mb-10">
-                            <span class="text-3xl font-black italic">${d.price}</span>
-                            <span class="text-xs text-gray-500 font-bold mb-1 italic">ج.س</span>
-                        </div>
-                        <input id="id-${c.key}" type="text" placeholder="أدخل ID اللاعب" class="w-full p-5 mb-4 bg-black/50 border border-white/5 rounded-3xl text-center outline-none focus:border-green-500 transition-all">
-                        <button onclick="openPayment('${d.amount}','${d.price}','${d.name}','${c.key}')" class="w-full khasm-btn italic">شحن فوري ⚡</button>
+                        <p class="text-[10px] text-gray-500 mb-6 font-bold">${d.name}</p>
+                        <div class="text-xl font-black mb-6">${d.price} ج.س</div>
+                        <input id="id-${c.key}" type="text" placeholder="أدخل ID اللاعب" class="w-full p-4 mb-4 bg-black rounded-xl border border-white/5 outline-none text-center focus:border-green-500 transition">
+                        <button onclick='openAgentsModal("order", ${JSON.stringify({...d, key: c.key})})' class="w-full khasm-btn">شحن عبر وكيل ⚡</button>
                     </div>`;
+                    adminL.innerHTML += `<div class="flex justify-between bg-white/5 p-3 rounded-xl mb-1 text-[10px]"><span>${d.amount}</span><button onclick="remove(ref(db,'packages/${c.key}'))" class="text-red-500">حذف</button></div>`;
                 });
             });
 
@@ -241,19 +232,21 @@
                 uL.innerHTML = ''; aL.innerHTML = '';
                 s.forEach(c => {
                     const d = c.val();
-                    const card = `<div class="price-card p-6 flex justify-between items-center">
-                        <div><p class="font-black text-sm">${d.amount}</p><p class="text-[9px] text-gray-500 mt-1 uppercase">${d.date}</p></div>
-                        <span class="status-pill ${d.status.includes('تم')?'bg-green-600':'bg-yellow-600'}">${d.status}</span>
+                    const sClass = d.status.includes('تم') ? 'bg-green-600' : d.status.includes('فشل') ? 'bg-red-600' : d.status.includes('جاري') ? 'bg-blue-600' : 'bg-yellow-600';
+                    const card = `<div class="glass-card p-5 flex justify-between items-center">
+                        <div><p class="font-black text-sm">${d.amount}</p><p class="text-[9px] text-gray-500 mt-1 uppercase">${d.agent} | ${d.date}</p></div>
+                        <span class="status-pill ${sClass}">${d.status}</span>
                     </div>`;
                     if(d.userId === currentUser.uid) uL.innerHTML += card;
                     if(currentUser.email === ADMIN_EMAIL) {
-                        aL.innerHTML += `<div class="price-card p-4 text-[10px]">
+                        aL.innerHTML += `<div class="glass-card p-4 text-[10px] mb-2">
                             <p>👤 ${d.userName} | 🆔 ${d.pid}</p>
-                            <p class="text-yellow-400 mb-3">🖼️ تأكد من استلام صورة الإشعار عبر واتساب</p>
+                            <p class="text-yellow-400 mb-3">وكيل الطلب: ${d.agent}</p>
                             <div class="flex gap-2">
-                                <button onclick="updateStatus('${c.key}','✅ مكتمل','${d.userId}','${d.amount}')" class="bg-green-600 px-4 py-2 rounded-xl">مكتمل</button>
-                                <button onclick="updateStatus('${c.key}','🔄 جاري التنفيذ','','')" class="bg-blue-600 px-4 py-2 rounded-xl">جاري</button>
-                                <button onclick="remove(ref(db,'orders/${c.key}'))" class="bg-red-600 px-4 py-2 rounded-xl">حذف</button>
+                                <button onclick="updateStatus('${c.key}','✅ مكتمل','${d.userId}','${d.amount}')" class="bg-green-600 px-3 py-2 rounded-xl">مكتمل</button>
+                                <button onclick="updateStatus('${c.key}','🔄 جاري التنفيذ','','')" class="bg-blue-600 px-3 py-2 rounded-xl">جاري</button>
+                                <button onclick="updateStatus('${c.key}','❌ فشل الطلب','','')" class="bg-red-600 px-3 py-2 rounded-xl">فشل</button>
+                                <button onclick="remove(ref(db,'orders/${c.key}'))" class="bg-gray-600 px-3 py-2 rounded-xl">حذف</button>
                             </div>
                         </div>`;
                     }
