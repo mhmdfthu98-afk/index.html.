@@ -3,62 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إمبراطورية الخصم | KHASM SHOP</title>
+    <title>KHASM SHOP | إمبراطورية الخصم الملكية</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
-        :root { --neon: #22c55e; --bg: #030303; }
-        body { font-family: 'Cairo', sans-serif; background: var(--bg); color: white; margin: 0; padding: 0; }
-        .glass-card { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(20px); border-radius: 25px; border: 1px solid rgba(255,255,255,0.08); }
-        .khasm-btn { background: linear-gradient(135deg, #16a34a, #065f46); border-radius: 18px; padding: 15px; font-weight: 900; color: white; width: 100%; cursor: pointer; border: none; }
-        .page { display: none; } .page.active { display: block; animation: fadeIn 0.3s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        nav button.active { color: var(--neon); }
-        input { background: rgba(255,255,255,0.05) !important; color: white !important; border: 1px solid rgba(255,255,255,0.1) !important; border-radius: 12px; padding: 10px; width: 100%; outline: none; }
+        :root { --neon: #22c55e; --bg: #030303; --gold: #f59e0b; }
+        body { font-family: 'Cairo', sans-serif; background: var(--bg); color: white; overflow-x: hidden; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        
+        /* تأثيرات الزجاج والفخامة */
+        .glass-card { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(20px); border-radius: 35px; border: 1px solid rgba(255,255,255,0.08); transition: 0.4s; }
+        .khasm-btn { background: linear-gradient(135deg, #16a34a, #065f46); border-radius: 22px; padding: 20px; font-weight: 900; text-align: center; cursor: pointer; color: white; width: 100%; border: none; display: block; box-shadow: 0 15px 35px rgba(22, 163, 74, 0.2); }
+        .khasm-btn:active { transform: scale(0.96); }
+
+        /* نظام الصفحات والأنيميشن */
+        .page { display: none; animation: slideUp 0.5s ease; }
+        .page.active { display: block; }
+        @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        /* السلايدر الثلاثي المتطور */
+        #slider-container { display: flex; transition: transform 0.8s cubic-bezier(0.7, 0, 0.3, 1); }
+        .slide-item { min-width: 100%; padding: 0 20px; box-sizing: border-box; }
+        .slide-box { height: 180px; border-radius: 45px; p: 2rem; display: flex; align-items: center; justify-content: space-between; position: relative; overflow: hidden; }
+        
+        .dot { width: 8px; height: 8px; background: #333; border-radius: 50%; transition: 0.4s; }
+        .dot.active { width: 30px; background: var(--neon); border-radius: 20px; }
+
+        /* الإشعارات */
+        .notif-box { position: fixed; top: 30px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: #111; border: 1px solid var(--neon); padding: 20px; border-radius: 25px; z-index: 10001; display: none; box-shadow: 0 20px 40px rgba(0,0,0,0.8); }
+        
+        nav button.active { color: var(--neon); transform: translateY(-5px); }
+        input { background: rgba(255,255,255,0.03) !important; color: white !important; border: 1px solid rgba(255,255,255,0.1) !important; border-radius: 18px; transition: 0.3s; }
+        input:focus { border-color: var(--neon) !important; background: rgba(255,255,255,0.06) !important; }
     </style>
 </head>
 <body>
 
-    <div id="loginOverlay" class="fixed inset-0 bg-black z-[9999] flex flex-col items-center justify-center p-8">
-        <h1 class="text-5xl font-black text-green-500 mb-8 italic">KHASM SHOP</h1>
-        <button id="loginBtn" class="w-full max-w-xs bg-white text-black py-4 rounded-full font-black flex items-center justify-center gap-3">
-            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" width="18"> دخول الإمبراطورية
+    <div id="loginOverlay" class="fixed inset-0 bg-[#030303] z-[10000] flex flex-col items-center justify-center p-10 text-center">
+        <div class="mb-10 scale-125">
+            <h1 class="text-7xl font-black text-green-500 italic tracking-tighter">KHASM</h1>
+            <p class="text-white tracking-[0.8em] text-[10px] font-bold mt-1">ROYAL SHOP</p>
+        </div>
+        <button id="loginBtn" class="w-full max-w-xs bg-white text-black py-6 rounded-full font-black flex items-center justify-center gap-4 shadow-[0_0_50px_rgba(255,255,255,0.1)] active:scale-90 transition-all">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" width="24"> دخول الإمبراطورية
         </button>
     </div>
 
-    <header class="p-5 sticky top-0 z-[5000] backdrop-blur-3xl border-b border-white/5 flex justify-between items-center">
-        <h2 class="text-xl font-black text-green-500 italic">KHASM SHOP</h2>
-        <div class="bg-yellow-500/10 px-4 py-2 rounded-xl border border-yellow-500/20 flex items-center gap-2">
-            <span id="pointsDisplay" class="text-lg font-black text-yellow-400">0</span><i class="fas fa-crown text-yellow-400 text-xs"></i>
+    <div id="popupNotif" class="notif-box">
+        <div class="flex items-center gap-4">
+            <div class="bg-green-500/20 p-3 rounded-full"><i class="fas fa-bell text-green-500"></i></div>
+            <div><h4 id="notifT" class="font-black text-sm"></h4><p id="notifD" class="text-[10px] text-gray-400"></p></div>
+        </div>
+    </div>
+
+    <header class="p-6 sticky top-0 z-[5000] backdrop-blur-3xl border-b border-white/5 flex justify-between items-center">
+        <div>
+            <h2 class="text-2xl font-black text-green-500 italic">KHASM SHOP</h2>
+            <p id="userStatus" class="text-[9px] text-gray-500 font-bold uppercase">Sudan Premium</p>
+        </div>
+        <div class="bg-amber-500/10 px-5 py-2 rounded-2xl border border-amber-500/20 flex items-center gap-2">
+            <span id="starsCount" class="text-xl font-black text-amber-500">0</span>
+            <i class="fas fa-crown text-amber-500 text-xs"></i>
         </div>
     </header>
 
-    <main class="p-5 max-w-lg mx-auto mb-28">
-        <section id="shopPage" class="page active space-y-5"><div id="pkgsGrid" class="space-y-5"></div></section>
-        <section id="ordersPage" class="page"><div id="userOrdersList" class="space-y-4 text-center opacity-50 pt-10">لا توجد طلبات قديمة</div></section>
-        <section id="adminPage" class="page">
-            <div class="flex gap-2 mb-5">
-                <button onclick="showTab('ord')" class="flex-1 py-3 bg-green-600 rounded-xl font-black text-[10px]">الطلبات</button>
-                <button id="invBtn" onclick="showTab('inv')" class="flex-1 py-3 bg-white/5 rounded-xl font-black text-[10px] hidden">المخزن</button>
-            </div>
-            <div id="tab-ord" class="tab-content space-y-4"></div>
-            <div id="tab-inv" class="tab-content hidden space-y-4">
-                <div class="glass-card p-5 space-y-3">
-                    <input id="nN" type="text" placeholder="اسم المنتج">
-                    <input id="nA" type="number" placeholder="الكمية">
-                    <input id="nP" type="number" placeholder="السعر">
-                    <button onclick="addPkg()" class="khasm-btn">إضافة منتج 🚀</button>
+    <div class="relative max-w-lg mx-auto mt-6 overflow-hidden">
+        <div id="slider-container">
+            <div class="slide-item">
+                <div class="slide-box bg-gradient-to-br from-green-600 to-black p-8">
+                    <div><h4 class="text-3xl font-black mb-1">شحن فوري ⚡</h4><p class="text-[11px] text-green-200 opacity-80">تسليم الطلبات في أقل من 5 دقائق</p></div>
+                    <i class="fas fa-bolt text-7xl text-white/10 absolute -left-4 -bottom-4"></i>
                 </div>
-                <div id="adminInvList" class="space-y-2"></div>
+            </div>
+            <div class="slide-item">
+                <div class="slide-box bg-gradient-to-br from-amber-600 to-black p-8">
+                    <div><h4 class="text-3xl font-black mb-1">هدايا النجوم ✨</h4><p class="text-[11px] text-amber-200 opacity-80">استبدل نجومك بشدات مجانية الآن</p></div>
+                    <i class="fas fa-gem text-7xl text-white/10 absolute -left-4 -bottom-4"></i>
+                </div>
+            </div>
+            <div class="slide-item">
+                <div class="slide-box bg-gradient-to-br from-blue-600 to-black p-8">
+                    <div><h4 class="text-3xl font-black mb-1">دعم 24/7 🛡️</h4><p class="text-[11px] text-blue-200 opacity-80">نحن معك دائماً لضمان حقك</p></div>
+                    <i class="fas fa-shield-alt text-7xl text-white/10 absolute -left-4 -bottom-4"></i>
+                </div>
+            </div>
+        </div>
+        <div class="flex justify-center gap-2 mt-5">
+            <div class="dot active" id="d0"></div><div class="dot" id="d1"></div><div class="dot" id="d2"></div>
+        </div>
+    </div>
+
+    <main class="p-6 max-w-lg mx-auto mb-32">
+        
+        <section id="page-shop" class="page active space-y-8">
+            <div id="pkgs-list" class="space-y-8"></div>
+        </section>
+
+        <section id="page-rewards" class="page space-y-6 text-center pt-10">
+            <div class="glass-card p-10">
+                <i class="fas fa-gift text-6xl text-amber-500 mb-4"></i>
+                <h3 class="text-2xl font-black">قريباً في الإمبراطورية</h3>
+                <p class="text-gray-500 text-sm mt-2">نظام استبدال النجوم بجوائز كبرى</p>
+            </div>
+        </section>
+
+        <section id="page-orders" class="page space-y-4">
+            <div id="user-orders" class="space-y-4"></div>
+        </section>
+
+        <section id="page-admin" class="page">
+            <div class="flex gap-2 mb-8 p-1 bg-white/5 rounded-2xl border border-white/5">
+                <button onclick="showAdmTab('orders')" id="btn-t-ord" class="flex-1 py-4 font-black text-[10px] rounded-xl bg-green-600">طلبات الزبائن</button>
+                <button id="btn-t-inv" onclick="showAdmTab('inventory')" class="flex-1 py-4 font-black text-[10px] rounded-xl hidden">إدارة المنتجات</button>
+            </div>
+            
+            <div id="adm-orders-view" class="adm-content space-y-4"></div>
+            
+            <div id="adm-inv-view" class="adm-content hidden space-y-6">
+                <div class="glass-card p-6 space-y-4 border-green-500/20">
+                    <h3 class="font-black text-center text-green-500">إضافة منتج جديد</h3>
+                    <input id="add-n" type="text" placeholder="اسم الحزمة (مثلاً: 60 شدة)" class="w-full p-4">
+                    <input id="add-a" type="number" placeholder="الكمية الرقمية (UC)" class="w-full p-4">
+                    <input id="add-p" type="number" placeholder="السعر بالجنيه السوداني" class="w-full p-4">
+                    <button onclick="pushNewPkg()" class="khasm-btn !py-4">اعتماد في المتجر ✅</button>
+                </div>
+                <div id="adm-pkgs-list" class="space-y-3"></div>
             </div>
         </section>
     </main>
 
-    <nav class="fixed bottom-6 inset-x-6 h-16 bg-black/90 backdrop-blur-xl border border-white/10 rounded-full flex justify-around items-center z-[8000]">
-        <button onclick="changePage('shop')" id="nav-shop" class="active"><i class="fas fa-shopping-cart text-lg"></i></button>
-        <button id="nav-admin" onclick="changePage('admin')" class="hidden text-red-500"><i class="fas fa-crown text-lg"></i></button>
-        <button onclick="changePage('orders')" id="nav-orders"><i class="fas fa-history text-lg"></i></button>
+    <nav class="fixed bottom-6 inset-x-6 h-20 bg-black/80 backdrop-blur-3xl border border-white/10 rounded-[40px] flex justify-around items-center z-[8000] px-4">
+        <button onclick="changePage('shop')" id="n-shop" class="flex flex-col items-center gap-1 text-[9px] font-black uppercase active"><i class="fas fa-shopping-cart text-xl"></i>المتجر</button>
+        <button onclick="changePage('rewards')" id="n-rewards" class="flex flex-col items-center gap-1 text-[9px] font-black uppercase text-amber-500"><i class="fas fa-gem text-xl"></i>الجوائز</button>
+        <button id="n-admin" onclick="changePage('admin')" class="hidden flex flex-col items-center gap-1 text-[9px] font-black uppercase text-red-500"><i class="fas fa-crown text-xl"></i>الإدارة</button>
+        <button onclick="changePage('orders')" id="n-orders" class="flex flex-col items-center gap-1 text-[9px] font-black uppercase"><i class="fas fa-history text-xl"></i>طلباتي</button>
     </nav>
 
     <script type="module">
@@ -66,87 +145,119 @@
         import { getDatabase, ref, push, onValue, remove, set, get, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
         import { getAuth, signInWithRedirect, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-        const conf = { apiKey: "AIzaSyC0jzecEwKgHpxHpTi8Y-_bwwfzVdtgf3E", authDomain: "khasmshop.firebaseapp.com", databaseURL: "https://khasmshop-default-rtdb.firebaseio.com", projectId: "khasmshop" };
-        const app = initializeApp(conf); const db = getDatabase(app); const auth = getAuth(app); const prov = new GoogleAuthProvider();
-        const ADM = "mhmdfthu98@gmail.com"; const AGT = ["mohnadyasir43@gmail.com", "muhammedaltaj111@gmail.com"];
+        const fbConf = { apiKey: "AIzaSyC0jzecEwKgHpxHpTi8Y-_bwwfzVdtgf3E", authDomain: "khasmshop.firebaseapp.com", databaseURL: "https://khasmshop-default-rtdb.firebaseio.com", projectId: "khasmshop" };
+        const app = initializeApp(fbConf); const db = getDatabase(app); const auth = getAuth(app); const provider = new GoogleAuthProvider();
+        
+        const MASTER_ADMIN = "mhmdfthu98@gmail.com";
+        const AGENTS = ["mohnadyasir43@gmail.com", "muhammedaltaj111@gmail.com"];
         let user = null;
 
-        document.getElementById('loginBtn').onclick = () => signInWithRedirect(auth, prov);
-        onAuthStateChanged(auth, u => { 
-            if(u) { 
+        document.getElementById('loginBtn').onclick = () => signInWithRedirect(auth, provider);
+        
+        onAuthStateChanged(auth, u => {
+            if(u) {
                 user = u; document.getElementById('loginOverlay').style.display='none';
+                document.getElementById('userStatus').innerText = u.displayName;
                 const email = u.email.toLowerCase();
-                if(email===ADM || AGT.includes(email)) {
-                    document.getElementById('nav-admin').classList.remove('hidden');
-                    if(email===ADM) document.getElementById('invBtn').classList.remove('hidden');
+                if(email === MASTER_ADMIN || AGENTS.includes(email)) {
+                    document.getElementById('n-admin').classList.remove('hidden');
+                    if(email === MASTER_ADMIN) document.getElementById('btn-t-inv').classList.remove('hidden');
                 }
-                startSync();
-            } 
+                initSync();
+            }
         });
 
         window.changePage = id => {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(id+'Page').classList.add('active');
+            document.getElementById('page-'+id).classList.add('active');
+            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+            document.getElementById('n-'+id).classList.add('active');
         };
 
-        window.showTab = t => {
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
-            document.getElementById('tab-'+t).classList.remove('hidden');
+        window.showAdmTab = t => {
+            document.querySelectorAll('.adm-content').forEach(v => v.classList.add('hidden'));
+            document.getElementById('adm-'+t+'-view').classList.remove('hidden');
+            document.getElementById('btn-t-ord').classList.toggle('bg-green-600', t==='orders');
+            document.getElementById('btn-t-inv').classList.toggle('bg-green-600', t==='inventory');
         };
 
-        window.addPkg = () => {
-            const n = document.getElementById('nN').value, a = document.getElementById('nA').value, p = document.getElementById('nP').value;
-            if(n && a && p) push(ref(db, 'packages'), { name: n, amount: a, price: p });
+        window.notify = (t, d) => {
+            const b = document.getElementById('popupNotif');
+            document.getElementById('notifT').innerText = t; document.getElementById('notifD').innerText = d;
+            b.style.display = 'block'; setTimeout(() => b.style.display = 'none', 4000);
         };
 
-        window.delPkg = k => { if(confirm("حذف نهائي؟")) remove(ref(db, `packages/${k}`)); };
-        window.hideOrd = k => { if(confirm("إخفاء من اللوحة؟")) set(ref(db, `hidden/${user.uid}/${k}`), true); };
-
-        window.doneOrd = (k, uid, amt) => {
-            update(ref(db, `orders/${k}`), { status: '✅ مكتمل' });
-            const sR = ref(db, `users/${uid}/stars`);
-            get(sR).then(s => set(sR, (s.val()||0) + Math.floor(amt/30)));
+        // --- وظائف الحذف الفوري والنهائي ---
+        window.forceDelete = (path) => {
+            if(confirm("هل أنت متأكد من الحذف النهائي؟ لا يمكن التراجع!")) {
+                remove(ref(db, path)).then(() => window.notify("تم الحذف", "تم إزالة البيانات من النظام بنجاح"));
+            }
         };
 
-        window.order = (amt, pr, k) => {
-            const id = document.getElementById('id-'+k).value;
-            if(!id) return alert("ضع الـ ID أولاً");
-            push(ref(db, 'orders'), { userName: user.displayName, userId: user.uid, amount: amt, pid: id, status: '⏳ معلق' });
-            window.open(`https://wa.me/249916581517?text=طلب: ${amt} شدة | ID: ${id}`);
+        window.pushNewPkg = () => {
+            const n = document.getElementById('add-n').value, a = document.getElementById('add-a').value, p = document.getElementById('add-p').value;
+            if(n && a && p) {
+                push(ref(db, 'packages'), { name: n, amount: a, price: p });
+                document.getElementById('add-n').value=''; document.getElementById('add-a').value=''; document.getElementById('add-p').value='';
+            }
         };
 
-        function startSync() {
+        window.confirmOrder = (key, uid, amt) => {
+            update(ref(db, `orders/${key}`), { status: '✅ مكتمل' });
+            const sRef = ref(db, `users/${uid}/stars`);
+            get(sRef).then(s => set(sRef, (s.val()||0) + Math.floor(amt/30)));
+        };
+
+        window.sendOrder = (amt, key) => {
+            const pid = document.getElementById('pid-'+key).value;
+            if(!pid || pid.length < 5) return alert("يرجى إدخال ID لاعب صحيح");
+            push(ref(db, 'orders'), { userName: user.displayName, userId: user.uid, amount: amt, pid: pid, status: '⏳ قيد المراجعة', date: new Date().toLocaleString('ar-EG') });
+            window.open(`https://wa.me/249916581517?text=طلب شحن إمبراطوري%0Aالكمية: ${amt} UC%0Aالآيدي: ${pid}`);
+        };
+
+        function initSync() {
             onValue(ref(db, 'packages'), snap => {
-                const g = document.getElementById('pkgsGrid'), i = document.getElementById('adminInvList');
-                g.innerHTML = ''; i.innerHTML = '';
+                const list = document.getElementById('pkgs-list'), admList = document.getElementById('adm-pkgs-list');
+                list.innerHTML = ''; admList.innerHTML = '';
                 snap.forEach(c => {
                     const d = c.val();
-                    g.innerHTML += `<div class="glass-card p-6 text-center">
-                        <h3 class="text-4xl font-black">${d.amount} UC</h3><p class="text-xl my-2">${d.price} ج.س</p>
-                        <input id="id-${c.key}" type="number" placeholder="ID اللاعب" class="mb-3 text-center">
-                        <button onclick="order('${d.amount}','${d.price}','${c.key}')" class="khasm-btn">اشحن الآن ⚡</button>
+                    list.innerHTML += `<div class="glass-card p-8 text-center border-b-8 border-green-600/20">
+                        <h3 class="text-5xl font-black italic mb-2">${d.amount} <span class="text-xs text-green-500 uppercase">UC</span></h3>
+                        <p class="text-3xl font-black mb-6">${d.price} <span class="text-xs opacity-50">SDG</span></p>
+                        <input id="pid-${c.key}" type="number" placeholder="أدخل ID اللاعب هنا" class="w-full p-5 text-center mb-5 font-black outline-none text-lg">
+                        <button onclick="sendOrder('${d.amount}','${c.key}')" class="khasm-btn">اطلب الشحن الآن 🚀</button>
                     </div>`;
-                    if(user.email.toLowerCase()===ADM) i.innerHTML += `<div class="flex justify-between p-3 bg-white/5 rounded-xl text-xs"><span>${d.amount} UC</span><button onclick="delPkg('${c.key}')" class="text-red-500">حذف</button></div>`;
+                    admList.innerHTML += `<div class="flex justify-between p-4 bg-white/5 rounded-2xl border border-white/5 items-center">
+                        <span class="font-bold text-sm">${d.amount} UC</span>
+                        <button onclick="forceDelete('packages/${c.key}')" class="text-red-500 bg-red-500/10 px-4 py-2 rounded-xl text-[10px] font-black uppercase">حذف نهائي</button>
+                    </div>`;
                 });
             });
 
-            onValue(ref(db, 'orders'), async snap => {
-                const aL = document.getElementById('tab-ord');
-                const hS = await get(ref(db, `hidden/${user.uid}`));
-                const hD = hS.val() || {};
-                aL.innerHTML = '';
+            onValue(ref(db, 'orders'), snap => {
+                const uOrders = document.getElementById('user-orders'), aOrders = document.getElementById('adm-orders-view');
+                uOrders.innerHTML = ''; aOrders.innerHTML = '';
                 snap.forEach(c => {
-                    const v = c.val(); if(!hD[c.key]) {
-                        aL.innerHTML += `<div class="glass-card p-4 space-y-2">
-                            <div class="flex justify-between text-[10px]"><span>👤 ${v.userName}</span><button onclick="hideOrd('${c.key}')" class="text-red-500 font-bold">إخفاء</button></div>
-                            <p class="text-xs">ID: <span class="select-all font-black">${v.pid}</span> | الكمية: ${v.amount}</p>
-                            ${v.status !== '✅ مكتمل' ? `<button onclick="doneOrd('${c.key}','${v.userId}',${v.amount})" class="w-full py-2 bg-green-600 rounded-lg text-[10px] font-black">إتمام ✅</button>` : `<div class="text-center text-green-500 text-[10px]">مكتمل</div>`}
+                    const v = c.val(), k = c.key;
+                    if(v.userId === user.uid) uOrders.innerHTML += `<div class="glass-card p-6 flex justify-between items-center"><div><p class="font-black text-xl">${v.amount} UC</p><p class="text-[10px] text-green-500 font-bold">${v.status}</p></div><i class="fas fa-history opacity-20"></i></div>`;
+                    
+                    if(user.email.toLowerCase() === MASTER_ADMIN || AGENTS.includes(user.email.toLowerCase())) {
+                        aOrders.innerHTML += `<div class="glass-card p-5 space-y-4 border-l-4 border-green-500">
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs font-black text-green-500">👤 ${v.userName}</span>
+                                <button onclick="forceDelete('orders/${k}')" class="text-red-500 text-[10px] font-black"><i class="fas fa-trash"></i> مسح الطلب</button>
+                            </div>
+                            <div class="bg-black/40 p-4 rounded-2xl text-sm font-bold">الآيدي: <span class="select-all text-green-400">${v.pid}</span> <br> الكمية: ${v.amount} UC</div>
+                            ${v.status !== '✅ مكتمل' ? `<button onclick="confirmOrder('${k}','${v.userId}',${v.amount})" class="w-full bg-green-600 py-4 rounded-2xl font-black text-xs shadow-lg">إكمال وشحن ✅</button>` : `<div class="text-center text-green-500 text-xs font-black py-3 bg-green-500/10 rounded-2xl">تم التسليم بنجاح</div>`}
                         </div>`;
                     }
                 });
             });
-            onValue(ref(db, `users/${user.uid}/stars`), s => document.getElementById('pointsDisplay').innerText = s.val() || 0);
+            onValue(ref(db, `users/${user.uid}/stars`), s => document.getElementById('starsCount').innerText = s.val() || 0);
         }
+
+        // تحريك السلايدر الإعلاني
+        let cur = 0; setInterval(() => { cur = (cur+1)%3; document.getElementById('slider-container').style.transform = `translateX(${cur*100}%)`; document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i===cur)); }, 5000);
     </script>
 </body>
 </html>
