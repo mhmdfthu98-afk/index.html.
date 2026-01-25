@@ -345,3 +345,4 @@ onAuthStateChanged(auth, u => {
     }
 });
 window.handleRedeem=()=>{const pid=document.getElementById('redeem-pid').value;if(!pid)return alert("أدخل ID المستلم");get(ref(db,`users/${user.uid}/points`)).then(s=>{const p=s.val()||0;if(p>=30){set(ref(db,`users/${user.uid}/points`),p-30);push(ref(db,'orders'),{uid
+
