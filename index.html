@@ -12,149 +12,160 @@
     <style>
         :root { 
             --gold: #d4af37; 
-            --main-green: #064e3b;
-            --accent-green: #10b981;
-            --bg-dark: #020617;
+            --emerald: #10b981;
+            --deep-bg: #010403;
         }
         
         body { 
             font-family: 'Cairo', sans-serif; 
-            /* خلفية خضراء متدرجة فخمة ومريحة للعين */
-            background: radial-gradient(circle at top right, #064e3b 0%, #022c22 40%, #010403 100%);
+            background-color: var(--deep-bg);
             color: #e2e2e2; 
             min-height: 100vh;
             overflow-x: hidden;
+            margin: 0;
         }
-        
-        /* تأثير السعر المتحرك الفخم */
+
+        /* خلفية متحركة فخمة جداً */
+        #bg-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at center, #064e3b 0%, #010403 100%);
+        }
+
+        /* تأثير السعر المتحرك الفخم - تم إصلاح الظهور */
         .animated-price {
             font-weight: 900;
-            background: linear-gradient(to right, #fff, #d4af37, #10b981, #fff);
+            display: inline-block;
+            background: linear-gradient(90deg, #fff, var(--gold), var(--emerald), #fff);
             background-size: 200% auto;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             animation: shine 3s linear infinite;
-            filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.3));
+            font-size: 1.25rem;
         }
 
         @keyframes shine {
             to { background-position: 200% center; }
         }
 
-        /* بطاقات زجاجية فخمة */
+        /* بطاقات زجاجية محسنة */
         .royal-card {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(16, 185, 129, 0.1);
-            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 28px;
             padding: 24px;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
         
         .royal-card:hover { 
-            background: rgba(16, 185, 129, 0.05);
-            border-color: var(--accent-green);
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            border-color: var(--emerald);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(16, 185, 129, 0.15);
         }
 
         .gold-btn {
-            background: linear-gradient(135deg, #10b981, #064e3b);
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+            background: linear-gradient(135deg, var(--emerald), #064e3b);
             color: white;
-            font-weight: 800;
+            font-weight: 900;
             padding: 16px;
-            border-radius: 16px;
+            border-radius: 18px;
             width: 100%;
             transition: 0.3s;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
         }
         
         .gold-btn:hover {
-            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
-            transform: brightness(1.2);
+            transform: scale(1.02);
+            filter: brightness(1.2);
         }
 
         .bottom-nav {
-            background: rgba(1, 15, 12, 0.85);
-            backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(16, 185, 129, 0.1);
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(25px);
+            border-top: 1px solid rgba(16, 185, 129, 0.2);
         }
 
-        .nav-btn.active { color: var(--accent-green); }
+        .nav-btn.active { color: var(--emerald); }
 
         input, select {
-            background: rgba(0,0,0,0.3) !important;
-            border: 1px solid rgba(16, 185, 129, 0.2) !important;
+            background: rgba(0,0,0,0.4) !important;
+            border: 1px solid rgba(16, 185, 129, 0.3) !important;
             border-radius: 15px !important;
             color: white !important;
+            padding: 12px !important;
+            outline: none;
         }
 
-        .page { display: none; padding: 20px; padding-bottom: 120px; animation: slideIn 0.5s ease; }
+        .page { display: none; padding: 20px; padding-bottom: 120px; animation: fadeIn 0.6s ease; }
         .active-page { display: block; }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <header class="p-5 bg-transparent sticky top-0 z-50 flex justify-between items-center backdrop-blur-md">
+    <canvas id="bg-canvas"></canvas>
+
+    <header class="p-5 bg-transparent sticky top-0 z-50 flex justify-between items-center backdrop-blur-md border-b border-white/5">
         <div class="flex items-center gap-4">
-            <button onclick="logout()" class="text-emerald-500 bg-emerald-500/10 p-2 rounded-xl"><i class="fas fa-power-off"></i></button>
+            <button onclick="logout()" class="text-emerald-400 bg-emerald-950/50 p-2 rounded-xl border border-emerald-500/20"><i class="fas fa-power-off"></i></button>
             <div>
-                <h1 class="text-xl font-black text-emerald-400 tracking-tighter">KHASM SHOP</h1>
-                <p id="user-welcome" class="text-[10px] text-emerald-500/70 font-bold uppercase">الإمبراطورية الخضراء</p>
+                <h1 class="text-xl font-black text-emerald-400 tracking-widest">KHASM SHOP</h1>
+                <p id="user-welcome" class="text-[10px] text-emerald-500/70 font-bold uppercase">التميز في الشحن</p>
             </div>
         </div>
-        <div class="bg-emerald-500/10 border border-emerald-500/20 px-5 py-2 rounded-2xl shadow-lg shadow-emerald-900/20">
+        <div class="bg-emerald-900/30 border border-emerald-500/30 px-6 py-2 rounded-2xl shadow-xl">
             <span id="pts-display" class="text-2xl font-black text-emerald-400">0</span>
-            <span class="text-[9px] block text-emerald-600 font-bold uppercase">Points</span>
+            <span class="text-[9px] block text-emerald-500 font-bold text-center">نقطة</span>
         </div>
     </header>
 
     <main id="app">
         <section id="shop-page" class="page active-page">
-            <div class="mb-8">
-                <h2 class="text-2xl font-black text-white">المتجر الملكي</h2>
-                <p class="text-emerald-500 text-xs">اختر باقتك المفضلة بأسعار تنافسية</p>
-            </div>
+            <h2 class="text-2xl font-black text-white mb-6 border-r-4 border-emerald-500 pr-4">المتجر الملكي</h2>
             <div id="products-grid" class="grid gap-6"></div>
         </section>
 
         <section id="points-page" class="page">
-            <h2 class="text-2xl font-black mb-8 text-white">استرداد الجوائز</h2>
-            <div class="royal-card text-center relative overflow-hidden">
-                <div class="absolute -top-10 -right-10 w-32 h-32 bg-emerald-500/10 rounded-full blur-3xl"></div>
-                <i class="fas fa-gift text-5xl text-emerald-500 mb-4"></i>
+            <h2 class="text-2xl font-black mb-8 text-white border-r-4 border-emerald-500 pr-4">هدايا النقاط</h2>
+            <div class="royal-card text-center">
+                <i class="fas fa-crown text-6xl text-emerald-500 mb-4 drop-shadow-lg"></i>
                 <h3 class="text-2xl font-black text-white">60 شدة مجانية</h3>
-                <p class="text-emerald-500/60 mb-6 italic">مقابل 30 نقطة فقط</p>
-                <input type="number" id="redeem-id" placeholder="ID اللاعب">
-                <button onclick="redeemPoints()" class="gold-btn">استبدال الآن 💎</button>
+                <p class="text-emerald-400/70 mb-6 italic">استبدل 30 نقطة الآن</p>
+                <input type="number" id="redeem-id" placeholder="ID اللاعب" class="w-full mb-4 text-center">
+                <button onclick="redeemPoints()" class="gold-btn">تأكيد الاستبدال 💎</button>
             </div>
         </section>
 
         <section id="tracking-page" class="page">
-            <h2 class="text-2xl font-black mb-8 text-white">تتبع طلباتي</h2>
+            <h2 class="text-2xl font-black mb-8 text-white border-r-4 border-emerald-500 pr-4">تتبع الطلبات</h2>
             <div id="user-orders-list" class="space-y-6"></div>
         </section>
 
         <section id="admin-page" class="page">
-            <h2 class="text-2xl font-black mb-8 text-red-500">لوحة التحكم</h2>
+            <h2 class="text-2xl font-black mb-8 text-red-500">الإدارة</h2>
             <div id="admin-orders-list" class="space-y-6 mb-12"></div>
-            <div id="master-tools" class="hidden border-t border-emerald-500/10 pt-10">
+            <div id="master-tools" class="hidden border-t border-white/10 pt-10">
                 <div class="royal-card">
-                    <h3 class="font-bold mb-4">إضافة حزمة للمتجر</h3>
-                    <input type="text" id="new-amt" placeholder="الكمية">
-                    <input type="number" id="new-prc" placeholder="السعر">
-                    <button onclick="addPackage()" class="gold-btn">اعتماد الحزمة</button>
+                    <h3 class="font-bold mb-4 text-emerald-500">إضافة حزمة</h3>
+                    <input type="text" id="new-amt" placeholder="الكمية (مثلاً 60 شدة)" class="w-full mb-2">
+                    <input type="number" id="new-prc" placeholder="السعر بالـ SDG" class="w-full mb-4">
+                    <button onclick="addPackage()" class="gold-btn">نشر في المتجر</button>
                 </div>
             </div>
         </section>
     </main>
 
     <nav class="bottom-nav fixed bottom-0 left-0 right-0 flex justify-around p-4 z-50">
-        <div onclick="changePage('shop-page', this)" class="nav-btn active text-center"><i class="fas fa-store text-xl mb-1 block"></i><span class="text-[10px]">المتجر</span></div>
-        <div onclick="changePage('points-page', this)" class="nav-btn text-center"><i class="fas fa-star text-xl mb-1 block"></i><span class="text-[10px]">النقاط</span></div>
-        <div onclick="changePage('tracking-page', this)" class="nav-btn text-center"><i class="fas fa-history text-xl mb-1 block"></i><span class="text-[10px]">طلباتي</span></div>
-        <div id="admin-nav" onclick="changePage('admin-page', this)" class="nav-btn hidden text-red-500 text-center"><i class="fas fa-user-shield text-xl mb-1 block"></i><span class="text-[10px]">الإدارة</span></div>
+        <div onclick="changePage('shop-page', this)" class="nav-btn active text-center"><i class="fas fa-store-alt text-xl mb-1 block"></i><span class="text-[10px]">المتجر</span></div>
+        <div onclick="changePage('points-page', this)" class="nav-btn text-center"><i class="fas fa-gift text-xl mb-1 block"></i><span class="text-[10px]">النقاط</span></div>
+        <div onclick="changePage('tracking-page', this)" class="nav-btn text-center"><i class="fas fa-stream text-xl mb-1 block"></i><span class="text-[10px]">طلباتي</span></div>
+        <div id="admin-nav" onclick="changePage('admin-page', this)" class="nav-btn hidden text-red-500 text-center"><i class="fas fa-user-crown text-xl mb-1 block"></i><span class="text-[10px]">المدير</span></div>
     </nav>
 
     <script type="module">
@@ -177,26 +188,50 @@
         const STAFF = ["mohnadyasir43@gmail.com", "muhammedaltaj111@gmail.com"];
         let currentUser = null;
 
-        // دالة تسجيل الدخول التلقائي
-        const autoLogin = async () => {
-            const provider = new GoogleAuthProvider();
-            try { await signInWithPopup(auth, provider); } catch(e) { console.error(e); }
-        };
+        // إعداد الخلفية المتحركة
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        function initBg() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            particles = [];
+            for(let i=0; i<50; i++) {
+                particles.push({
+                    x: Math.random()*canvas.width,
+                    y: Math.random()*canvas.height,
+                    r: Math.random()*2+1,
+                    v: Math.random()*0.5+0.2
+                });
+            }
+        }
+        function animateBg() {
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            ctx.fillStyle = "rgba(16, 185, 129, 0.3)";
+            particles.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+                ctx.fill();
+                p.y -= p.v;
+                if(p.y < -10) p.y = canvas.height+10;
+            });
+            requestAnimationFrame(animateBg);
+        }
+        initBg(); animateBg(); window.onresize = initBg;
 
         onAuthStateChanged(auth, u => {
             if (u) {
                 currentUser = u;
-                document.getElementById('user-welcome').innerText = u.displayName.split(' ')[0];
-                const email = u.email.toLowerCase();
-                if (email === MASTER || STAFF.includes(email)) {
+                document.getElementById('user-welcome').innerText = u.displayName;
+                if (u.email.toLowerCase() === MASTER || STAFF.includes(u.email.toLowerCase())) {
                     document.getElementById('admin-nav').classList.remove('hidden');
-                    if(email === MASTER) document.getElementById('master-tools').classList.remove('hidden');
+                    if(u.email.toLowerCase() === MASTER) document.getElementById('master-tools').classList.remove('hidden');
                 }
                 loadCoreData();
-            } else { autoLogin(); }
+            } else { signInWithPopup(auth, new GoogleAuthProvider()); }
         });
 
-        window.logout = () => confirm("تسجيل الخروج؟") && signOut(auth).then(() => location.reload());
+        window.logout = () => signOut(auth).then(() => location.reload());
 
         window.changePage = (id, btn) => {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
@@ -213,116 +248,82 @@
                     const p = child.val(); const k = child.key;
                     grid.innerHTML += `
                     <div class="royal-card">
-                        <div class="flex justify-between mb-4">
+                        <div class="flex justify-between items-start mb-6">
                             <div>
                                 <h3 class="text-2xl font-black text-white">${p.amount}</h3>
-                                <div class="animated-price text-xl">${p.price} SDG</div>
+                                <div class="animated-price">${p.price} SDG</div>
                             </div>
-                            ${currentUser.email.toLowerCase() === MASTER ? `<button onclick="deletePackage('${k}')" class="text-red-500/50 hover:text-red-500"><i class="fas fa-trash-alt"></i></button>` : ''}
+                            ${currentUser.email.toLowerCase() === MASTER ? `<button onclick="deletePackage('${k}')" class="text-red-500/40"><i class="fas fa-trash"></i></button>` : ''}
                         </div>
-                        <select id="ag-${k}" class="mb-3">
-                            <option value="249907760989">المدير محمد فتحي</option>
-                            <option value="249914178935">مهند ياسر</option>
+                        <select id="ag-${k}" class="w-full mb-2">
+                            <option value="249907760989">مهند ياسر بلوله</option>
+                            <option value="249914178935">محمد فتحي</option>
                             <option value="249916581517">محمد التاج</option>
                         </select>
-                        <input type="number" id="id-${k}" placeholder="ID اللاعب" class="mb-4">
+                        <input type="number" id="id-${k}" placeholder="ID اللاعب" class="w-full mb-4">
                         <button onclick="placeOrder('${p.amount}', '${p.price}', '${k}')" class="gold-btn">شحن فوري 🚀</button>
                     </div>`;
                 });
             });
 
             onValue(ref(db, 'orders'), snap => {
-                const userList = document.getElementById('user-orders-list');
-                const adminList = document.getElementById('admin-orders-list');
-                userList.innerHTML = ''; adminList.innerHTML = '';
+                const uL = document.getElementById('user-orders-list');
+                const aL = document.getElementById('admin-orders-list');
+                uL.innerHTML = ''; aL.innerHTML = '';
                 snap.forEach(child => {
                     const o = child.val(); const k = child.key;
-                    let clr = "emerald-500", lbl = "قيد الانتظار";
-                    if(o.status === "جاري التنفيذ") { clr = "blue-400"; lbl = "جاري تنفيذ طلبك.."; }
-                    if(o.status === "مكتمل") { clr = "emerald-400"; lbl = "تم الشحن بنجاح ✅"; }
-                    if(o.status === "فشل") { clr = "red-500"; lbl = "فشل الطلب ❌"; }
-
+                    let cl = o.status === "مكتمل" ? "emerald" : o.status === "فشل" ? "red" : "blue";
                     const html = `
-                    <div class="royal-card border-r-4 border-${clr.split('-')[0]}-600/50">
+                    <div class="royal-card border-r-4 border-${cl}-500">
                         <div class="flex justify-between text-[10px] text-white/30 mb-2"><span>#${k.substring(1,7)}</span><span>${o.time}</span></div>
-                        <h4 class="font-bold text-white mb-2">${o.amount}</h4>
-                        <div class="flex justify-between items-center bg-white/5 p-2 rounded-xl">
-                            <span class="text-${clr} font-bold text-xs">${lbl}</span>
-                            <span class="text-[10px] text-white/40">ID: ${o.pid}</span>
-                        </div>
+                        <h4 class="font-bold text-white">${o.amount}</h4>
+                        <p class="text-[11px] text-${cl}-400 mt-1">${o.status === "قيد الانتظار" ? "جاري المعالجة..." : o.status}</p>
                     </div>`;
-                    if(o.uid === currentUser.uid) userList.innerHTML += html;
+                    if(o.uid === currentUser.uid) uL.innerHTML += html;
                     if(currentUser.email.toLowerCase() === MASTER || STAFF.includes(currentUser.email.toLowerCase())) {
-                        const locked = (o.status === 'مكتمل' || o.status === 'فشل');
-                        adminList.innerHTML += `
-                        <div class="royal-card border-l-4 border-emerald-500/20">
-                            <div class="flex justify-between items-center mb-3 text-xs"><b>${o.customer}</b><button onclick="deleteOrder('${k}')" class="text-red-500/30"><i class="fas fa-times"></i></button></div>
-                            <div class="text-emerald-400 font-bold mb-4 text-xs">${o.amount} | ID: ${o.pid}</div>
-                            <div class="flex gap-2 ${locked ? 'opacity-20 pointer-events-none' : ''}">
-                                <button onclick="updateStatus('${k}', 'مكتمل', '${o.uid}', '${o.amount}')" class="flex-1 bg-emerald-500/20 text-emerald-400 py-3 rounded-xl text-[10px] font-bold">إكمال</button>
-                                <button onclick="updateStatus('${k}', 'جاري التنفيذ')" class="flex-1 bg-blue-500/20 text-blue-400 py-3 rounded-xl text-[10px] font-bold">تنفيذ</button>
-                                <button onclick="updateStatus('${k}', 'فشل')" class="flex-1 bg-red-500/20 text-red-400 py-3 rounded-xl text-[10px] font-bold">رفض</button>
+                        aL.innerHTML += `<div class="royal-card mb-4 text-xs">
+                            <b>${o.customer}</b> | ${o.amount}<br>ID: ${o.pid}<br>
+                            <div class="flex gap-2 mt-3">
+                                <button onclick="updateStatus('${k}', 'مكتمل', '${o.uid}', '${o.amount}')" class="bg-emerald-600 px-3 py-1 rounded">إكمال</button>
+                                <button onclick="updateStatus('${k}', 'فشل')" class="bg-red-600 px-3 py-1 rounded">رفض</button>
                             </div>
                         </div>`;
                     }
                 });
             });
 
-            onValue(ref(db, `users/${currentUser.uid}/pts`), s => {
-                document.getElementById('pts-display').innerText = s.val() || 0;
-            });
+            onValue(ref(db, `users/${currentUser.uid}/pts`), s => document.getElementById('pts-display').innerText = s.val() || 0);
         }
 
         window.placeOrder = (amt, prc, k) => {
             const pid = document.getElementById(`id-${k}`).value;
             const ag = document.getElementById(`ag-${k}`);
-            if(pid.length < 5) return alert("ID غير صحيح!");
+            if(pid.length < 5) return alert("الآيدي غير صحيح!");
             const data = {
                 uid: currentUser.uid, customer: currentUser.displayName,
                 amount: amt, price: prc, pid: pid, agent: ag.options[ag.selectedIndex].text,
                 status: "قيد الانتظار", time: new Date().toLocaleString('ar-EG')
             };
             push(ref(db, 'orders'), data).then(() => {
-                window.open(`https://wa.me/${ag.value}?text=${encodeURIComponent("🔥 طلب شحن جديد\nالعميل: "+data.customer+"\nالكمية: "+amt+"\nID: "+pid)}`);
+                // رسالة الواتساب المطلوبة
+                const msg = `👑 *طلب شحن من KHASM SHOP*\n\n👤 *الزبون:* ${data.customer}\n💎 *الكمية:* ${amt}\n💰 *المبلغ:* ${prc} SDG\n🆔 *الآيدي:* ${pid}\n🛡️ *الوكيل:* 🛡️ ${data.agent}`;
+                window.open(`https://wa.me/${ag.value}?text=${encodeURIComponent(msg)}`);
                 changePage('tracking-page', document.querySelectorAll('.nav-btn')[2]);
             });
         };
 
-        window.redeemPoints = () => {
-            const pid = document.getElementById('redeem-id').value;
-            if(pid.length < 5) return alert("أدخل ID صحيح!");
-            const ptsRef = ref(db, `users/${currentUser.uid}/pts`);
-            get(ptsRef).then(snap => {
-                const current = snap.val() || 0;
-                if(current < 30) return alert("نقاطك غير كافية!");
-                if(confirm("استبدال 30 نقطة بـ 60 شدة؟")) {
-                    update(ref(db, `users/${currentUser.uid}`), { pts: current - 30 });
-                    push(ref(db, 'orders'), {
-                        uid: currentUser.uid, customer: currentUser.displayName,
-                        amount: "60 شدة (استبدال نقاط)", price: "0", pid: pid,
-                        agent: "المدير محمد فتحي", status: "قيد الانتظار", time: new Date().toLocaleString('ar-EG')
-                    });
-                    changePage('tracking-page', document.querySelectorAll('.nav-btn')[2]);
-                }
-            });
-        };
-
-        window.updateStatus = (key, status, userUid, orderAmount) => {
-            update(ref(db, `orders/${key}`), { status });
-            if(status === "مكتمل" && userUid && orderAmount) {
-                const r = ref(db, `users/${userUid}/pts`);
-                get(r).then(s => {
-                    let num = parseInt(orderAmount.replace(/[^0-9]/g, ''));
-                    if(!isNaN(num) && num >= 60) {
-                        let bonus = Math.floor(num / 60) * 2;
-                        update(ref(db, `users/${userUid}`), { pts: (s.val() || 0) + bonus });
-                    }
+        window.updateStatus = (k, s, u, a) => {
+            update(ref(db, `orders/${k}`), {status: s});
+            if(s === "مكتمل" && u) {
+                get(ref(db, `users/${u}/pts`)).then(snap => {
+                    let pts = snap.val() || 0;
+                    let num = parseInt(a.replace(/[^0-9]/g, ''));
+                    if(num >= 60) update(ref(db, `users/${u}`), {pts: pts + Math.floor(num/60)*2});
                 });
             }
         };
 
-        window.deleteOrder = k => confirm("حذف؟") && remove(ref(db, `orders/${k}`));
-        window.deletePackage = k => confirm("حذف الحزمة؟") && remove(ref(db, `packages/${k}`));
+        window.deletePackage = k => confirm("حذف؟") && remove(ref(db, `packages/${k}`));
         window.addPackage = () => {
             const a = document.getElementById('new-amt').value, p = document.getElementById('new-prc').value;
             if(a && p) push(ref(db, 'packages'), { amount: a, price: p });
