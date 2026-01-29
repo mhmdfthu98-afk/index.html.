@@ -10,147 +10,154 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
-        :root { --gold: #f59e0b; --dark-card: #0f0f0f; --neon-border: rgba(245, 158, 11, 0.2); }
-        body { font-family: 'Cairo', sans-serif; background: #050505; color: #fff; overflow-x: hidden; }
-        
-        /* إعلانات متحركة فخمة */
-        .slider-container { width: 100%; overflow: hidden; position: relative; height: 160px; margin-bottom: 20px; border-radius: 15px; }
-        .slider { display: flex; transition: transform 0.5s ease-in-out; height: 100%; }
-        .slide { min-width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-weight: 900; text-align: center; padding: 20px; position: relative; }
-        .slide-1 { background: linear-gradient(45deg, #1a1a1a, #92400e); }
-        .slide-2 { background: linear-gradient(45deg, #0f172a, #1e40af); }
-        .slide-3 { background: linear-gradient(45deg, #1e1b4b, #4c1d95); }
-
-        .royal-card {
-            background: var(--dark-card);
-            border: 1px solid var(--neon-border);
-            border-radius: 20px; padding: 20px; transition: 0.3s; position: relative;
+        :root { 
+            --gold: #d4af37; 
+            --bg-deep: #0a0a0b;
+            --bg-soft: #141416;
+            --card-border: rgba(212, 175, 55, 0.1);
         }
-        .royal-card:hover { border-color: var(--gold); transform: translateY(-3px); }
+        
+        body { 
+            font-family: 'Cairo', sans-serif; 
+            background: radial-gradient(circle at top, #1a1a1c 0%, #0a0a0b 100%);
+            color: #e2e2e2; 
+            overflow-x: hidden; 
+            min-height: 100vh;
+        }
+        
+        /* تصميم فخم وهادئ للبطاقات */
+        .royal-card {
+            background: var(--bg-soft);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 24px;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .royal-card:hover { 
+            border-color: var(--gold);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(212, 175, 55, 0.05);
+        }
 
-        .progress-track { height: 8px; background: #1a1a1a; border-radius: 10px; margin: 15px 0; overflow: hidden; }
-        .progress-fill { height: 100%; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); }
-        .status-pending { width: 25%; background: #f59e0b; }
-        .status-processing { width: 60%; background: #3b82f6; }
-        .status-completed { width: 100%; background: #10b981; }
-        .status-failed { width: 100%; background: #ef4444; }
+        /* شريط التقدم بلمسة هادئة */
+        .progress-track { height: 6px; background: #222; border-radius: 20px; margin: 20px 0; overflow: hidden; }
+        .progress-fill { height: 100%; transition: width 1.2s ease; }
+        .status-pending { background: #b8860b; }
+        .status-processing { background: #4a90e2; }
+        .status-completed { background: #2d6a4f; }
+        .status-failed { background: #7b1d1d; }
 
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; right: 0;
-            background: rgba(10, 10, 10, 0.98); backdrop-filter: blur(15px);
-            border-top: 1px solid #222; display: flex; justify-content: space-around;
-            padding: 12px 0; z-index: 1000;
+            background: rgba(10, 10, 11, 0.9);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            display: flex; justify-content: space-around;
+            padding: 15px 0; z-index: 1000;
         }
-        .nav-btn { color: #555; text-align: center; font-size: 11px; cursor: pointer; transition: 0.3s; }
-        .nav-btn.active { color: var(--gold); transform: scale(1.1); }
-        .nav-btn i { font-size: 22px; display: block; margin-bottom: 4px; }
+        .nav-btn { color: #666; text-align: center; font-size: 11px; cursor: pointer; transition: 0.3s; }
+        .nav-btn.active { color: var(--gold); text-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
+        .nav-btn i { font-size: 22px; display: block; margin-bottom: 5px; }
 
         input, select {
-            background: #111 !important; border: 1px solid #222 !important;
-            color: #fff !important; padding: 14px !important; border-radius: 12px !important;
-            width: 100%; margin-bottom: 10px; outline: none;
+            background: #1c1c1e !important; border: 1px solid #2c2c2e !important;
+            color: #fff !important; padding: 15px !important; border-radius: 15px !important;
+            width: 100%; margin-bottom: 12px; outline: none; transition: 0.3s;
         }
-        .gold-btn {
-            background: linear-gradient(135deg, #f59e0b, #92400e);
-            color: #000; font-weight: 900; padding: 14px; border-radius: 12px;
-            width: 100%; cursor: pointer; transition: 0.2s; border: none;
-        }
-        .gold-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        input:focus { border-color: var(--gold) !important; }
 
-        .page { display: none; padding: 20px; padding-bottom: 100px; animation: fadeIn 0.4s ease; }
+        .gold-btn {
+            background: linear-gradient(135deg, #d4af37, #996515);
+            color: #000; font-weight: 800; padding: 16px; border-radius: 15px;
+            width: 100%; cursor: pointer; transition: 0.3s; border: none;
+            letter-spacing: 1px;
+        }
+        .gold-btn:active { transform: scale(0.96); }
+
+        .page { display: none; padding: 25px; padding-bottom: 120px; animation: fadeIn 0.5s ease; }
         .active-page { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* تعديل الإعلانات لتناسب الهدوء */
+        .slider-container { border: 1px solid rgba(255,255,255,0.05); }
+        .slide { background: #161618; color: var(--gold); }
     </style>
 </head>
 <body>
 
-    <header class="p-4 border-b border-white/5 bg-black/80 backdrop-blur-md sticky top-0 z-50 flex justify-between items-center">
-        <div class="flex items-center gap-3">
-            <button onclick="logout()" class="text-gray-500 bg-white/5 p-2 rounded-lg hover:text-red-500"><i class="fas fa-power-off"></i></button>
+    <header class="p-5 border-b border-white/5 bg-black/40 backdrop-blur-xl sticky top-0 z-50 flex justify-between items-center">
+        <div class="flex items-center gap-4">
+            <button onclick="logout()" class="text-gray-400 bg-white/5 p-2 rounded-xl hover:bg-red-900/20 transition"><i class="fas fa-power-off text-sm"></i></button>
             <div>
-                <h1 class="text-xl font-black italic text-amber-500">KHASM SHOP</h1>
-                <p id="user-welcome" class="text-[9px] text-gray-500 font-bold uppercase">جاري التحميل...</p>
+                <h1 class="text-xl font-black tracking-tighter text-amber-500">KHASM SHOP</h1>
+                <p id="user-welcome" class="text-[10px] text-gray-400 font-medium">مرحباً بك في عالم الفخامة</p>
             </div>
         </div>
-        <div class="text-center bg-amber-500/10 px-4 py-1 rounded-xl border border-amber-500/20">
-            <span id="pts-display" class="text-xl font-black text-amber-500">0</span>
-            <span class="text-[8px] block text-gray-400 font-bold tracking-widest">نقطة ملكية</span>
+        <div class="bg-amber-500/5 border border-amber-500/20 px-5 py-2 rounded-2xl">
+            <span id="pts-display" class="text-2xl font-black text-amber-500">0</span>
+            <span class="text-[9px] block text-gray-500 font-bold tracking-widest">نقطة ملكية</span>
         </div>
     </header>
 
-    <div class="slider-container px-4 mt-4">
-        <div class="slider" id="mainSlider">
-            <div class="slide slide-1 rounded-2xl">
-                <div>
-                    <h2 class="text-2xl font-black mb-1">أهلاً بك في الإمبراطورية</h2>
-                    <p class="text-xs opacity-80">أسرع شحن في السودان وبأقل الأسعار</p>
-                </div>
+    <div class="slider-container px-4 mt-6 h-32 overflow-hidden relative rounded-3xl mx-4">
+        <div class="slider flex transition-transform duration-700 h-full" id="mainSlider">
+            <div class="slide min-w-full flex items-center justify-center text-center p-6 bg-[#111]">
+                <h2 class="text-xl font-bold">💎 باقات حصرية بأفضل الأسعار</h2>
             </div>
-            <div class="slide slide-2 rounded-2xl">
-                <div>
-                    <h2 class="text-2xl font-black mb-1">نظام النقاط الجديد</h2>
-                    <p class="text-xs opacity-80">اشحن واجمع النقاط واستبدلها بشدات مجانية</p>
-                </div>
+            <div class="slide min-w-full flex items-center justify-center text-center p-6 bg-[#161616]">
+                <h2 class="text-xl font-bold">🏆 استبدل نقاطك بشدات مجانية</h2>
             </div>
-            <div class="slide slide-3 rounded-2xl">
-                <div>
-                    <h2 class="text-2xl font-black mb-1">ضمان وأمان</h2>
-                    <p class="text-xs opacity-80">فريق عمل متواجد لخدمتكم على مدار الساعة</p>
-                </div>
+            <div class="slide min-w-full flex items-center justify-center text-center p-6 bg-[#0f0f0f]">
+                <h2 class="text-xl font-bold">🛡️ أمان تام وسرعة في التنفيذ</h2>
             </div>
         </div>
     </div>
 
     <main id="app">
         <section id="shop-page" class="page active-page">
-            <div class="flex items-center justify-between mb-6">
-                <h2 class="text-lg font-black border-r-4 border-amber-500 pr-3">باقات الشحن</h2>
-                <span class="text-[10px] text-gray-500">اختر باقتك المفضلة</span>
+            <div class="mb-8">
+                <h2 class="text-xl font-black text-gray-200">المتجر الملكي</h2>
+                <div class="w-12 h-1 bg-amber-500 mt-1 rounded-full"></div>
             </div>
-            <div id="products-grid" class="grid gap-6"></div>
+            <div id="products-grid" class="grid gap-8"></div>
         </section>
 
         <section id="points-page" class="page">
-            <h2 class="text-lg font-black mb-6 border-r-4 border-green-500 pr-3">استرداد النقاط</h2>
-            <div class="royal-card border-green-500/30 text-center">
-                <div class="mb-4">
-                    <i class="fas fa-gift text-4xl text-green-500 mb-2"></i>
-                    <h3 class="text-xl font-black">60 شدة مجانية</h3>
-                    <p class="text-gray-400 text-sm mt-1">سعر الاستبدال: <span class="text-green-500 font-bold">30 نقطة</span></p>
-                </div>
-                <input type="number" id="redeem-id" placeholder="أدخل ID اللاعب">
-                <button onclick="redeemPoints()" class="gold-btn !from-green-600 !to-green-900">استبدال الآن 💎</button>
-                <p class="text-[10px] text-gray-600 mt-4 text-right">* سيتم خصم 30 نقطة من رصيدك فوراً وتحويل الطلب للمراجعة.</p>
+            <h2 class="text-xl font-black mb-8 border-r-4 border-amber-600 pr-4">استرداد الجوائز</h2>
+            <div class="royal-card text-center border-amber-600/20">
+                <i class="fas fa-crown text-5xl text-amber-500 mb-4"></i>
+                <h3 class="text-2xl font-black mb-2">60 شدة مجانية</h3>
+                <p class="text-gray-500 mb-6 italic">تكلفة الاستبدال: 30 نقطة ملكية</p>
+                <input type="number" id="redeem-id" placeholder="ID اللاعب">
+                <button onclick="redeemPoints()" class="gold-btn">تأكيد الاستبدال</button>
             </div>
         </section>
 
         <section id="tracking-page" class="page">
-            <h2 class="text-lg font-black mb-6 border-r-4 border-blue-500 pr-3">سجل العمليات</h2>
-            <div id="user-orders-list" class="space-y-4"></div>
+            <h2 class="text-xl font-black mb-8 border-r-4 border-blue-600 pr-4">سجل العمليات</h2>
+            <div id="user-orders-list" class="space-y-6"></div>
         </section>
 
         <section id="admin-page" class="page">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-lg font-black border-r-4 border-red-600 pr-3">لوحة الإدارة</h2>
-                <span class="bg-red-600 text-white text-[10px] px-2 py-1 rounded font-bold uppercase">Control Panel</span>
-            </div>
-            <div id="admin-orders-list" class="space-y-4 mb-10"></div>
-            <div id="master-tools" class="mt-12 pt-8 border-t border-white/10 hidden">
-                <h3 class="text-amber-500 font-bold mb-4">إضافة حزمة للمتجر</h3>
-                <div class="royal-card space-y-4">
-                    <input type="text" id="new-amt" placeholder="الكمية (مثل: 60 شدة)">
-                    <input type="number" id="new-prc" placeholder="السعر بالـ SDG">
-                    <button onclick="addPackage()" class="gold-btn">اعتماد في المتجر</button>
+            <h2 class="text-xl font-black mb-8 text-red-500">لوحة الإدارة</h2>
+            <div id="admin-orders-list" class="space-y-6 mb-12"></div>
+            <div id="master-tools" class="hidden border-t border-white/10 pt-10">
+                <div class="royal-card bg-black/40">
+                    <h3 class="font-bold mb-4">إضافة حزمة جديدة</h3>
+                    <input type="text" id="new-amt" placeholder="الكمية (مثلاً: 60 شدة)">
+                    <input type="number" id="new-prc" placeholder="السعر">
+                    <button onclick="addPackage()" class="gold-btn">حفظ في المتجر</button>
                 </div>
             </div>
         </section>
     </main>
 
     <nav class="bottom-nav">
-        <div onclick="changePage('shop-page', this)" class="nav-btn active"><i class="fas fa-shopping-cart"></i><span>المتجر</span></div>
-        <div onclick="changePage('points-page', this)" class="nav-btn"><i class="fas fa-coins"></i><span>النقاط</span></div>
-        <div onclick="changePage('tracking-page', this)" class="nav-btn"><i class="fas fa-tasks"></i><span>تتبعي</span></div>
-        <div id="admin-nav" onclick="changePage('admin-page', this)" class="nav-btn hidden text-red-500"><i class="fas fa-crown"></i><span>الإدارة</span></div>
+        <div onclick="changePage('shop-page', this)" class="nav-btn active"><i class="fas fa-gem"></i><span>المتجر</span></div>
+        <div onclick="changePage('points-page', this)" class="nav-btn"><i class="fas fa-gift"></i><span>النقاط</span></div>
+        <div onclick="changePage('tracking-page', this)" class="nav-btn"><i class="fas fa-bolt"></i><span>تتبعي</span></div>
+        <div id="admin-nav" onclick="changePage('admin-page', this)" class="nav-btn hidden text-red-500"><i class="fas fa-shield-alt"></i><span>الإدارة</span></div>
     </nav>
 
     <script type="module">
@@ -173,17 +180,27 @@
         const STAFF = ["mohnadyasir43@gmail.com", "muhammedaltaj111@gmail.com"];
         let currentUser = null;
 
-        // تشغيل الإعلانات
-        let slideIndex = 0;
+        let slidePos = 0;
         setInterval(() => {
-            slideIndex = (slideIndex + 1) % 3;
-            document.getElementById('mainSlider').style.transform = `translateX(${slideIndex * 100}%)`;
-        }, 4000);
+            slidePos = (slidePos + 1) % 3;
+            document.getElementById('mainSlider').style.transform = `translateX(${slidePos * 100}%)`;
+        }, 5000);
+
+        // تصحيح تسجيل الدخول
+        const login = async () => {
+            try {
+                const provider = new GoogleAuthProvider();
+                await signInWithPopup(auth, provider);
+            } catch (error) {
+                console.error("Login Error:", error);
+                alert("فشل تسجيل الدخول: يرجى التأكد من تفعيل Google Auth في Firebase");
+            }
+        };
 
         onAuthStateChanged(auth, u => {
             if (u) {
                 currentUser = u;
-                document.getElementById('user-welcome').innerText = u.displayName;
+                document.getElementById('user-welcome').innerText = "مرحباً، " + u.displayName.split(' ')[0];
                 const email = u.email.toLowerCase();
                 if (email === MASTER || STAFF.includes(email)) {
                     document.getElementById('admin-nav').classList.remove('hidden');
@@ -191,11 +208,11 @@
                 }
                 loadCoreData();
             } else {
-                signInWithPopup(auth, new GoogleAuthProvider());
+                login();
             }
         });
 
-        window.logout = () => confirm("هل تريد تسجيل الخروج؟") && signOut(auth).then(() => location.reload());
+        window.logout = () => confirm("خروج؟") && signOut(auth).then(() => location.reload());
 
         window.changePage = (id, btn) => {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
@@ -205,18 +222,16 @@
         };
 
         function loadCoreData() {
-            // المتجر
             onValue(ref(db, 'packages'), snap => {
                 const grid = document.getElementById('products-grid');
                 grid.innerHTML = '';
                 snap.forEach(child => {
-                    const p = child.val();
-                    const k = child.key;
+                    const p = child.val(); const k = child.key;
                     grid.innerHTML += `
                     <div class="royal-card">
-                        <div class="flex justify-between items-center mb-4">
-                            <div><h3 class="text-2xl font-black">${p.amount}</h3><p class="text-amber-500 font-bold">${p.price} SDG</p></div>
-                            ${currentUser.email.toLowerCase() === MASTER ? `<button onclick="deletePackage('${k}')" class="text-red-500"><i class="fas fa-trash"></i></button>` : ''}
+                        <div class="flex justify-between items-start mb-6">
+                            <div><h3 class="text-3xl font-black text-white">${p.amount}</h3><p class="text-amber-500 font-bold mt-1">${p.price} SDG</p></div>
+                            ${currentUser.email.toLowerCase() === MASTER ? `<button onclick="deletePackage('${k}')" class="text-red-900/40 hover:text-red-500"><i class="fas fa-trash"></i></button>` : ''}
                         </div>
                         <select id="ag-${k}">
                             <option value="249907760989">المدير محمد فتحي</option>
@@ -224,72 +239,49 @@
                             <option value="249916581517">محمد التاج</option>
                         </select>
                         <input type="number" id="id-${k}" placeholder="ID اللاعب">
-                        <button onclick="placeOrder('${p.amount}', '${p.price}', '${k}')" class="gold-btn">اشحن الآن ⚡</button>
+                        <button onclick="placeOrder('${p.amount}', '${p.price}', '${k}')" class="gold-btn">اطلب الآن</button>
                     </div>`;
                 });
             });
 
-            // الطلبات
             onValue(ref(db, 'orders'), snap => {
                 const userList = document.getElementById('user-orders-list');
                 const adminList = document.getElementById('admin-orders-list');
                 userList.innerHTML = ''; adminList.innerHTML = '';
-
                 snap.forEach(child => {
-                    const o = child.val();
-                    const k = child.key;
+                    const o = child.val(); const k = child.key;
+                    let pC = "status-pending", lbl = "قيد الانتظار", clr = "amber";
+                    if(o.status === "جاري التنفيذ") { pC = "status-processing"; lbl = "جاري تنفيذ طلبك.."; clr = "blue"; }
+                    if(o.status === "مكتمل") { pC = "status-completed"; lbl = "تم الشحن ✅"; clr = "green"; }
+                    if(o.status === "فشل") { pC = "status-failed"; lbl = "فشل الطلب ❌"; clr = "red"; }
 
-                    let progClass = "status-pending", label = "بانتظار التأكيد", color = "amber";
-                    if (o.status === "جاري التنفيذ") { progClass = "status-processing"; label = "جاري تنفيذ طلبك الآن.."; color = "blue"; }
-                    if (o.status === "مكتمل") { progClass = "status-completed"; label = "تم الشحن بنجاح ✅"; color = "green"; }
-                    if (o.status === "فشل") { progClass = "status-failed"; label = "فشل الطلب ❌ (تواصل معنا)"; color = "red"; }
-
-                    const orderHTML = `
-                    <div class="royal-card border-r-4 border-${color}-500">
-                        <div class="flex justify-between text-[10px] text-gray-500 mb-3">
-                            <span>رقم العملية: #${k.substring(1,7).toUpperCase()}</span>
-                            <span>التاريخ: ${o.time}</span>
-                        </div>
-                        <div class="flex justify-between items-center mb-1">
-                            <h4 class="font-black">${o.amount}</h4>
-                            <span class="text-[10px] font-bold text-amber-500">ID: ${o.pid}</span>
-                        </div>
-                        <div class="progress-track"><div class="progress-fill ${progClass}"></div></div>
-                        <div class="grid grid-cols-2 gap-2 text-[9px] text-gray-400 font-bold">
-                            <div class="bg-white/5 p-1 rounded">الحالة: <span class="text-${color}-500">${label}</span></div>
-                            <div class="bg-white/5 p-1 rounded">الوكيل: ${o.agent.split(' ')[0]}</div>
-                            <div class="bg-white/5 p-1 rounded">العميل: ${o.customer.split(' ')[0]}</div>
-                            <div class="bg-white/5 p-1 rounded font-mono">السعر: ${o.price}</div>
+                    const html = `
+                    <div class="royal-card border-r-4 border-${clr}-600/50">
+                        <div class="flex justify-between text-[10px] text-gray-500 mb-4"><span>#${k.substring(1,7)}</span><span>${o.time}</span></div>
+                        <div class="flex justify-between items-center mb-2"><h4 class="font-bold text-lg text-white">${o.amount}</h4><span class="text-amber-500 text-xs">ID: ${o.pid}</span></div>
+                        <div class="progress-track"><div class="progress-fill ${pC}" style="width:${o.status==='مكتمل'?'100%':o.status==='جاري التنفيذ'?'60%':'25%'}"></div></div>
+                        <div class="grid grid-cols-2 gap-3 text-[10px] text-gray-400">
+                            <div class="bg-black/20 p-2 rounded-lg text-${clr}-500">${lbl}</div>
+                            <div class="bg-black/20 p-2 rounded-lg">الوكيل: ${o.agent.split(' ')[0]}</div>
                         </div>
                     </div>`;
-
-                    if (o.uid === currentUser.uid) userList.innerHTML += orderHTML;
-
-                    // لوحة الإدارة
-                    const email = currentUser.email.toLowerCase();
-                    if (email === MASTER || STAFF.includes(email)) {
-                        const isLocked = (o.status === 'مكتمل' || o.status === 'فشل');
+                    if(o.uid === currentUser.uid) userList.innerHTML += html;
+                    if(currentUser.email.toLowerCase() === MASTER || STAFF.includes(currentUser.email.toLowerCase())) {
+                        const locked = (o.status === 'مكتمل' || o.status === 'فشل');
                         adminList.innerHTML += `
-                        <div class="royal-card border-l-4 border-amber-600">
-                            <div class="flex justify-between items-center mb-3">
-                                <b class="text-xs">${o.customer}</b>
-                                <button onclick="deleteOrder('${k}')" class="text-red-500 text-xs"><i class="fas fa-trash"></i></button>
+                        <div class="royal-card border-l-2 border-amber-600/30">
+                            <div class="flex justify-between items-center mb-4"><b class="text-xs text-gray-300">${o.customer}</b><button onclick="deleteOrder('${k}')" class="text-red-900/40 text-xs"><i class="fas fa-times"></i></button></div>
+                            <div class="text-[11px] text-amber-500 mb-4">${o.amount} | ID: ${o.pid}</div>
+                            <div class="flex gap-2 ${locked ? 'opacity-20 pointer-events-none' : ''}">
+                                <button onclick="updateStatus('${k}', 'مكتمل', '${o.uid}', '${o.amount}')" class="flex-1 bg-green-900/40 text-green-400 py-3 rounded-xl text-[10px] font-bold">إكمال</button>
+                                <button onclick="updateStatus('${k}', 'جاري التنفيذ')" class="flex-1 bg-blue-900/40 text-blue-400 py-3 rounded-xl text-[10px] font-bold">تنفيذ</button>
+                                <button onclick="updateStatus('${k}', 'فشل')" class="flex-1 bg-red-900/40 text-red-400 py-3 rounded-xl text-[10px] font-bold">رفض</button>
                             </div>
-                            <div class="bg-black/40 p-2 rounded text-[11px] mb-3">
-                                ${o.amount} | ID: ${o.pid} | الوكيل: ${o.agent}
-                            </div>
-                            <div class="flex gap-1 ${isLocked ? 'opacity-30 pointer-events-none' : ''}">
-                                <button onclick="updateStatus('${k}', 'مكتمل', '${o.uid}', '${o.amount}')" class="flex-1 bg-green-600 text-[10px] py-2 rounded font-bold">مكتمل</button>
-                                <button onclick="updateStatus('${k}', 'جاري التنفيذ')" class="flex-1 bg-blue-600 text-[10px] py-2 rounded font-bold">تنفيذ</button>
-                                <button onclick="updateStatus('${k}', 'فشل')" class="flex-1 bg-red-600 text-[10px] py-2 rounded font-bold">فشل</button>
-                            </div>
-                            ${isLocked ? '<p class="text-[9px] text-center text-gray-500 mt-2">الطلب مغلق (لا يمكن التعديل)</p>' : ''}
                         </div>`;
                     }
                 });
             });
 
-            // النقاط
             onValue(ref(db, `users/${currentUser.uid}/pts`), s => {
                 document.getElementById('pts-display').innerText = s.val() || 0;
             });
@@ -297,73 +289,57 @@
 
         window.placeOrder = (amt, prc, k) => {
             const pid = document.getElementById(`id-${k}`).value;
-            const agSelect = document.getElementById(`ag-${k}`);
-            const agName = agSelect.options[agSelect.selectedIndex].text;
-            const agPhone = agSelect.value;
-            if (pid.length < 5) return alert("يرجى إدخال ID لاعب صحيح");
-
+            const ag = document.getElementById(`ag-${k}`);
+            if(pid.length < 5) return alert("ID ناقص!");
             const data = {
                 uid: currentUser.uid, customer: currentUser.displayName,
-                amount: amt, price: prc, pid: pid, agent: agName,
+                amount: amt, price: prc, pid: pid, agent: ag.options[ag.selectedIndex].text,
                 status: "قيد الانتظار", time: new Date().toLocaleString('ar-EG')
             };
-
             push(ref(db, 'orders'), data).then(() => {
-                const msg = `👑 *طلب شحن من KHASM SHOP*\n👤 الزبون: ${data.customer}\n💎 الكمية: ${amt}\n🆔 الآيدي: ${pid}`;
-                window.open(`https://wa.me/${agPhone}?text=${encodeURIComponent(msg)}`);
+                window.open(`https://wa.me/${ag.value}?text=${encodeURIComponent("👑 طلب شحن من المتجر\nالعميل: "+data.customer+"\nالكمية: "+amt+"\nID: "+pid)}`);
                 changePage('tracking-page', document.querySelectorAll('.nav-btn')[2]);
             });
         };
 
         window.redeemPoints = () => {
             const pid = document.getElementById('redeem-id').value;
-            if (pid.length < 5) return alert("يرجى إدخال ID صحيح");
-
             const ptsRef = ref(db, `users/${currentUser.uid}/pts`);
             get(ptsRef).then(snap => {
                 const current = snap.val() || 0;
-                if (current < 30) return alert("نقاطك غير كافية (تحتاج 30 نقطة)");
-
-                if (confirm("هل تريد استبدال 30 نقطة بـ 60 شدة؟")) {
+                if(current < 30) return alert("نقاطك 💳 لا تكفي!");
+                if(confirm("استبدال 30 نقطة؟")) {
                     update(ref(db, `users/${currentUser.uid}`), { pts: current - 30 });
                     push(ref(db, 'orders'), {
                         uid: currentUser.uid, customer: currentUser.displayName,
-                        amount: "60 شدة (استبدال نقاط)", price: "0 (مجاني)",
-                        pid: pid, agent: "المدير محمد فتحي", status: "قيد الانتظار",
-                        time: new Date().toLocaleString('ar-EG')
-                    }).then(() => {
-                        alert("تم إرسال طلبك بنجاح!");
-                        changePage('tracking-page', document.querySelectorAll('.nav-btn')[2]);
+                        amount: "60 شدة (هدية نقاط)", price: "0", pid: pid,
+                        agent: "المدير محمد فتحي", status: "قيد الانتظار", time: new Date().toLocaleString('ar-EG')
                     });
+                    changePage('tracking-page', document.querySelectorAll('.nav-btn')[2]);
                 }
             });
         };
 
         window.updateStatus = (key, status, userUid, orderAmount) => {
             update(ref(db, `orders/${key}`), { status });
-            if (status === "مكتمل" && userUid && orderAmount) {
+            if(status === "مكتمل" && userUid && orderAmount) {
                 const r = ref(db, `users/${userUid}/pts`);
                 get(r).then(s => {
-                    let amountNumber = parseInt(orderAmount.replace(/[^0-9]/g, ''));
-                    if (!isNaN(amountNumber) && amountNumber >= 60) {
-                        let bonus = Math.floor(amountNumber / 60) * 2;
+                    let num = parseInt(orderAmount.replace(/[^0-9]/g, ''));
+                    if(!isNaN(num) && num >= 60) {
+                        let bonus = Math.floor(num / 60) * 2;
                         update(ref(db, `users/${userUid}`), { pts: (s.val() || 0) + bonus });
                     }
                 });
             }
         };
 
-        window.deleteOrder = k => confirm("حذف الطلب نهائياً؟") && remove(ref(db, `orders/${k}`));
-        window.deletePackage = k => confirm("حذف الباقة من المتجر؟") && remove(ref(db, `packages/${k}`));
-        window.addPackage = () => {
-            const a = document.getElementById('new-amt').value, p = document.getElementById('new-prc').value;
-            if(a && p) push(ref(db, 'packages'), { amou
-                                                  window.deleteOrder = k => confirm("حذف الطلب نهائياً؟") && remove(ref(db, `orders/${k}`));
-        window.deletePackage = k => confirm("حذف الباقة من المتجر؟") && remove(ref(db, `packages/${k}`));
+        window.deleteOrder = k => confirm("حذف؟") && remove(ref(db, `orders/${k}`));
+        window.deletePackage = k => confirm("حذف؟") && remove(ref(db, `packages/${k}`));
         window.addPackage = () => {
             const a = document.getElementById('new-amt').value, p = document.getElementById('new-prc').value;
             if(a && p) push(ref(db, 'packages'), { amount: a, price: p });
         };
     </script>
 </body>
-</html>
+        </html>
