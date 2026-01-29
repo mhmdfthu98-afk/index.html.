@@ -3,106 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إمبراطورية الخصم | KHASM SHOP</title>
+    <title>KHASM SHOP | إمبراطورية الخصم</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
-        :root { 
-            --gold: #d4af37; 
-            --emerald: #10b981;
-            --deep-bg: #010403;
-        }
+        :root { --emerald: #10b981; --gold: #d4af37; --dark: #010403; }
+        body { font-family: 'Cairo', sans-serif; background: var(--dark); color: #fff; min-height: 100vh; overflow-x: hidden; }
         
-        body { 
-            font-family: 'Cairo', sans-serif; 
-            background-color: var(--deep-bg);
-            color: #e2e2e2; 
-            min-height: 100vh;
-            overflow-x: hidden;
-            margin: 0;
-        }
+        /* خلفية جزيئات متحركة هادئة */
+        #bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; background: radial-gradient(circle at center, #064e3b 0%, #010403 100%); }
 
-        /* خلفية متحركة فخمة جداً */
-        #bg-canvas {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: -1;
-            background: radial-gradient(circle at center, #064e3b 0%, #010403 100%);
-        }
-
-        /* تأثير السعر المتحرك الفخم - تم إصلاح الظهور */
-        .animated-price {
-            font-weight: 900;
-            display: inline-block;
-            background: linear-gradient(90deg, #fff, var(--gold), var(--emerald), #fff);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: shine 3s linear infinite;
-            font-size: 1.25rem;
-        }
-
-        @keyframes shine {
-            to { background-position: 200% center; }
-        }
-
-        /* بطاقات زجاجية محسنة */
         .royal-card {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.04);
             backdrop-filter: blur(15px);
             border: 1px solid rgba(16, 185, 129, 0.2);
-            border-radius: 28px;
-            padding: 24px;
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border-radius: 24px; padding: 20px;
+            transition: 0.3s ease;
         }
-        
-        .royal-card:hover { 
-            border-color: var(--emerald);
-            transform: translateY(-10px);
-            box-shadow: 0 20px 50px rgba(16, 185, 129, 0.15);
+
+        /* السعر الآن واضح جداً */
+        .price-tag {
+            color: #fff; font-size: 1.3rem; font-weight: 900;
+            text-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+            display: block; margin-top: 5px;
         }
 
         .gold-btn {
-            background: linear-gradient(135deg, var(--emerald), #064e3b);
-            color: white;
-            font-weight: 900;
-            padding: 16px;
-            border-radius: 18px;
-            width: 100%;
-            transition: 0.3s;
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
+            background: linear-gradient(135deg, var(--emerald), #065f46);
+            color: white; font-weight: 900; padding: 14px; border-radius: 15px;
+            width: 100%; cursor: pointer; border: none; transition: 0.2s;
         }
-        
-        .gold-btn:hover {
-            transform: scale(1.02);
-            filter: brightness(1.2);
-        }
+        .gold-btn:active { transform: scale(0.97); }
 
-        .bottom-nav {
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(25px);
-            border-top: 1px solid rgba(16, 185, 129, 0.2);
-        }
+        .status-bar { height: 6px; background: #111; border-radius: 10px; margin: 15px 0; overflow: hidden; }
+        .fill-pending { width: 30%; background: #f59e0b; }
+        .fill-process { width: 65%; background: #3b82f6; }
+        .fill-done { width: 100%; background: #10b981; }
+        .fill-fail { width: 100%; background: #ef4444; }
 
-        .nav-btn.active { color: var(--emerald); }
+        .bottom-nav { background: rgba(0,0,0,0.9); backdrop-filter: blur(20px); border-top: 1px solid rgba(255,255,255,0.05); }
+        .nav-btn.active { color: var(--emerald); transform: scale(1.1); }
 
-        input, select {
-            background: rgba(0,0,0,0.4) !important;
-            border: 1px solid rgba(16, 185, 129, 0.3) !important;
-            border-radius: 15px !important;
-            color: white !important;
-            padding: 12px !important;
-            outline: none;
-        }
+        input, select { background: rgba(0,0,0,0.5) !important; border: 1px solid rgba(16, 185, 129, 0.3) !important; color: #fff !important; padding: 12px; border-radius: 12px; width: 100%; outline: none; }
 
-        .page { display: none; padding: 20px; padding-bottom: 120px; animation: fadeIn 0.6s ease; }
+        .page { display: none; padding: 20px; padding-bottom: 100px; animation: fadeIn 0.4s ease; }
         .active-page { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
@@ -111,61 +58,58 @@
 
     <canvas id="bg-canvas"></canvas>
 
-    <header class="p-5 bg-transparent sticky top-0 z-50 flex justify-between items-center backdrop-blur-md border-b border-white/5">
-        <div class="flex items-center gap-4">
-            <button onclick="logout()" class="text-emerald-400 bg-emerald-950/50 p-2 rounded-xl border border-emerald-500/20"><i class="fas fa-power-off"></i></button>
-            <div>
-                <h1 class="text-xl font-black text-emerald-400 tracking-widest">KHASM SHOP</h1>
-                <p id="user-welcome" class="text-[10px] text-emerald-500/70 font-bold uppercase">التميز في الشحن</p>
-            </div>
+    <header class="p-4 sticky top-0 z-50 flex justify-between items-center backdrop-blur-md border-b border-white/5">
+        <div class="flex items-center gap-3">
+            <button onclick="logout()" class="text-emerald-500 bg-white/5 p-2 rounded-lg"><i class="fas fa-power-off"></i></button>
+            <h1 class="text-xl font-black text-emerald-400">KHASM SHOP</h1>
         </div>
-        <div class="bg-emerald-900/30 border border-emerald-500/30 px-6 py-2 rounded-2xl shadow-xl">
-            <span id="pts-display" class="text-2xl font-black text-emerald-400">0</span>
-            <span class="text-[9px] block text-emerald-500 font-bold text-center">نقطة</span>
+        <div class="bg-emerald-500/10 border border-emerald-500/20 px-4 py-1 rounded-xl">
+            <span id="pts-display" class="text-xl font-black text-emerald-400">0</span>
+            <span class="text-[9px] block text-gray-400 text-center uppercase">Point</span>
         </div>
     </header>
 
     <main id="app">
         <section id="shop-page" class="page active-page">
-            <h2 class="text-2xl font-black text-white mb-6 border-r-4 border-emerald-500 pr-4">المتجر الملكي</h2>
+            <h2 class="text-xl font-black mb-6 border-r-4 border-emerald-500 pr-3">باقات الشحن</h2>
             <div id="products-grid" class="grid gap-6"></div>
         </section>
 
         <section id="points-page" class="page">
-            <h2 class="text-2xl font-black mb-8 text-white border-r-4 border-emerald-500 pr-4">هدايا النقاط</h2>
+            <h2 class="text-xl font-black mb-6 border-r-4 border-emerald-500 pr-3">استبدال النقاط</h2>
             <div class="royal-card text-center">
-                <i class="fas fa-crown text-6xl text-emerald-500 mb-4 drop-shadow-lg"></i>
-                <h3 class="text-2xl font-black text-white">60 شدة مجانية</h3>
-                <p class="text-emerald-400/70 mb-6 italic">استبدل 30 نقطة الآن</p>
-                <input type="number" id="redeem-id" placeholder="ID اللاعب" class="w-full mb-4 text-center">
-                <button onclick="redeemPoints()" class="gold-btn">تأكيد الاستبدال 💎</button>
+                <i class="fas fa-gift text-5xl text-emerald-500 mb-3"></i>
+                <h3 class="text-xl font-black">60 شدة مجانية</h3>
+                <p class="text-gray-400 text-sm mb-4">التكلفة: 30 نقطة</p>
+                <input type="number" id="redeem-id" placeholder="ID اللاعب" class="text-center mb-3">
+                <button onclick="redeemPoints()" class="gold-btn">استبدال الآن</button>
             </div>
         </section>
 
         <section id="tracking-page" class="page">
-            <h2 class="text-2xl font-black mb-8 text-white border-r-4 border-emerald-500 pr-4">تتبع الطلبات</h2>
-            <div id="user-orders-list" class="space-y-6"></div>
+            <h2 class="text-xl font-black mb-6 border-r-4 border-emerald-500 pr-3">طلباتي المباشرة</h2>
+            <div id="user-orders-list" class="space-y-4"></div>
         </section>
 
         <section id="admin-page" class="page">
-            <h2 class="text-2xl font-black mb-8 text-red-500">الإدارة</h2>
-            <div id="admin-orders-list" class="space-y-6 mb-12"></div>
-            <div id="master-tools" class="hidden border-t border-white/10 pt-10">
+            <h2 class="text-xl font-black mb-6 text-red-500">لوحة التحكم</h2>
+            <div id="admin-orders-list" class="space-y-4"></div>
+            <div id="master-tools" class="mt-10 hidden">
                 <div class="royal-card">
-                    <h3 class="font-bold mb-4 text-emerald-500">إضافة حزمة</h3>
-                    <input type="text" id="new-amt" placeholder="الكمية (مثلاً 60 شدة)" class="w-full mb-2">
-                    <input type="number" id="new-prc" placeholder="السعر بالـ SDG" class="w-full mb-4">
-                    <button onclick="addPackage()" class="gold-btn">نشر في المتجر</button>
+                    <h4 class="font-bold mb-3">إضافة باقة</h4>
+                    <input type="text" id="new-amt" placeholder="مثال: 60 شدة" class="mb-2">
+                    <input type="number" id="new-prc" placeholder="السعر" class="mb-3">
+                    <button onclick="addPackage()" class="gold-btn">اعتماد</button>
                 </div>
             </div>
         </section>
     </main>
 
     <nav class="bottom-nav fixed bottom-0 left-0 right-0 flex justify-around p-4 z-50">
-        <div onclick="changePage('shop-page', this)" class="nav-btn active text-center"><i class="fas fa-store-alt text-xl mb-1 block"></i><span class="text-[10px]">المتجر</span></div>
-        <div onclick="changePage('points-page', this)" class="nav-btn text-center"><i class="fas fa-gift text-xl mb-1 block"></i><span class="text-[10px]">النقاط</span></div>
-        <div onclick="changePage('tracking-page', this)" class="nav-btn text-center"><i class="fas fa-stream text-xl mb-1 block"></i><span class="text-[10px]">طلباتي</span></div>
-        <div id="admin-nav" onclick="changePage('admin-page', this)" class="nav-btn hidden text-red-500 text-center"><i class="fas fa-user-crown text-xl mb-1 block"></i><span class="text-[10px]">المدير</span></div>
+        <div onclick="changePage('shop-page', this)" class="nav-btn active text-center"><i class="fas fa-shopping-basket mb-1 block"></i><span>المتجر</span></div>
+        <div onclick="changePage('points-page', this)" class="nav-btn text-center"><i class="fas fa-coins mb-1 block"></i><span>النقاط</span></div>
+        <div onclick="changePage('tracking-page', this)" class="nav-btn text-center"><i class="fas fa-history mb-1 block"></i><span>تتبعي</span></div>
+        <div id="admin-nav" onclick="changePage('admin-page', this)" class="nav-btn hidden text-red-500 text-center"><i class="fas fa-crown mb-1 block"></i><span>المدير</span></div>
     </nav>
 
     <script type="module">
@@ -188,41 +132,24 @@
         const STAFF = ["mohnadyasir43@gmail.com", "muhammedaltaj111@gmail.com"];
         let currentUser = null;
 
-        // إعداد الخلفية المتحركة
+        // خلفية متحركة
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
-        let particles = [];
-        function initBg() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            particles = [];
-            for(let i=0; i<50; i++) {
-                particles.push({
-                    x: Math.random()*canvas.width,
-                    y: Math.random()*canvas.height,
-                    r: Math.random()*2+1,
-                    v: Math.random()*0.5+0.2
-                });
-            }
+        let pts = [];
+        function init() {
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            pts = []; for(let i=0; i<40; i++) pts.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, r:Math.random()*2, v:Math.random()*0.5});
         }
-        function animateBg() {
-            ctx.clearRect(0,0,canvas.width,canvas.height);
-            ctx.fillStyle = "rgba(16, 185, 129, 0.3)";
-            particles.forEach(p => {
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
-                ctx.fill();
-                p.y -= p.v;
-                if(p.y < -10) p.y = canvas.height+10;
-            });
-            requestAnimationFrame(animateBg);
+        function anim() {
+            ctx.clearRect(0,0,canvas.width,canvas.height); ctx.fillStyle = "rgba(16,185,129,0.2)";
+            pts.forEach(p => { ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill(); p.y-=p.v; if(p.y<0) p.y=canvas.height; });
+            requestAnimationFrame(anim);
         }
-        initBg(); animateBg(); window.onresize = initBg;
+        init(); anim();
 
         onAuthStateChanged(auth, u => {
             if (u) {
                 currentUser = u;
-                document.getElementById('user-welcome').innerText = u.displayName;
                 if (u.email.toLowerCase() === MASTER || STAFF.includes(u.email.toLowerCase())) {
                     document.getElementById('admin-nav').classList.remove('hidden');
                     if(u.email.toLowerCase() === MASTER) document.getElementById('master-tools').classList.remove('hidden');
@@ -232,7 +159,6 @@
         });
 
         window.logout = () => signOut(auth).then(() => location.reload());
-
         window.changePage = (id, btn) => {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
             document.getElementById(id).classList.add('active-page');
@@ -248,20 +174,17 @@
                     const p = child.val(); const k = child.key;
                     grid.innerHTML += `
                     <div class="royal-card">
-                        <div class="flex justify-between items-start mb-6">
-                            <div>
-                                <h3 class="text-2xl font-black text-white">${p.amount}</h3>
-                                <div class="animated-price">${p.price} SDG</div>
-                            </div>
-                            ${currentUser.email.toLowerCase() === MASTER ? `<button onclick="deletePackage('${k}')" class="text-red-500/40"><i class="fas fa-trash"></i></button>` : ''}
+                        <div class="flex justify-between items-start mb-4">
+                            <div><h3 class="text-2xl font-bold">${p.amount}</h3><span class="price-tag">${p.price} SDG</span></div>
+                            ${currentUser.email.toLowerCase() === MASTER ? `<button onclick="deletePackage('${k}')" class="text-red-500/50"><i class="fas fa-trash"></i></button>` : ''}
                         </div>
-                        <select id="ag-${k}" class="w-full mb-2">
+                        <select id="ag-${k}" class="mb-2">
                             <option value="249907760989">مهند ياسر بلوله</option>
                             <option value="249914178935">محمد فتحي</option>
                             <option value="249916581517">محمد التاج</option>
                         </select>
-                        <input type="number" id="id-${k}" placeholder="ID اللاعب" class="w-full mb-4">
-                        <button onclick="placeOrder('${p.amount}', '${p.price}', '${k}')" class="gold-btn">شحن فوري 🚀</button>
+                        <input type="number" id="id-${k}" placeholder="ID اللاعب" class="mb-4">
+                        <button onclick="placeOrder('${p.amount}', '${p.price}', '${k}')" class="gold-btn">شحن سريع 🚀</button>
                     </div>`;
                 });
             });
@@ -272,42 +195,63 @@
                 uL.innerHTML = ''; aL.innerHTML = '';
                 snap.forEach(child => {
                     const o = child.val(); const k = child.key;
-                    let cl = o.status === "مكتمل" ? "emerald" : o.status === "فشل" ? "red" : "blue";
-                    const html = `
-                    <div class="royal-card border-r-4 border-${cl}-500">
+                    let fill = "fill-pending", lbl = "قيد الانتظار", clr = "text-amber-500";
+                    if(o.status === "جاري التنفيذ") { fill = "fill-process"; lbl = "جاري التنفيذ الآن.."; clr = "text-blue-400"; }
+                    if(o.status === "مكتمل") { fill = "fill-done"; lbl = "تم الشحن بنجاح ✅"; clr = "text-emerald-400"; }
+                    if(o.status === "فشل") { fill = "fill-fail"; lbl = "فشل الطلب ❌"; clr = "text-red-500"; }
+
+                    const h = `
+                    <div class="royal-card border-r-4 ${o.status==='مكتمل'?'border-emerald-500':'border-white/10'}">
                         <div class="flex justify-between text-[10px] text-white/30 mb-2"><span>#${k.substring(1,7)}</span><span>${o.time}</span></div>
-                        <h4 class="font-bold text-white">${o.amount}</h4>
-                        <p class="text-[11px] text-${cl}-400 mt-1">${o.status === "قيد الانتظار" ? "جاري المعالجة..." : o.status}</p>
+                        <h4 class="font-bold">${o.amount}</h4>
+                        <div class="status-bar"><div class="fill-bar ${fill}" style="height:100%"></div></div>
+                        <div class="flex justify-between items-center text-[10px] font-bold">
+                            <span class="${clr}">${lbl}</span>
+                            <span class="text-white/40">ID: ${o.pid}</span>
+                        </div>
                     </div>`;
-                    if(o.uid === currentUser.uid) uL.innerHTML += html;
+                    if(o.uid === currentUser.uid) uL.innerHTML += h;
                     if(currentUser.email.toLowerCase() === MASTER || STAFF.includes(currentUser.email.toLowerCase())) {
-                        aL.innerHTML += `<div class="royal-card mb-4 text-xs">
-                            <b>${o.customer}</b> | ${o.amount}<br>ID: ${o.pid}<br>
-                            <div class="flex gap-2 mt-3">
-                                <button onclick="updateStatus('${k}', 'مكتمل', '${o.uid}', '${o.amount}')" class="bg-emerald-600 px-3 py-1 rounded">إكمال</button>
-                                <button onclick="updateStatus('${k}', 'فشل')" class="bg-red-600 px-3 py-1 rounded">رفض</button>
+                        const locked = (o.status==='مكتمل'||o.status==='فشل');
+                        aL.innerHTML += `
+                        <div class="royal-card border-l-2 border-white/10">
+                            <div class="flex justify-between mb-2 text-xs"><b>${o.customer}</b><button onclick="deleteOrder('${k}')" class="text-red-500"><i class="fas fa-trash-alt"></i></button></div>
+                            <div class="text-[11px] mb-3">${o.amount} | ID: ${o.pid}</div>
+                            <div class="flex gap-1 ${locked?'opacity-20 pointer-events-none':''}">
+                                <button onclick="updateStatus('${k}','مكتمل','${o.uid}','${o.amount}')" class="flex-1 bg-emerald-600 py-2 rounded text-[10px]">مكتمل</button>
+                                <button onclick="updateStatus('${k}','جاري التنفيذ')" class="flex-1 bg-blue-600 py-2 rounded text-[10px]">تنفيذ</button>
+                                <button onclick="updateStatus('${k}','فشل')" class="flex-1 bg-red-600 py-2 rounded text-[10px]">رفض</button>
                             </div>
                         </div>`;
                     }
                 });
             });
-
             onValue(ref(db, `users/${currentUser.uid}/pts`), s => document.getElementById('pts-display').innerText = s.val() || 0);
         }
 
         window.placeOrder = (amt, prc, k) => {
             const pid = document.getElementById(`id-${k}`).value;
             const ag = document.getElementById(`ag-${k}`);
-            if(pid.length < 5) return alert("الآيدي غير صحيح!");
+            if(pid.length < 5) return alert("ID ناقص!");
             const data = {
                 uid: currentUser.uid, customer: currentUser.displayName,
                 amount: amt, price: prc, pid: pid, agent: ag.options[ag.selectedIndex].text,
                 status: "قيد الانتظار", time: new Date().toLocaleString('ar-EG')
             };
             push(ref(db, 'orders'), data).then(() => {
-                // رسالة الواتساب المطلوبة
                 const msg = `👑 *طلب شحن من KHASM SHOP*\n\n👤 *الزبون:* ${data.customer}\n💎 *الكمية:* ${amt}\n💰 *المبلغ:* ${prc} SDG\n🆔 *الآيدي:* ${pid}\n🛡️ *الوكيل:* 🛡️ ${data.agent}`;
                 window.open(`https://wa.me/${ag.value}?text=${encodeURIComponent(msg)}`);
+                changePage('tracking-page', document.querySelectorAll('.nav-btn')[2]);
+            });
+        };
+
+        window.redeemPoints = () => {
+            const pid = document.getElementById('redeem-id').value;
+            if(pid.length<5) return alert("ID خطأ!");
+            get(ref(db, `users/${currentUser.uid}/pts`)).then(snap => {
+                const p = snap.val()||0; if(p<30) return alert("نقاطك قليلة!");
+                update(ref(db, `users/${currentUser.uid}`), {pts: p-30});
+                push(ref(db, 'orders'), { uid:currentUser.uid, customer:currentUser.displayName, amount:"60 شدة (نقاط)", price:"0", pid:pid, agent:"المدير محمد فتحي", status:"قيد الانتظار", time:new Date().toLocaleString('ar-EG')});
                 changePage('tracking-page', document.querySelectorAll('.nav-btn')[2]);
             });
         };
@@ -323,11 +267,12 @@
             }
         };
 
-        window.deletePackage = k => confirm("حذف؟") && remove(ref(db, `packages/${k}`));
+        window.deleteOrder = k => confirm("حذف الطلب؟") && remove(ref(db, `orders/${k}`));
+        window.deletePackage = k => confirm("حذف الباقة؟") && remove(ref(db, `packages/${k}`));
         window.addPackage = () => {
             const a = document.getElementById('new-amt').value, p = document.getElementById('new-prc').value;
             if(a && p) push(ref(db, 'packages'), { amount: a, price: p });
         };
     </script>
 </body>
-</html>
+    </html>
