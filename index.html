@@ -3,355 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KhasmShop | المنصة الملكية المتكاملة</title>
+    <title>KhasmShop | المتجر الملكي المتكامل</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
+        body { font-family: 'Cairo', sans-serif; background: #f0f2f5; margin: 0; }
         
-        body { font-family: 'Cairo', sans-serif; background: #fff; overflow-x: hidden; scroll-behavior: smooth; }
+        /* انترو البداية الفخم */
+        #intro { position: fixed; inset: 0; z-index: 9999; background: #000; display: flex; align-items: center; justify-content: center; transition: 1s; }
+        .logo-gold { font-size: 3rem; font-weight: 900; color: #fff; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
 
-        /* الخلفية الملكية المتدرجة */
-        .royal-bg {
-            position: fixed; inset: 0; z-index: -1;
-            background: linear-gradient(135deg, #ffffff 0%, #f0fff4 25%, #fff5f5 50%, #fffdf0 75%, #f0f7ff 100%);
-            background-size: 400% 400%; animation: gradientMove 12s ease infinite;
-        }
-        @keyframes gradientMove { 0% {background-position:0% 50%} 50% {background-position:100% 50%} 100% {background-position:0% 50%} }
+        /* شريط الإعلان الثلاثي المتحرك */
+        .marquee-container { background: #fff; border-bottom: 2px solid #ddd; overflow: hidden; }
+        .m-line { white-space: nowrap; display: block; padding: 6px 0; font-size: 11px; font-weight: 900; animation: scroll 20s linear infinite; }
+        @keyframes scroll { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
 
-        /* الإنترو الفخم */
-        #intro {
-            position: fixed; inset: 0; z-index: 9999; background: #0a0a0a;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: 1s;
-        }
-        .logo-gold { font-size: 4rem; font-weight: 900; background: linear-gradient(to right, #fbbf24, #fff, #fbbf24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: pulse 2s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.05); } }
-
-        /* شريط الإعلان الثلاثي الفخم */
-        .marquee-container { overflow: hidden; background: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        .m-layer { white-space: nowrap; padding: 10px 0; font-weight: 900; font-size: 13px; display: flex; }
-        .layer-1 { background: #2563eb; color: #fff; animation: scrollLeft 20s linear infinite; }
-        .layer-2 { background: #dc2626; color: #fff; animation: scrollRight 25s linear infinite; }
-        .layer-3 { background: #16a34a; color: #fff; animation: scrollLeft 30s linear infinite; }
-        @keyframes scrollLeft { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-        @keyframes scrollRight { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
-
-        .glass { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(15px); border: 1px solid rgba(0,0,0,0.05); border-radius: 35px; transition: 0.3s; }
-        .glass:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.08); }
+        /* تصميم السلايدر والبنرات (مثل الصورة) */
+        .main-slider { background: linear-gradient(45deg, #5a189a, #7b2cbf); border-radius: 25px; height: 160px; display: flex; align-items: center; padding: 20px; color: white; position: relative; margin: 15px; box-shadow: 0 10px 20px rgba(90, 24, 154, 0.2); }
+        .banner-stats { display: flex; justify-content: space-around; background: #5a189a; margin: 10px 15px; padding: 12px; border-radius: 15px; color: white; font-size: 10px; }
         
-        .tab-active { border-bottom: 4px solid #2563eb; color: #2563eb; font-weight: 900; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
+        /* كروت المنتجات */
+        .p-card { background: #fff; border-radius: 20px; padding: 15px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border: 1px solid #eee; transition: 0.3s; }
+        .p-card:hover { transform: translateY(-5px); border-color: #5a189a; }
+        .p-img { width: 70px; height: 70px; margin: 0 auto 10px; object-fit: contain; }
+
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
     <div id="intro">
-        <div class="logo-gold italic tracking-tighter">KHASM<span class="text-blue-600">SHOP</span></div>
-        <div class="h-1 w-24 bg-blue-600 mt-4 rounded-full animate-bounce"></div>
+        <div class="logo-gold italic">KHASM<span class="text-blue-500">SHOP</span></div>
     </div>
 
-    <div class="royal-bg"></div>
-
-    <div class="marquee-container sticky top-0 z-[1000]">
-        <div class="m-layer layer-1">🔥 عرض الأسبوع: 60 US بـ 4000 فقط! | رومات يومية على جوائز قيمة | خصومات الرتب تبدأ من 3% وتصل إلى 12% 🔥</div>
-        <div class="m-layer layer-2">⚡ شحن فوري وآمن 100% | طرق دفع متعددة | الوكلاء متاحون 24 ساعة لخدمتكم ⚡</div>
-        <div class="m-layer layer-3">💎 نظام النقاط الملكي: كل 30 نقطة تمنحك 60 شدة مجانية | اشحن أكثر لترتفع رتبتك 💎</div>
+    <div class="marquee-container">
+        <div class="m-line text-blue-600">🔥 شحن فوري وآمن | متوفر شدات ببجي وجواهر فري فاير | اشحن محفظتك الآن واستمتع 🔥</div>
+        <div class="m-line text-red-600" style="animation-duration: 15s; animation-direction: reverse;">⚡ خصومات الرتب مفعلة تلقائياً | رتبة فضية، ذهبية، بلاتينية، وماسية ⚡</div>
+        <div class="m-line text-green-600" style="animation-duration: 25s;">💎 نظام النقاط الملكي: استبدل نقاطك بشدات مجانية | كل 30 نقطة = 60 شدة 💎</div>
     </div>
 
-    <div id="authScreen" class="fixed inset-0 z-[5000] bg-white flex items-center justify-center p-6 hidden">
-        <div class="glass w-full max-w-sm p-10 text-center shadow-2xl">
-            <h1 class="text-5xl font-black text-slate-900 mb-4 italic">KHASM<span class="text-blue-600">SHOP</span></h1>
-            <p class="text-gray-400 font-bold mb-10">سجل دخولك لتدخل عالم الفخامة</p>
-            <button onclick="login()" class="w-full bg-slate-900 text-white p-5 rounded-[20px] font-black flex items-center justify-center gap-4 active:scale-95 transition">
-                <i class="fab fa-google text-xl text-blue-400"></i> دخول عبر قوقل بلاي
+    <div id="authBox" class="fixed inset-0 z-[5000] bg-white flex items-center justify-center p-6 hidden">
+        <div class="w-full max-w-sm p-10 text-center glass shadow-2xl rounded-[40px] border border-gray-100">
+            <h1 class="text-4xl font-black text-slate-900 mb-4 italic">دخول <span class="text-blue-600">ملكي</span></h1>
+            <p class="text-gray-400 font-bold mb-10 text-sm">يجب تسجيل الدخول أولاً لتثبيت رقم محفظتك</p>
+            <button onclick="login()" class="w-full bg-slate-900 text-white p-5 rounded-2xl font-black flex items-center justify-center gap-3 active:scale-95 transition shadow-xl">
+                <img src="https://www.google.com/favicon.ico" class="w-6"> سجل عبر قوقل بلاي
             </button>
         </div>
     </div>
 
-    <div id="mainUI" class="hidden">
-        <div class="max-w-2xl mx-auto p-4">
-            <header class="flex justify-between items-center py-6">
-                <div class="flex items-center gap-4">
-                    <img id="uImg" class="w-16 h-16 rounded-2xl border-4 border-white shadow-xl">
-                    <div>
-                        <h2 id="uName" class="font-black text-xl text-slate-800 leading-tight">..</h2>
-                        <div class="flex gap-2 items-center">
-                            <span id="uRank" class="text-[10px] px-2 py-0.5 rounded-lg font-black text-white bg-amber-800">برونزي</span>
-                            <span id="uID" class="text-blue-600 font-bold text-[11px] bg-blue-50 px-2 rounded italic">#000000</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex gap-3">
-                    <button onclick="toggleSidebar()" class="w-12 h-12 bg-white rounded-2xl shadow-sm text-slate-800 flex items-center justify-center"><i class="fas fa-info-circle"></i></button>
-                    <button onclick="logout()" class="w-12 h-12 bg-red-50 rounded-2xl shadow-sm text-red-600 flex items-center justify-center"><i class="fas fa-power-off"></i></button>
-                </div>
-            </header>
-
-            <section class="glass p-8 mb-8 bg-gradient-to-br from-white to-blue-50 relative overflow-hidden">
-                <div class="flex justify-between items-end relative z-10">
-                    <div>
-                        <p class="text-[10px] text-gray-400 font-black uppercase mb-1">الرصيد المتوفر</p>
-                        <h2 class="text-5xl font-black text-slate-900 leading-none"><span id="uBal">0</span> <span class="text-sm text-blue-600 font-bold">SDG</span></h2>
-                    </div>
-                    <div class="text-left">
-                        <p class="text-[10px] text-gray-400 font-black mb-1">النقاط</p>
-                        <h2 class="text-2xl font-black text-green-600"><span id="uPts">0</span> ⭐</h2>
-                    </div>
-                </div>
-                <div class="grid grid-cols-2 gap-3 mt-8">
-                    <button onclick="openAgents('recharge')" class="bg-blue-600 text-white py-4 rounded-2xl font-black text-xs shadow-lg shadow-blue-200">شحن الرصيد</button>
-                    <button onclick="openAgents('support')" class="bg-white border-2 border-slate-100 text-slate-700 py-4 rounded-2xl font-black text-xs">الدعم الفني</button>
-                </div>
-            </section>
-
-            <nav class="flex gap-8 mb-8 border-b border-gray-100 overflow-x-auto no-scrollbar font-black text-xs">
-                <button onclick="setTab('store')" id="t-store" class="tab-active pb-4 shrink-0">المتجر الملكي</button>
-                <button onclick="setTab('orders')" id="t-orders" class="text-gray-400 pb-4 shrink-0">سجل طلباتي</button>
-                <button id="adminBtn" onclick="setTab('admin')" class="hidden text-red-600 pb-4 shrink-0">لوحة الإدارة ⚙️</button>
-            </nav>
-
-            <div id="view-store" class="space-y-8">
+    <div id="app" class="hidden">
+        <header class="p-4 bg-white flex justify-between items-center sticky top-0 z-50 shadow-sm">
+            <div class="flex items-center gap-3">
+                <img id="uImg" class="w-12 h-12 rounded-2xl border-2 border-blue-500 shadow-md">
                 <div>
-                    <h3 class="font-black text-slate-800 mb-4 pr-3 border-r-4 border-blue-600 italic text-sm">الشحن المباشر (آيدي) ⚡</h3>
-                    <div id="grid-direct" class="grid grid-cols-2 gap-4"></div>
-                </div>
-                <div>
-                    <h3 class="font-black text-slate-800 mb-4 pr-3 border-r-4 border-red-600 italic text-sm">عروض الأسبوع الخاصة 💥</h3>
-                    <div id="grid-weekly" class="grid grid-cols-2 gap-4"></div>
-                </div>
-                <div>
-                    <h3 class="font-black text-slate-800 mb-4 pr-3 border-r-4 border-green-600 italic text-sm">الاشتراكات والحزم 💎</h3>
-                    <div id="grid-subs" class="grid grid-cols-2 gap-4"></div>
+                    <p id="uName" class="font-black text-slate-800 text-sm">--</p>
+                    <p id="uID" class="text-[10px] text-blue-600 font-bold bg-blue-50 px-2 rounded">محفظة: #000000</p>
                 </div>
             </div>
+            <button onclick="logout()" class="text-red-500 text-xl p-2"><i class="fas fa-power-off"></i></button>
+        </header>
 
-            <div id="view-orders" class="hidden space-y-4"></div>
-
-            <div id="view-admin" class="hidden space-y-6">
-                <div class="glass p-6 border-2 border-red-100 bg-red-50/30">
-                    <h3 class="font-black text-red-600 mb-4 italic">إيداع رصيد سريع</h3>
-                    <input id="admWID" placeholder="رقم المحفظة (مثال: 123456)" class="w-full p-4 rounded-xl mb-2 outline-none border font-bold">
-                    <input id="admAmt" type="number" placeholder="المبلغ المراد إضافته" class="w-full p-4 rounded-xl mb-4 outline-none border font-bold">
-                    <button onclick="adminDeposit()" class="w-full bg-red-600 text-white font-black py-4 rounded-xl shadow-xl">تأكيد عملية الإيداع</button>
+        <main class="max-w-md mx-auto">
+            <div class="main-slider">
+                <div class="flex-1">
+                    <h2 class="text-xl font-black mb-1">اشحن محفظتك الآن</h2>
+                    <p class="text-[10px] opacity-90">دعم فني سريع | شحن تلقائي 24/7</p>
+                    <button onclick="openWA()" class="mt-3 bg-yellow-400 text-slate-900 px-4 py-1.5 rounded-full text-[10px] font-black shadow-lg">تواصل مع الوكلاء</button>
                 </div>
-                <div id="allOrders" class="space-y-4">
-                    <h3 class="font-black text-slate-800 italic">مراقبة الطلبات الحالية:</h3>
-                </div>
+                <i class="fas fa-crown text-6xl opacity-20 absolute left-4"></i>
             </div>
-        </div>
+
+            <div class="banner-stats">
+                <div class="text-center"><i class="fas fa-wallet mb-1 text-yellow-400"></i><p>رصيدك: <span id="uBal">0</span></p></div>
+                <div class="text-center"><i class="fas fa-star mb-1 text-blue-400"></i><p>نقاطك: <span id="uPts">0</span></p></div>
+                <div class="text-center"><i class="fas fa-medal mb-1 text-green-400"></i><p id="uRank">برونزي</p></div>
+            </div>
+
+            <div class="px-4">
+                <h3 class="font-black text-slate-800 mb-4 flex items-center gap-2">
+                    <span class="w-2 h-6 bg-blue-600 rounded-full"></span> المنتجات الأكثر طلباً
+                </h3>
+
+                <div id="grid" class="grid grid-cols-2 gap-4 pb-24">
+                    </div>
+            </div>
+        </main>
     </div>
 
-    <div id="buyModal" class="fixed inset-0 z-[6000] bg-black/70 backdrop-blur-md hidden flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-sm rounded-[40px] p-8 relative shadow-2xl animate-modal">
-            <h3 id="buyTitle" class="font-black text-xl mb-6 text-center text-blue-600 italic">تأكيد عملية الشحن</h3>
-            <div class="space-y-4">
-                <input id="pPlayerID" placeholder="أدخل الآيدي (Player ID)" class="w-full p-4 bg-slate-50 rounded-2xl outline-none font-black text-center border-2 border-transparent focus:border-blue-400">
-                <input id="pPlayerName" placeholder="اسمك داخل اللعبة" class="w-full p-4 bg-slate-50 rounded-2xl outline-none font-black text-center border-2 border-transparent focus:border-blue-400">
-                <div class="p-4 bg-slate-900 text-white rounded-2xl text-center">
-                    <p class="text-[9px] text-gray-400 font-bold uppercase mb-1">طريقة الدفع التلقائي</p>
-                    <p class="font-black">رصيد محفظة خصم شوب</p>
-                </div>
-                <button id="confirmBtn" class="w-full bg-blue-600 text-white font-black py-5 rounded-2xl shadow-xl active:scale-95 transition">إرسال الطلب للمتجر 🚀</button>
-                <button onclick="closeModals()" class="w-full text-gray-400 font-bold py-2 text-xs">إلغاء العملية</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="agentModal" class="fixed inset-0 z-[7000] bg-black/70 backdrop-blur-md hidden flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-sm rounded-[40px] p-8 text-right shadow-2xl relative" dir="rtl">
-            <h3 class="font-black text-xl mb-8 text-center text-green-600 italic">الوكلاء المعتمدون</h3>
-            <div class="space-y-4">
-                <a href="https://wa.me/201550165993" class="flex justify-between items-center p-5 bg-slate-50 rounded-2xl border-2 border-transparent hover:border-green-500 transition">
-                    <div><p class="font-black text-sm">محمد فتحي حمزه</p><p class="text-[9px] text-gray-400">مصر | +201550165993</p></div>
-                    <i class="fab fa-whatsapp text-2xl text-green-500"></i>
-                </a>
-                <a href="https://wa.me/249914178935" class="flex justify-between items-center p-5 bg-slate-50 rounded-2xl border-2 border-transparent hover:border-green-500 transition">
-                    <div><p class="font-black text-sm">محمد التاج حمزه</p><p class="text-[9px] text-gray-400">السودان | +249914178935</p></div>
-                    <i class="fab fa-whatsapp text-2xl text-green-500"></i>
-                </a>
-                <a href="https://wa.me/249916581517" class="flex justify-between items-center p-5 bg-slate-50 rounded-2xl border-2 border-transparent hover:border-green-500 transition">
-                    <div><p class="font-black text-sm">مهند ياسر بلوله</p><p class="text-[9px] text-gray-400">السودان | +249916581517</p></div>
-                    <i class="fab fa-whatsapp text-2xl text-green-500"></i>
-                </a>
-                <a href="https://wa.me/249907760989" class="block w-full bg-slate-900 text-white py-4 rounded-2xl text-center font-black mt-4">المدير العام للمتجر</a>
-            </div>
-            <button onclick="closeModals()" class="w-full mt-6 text-gray-300 font-bold text-xs uppercase">إغلاق</button>
-        </div>
-    </div>
-
-    <div id="sidebar" class="fixed inset-y-0 left-0 w-80 bg-white z-[8000] shadow-2xl translate-x-[-100%] transition-transform duration-500 p-10">
-        <button onclick="toggleSidebar()" class="mb-12 text-gray-300 text-3xl"><i class="fas fa-times-circle"></i></button>
-        <h2 class="text-3xl font-black text-slate-800 mb-6 italic">من نحن؟</h2>
-        <p class="text-slate-500 font-bold leading-relaxed italic mb-10 text-sm">
-            في خصم شوب، صممنا لك نظاماً ملكياً يجمع بين السرعة والفخامة. نحن نوفر لك أفضل العروض بأسعار حصرية تتناقص كلما زاد ولاؤك للمتجر. هدفنا هو تقديم خدمة شحن تليق بمقامك الراقي.
-        </p>
-        <button onclick="logout()" class="w-full bg-red-50 text-red-600 font-black py-4 rounded-2xl flex items-center justify-center gap-3"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</button>
-    </div>
+    <a href="https://wa.me/249907760989" class="fixed bottom-6 left-6 bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl text-2xl z-[1000] animate-bounce">
+        <i class="fab fa-whatsapp"></i>
+    </a>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc, onSnapshot, query, where, increment, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
         const firebaseConfig = { apiKey: "AIzaSyC0jzecEwKgHpxHpTi8Y-_bwwfzVdtgf3E", authDomain: "khasmshop.firebaseapp.com", projectId: "khasmshop", storageBucket: "khasmshop.firebasestorage.app", messagingSenderId: "238182001615", appId: "1:238182001615:web:d77391030a40a481b440ba" };
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
-        const provider = new GoogleAuthProvider();
-        const adminEmails = ["mhmdfthu98@gmail.com", "mohnadyasir43@gmail.com", "muhammedaltaj111@gmail.com"];
+        const prov = new GoogleAuthProvider();
 
-        let uData = null;
-
-        const storeItems = [
-            { cat:'direct', n:'60 US', p:4000, uc:60, pts:2 },
-            { cat:'direct', n:'325 US', p:20000, uc:325, pts:10 },
-            { cat:'direct', n:'660 US', p:40000, uc:660, pts:22 },
-            { cat:'direct', n:'1800 US', p:100000, uc:1800, pts:60 },
-            { cat:'direct', n:'3850 US', p:200000, uc:3850, pts:128 },
-            { cat:'direct', n:'8100 US', p:400000, uc:8100, pts:270 },
-            { cat:'weekly', n:'385 US (عرض الأسبوع)', p:26000, uc:385, pts:12 },
-            { cat:'weekly', n:'720 US (عرض الأسبوع)', p:40000, uc:720, pts:24 },
-            { cat:'subs', n:'اشتراك برايم شهر', p:4500, uc:0, pts:1 },
-            { cat:'subs', n:'برايم بلص شهر', p:45000, uc:900, pts:30 },
-            { cat:'subs', n:'حزمة المتريالات', p:13500, uc:0, pts:6 }
+        // قائمة المنتجات (كاملة)
+        const products = [
+            { id:1, name:'60 شدة ببجي', price:4000, img:'https://www.pubgmobile.com/common/images/icon_logo.jpg' },
+            { id:2, name:'325 شدة ببجي', price:20000, img:'https://www.pubgmobile.com/common/images/icon_logo.jpg' },
+            { id:3, name:'660 شدة ببجي', price:40000, img:'https://www.pubgmobile.com/common/images/icon_logo.jpg' },
+            { id:4, name:'100 جواهر فري فاير', price:5000, img:'https://img.utdstc.com/icon/403/60a/40360a87f549c490a60424a106e232144d4c5c2d36d4f7385a4982a58d60e6e7' },
+            { id:5, name:'شحن تيك توك فوري', price:8000, img:'https://cdn-icons-png.flaticon.com/512/3046/3046121.png' },
+            { id:6, name:'اشتراك برايم شهر', price:4500, img:'https://cdn-icons-png.flaticon.com/512/3054/3054452.png' }
         ];
 
-        function getRank(totalUC) {
-            if (totalUC >= 7400) return { n:'ماسي', d:0.12, c:'bg-purple-600' };
-            if (totalUC >= 4400) return { n:'بلاتيني', d:0.09, c:'bg-blue-600' };
-            if (totalUC >= 2400) return { n:'ذهبي', d:0.06, c:'bg-amber-400 text-slate-900' };
-            if (totalUC >= 900) return { n:'فضي', d:0.03, c:'bg-slate-400' };
-            return { n:'برونزي', d:0, c:'bg-amber-800' };
-        }
-
         onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                document.getElementById('intro').style.opacity = '0';
-                setTimeout(() => document.getElementById('intro').classList.add('hidden'), 1000);
-                document.getElementById('authScreen').classList.add('hidden');
-                document.getElementById('mainUI').classList.remove('hidden');
-                initUser(user);
-            } else {
-                document.getElementById('intro').classList.add('hidden');
-                document.getElementById('authScreen').classList.remove('hidden');
-            }
+            setTimeout(() => {
+                document.getElementById('intro').style.display = 'none';
+                if (user) {
+                    document.getElementById('authBox').classList.add('hidden');
+                    document.getElementById('app').classList.remove('hidden');
+                    handleUser(user);
+                } else {
+                    document.getElementById('authBox').classList.remove('hidden');
+                }
+            }, 3000);
         });
 
-        async function initUser(user) {
+        async function handleUser(user) {
             const ref = doc(db, "users", user.uid);
-            onSnapshot(ref, (snap) => {
-                if (snap.exists()) {
-                    uData = snap.data();
-                    updateUI();
-                    if (adminEmails.includes(user.email.toLowerCase())) {
-                        document.getElementById('adminBtn').classList.remove('hidden');
-                        loadAdminOrders();
-                    }
-                } else {
-                    const newU = { name: user.displayName, email: user.email, balance: 0, points: 0, totalUC: 0, walletID: Math.floor(100000 + Math.random() * 900000).toString(), img: user.photoURL };
-                    setDoc(ref, newU);
-                }
-            });
-            loadUserOrders(user.uid);
-        }
-
-        function updateUI() {
-            const r = getRank(uData.totalUC || 0);
-            document.getElementById('uName').innerText = uData.name;
-            document.getElementById('uImg').src = uData.img;
-            document.getElementById('uBal').innerText = uData.balance.toLocaleString();
-            document.getElementById('uPts').innerText = uData.points || 0;
-            document.getElementById('uID').innerText = `#${uData.walletID}`;
-            document.getElementById('uRank').innerText = r.n;
-            document.getElementById('uRank').className = `text-[10px] px-2 py-0.5 rounded-lg font-black text-white ${r.c}`;
+            let snap = await getDoc(ref);
             
-            // رندر المتجر بخصم الرتبة
-            renderCategory('direct', 'grid-direct', r.d);
-            renderCategory('weekly', 'grid-weekly', r.d);
-            renderCategory('subs', 'grid-subs', r.d);
+            // إذا كان مستخدم جديد، أنشئ له محفظة ثابتة
+            if (!snap.exists()) {
+                const wid = Math.floor(100000 + Math.random() * 900000).toString();
+                await setDoc(ref, { name:user.displayName, email:user.email, walletID:wid, balance:0, points:0, totalUC:0, img:user.photoURL });
+            }
+
+            // مراقبة المحفظة والبيانات بشكل مباشر
+            onSnapshot(ref, (d) => {
+                const data = d.data();
+                document.getElementById('uName').innerText = data.name;
+                document.getElementById('uImg').src = data.img;
+                document.getElementById('uID').innerText = `المحفظة الثابتة: #${data.walletID}`;
+                document.getElementById('uBal').innerText = data.balance.toLocaleString();
+                document.getElementById('uPts').innerText = data.points;
+                renderProducts();
+            });
         }
 
-        function renderCategory(cat, gridId, discount) {
-            const grid = document.getElementById(gridId);
-            grid.innerHTML = "";
-            storeItems.filter(x => x.cat === cat).forEach(i => {
-                const finalP = i.p * (1 - discount);
-                grid.innerHTML += `
-                    <div class="glass p-5 text-center relative">
-                        <span class="absolute top-2 left-2 text-[8px] bg-green-100 text-green-600 px-2 py-0.5 rounded-full font-black">+${i.pts} ⭐</span>
-                        <p class="text-[10px] text-gray-400 font-black mb-1">${i.n}</p>
-                        <p class="text-xl font-black text-slate-800">${finalP.toLocaleString()}</p>
-                        ${discount > 0 ? `<p class="text-[8px] text-red-500 line-through">${i.p.toLocaleString()}</p>` : ''}
-                        <button onclick="openBuyModal('${i.n}', ${finalP}, ${i.uc}, ${i.pts})" class="w-full bg-slate-900 text-white text-[10px] py-3 rounded-xl mt-3 font-black shadow-lg">شحن</button>
+        function renderProducts() {
+            const g = document.getElementById('grid');
+            g.innerHTML = "";
+            products.forEach(p => {
+                g.innerHTML += `
+                    <div class="p-card">
+                        <img src="${p.img}" class="p-img">
+                        <h4 class="font-black text-[11px] text-slate-800 mb-2">${p.name}</h4>
+                        <p class="text-blue-600 font-black text-sm mb-3">${p.price.toLocaleString()} ج.س</p>
+                        <button onclick="alert('سيتم فتح تفاصيل الشحن..')" class="w-full bg-slate-900 text-white py-2 rounded-xl text-[10px] font-bold">طلب شحن</button>
                     </div>`;
             });
         }
 
-        window.openBuyModal = (n, p, uc, pts) => {
-            if (uData.balance < p) return alert("عذراً، رصيدك لا يكفي لشراء هذا العرض.");
-            document.getElementById('buyModal').classList.remove('hidden');
-            document.getElementById('confirmBtn').onclick = () => createOrder(n, p, uc, pts);
-        };
-
-        async function createOrder(n, p, uc, pts) {
-            const pid = document.getElementById('pPlayerID').value;
-            const pName = document.getElementById('pPlayerName').value;
-            if (!pid || !pName) return alert("الرجاء إدخال بيانات اللاعب أولاً.");
-
-        const order = { uid:auth.currentUser.uid, uName:uData.name, walletID:uData.walletID, playerID:pid, playerName:pName, item:n, price:p, status:'قيد التنفيذ', date:new Date().toLocaleString('ar-EG') };
-            await addDoc(collection(db, "orders"), order);
-            await updateDoc(doc(db, "users", auth.currentUser.uid), { balance: increment(-p), points: increment(pts), totalUC: increment(uc) });
-            alert("✅ تم تسجيل طلبك بنجاح وسوف يتم تنفيذه فوراً.");
-            closeModals();
-        }
-
-        function loadUserOrders(uid) {
-            const q = query(collection(db, "orders"), where("uid", "==", uid));
-            onSnapshot(q, (snap) => {
-                const div = document.getElementById('view-orders');
-                div.innerHTML = snap.empty ? '<p class="text-center text-gray-400 font-bold">لا توجد طلبات سابقة</p>' : '';
-                snap.forEach(d => {
-                    const o = d.data();
-                    const statusClass = o.status === 'مكتمل' ? 'bg-green-100 text-green-600' : (o.status === 'فشل' ? 'bg-red-100 text-red-600' : 'bg-blue-100 text-blue-600');
-                    div.innerHTML += `<div class="glass p-5 flex justify-between items-center"><div class="text-right"><h4 class="font-black text-slate-800">${o.item}</h4><p class="text-[10px] text-gray-400 font-bold">${o.date}</p><p class="text-[11px] font-bold text-blue-600 mt-1 italic">اللاعب: ${o.playerName}</p></div><span class="text-[10px] font-black px-3 py-1 rounded-lg ${statusClass}">${o.status}</span></div>`;
-                });
-            });
-        }
-
-        async function loadAdminOrders() {
-            onSnapshot(collection(db, "orders"), (snap) => {
-                const div = document.getElementById('allOrders');
-                div.innerHTML = "";
-                snap.forEach(d => {
-                    const o = d.data();
-                    div.innerHTML += `<div class="glass p-4 text-xs space-y-2 border-l-4 border-red-500">
-                        <p><b>الزبون:</b> ${o.uName} (#${o.walletID})</p>
-                        <p><b>الطلب:</b> ${o.item} | <b>ID:</b> ${o.playerID} (${o.playerName})</p>
-                        <div class="flex gap-2"><button onclick="updStat('${d.id}', 'مكتمل')" class="bg-green-500 text-white p-1 px-3 rounded">مكتمل</button><button onclick="updStat('${d.id}', 'فشل')" class="bg-red-500 text-white p-1 px-3 rounded">فشل</button></div>
-                    </div>`;
-                });
-            });
-        }
-
-        window.updStat = async (id, s) => { await updateDoc(doc(db, "orders", id), { status: s }); alert("تم تحديث حالة الطلب ✅"); };
-
-        window.adminDeposit = async () => {
-            const wid = document.getElementById('admWID').value;
-            const amt = parseFloat(document.getElementById('admAmt').value);
-            const q = query(collection(db, "users"), where("walletID", "==", wid));
-            const s = await getDocs(q);
-            if (s.empty) return alert("خطأ: رقم المحفظة غير مسجل.");
-            await updateDoc(doc(db, "users", s.docs[0].id), { balance: increment(amt) });
-            alert(`تم إيداع ${amt} بنجاح ✅`);
-        };
-
-        window.setTab = (t) => { ['store', 'orders', 'admin'].forEach(v => { document.getElementById(`view-${v}`)?.classList.add('hidden'); document.getElementById(`t-${v}`)?.classList.remove('tab-active'); document.getElementById(`t-${v}`)?.classList.add('text-gray-400'); }); document.getElementById(`view-${t}`).classList.remove('hidden'); document.getElementById(`t-${t}`).classList.add('tab-active'); document.getElementById(`t-${t}`).classList.remove('text-gray-400'); };
-        window.openAgents = () => document.getElementById('agentModal').classList.remove('hidden');
-        window.closeModals = () => { document.getElementById('buyModal').classList.add('hidden'); document.getElementById('agentModal').classList.add('hidden'); };
-        window.toggleSidebar = () => { const s = document.getElementById('sidebar'); s.style.transform = s.style.transform === 'translateX(0%)' ? 'translateX(-100%)' : 'translateX(0%)'; };
-        window.login = () => signInWithPopup(auth, provider);
+        window.login = () => signInWithPopup(auth, prov);
         window.logout = () => signOut(auth).then(() => location.reload());
+        window.openWA = () => window.open('https://wa.me/249907760989');
     </script>
 </body>
-</html>
+    </html>
