@@ -3,143 +3,204 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KhasmShop | النظام الملكي المطور</title>
+    <title>KhasmShop | النظام الملكي المتكامل</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
+        /* تعريف الخطوط والخلفيات */
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
-        body { font-family: 'Cairo', sans-serif; background: #020617; color: white; overflow-x: hidden; }
         
-        /* الخلفية الفخمة */
-        .royal-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
-            background: radial-gradient(circle at center, #1e293b 0%, #020617 100%); }
-        .stars { position: absolute; width: 100%; height: 100%; background: url('https://www.transparenttextures.com/patterns/stardust.png'); opacity: 0.2; animation: moveBg 100s linear infinite; }
-        @keyframes moveBg { from { background-position: 0 0; } to { background-position: 1000px 1000px; } }
+        :root {
+            --primary-color: #2563eb;
+            --accent-green: #22c55e;
+            --accent-red: #ef4444;
+        }
 
-        /* تصميم كروت الزجاج */
-        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 25px; }
-        .marquee-3d { background: linear-gradient(90deg, #1e40af, #3b82f6); color: #fbbf24; padding: 12px 0; transform: perspective(1000px) rotateX(10deg); box-shadow: 0 10px 30px rgba(0,0,0,0.5); font-weight: 900; }
-        .tab-btn.active { border-bottom: 3px solid #fbbf24; color: #fbbf24; }
+        body { 
+            font-family: 'Cairo', sans-serif; 
+            margin: 0; 
+            background: #ffffff; 
+            color: #1a1a1a;
+            scroll-behavior: smooth;
+        }
+
+        /* الخلفية المتدرجة المتحركة المطلوبة (أبيض + أحمر + أخضر + أزرق) */
+        .gradient-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+            background: linear-gradient(135deg, 
+                rgba(255,255,255,1) 0%, 
+                rgba(240,255,244,1) 25%, 
+                rgba(255,245,245,1) 50%, 
+                rgba(240,247,255,1) 75%);
+            background-size: 400% 400%;
+            animation: moveGradient 12s ease infinite;
+        }
+
+        @keyframes moveGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* كروت التصميم الزجاجي الأبيض */
+        .glass-white { 
+            background: rgba(255, 255, 255, 0.85); 
+            backdrop-filter: blur(12px); 
+            border: 1px solid rgba(0, 0, 0, 0.08); 
+            border-radius: 30px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+        }
+
+        /* تأثيرات الأزرار والتبويبات */
+        .tab-active { 
+            border-bottom: 4px solid var(--primary-color); 
+            color: var(--primary-color); 
+            font-weight: 900; 
+        }
+
+        .product-card {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        /* أنيميشن الإعلان الثلاثي */
+        .marquee-container {
+            background: linear-gradient(90deg, #1e40af, #3b82f6, #1e40af);
+            color: white;
+            padding: 10px 0;
+            perspective: 1000px;
+        }
+        .marquee-content {
+            display: inline-block;
+            transform: rotateX(10deg);
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
 
-    <div class="royal-bg"><div class="stars"></div></div>
+    <div class="gradient-bg"></div>
 
-    <div id="authScreen" class="fixed inset-0 z-[2000] bg-slate-950 flex items-center justify-center p-6">
-        <div class="glass w-full max-w-sm p-10 text-center border-yellow-400/20">
-            <h1 class="text-4xl font-black mb-2 text-white italic tracking-tighter">KHASM<span class="text-yellow-400">SHOP</span></h1>
-            <p class="text-gray-400 text-xs mb-10 tracking-[3px]">PREMIUM RECHARGE SYSTEM</p>
-            <button onclick="loginGoogle()" class="w-full bg-white text-black p-4 rounded-2xl font-black flex items-center justify-center gap-4 hover:scale-105 transition duration-300">
-                <img src="https://www.google.com/favicon.ico" class="w-6"> الدخول عبر GOOGLE
-            </button>
+    <div id="authScreen" class="fixed inset-0 z-[5000] bg-white flex items-center justify-center p-6">
+        <div class="max-w-sm w-full text-center">
+            <div class="mb-8">
+                <h1 class="text-5xl font-black italic tracking-tighter text-blue-700">KHASM<span class="text-red-600">SHOP</span></h1>
+                <div class="h-1 w-20 bg-green-500 mx-auto mt-2 rounded-full"></div>
+            </div>
+            <div class="glass-white p-8">
+                <p class="text-gray-500 mb-8 font-bold">مرحباً بك في المتجر الملكي، يرجى تسجيل الدخول للمتابعة</p>
+                <button onclick="loginGoogle()" class="w-full bg-slate-900 text-white p-5 rounded-2xl font-black flex items-center justify-center gap-4 hover:bg-black transition shadow-2xl">
+                    <img src="https://www.google.com/favicon.ico" class="w-6"> دخول عبر GOOGLE
+                </button>
+            </div>
         </div>
     </div>
 
     <div id="mainUI" class="hidden">
-        <div class="marquee-3d text-center">
-            <marquee behavior="scroll" direction="right" scrollamount="8">
-                💥 عرض الأسبوع: 60 شدة بـ 4000 فقط! | 🏆 كل 60 شدة = 2 نقطة | 💎 رومات أسبوعية على 60 شدة مجاناً 💎
+        <div class="marquee-container shadow-lg">
+            <marquee behavior="scroll" direction="right" scrollamount="7">
+                🛡️ شحن آمن بنسبة 100% | 💎 نظام النقاط: 30 نقطة = 60 شدة مجاناً | ⚡ سرعة في التنفيذ مع كبار الوكلاء
             </marquee>
         </div>
 
         <div class="max-w-2xl mx-auto p-4">
-            <div class="flex justify-between items-center py-6">
+            
+            <header class="flex justify-between items-center py-8">
                 <div class="flex items-center gap-4">
-                    <img id="userImg" src="" class="w-14 h-14 rounded-full border-2 border-yellow-400 shadow-xl">
+                    <div class="relative">
+                        <img id="userImg" src="" class="w-16 h-16 rounded-2xl border-4 border-white shadow-lg">
+                        <div class="absolute -bottom-2 -right-2 bg-green-500 w-5 h-5 rounded-full border-4 border-white"></div>
+                    </div>
                     <div>
-                        <p id="userName" class="font-black text-xl leading-none italic uppercase">تحميل...</p>
-                        <p id="walletIDDisp" class="text-yellow-400 text-xs font-bold mt-2 tracking-widest"></p>
+                        <h2 id="userName" class="font-black text-xl text-slate-800 leading-none">جاري التحميل...</h2>
+                        <div id="walletIDDisp" class="mt-2 text-[11px] font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-lg italic">#000000</div>
                     </div>
                 </div>
-                <button onclick="logout()" class="bg-white/5 p-3 rounded-full hover:bg-red-500/20 text-red-500 transition"><i class="fas fa-power-off text-xl"></i></button>
-            </div>
+                <button onclick="logout()" class="text-gray-300 hover:text-red-500 transition-colors"><i class="fas fa-power-off text-2xl"></i></button>
+            </header>
 
-            <div class="grid grid-cols-2 gap-4 mb-6">
-                <div class="glass p-5 relative overflow-hidden">
-                    <p class="text-[10px] text-gray-400 uppercase tracking-widest">رصيد المحفظة</p>
-                    <h2 class="text-3xl font-black text-white mt-1"><span id="balance">0</span> <span class="text-xs text-yellow-400 font-bold">SDG</span></h2>
-                    <i class="fas fa-wallet absolute -bottom-2 -right-2 text-4xl opacity-5"></i>
-                </div>
-                <div class="glass p-5 relative overflow-hidden border-yellow-400/30">
-                    <p class="text-[10px] text-gray-400 uppercase tracking-widest">نقاط المكافآت</p>
-                    <h2 class="text-3xl font-black text-yellow-400 mt-1"><span id="points">0</span> <span class="text-[10px] text-white">نقطة</span></h2>
-                    <i class="fas fa-star absolute -bottom-2 -right-2 text-4xl opacity-10 text-yellow-400"></i>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-2 gap-4 mb-8">
-                <button onclick="showAgents('support')" class="bg-green-600/20 border border-green-500/50 p-4 rounded-3xl flex items-center justify-center gap-3 font-black hover:bg-green-600 transition">
-                    <i class="fab fa-whatsapp text-2xl text-green-500"></i> الدعم الفني
-                </button>
-                <button onclick="showAgents('recharge')" class="bg-blue-600/20 border border-blue-500/50 p-4 rounded-3xl flex items-center justify-center gap-3 font-black hover:bg-blue-600 transition">
-                    <i class="fas fa-money-bill-transfer text-2xl text-blue-500"></i> شحن المحفظة
-                </button>
-            </div>
-
-            <div id="adminPanel" class="hidden glass p-6 mb-8 border-2 border-yellow-400/50">
-                <h3 class="text-yellow-400 font-black mb-4 flex items-center gap-2 italic"><i class="fas fa-tools"></i> لوحة تحكم الإدارة</h3>
-                <div class="space-y-3">
-                    <input id="newProdName" placeholder="اسم المنتج (مثلاً: 60 شدة)" class="w-full p-4 rounded-2xl bg-white/5 border border-white/10 text-sm">
-                    <div class="grid grid-cols-2 gap-2">
-                        <input id="newProdPrice" type="number" placeholder="السعر SDG" class="p-4 rounded-2xl bg-white/5 border border-white/10 text-sm">
-                        <input id="newProdUC" type="number" placeholder="كمية UC" class="p-4 rounded-2xl bg-white/5 border border-white/10 text-sm">
+            <section class="glass-white p-8 mb-8 relative overflow-hidden">
+                <div class="relative z-10 flex justify-between items-end">
+                    <div>
+                        <p class="text-[11px] text-gray-400 font-black uppercase tracking-widest mb-2">الرصيد المتوفر</p>
+                        <h3 class="text-5xl font-black text-slate-900"><span id="balance">0</span> <span class="text-sm text-blue-600">SDG</span></h3>
                     </div>
-                    <select id="newProdCat" class="w-full p-4 rounded-2xl bg-slate-800 border border-white/10 text-sm">
-                        <option value="direct">شحن مباشر (5% خصم)</option>
-                        <option value="id">شحن عبر الآيدي</option>
-                        <option value="subs">اشتراكات وحزم</option>
-                    </select>
-                    <button onclick="addNewProduct()" class="w-full bg-yellow-400 text-black font-black py-4 rounded-2xl">إضافة المنتج للمتجر ➕</button>
-                </div>
-                <div class="mt-6 border-t border-white/10 pt-4">
-                    <p class="text-xs text-gray-400 mb-3">شحن سريع للمحافظ:</p>
-                    <div class="flex gap-2">
-                        <input id="targetWID" placeholder="رقم المحفظة" class="w-2/3 p-4 rounded-2xl bg-white/5 border border-white/10">
-                        <input id="targetAmt" placeholder="المبلغ" class="w-1/3 p-4 rounded-2xl bg-white/5 border border-white/10">
+                    <div class="text-left">
+                        <p class="text-[11px] text-gray-400 font-black mb-1">نقاط الولاء</p>
+                        <div class="bg-green-100 text-green-700 px-4 py-2 rounded-2xl font-black flex items-center gap-2">
+                            <span id="points">0</span> <i class="fas fa-star text-xs"></i>
+                        </div>
                     </div>
-                    <button onclick="quickCharge()" class="w-full bg-green-500 text-white font-black py-3 rounded-2xl mt-2">تنفيذ الإيداع ✅</button>
                 </div>
-            </div>
+                <div class="grid grid-cols-2 gap-3 mt-8">
+                    <button onclick="openAgents('recharge')" class="bg-blue-600 text-white py-4 rounded-2xl font-black shadow-lg shadow-blue-200 hover:bg-blue-700 transition">شحن المحفظة</button>
+                    <button onclick="openAgents('support')" class="bg-white border-2 border-slate-100 text-slate-700 py-4 rounded-2xl font-black hover:bg-slate-50 transition">الدعم الفني</button>
+                </div>
+            </section>
 
-            <div class="flex justify-around mb-8 border-b border-white/5">
-                <button onclick="switchTab('direct')" id="tab-direct" class="tab-btn pb-4 font-black active">شحن مباشر</button>
-                <button onclick="switchTab('id')" id="tab-id" class="tab-btn pb-4 font-black">عبر الآيدي</button>
-                <button onclick="switchTab('subs')" id="tab-subs" class="tab-btn pb-4 font-black">اشتراكات</button>
-                <button onclick="switchTab('redeem')" id="tab-redeem" class="tab-btn pb-4 font-black text-yellow-400 underline italic">النقاط 🎁</button>
-            </div>
+            <section id="adminPanel" class="hidden mb-10">
+                <div class="bg-red-50 border-2 border-red-100 rounded-[35px] p-8">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="bg-red-500 p-2 rounded-lg text-white"><i class="fas fa-user-shield"></i></div>
+                        <h4 class="font-black text-red-600 italic">لوحة إدارة العمليات</h4>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="bg-white p-4 rounded-2xl shadow-sm">
+                            <p class="text-xs font-bold text-gray-400 mb-3 uppercase">إيداع سريع للزبائن</p>
+                            <input id="targetWID" placeholder="أدخل رقم محفظة الزبون" class="w-full mb-3 p-4 bg-slate-50 rounded-xl outline-none focus:ring-2 ring-red-200 font-bold">
+                            <input id="targetAmt" type="number" placeholder="المبلغ المراد شحنه" class="w-full p-4 bg-slate-50 rounded-xl outline-none font-bold">
+                        </div>
+                        <button onclick="quickCharge()" class="w-full bg-red-600 text-white font-black py-4 rounded-2xl shadow-xl shadow-red-100">تنفيذ عملية الشحن ✅</button>
+                    </div>
+                </div>
+            </section>
 
-            <div id="productGrid" class="grid grid-cols-2 gap-4"></div>
+            <nav class="flex justify-between mb-8 border-b border-gray-100">
+                <button onclick="switchTab('direct')" id="tab-direct" class="tab-active flex-1 pb-4 text-sm font-bold">شحن مباشر</button>
+                <button onclick="switchTab('id')" id="tab-id" class="flex-1 pb-4 text-sm font-bold text-gray-400">عبر الآيدي</button>
+                <button onclick="switchTab('subs')" id="tab-subs" class="flex-1 pb-4 text-sm font-bold text-gray-400">اشتراكات</button>
+                <button onclick="switchTab('redeem')" id="tab-redeem" class="flex-1 pb-4 text-sm font-black text-green-600 italic">المكافآت 🎁</button>
+            </nav>
+
+            <div id="productGrid" class="grid grid-cols-2 gap-5">
+                </div>
+
         </div>
     </div>
 
-    <div id="agentModal" class="fixed inset-0 z-[3000] bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-6">
-        <div class="glass w-full max-w-sm p-8 text-center border-yellow-400/30 relative">
-            <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 text-2xl"><i class="fas fa-times"></i></button>
-            <h3 id="modalTitle" class="text-2xl font-black text-yellow-400 mb-8 italic uppercase tracking-tighter">قائمة الوكلاء المعتمدين</h3>
+    <div id="agentModal" class="fixed inset-0 z-[6000] bg-slate-900/40 backdrop-blur-md hidden flex items-center justify-center p-6">
+        <div class="bg-white w-full max-w-sm rounded-[40px] p-8 shadow-2xl relative">
+            <button onclick="closeModal()" class="absolute top-6 right-6 text-gray-300 hover:text-red-500 transition"><i class="fas fa-times-circle text-3xl"></i></button>
+            <h3 id="modalTitle" class="text-2xl font-black text-slate-800 mb-8 italic">تواصل مع الإدارة</h3>
             <div class="space-y-4">
-                <a href="https://wa.me/249929281699" target="_blank" class="flex items-center justify-between bg-white/5 p-5 rounded-3xl hover:bg-yellow-400 hover:text-black transition group">
-                    <span class="font-black italic text-lg">المدير العام محمد</span>
-                    <i class="fab fa-whatsapp text-2xl text-green-500 group-hover:text-black"></i>
+                <a href="https://wa.me/249929281699" target="_blank" class="flex items-center justify-between p-5 bg-slate-50 rounded-3xl border-2 border-transparent hover:border-green-500 hover:bg-green-50 transition group">
+                    <div>
+                        <p class="font-black text-slate-800">المدير العام محمد</p>
+                        <p class="text-[10px] text-gray-400 font-bold">متاح الآن - رد فوري</p>
+                    </div>
+                    <i class="fab fa-whatsapp text-3xl text-green-500 group-hover:scale-110 transition"></i>
                 </a>
-                <a href="https://wa.me/249114175317" target="_blank" class="flex items-center justify-between bg-white/5 p-5 rounded-3xl hover:bg-yellow-400 hover:text-black transition group">
-                    <span class="font-black italic text-lg">الوكيل مهند ياسر</span>
-                    <i class="fab fa-whatsapp text-2xl text-green-500 group-hover:text-black"></i>
-                </a>
-                <a href="https://wa.me/249124450259" target="_blank" class="flex items-center justify-between bg-white/5 p-5 rounded-3xl hover:bg-yellow-400 hover:text-black transition group">
-                    <span class="font-black italic text-lg">الوكيل محمد التاج</span>
-                    <i class="fab fa-whatsapp text-2xl text-green-500 group-hover:text-black"></i>
+                <a href="https://wa.me/249114175317" target="_blank" class="flex items-center justify-between p-5 bg-slate-50 rounded-3xl border-2 border-transparent hover:border-green-500 hover:bg-green-50 transition group">
+                    <div>
+                        <p class="font-black text-slate-800">الوكيل مهند ياسر</p>
+                        <p class="text-[10px] text-gray-400 font-bold">قسم الشحن والتحويل</p>
+                    </div>
+                    <i class="fab fa-whatsapp text-3xl text-green-500 group-hover:scale-110 transition"></i>
                 </a>
             </div>
-            <p class="mt-8 text-[10px] text-gray-500 uppercase tracking-[4px]">Verified Security Team</p>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, query, where, getDocs, increment, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, query, where, getDocs, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
+        // إعدادات Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyC0jzecEwKgHpxHpTi8Y-_bwwfzVdtgf3E",
             authDomain: "khasmshop.firebaseapp.com",
@@ -153,11 +214,30 @@
         const db = getFirestore(app);
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
+
+        // قائمة المديرين المسموح لهم بدخول لوحة الإدارة
         const admins = ["mhmdfthu98@gmail.com", "mohnadyasir43@gmail.com", "muhammedaltaj111@gmail.com"];
         
         let userData = null;
         let activeTab = "direct";
 
+        // قاعدة بيانات المنتجات الثابتة (يمكنك تعديلها من هنا)
+        const storeItems = [
+            // شحن مباشر
+            { id: 1, cat: 'direct', name: '60 UC', uc: 60, price: 4000, pts: '+2' },
+            { id: 2, cat: 'direct', name: '325 UC', uc: 325, price: 20000, pts: '+10' },
+            { id: 3, cat: 'direct', name: '660 UC', uc: 660, price: 40000, pts: '+22' },
+            { id: 4, cat: 'direct', name: '1800 UC', uc: 1800, price: 100000, pts: '+60' },
+            // عبر الايدي
+            { id: 5, cat: 'id', name: '385 UC (عرض)', uc: 385, price: 26000, pts: '+12' },
+            { id: 6, cat: 'id', name: '720 UC', uc: 720, price: 40000, pts: '+24' },
+            // اشتراكات وحزم
+            { id: 7, cat: 'subs', name: 'اشتراك برايم شهر', uc: 0, price: 4500, pts: '+1' },
+            { id: 8, cat: 'subs', name: 'برايم بلص شهر', uc: 900, price: 45000, pts: '+30' },
+            { id: 9, cat: 'subs', name: 'حزمة الماتريال', uc: 0, price: 13500, pts: '+6' }
+        ];
+
+        // مراقبة حالة المستخدم
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 document.getElementById('authScreen').classList.add('hidden');
@@ -165,127 +245,158 @@
                 document.getElementById('userName').innerText = user.displayName;
                 document.getElementById('userImg').src = user.photoURL;
 
+                // حماية الإدارة
                 if (admins.includes(user.email.toLowerCase())) {
                     document.getElementById('adminPanel').classList.remove('hidden');
                 }
 
-                const ref = doc(db, "wallets", user.uid);
-                const snap = await getDoc(ref);
-                if (snap.exists()) {
-                    userData = snap.data();
+                // جلب بيانات المحفظة
+                const walletRef = doc(db, "wallets", user.uid);
+                const walletSnap = await getDoc(walletRef);
+                
+                if (walletSnap.exists()) {
+                    userData = walletSnap.data();
                 } else {
-                    userData = { balance: 0, points: 0, walletID: Math.floor(100000 + Math.random() * 900000).toString(), email: user.email };
-                    await setDoc(ref, userData);
+                    userData = { 
+                        balance: 0, 
+                        points: 0, 
+                        walletID: Math.floor(100000 + Math.random() * 900000).toString(),
+                        email: user.email 
+                    };
+                    await setDoc(walletRef, userData);
                 }
-                renderUI();
+                updateDisplay();
             } else {
                 document.getElementById('authScreen').classList.remove('hidden');
                 document.getElementById('mainUI').classList.add('hidden');
             }
         });
 
-        // رندر المنتجات
-        async function renderUI() {
+        // تحديث واجهة العرض
+        function updateDisplay() {
             document.getElementById('balance').innerText = userData.balance.toLocaleString();
             document.getElementById('points').innerText = userData.points || 0;
-            document.getElementById('walletIDDisp').innerText = `محفظتك الرقمية: #${userData.walletID}`;
+            document.getElementById('walletIDDisp').innerText = `المحفظة الرقمية: #${userData.walletID}`;
 
             const grid = document.getElementById('productGrid');
             grid.innerHTML = "";
 
             if (activeTab === 'redeem') {
-                grid.innerHTML = `
-                    <div class="glass p-6 text-center border-yellow-400 col-span-2">
-                        <i class="fas fa-gift text-4xl text-yellow-400 mb-4"></i>
-                        <h4 class="font-black">استبدال النقاط</h4>
-                        <p class="text-xs text-gray-400 mt-2">حوّل 30 نقطة إلى 60 شدة مجاناً</p>
-                        <button onclick="redeemPoints(30, 60)" class="w-full bg-yellow-400 text-black font-black py-3 rounded-2xl mt-6">استبدال الآن 🎁</button>
-                    </div>`;
+                renderRedeemSection(grid);
                 return;
             }
 
-            const q = query(collection(db, "products"), where("category", "==", activeTab));
-            const snap = await getDocs(q);
-            
-            snap.forEach(docSnap => {
-                const p = docSnap.data();
-                const isAdmin = admins.includes(auth.currentUser.email.toLowerCase());
+            // عرض المنتجات العادية
+            storeItems.filter(item => item.cat === activeTab).forEach(item => {
                 grid.innerHTML += `
-                    <div class="glass p-5 text-center group transition duration-500 hover:border-yellow-400/50 relative">
-                        ${isAdmin ? `<button onclick="deleteProduct('${docSnap.id}')" class="absolute top-2 right-2 text-red-500 text-xs"><i class="fas fa-trash"></i></button>` : ''}
-                        <p class="text-[9px] text-gray-500 font-bold mb-1 uppercase tracking-tighter">${p.name}</p>
-                        <p class="text-2xl font-black text-white group-hover:text-yellow-400 transition">${p.price.toLocaleString()}</p>
-                        <p class="text-[9px] text-yellow-400 italic mb-4">SDG</p>
-                        <button onclick="buyProduct(${p.price}, ${p.uc}, '${p.name}')" class="w-full bg-yellow-400/10 border border-yellow-400/20 text-yellow-400 text-[10px] font-black py-2 rounded-xl hover:bg-yellow-400 hover:text-black transition">شحن ملكي</button>
-                    </div>`;
+                    <div class="product-card glass-white p-6 text-center relative border-transparent border-2 hover:border-blue-200">
+                        <span class="absolute top-3 left-3 bg-green-50 text-green-600 text-[9px] px-2 py-0.5 rounded-full font-black">${item.pts} نقطة</span>
+                        <p class="text-[10px] text-gray-400 font-black mb-1 uppercase tracking-tighter">${item.name}</p>
+                        <h4 class="text-2xl font-black text-slate-800">${item.price.toLocaleString()}</h4>
+                        <p class="text-[10px] text-blue-500 font-black mb-4 uppercase italic">Sudanese Pounds</p>
+                        <button onclick="processPurchase(${item.price}, ${item.uc}, '${item.name}')" class="w-full bg-slate-900 text-white text-[10px] font-black py-3 rounded-xl hover:bg-blue-600 transition duration-300">شراء الآن</button>
+                    </div>
+                `;
             });
         }
 
-        // عمليات الإدارة
-        window.addNewProduct = async () => {
-            const name = document.getElementById('newProdName').value;
-            const price = parseFloat(document.getElementById('newProdPrice').value);
-            const uc = parseInt(document.getElementById('newProdUC').value);
-            const category = document.getElementById('newProdCat').value;
+        // قسم استبدال النقاط
+        function renderRedeemSection(grid) {
+            grid.classList.remove('grid-cols-2');
+            grid.classList.add('grid-cols-1');
+            grid.innerHTML = `
+                <div class="glass-white p-10 text-center border-green-200 border-2">
+                    <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-gift text-3xl text-green-600"></i>
+                    </div>
+                    <h3 class="text-2xl font-black text-slate-800 mb-2 italic">متجر المكافآت</h3>
+                    <p class="text-gray-500 text-sm mb-8">كل 30 نقطة تمنحك 60 شدة مجانية فوراً</p>
+                    <button onclick="redeemPoints(30, 60)" class="w-full bg-green-600 text-white font-black py-5 rounded-2xl shadow-xl shadow-green-100 hover:scale-95 transition">تحويل النقاط إلى شدات (30 نقطة) 🎁</button>
+                </div>
+            `;
+        }
 
-            if (!name || !price) return alert("امسح الخانات الفارغة يا مدير!");
-            await setDoc(doc(collection(db, "products")), { name, price, uc, category });
-            alert("تمت إضافة المنتج بنجاح! 🔥");
-            location.reload();
-        };
-
-        window.deleteProduct = async (id) => {
-            if (confirm("هل تريد حذف هذا العرض نهائياً؟")) {
-                await deleteDoc(doc(db, "products", id));
-                renderUI();
+        // عمليات الشراء
+        window.processPurchase = async (price, uc, name) => {
+            if (userData.balance < price) {
+                alert("رصيد محفظتك غير كافٍ. يرجى الشحن من الوكلاء.");
+                return;
             }
-        };
-
-        window.quickCharge = async () => {
-            const wid = document.getElementById('targetWID').value;
-            const amt = parseFloat(document.getElementById('targetAmt').value);
-            const q = query(collection(db, "wallets"), where("walletID", "==", wid));
-            const snap = await getDocs(q);
-            if (snap.empty) return alert("المحفظة غير موجودة!");
-            await updateDoc(doc(db, "wallets", snap.docs[0].id), { balance: increment(amt) });
-            alert("تم الشحن بنجاح! ✅");
-        };
-
-        // عمليات المستخدم
-        window.buyProduct = async (price, uc, name) => {
-            if (userData.balance < price) return alert("عذراً! رصيدك غير كافٍ. تواصل مع الوكلاء لشحن محفظتك.");
-            if (confirm(`تأكيد شراء ${name}؟`)) {
-                const ref = doc(db, "wallets", auth.currentUser.uid);
+            if (confirm(`هل أنت متأكد من رغبتك في شحن ${name}؟`)) {
+                const userRef = doc(db, "wallets", auth.currentUser.uid);
                 const ptsEarned = Math.floor(uc / 60) * 2;
-                await updateDoc(ref, { balance: increment(-price), points: increment(ptsEarned) });
-                alert(`تم الشحن بنجاح! ربحت ${ptsEarned} نقطة مكافأة 🎁`);
+                await updateDoc(userRef, { 
+                    balance: increment(-price), 
+                    points: increment(ptsEarned) 
+                });
+                alert(`تمت العملية بنجاح! تم إضافة ${ptsEarned} نقطة لرصيدك ⭐`);
                 location.reload();
             }
         };
 
+        // استبدال النقاط
         window.redeemPoints = async (cost, uc) => {
-            if (userData.points < cost) return alert("نقاطك لا تكفي! تحتاج 30 نقطة.");
-            await updateDoc(doc(db, "wallets", auth.currentUser.uid), { points: increment(-cost) });
-            alert(`مبروك! تم استبدال النقاط بـ ${uc} شدة مجانية ✅`);
+            if (userData.points < cost) {
+                alert("نقاطك الحالية لا تكفي لهذه العملية.");
+                return;
+            }
+            const userRef = doc(db, "wallets", auth.currentUser.uid);
+            await updateDoc(userRef, { points: increment(-cost) });
+            alert(`مبروك! تم تحويل النقاط بنجاح. تواصل مع المدير لاستلام ${uc} شدة.`);
             location.reload();
         };
 
-        window.switchTab = (tab) => {
-            activeTab = tab;
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(`tab-${tab}`).classList.add('active');
-            renderUI();
-        };
-
-        window.showAgents = (type) => {
-            document.getElementById('modalTitle').innerText = type === 'support' ? "الدعم الفني المباشر" : "شحن المحفظة (الوكلاء)";
+        // إدارة الوكلاء والمودال
+        window.openAgents = (type) => {
+            const title = document.getElementById('modalTitle');
+            title.innerText = (type === 'support') ? "الدعم الفني والشكاوى" : "شحن المحفظة (الوكلاء)";
             document.getElementById('agentModal').classList.remove('hidden');
         };
 
-        window.closeModal = () => document.getElementById('agentModal').classList.add('hidden');
+        window.closeModal = () => {
+            document.getElementById('agentModal').classList.add('hidden');
+        };
+
+        // لوحة المدير - إيداع سريع
+        window.quickCharge = async () => {
+            const wid = document.getElementById('targetWID').value;
+            const amt = parseFloat(document.getElementById('targetAmt').value);
+            
+            if (!wid || !amt) return alert("يرجى ملء كافة الخانات.");
+
+            const q = query(collection(db, "wallets"), where("walletID", "==", wid));
+            const querySnapshot = await getDocs(q);
+            
+            if (querySnapshot.empty) {
+                alert("خطأ: رقم المحفظة غير موجود في النظام.");
+                return;
+            }
+
+            const targetDoc = querySnapshot.docs[0];
+            await updateDoc(doc(db, "wallets", targetDoc.id), { balance: increment(amt) });
+            alert(`تم إيداع ${amt} SDG بنجاح في المحفظة #${wid} ✅`);
+            document.getElementById('targetWID').value = "";
+            document.getElementById('targetAmt').value = "";
+        };
+
+        // تبديل التبويبات
+        window.switchTab = (tab) => {
+            activeTab = tab;
+            const grid = document.getElementById('productGrid');
+            grid.classList.add('grid-cols-2');
+            grid.classList.remove('grid-cols-1');
+            
+            document.querySelectorAll('button[id^="tab-"]').forEach(btn => {
+                btn.classList.remove('tab-active', 'text-slate-800');
+                btn.classList.add('text-gray-400');
+            });
+            document.getElementById(`tab-${tab}`).classList.add('tab-active', 'text-slate-800');
+            updateDisplay();
+        };
+        // المصادقة
         window.loginGoogle = () => signInWithPopup(auth, provider);
-        window.logout = () => signOut(auth);
-        window.toggleAdmin = () => document.getElementById('adminPanel').classList.toggle('hidden');
+        window.logout = () => signOut(auth).then(() => location.reload());
+
     </script>
 </body>
-    </html>
+</html
