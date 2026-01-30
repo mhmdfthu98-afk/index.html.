@@ -3,277 +3,258 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KHASM SHOP | الإمبراطورية 👑</title>
+<title>KHASM SHOP 6.0 | النسخة الأسطورية</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <style>
-:root { --main-bg: linear-gradient(135deg,#f8fafc 0%,#dbeafe 50%,#f1f5f9 100%); }
-body { font-family:'Cairo',sans-serif; background:var(--main-bg); color:#1e293b; overflow-x:hidden; min-height:100vh; }
+:root{
+--main-bg:linear-gradient(135deg,#0f172a,#1e293b,#0f172a);
+--accent:#10b981;
+}
+body{font-family:'Cairo',sans-serif;background:var(--main-bg);color:#f1f5f9;overflow-x:hidden;min-height:100vh;scroll-behavior:smooth}
 
 /* Splash Screen */
-#splash-screen { position:fixed; inset:0; z-index:1000; background: radial-gradient(circle at center, #020617 0%, #000 100%); display:flex; flex-direction:column; align-items:center; justify-content:center; transition:opacity 1s ease; }
-.loader-ring { width:120px; height:120px; border:4px solid transparent; border-top-color:#10b981; border-radius:50%; animation:spin 1s linear infinite; }
-@keyframes spin { to { transform:rotate(360deg); } }
+#splash-screen{position:fixed;inset:0;z-index:1000;background:radial-gradient(circle at center,#020617 0%,#000 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 1s ease;overflow:hidden}
+.stars{position:absolute;width:100%;height:100%;background:url('https://i.ibb.co/vXHJxzn/stars.png') repeat;animation:starsMove 60s linear infinite}
+@keyframes starsMove{0%{background-position:0 0}100%{background-position:-10000px 0}}
+.loader-ring{width:120px;height:120px;border:4px solid transparent;border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 
 /* Cards */
-.royal-card { background:rgba(255,255,255,0.8); backdrop-filter:blur(10px); border-radius:20px; box-shadow:0 10px 25px -5px rgba(0,0,0,0.05); padding:16px; display:flex; justify-content:space-between; align-items:center; }
+.royal-card{background:rgba(255,255,255,0.05);backdrop-filter:blur(12px);border-radius:20px;box-shadow:0 10px 25px -5px rgba(0,0,0,0.3);transition:transform 0.3s,box-shadow 0.3s;cursor:pointer}
+.royal-card:hover{transform:translateY(-5px) scale(1.02);box-shadow:0 15px 35px -5px rgba(0,0,0,0.5)}
+.ad-card{background:linear-gradient(135deg,#2563eb,#10b981);border-radius:20px;padding:12px;color:#fff;font-weight:bold;box-shadow:0 8px 20px -5px rgba(0,0,0,0.4);transition:transform 0.3s;cursor:pointer}
+.ad-card:hover{transform:scale(1.03);}
 
 /* News Slider */
-.news-slider { background:#1e293b; color:#fff; padding:10px 0; overflow:hidden; position:relative; }
-.news-track { display:flex; gap:50px; animation:scroll 25s linear infinite; white-space:nowrap; }
-@keyframes scroll { 0% { transform:translateX(100%); } 100% { transform:translateX(-100%); } }
+.news-slider{background:rgba(30,41,59,0.85);color:#fff;padding:12px 0;overflow:hidden;position:relative}
+.news-track{display:flex;gap:60px;animation:scroll 35s linear infinite;white-space:nowrap}
+@keyframes scroll{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+
+/* Sidebar */
+#sidebar{position:fixed;top:0;right:-320px;width:300px;height:100%;background:rgba(30,41,59,0.95);backdrop-filter:blur(12px);z-index:900;transition:right 0.4s;padding:20px;overflow-y:auto}
+#sidebar.show{right:0}
+#sidebar button{width:100%;margin-bottom:12px}
+
+/* Hamburger */
+#hamburger{position:fixed;top:20px;right:20px;z-index:950;font-size:2rem;color:white;cursor:pointer}
 
 /* Buttons */
-.btn-google { background:#fff; color:#444; border:1px solid #ddd; }
-.btn-phone { background:#2563eb; color:#fff; }
+.btn-google{background:#fff;color:#444;border:1px solid #ddd}
+.btn-phone{background:#2563eb;color:#fff}
 
-/* Hamburger Sidebar */
-#hamburger { position:fixed; top:20px; right:20px; width:35px; height:30px; display:flex; flex-direction:column; justify-content:space-between; cursor:pointer; z-index:600; }
-#hamburger span { display:block; height:4px; background:#1e293b; border-radius:2px; }
-#sidebar { position:fixed; top:0; right:0; width:0; height:100%; background:#fff; overflow-x:hidden; transition:0.3s; z-index:500; box-shadow:-3px 0 10px rgba(0,0,0,0.1); }
+/* Modal Request Details */
+#request-modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.8);z-index:1000}
+#request-modal .modal-content{background:rgba(255,255,255,0.05);backdrop-filter:blur(12px);padding:20px;border-radius:20px;width:90%;max-width:400px;color:#fff}
 </style>
 </head>
 <body>
 
 <!-- Splash Screen -->
 <div id="splash-screen">
-  <div class="loader-ring mb-6"></div>
-  <h1 class="text-5xl font-black text-white animate-pulse">KHASM <span class="text-emerald-400">SHOP</span></h1>
-  <p class="text-white/70 mt-2 font-bold tracking-widest text-sm">LOADING EMPIRE...</p>
+  <div class="stars"></div>
+  <div class="loader-ring mb-8"></div>
+  <h1 class="text-4xl font-black text-white tracking-widest animate-pulse">KHASM <span class="text-emerald-500">SHOP</span></h1>
+  <p class="text-emerald-400 mt-4 font-bold tracking-widest text-sm">LOADING EMPIRE 6.0...</p>
 </div>
 
 <!-- Auth Page -->
-<div id="auth-page" class="hidden fixed inset-0 bg-slate-900 flex items-center justify-center p-6 z-50">
-  <div class="bg-white rounded-[40px] p-8 w-full max-w-md text-center shadow-2xl">
-    <h2 class="text-2xl font-black text-slate-800 mb-4">تسجيل الدخول الملكي</h2>
-    <button onclick="loginWithGoogle()" class="w-full btn-google py-4 rounded-2xl font-bold mb-4 flex items-center justify-center gap-3 shadow-sm">
-      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" width="20">
-      الدخول عبر Google
+<div id="auth-page" class="hidden fixed inset-0 z-[500] bg-slate-900/90 flex items-center justify-center p-6">
+  <div class="bg-white/10 rounded-[40px] p-8 w-full max-w-md text-center backdrop-blur-md shadow-2xl">
+    <div class="w-20 h-20 bg-blue-600 rounded-3xl mx-auto mb-6 flex items-center justify-center text-white text-3xl shadow-lg shadow-blue-200">
+      <i class="fas fa-shield-crown"></i>
+    </div>
+    <h2 class="text-2xl font-black text-white mb-2">تسجيل الدخول الملكي</h2>
+    <p class="text-slate-300 text-sm mb-8">اختر وسيلة الدخول للبدء في الشحن</p>
+    <button onclick="loginWithGoogle()" class="w-full btn-google py-4 rounded-2xl font-bold mb-4 flex items-center justify-center gap-3 shadow-sm hover:scale-105 transition-transform">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" width="20"> Google
     </button>
-    <button onclick="showPhoneLogin()" class="w-full btn-phone py-4 rounded-2xl font-bold flex items-center justify-center gap-3 shadow-lg shadow-blue-200">
-      <i class="fas fa-phone-alt"></i>
-      رقم الهاتف (واتساب)
+    <button onclick="showPhoneLogin()" class="w-full btn-phone py-4 rounded-2xl font-bold flex items-center justify-center gap-3 shadow-lg shadow-blue-200 hover:scale-105 transition-transform">
+      <i class="fas fa-phone-alt"></i> رقم الهاتف (OTP)
     </button>
   </div>
+</div>
+
+<!-- Hamburger Icon -->
+<div id="hamburger" onclick="openSidebar()"><i class="fas fa-bars"></i></div>
+
+<!-- Sidebar -->
+<div id="sidebar">
+  <button onclick="closeSidebar()" class="text-white text-right mb-6"><i class="fas fa-times"></i> إغلاق</button>
+  <p class="font-bold text-lg mb-2">الحساب</p>
+  <p id="userPhone">رقم الهاتف: -</p>
+  <hr class="my-2 border-slate-400">
+  <p class="font-bold text-lg mt-4 mb-2">الطلبات</p>
+  <div id="userOrders" class="space-y-2"></div>
+  <hr class="my-2 border-slate-400">
+  <p class="font-bold text-lg mt-4 mb-2">استرداد النقاط</p>
+  <div id="redeemPoints" class="space-y-2"></div>
+  <hr class="my-2 border-slate-400">
+  <p class="font-bold text-lg mt-4 mb-2">من نحن</p>
+  <p>KHASM SHOP متجر الإمبراطورية الأسرع والأجمل، تجربة فخمة مع تصميم حديث ومؤثرات رائعة 💎🔥🎁</p>
+  <hr class="my-2 border-slate-400">
+  <button onclick="logout()" class="bg-red-500 text-white py-2 rounded-xl mt-4">تبديل الحساب / تسجيل الخروج</button>
 </div>
 
 <!-- News Slider -->
 <div class="news-slider">
-  <div class="news-track">
-    <span>🔥 عرض الإمبراطور: اشحن 5000 شدة واحصل على 1000 مجاناً!</span>
-    <span>💎 جواهر فري فاير متوفرة الآن بأسعار سودانية حصرية!</span>
-    <span>🚀 سرعة الشحن لا تتجاوز 5 دقائق!</span>
-    <span>🎁 اجمع 30 نقطة واستبدلها بـ 4000 جنيه!</span>
-    <span>⚠️ تأكد من ID قبل إرسال الطلب!</span>
+  <div class="news-track font-bold text-xs uppercase">
+    <span>🔥 اشحن 5000 شدة واحصل على 1000 مجاناً!</span>
+    <span>💎 جواهر متوفرة بأسعار سودانية!</span>
+    <span>🚀 الشحن خلال 5 دقائق!</span>
+    <span>🎁 استبدل 30 نقطة بـ 4000 ج.س فوراً!</span>
+    <span>⚠️ تأكد من ID قبل الطلب!</span>
+    <span>👑 انضم للإمبراطورية واحصل على هدية!</span>
+    <span>💥 عرض خاص: 100 شدة إضافية لكل طلب اليوم!</span>
+    <span>🎉 خصم على الشحنات الكبيرة!</span>
+    <span>🔥 أسرع شحن بضمان الجودة!</span>
   </div>
 </div>
 
-<!-- Header -->
-<header class="p-6 flex justify-between items-center bg-white/50 backdrop-blur-md">
-  <div class="flex items-center gap-3">
-    <div id="userImg" class="w-10 h-10 bg-slate-200 rounded-full overflow-hidden"></div>
-    <div>
-      <h1 id="userName" class="font-black text-slate-800 leading-none">الملك الزائر</h1>
-      <span class="text-[10px] text-blue-600 font-bold">رصيدك: <span id="userPoints">0</span> نقطة</span>
-    </div>
-  </div>
-  <div class="flex gap-2 text-slate-400">
-    <i class="fas fa-bell"></i>
-    <i class="fas fa-cog"></i>
-  </div>
-</header>
-
-<!-- Main Content -->
-<main class="p-4 max-w-3xl mx-auto space-y-6">
-  <input type="text" id="searchInput" placeholder="ابحث عن المنتج..." class="mb-4 p-3 rounded-lg border border-gray-300 w-full">
+<!-- Products & Ads -->
+<main class="p-4 max-w-2xl mx-auto space-y-6">
   <section>
-    <h2 class="font-black text-slate-800 text-lg mb-4">خدمات الشحن السريع</h2>
+    <h2 class="font-black text-slate-800 text-lg mb-4">منتجات الشحن السريع</h2>
     <div id="products-list" class="grid gap-4"></div>
   </section>
-
-  <section id="rewards-section" class="mt-10 p-6 bg-yellow-100 rounded-2xl">
-    <h2 class="font-black text-xl mb-4 text-yellow-800">💰 استرداد النقاط</h2>
-    <div id="rewards-list" class="grid gap-4"></div>
+  <section>
+    <h2 class="font-black text-slate-800 text-lg mb-4">إعلانات حصرية</h2>
+    <div class="grid gap-4">
+      <div class="ad-card">💎 عرض VIP: اشحن 1000 ج.س واحصل على 50 شدة مجانية!</div>
+      <div class="ad-card">🔥 أسرع شحن بضمان جودة KHASM SHOP!</div>
+      <div class="ad-card">🎁 اشحن الآن واحصل على نقاط إضافية!</div>
+      <div class="ad-card">🚀 خصم 10% على الشحنات الكبيرة اليوم!</div>
+      <div class="ad-card">🎉 احصل على نقاط مضاعفة لمدة 24 ساعة!</div>
+    </div>
   </section>
 
-  <section id="admin-section" class="hidden mt-10 p-6 bg-slate-900 rounded-2xl text-white">
-    <h2 class="font-black text-xl mb-4 text-red-400">👑 لوحة التحكم الإمبراطورية</h2>
+  <section id="admin-section" class="hidden mt-10 p-6 bg-slate-900 rounded-[30px] text-white">
+    <h2 class="font-black text-xl mb-4 text-red-400">لوحة الأدمن</h2>
     <div id="all-orders-list" class="space-y-4"></div>
   </section>
 </main>
 
-<!-- Hamburger -->
-<div id="hamburger">
-  <span></span>
-  <span></span>
-  <span></span>
-</div>
-
-<!-- Sidebar -->
-<div id="sidebar">
-  <div class="p-6 flex flex-col h-full justify-between">
-    <div>
-      <div class="mb-6">
-        <h2 class="font-black text-lg mb-2">حسابك</h2>
-        <p id="sidebarUserName" class="font-bold text-slate-800"></p>
-        <p id="sidebarUserPhone" class="text-sm text-slate-500"></p>
-        <span class="text-[10px] text-blue-600 font-bold">رصيدك: <span id="sidebarUserPoints">0</span> نقطة</span>
-      </div>
-      <div class="mb-6">
-        <h2 class="font-black text-lg mb-2">طلباتي</h2>
-        <div id="sidebarOrders" class="space-y-2 max-h-60 overflow-y-auto"></div>
-      </div>
-      <div class="mb-6">
-        <h2 class="font-black text-lg mb-2">من نحن</h2>
-        <div id="aboutSection" class="text-sm text-slate-700 leading-relaxed">
-          مرحباً بكم في KHASM SHOP الإمبراطورية الملكية للشحن السريع ⚡🔥. نقدم أفضل خدمات الشحن بأمان وسرعة مع عروض مستمرة ونقاط مكافآت.💎🚀
-        </div>
-      </div>
-    </div>
-    <div class="flex flex-col gap-2">
-      <button onclick="switchAccount()" class="btn btn-phone w-full">تبديل الحساب</button>
-      <button onclick="logoutUser()" class="btn btn-google w-full">تسجيل الخروج</button>
-    </div>
+<!-- Modal Request Details -->
+<div id="request-modal">
+  <div class="modal-content">
+    <h3 class="font-black text-lg mb-2">تفاصيل الطلب</h3>
+    <div id="modal-details"></div>
+    <button onclick="closeModal()" class="mt-4 bg-red-500 text-white py-2 rounded-xl w-full">إغلاق</button>
   </div>
 </div>
 
-<!-- Scripts -->
 <script type="module">
+// Firebase Imports
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signInWithPhoneNumber, RecaptchaVerifier } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
-// ضع هنا بياناتك من Firebase
-const firebaseConfig = {
-  apiKey:"API_KEY",
-  authDomain:"YOUR_PROJECT_ID.firebaseapp.com",
-  projectId:"YOUR_PROJECT_ID",
-  storageBucket:"YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId:"SENDER_ID",
-  appId:"APP_ID"
-};
-
+const firebaseConfig = { apiKey:"API_KEY", authDomain:"ID.firebaseapp.com", projectId:"ID" };
 const ADMIN_UID = "hFeFMyTjzLd8nAEDuZ784VXNYln2";
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// Splash Screen
+// Splash
 setTimeout(()=>{
   document.getElementById('splash-screen').style.opacity='0';
-  setTimeout(()=>{ document.getElementById('splash-screen').style.display='none'; document.getElementById('auth-page').classList.remove('hidden'); },1000);
-},3500);
+  setTimeout(()=>{document.getElementById('splash-screen').style.display='none'; checkAuth();},1000)
+},3000);
 
-// تسجيل الدخول
-window.loginWithGoogle = async ()=>{ const provider=new GoogleAuthProvider(); await signInWithPopup(auth,provider); };
-window.showPhoneLogin = ()=>{ const phone=prompt("أدخل رقم هاتفك:"); if(phone){ window.open(`https://wa.me/249XXXXXXXXX?text=أريد تسجيل الدخول برقمي: ${phone}`); alert("تم إرسال طلبك عبر واتساب لتأكيد هويتك!"); } };
-
-// Hamburger
-const hamburger = document.getElementById('hamburger');
-const sidebar = document.getElementById('sidebar');
-hamburger.addEventListener('click',()=>{ sidebar.style.width = sidebar.style.width==='300px'?'0':'300px'; });
-
-// Logout + Switch Account
-function logoutUser(){ auth.signOut().then(()=>{ alert('تم تسجيل الخروج'); location.reload(); }); }
-function switchAccount(){ logoutUser(); }
-
-// المنتجات + النقاط
-const products = [
-  { name:"شدة 60", points:2, price:30 },
-  { name:"شدة 120", points:4, price:60 },
-  { name:"شدة 180", points:6, price:90 },
-  { name:"شدة 240", points:8, price:120 },
-  { name:"شدة 300", points:10, price:150 },
-  { name:"شدة 500", points:16, price:250 }
-];
-
-function loadProducts(){ 
-  const container=document.getElementById("products-list"); 
-  container.innerHTML=""; 
-  products.forEach(p=>{
-    const div=document.createElement("div"); 
-    div.className="p-4 rounded-2xl bg-white/80 backdrop-blur-md shadow-lg flex justify-between items-center"; 
-    div.innerHTML=`<div><h3 class="font-bold text-slate-800">${p.name}</h3><p class="text-sm text-slate-500">تكسب نقاط: <span class="font-bold">${p.points}</span></p></div><button class="btn btn-phone" onclick="buyProduct('${p.name}',${p.points},${p.price})">اشحن الآن</button>`; 
-    container.appendChild(div); 
-  }); 
+function checkAuth(){
+  onAuthStateChanged(auth,user=>{
+    if(!user){document.getElementById('auth-page').classList.remove('hidden');}
+    else{
+      document.getElementById('auth-page').classList.add('hidden');
+      document.getElementById('userPhone').innerText=user.phoneNumber||'-';
+      loadProducts(); loadOrders(); loadRedeemPoints();
+    }
+  });
 }
 
-window.buyProduct = async(name,points,price)=>{ 
-  const user=auth.currentUser; 
-  if(!user) return alert("يجب تسجيل الدخول أولاً!"); 
-  try{ 
-    await addDoc(collection(db,"orders"),{ productName:name, pointsEarned:points, price:price, userId:user.uid, userName:user.displayName, status:"قيد التنفيذ", createdAt:new Date() }); 
-    alert(`تم شراء ${name} بنجاح!\nالنقاط المكتسبة: ${points}`); 
-  } catch(err){ console.error(err); alert("حدث خطأ أثناء الشحن."); } 
-};
-
-// استرداد النقاط
-const rewards = [
-  { desc:"60 شدة", pointsNeeded:30, price:4000 },
-  { desc:"120 شدة", pointsNeeded:60, price:8000 },
-  { desc:"180 شدة", pointsNeeded:90, price:12000 },
-  { desc:"300 شدة", pointsNeeded:150, price:20000 }
-];
-
-function loadRewards(){ 
-  const container=document.getElementById("rewards-list"); 
-  container.innerHTML=""; 
-  rewards.forEach(r=>{
-    const div=document.createElement("div"); 
-    div.className="p-4 bg-yellow-50 rounded-xl flex justify-between items-center shadow-md"; 
-    div.innerHTML=`<div><h4 class="font-bold text-yellow-800">${r.desc}</h4><p class="text-sm text-yellow-600">نقاط مطلوبة: <span class="font-bold">${r.pointsNeeded}</span></p></div><span class="font-black text-yellow-900">${r.price} ج.س</span>`; 
-    container.appendChild(div); 
-  }); 
-}
-
-// البحث
-document.getElementById("searchInput").addEventListener("input",(e)=>{ 
-  const term=e.target.value.toLowerCase(); 
-  const filtered=products.filter(p=>p.name.toLowerCase().includes(term)); 
-  const container=document.getElementById("products-list"); 
-  container.innerHTML=""; 
-  filtered.forEach(p=>{
-    const div=document.createElement("div"); 
-    div.className="p-4 rounded-2xl bg-white/80 backdrop-blur-md shadow-lg flex justify-between items-center"; 
-    div.innerHTML=`<div><h3 class="font-bold text-slate-800">${p.name}</h3><p class="text-sm text-slate-500">تكسب نقاط: <span class="font-bold">${p.points}</span></p></div><button class="btn btn-phone" onclick="buyProduct('${p.name}',${p.points},${p.price})">اشحن الآن</button>`; 
-    container.appendChild(div); 
-  }); 
-});
-
-// بعد تسجيل الدخول
-onAuthStateChanged(auth,user=>{
-  if(!user){ document.getElementById('auth-page').classList.remove('hidden'); }
-  else{
-    document.getElementById('auth-page').classList.add('hidden');
-    document.getElementById('userName').innerText=user.displayName;
-    document.getElementById('userImg').innerHTML=`<img src="${user.photoURL}" class="w-full h-full object-cover">`;
-    if(user.uid===ADMIN_UID) document.getElementById('admin-section').classList.remove('hidden');
-    loadSidebar(user);
-    loadProducts(); loadRewards();
+window.loginWithGoogle=async()=>{const provider=new GoogleAuthProvider(); await signInWithPopup(auth,provider);}
+window.showPhoneLogin=()=>{
+  const phone=prompt("أدخل رقم هاتفك بالسودان")?.trim();
+  if(phone){
+    const recaptcha=new RecaptchaVerifier('auth-page',{'size':'invisible'},auth);
+    const phoneNumber='+249'+phone;
+    signInWithPhoneNumber(auth,phoneNumber,recaptcha).then(confirmationResult=>{
+      const code=prompt("أدخل كود OTP").trim();
+      confirmationResult.confirm(code).then(()=>{alert('تم تسجيل الدخول!');}).catch(()=>{alert('خطأ بالكود');});
+    }).catch(()=>{alert('خطأ في إرسال OTP');});
   }
-});
+}
+window.logout=()=>{auth.signOut(); location.reload();}
 
-function loadSidebar(user){
-  document.getElementById('sidebarUserName').innerText=user.displayName;
-  document.getElementById('sidebarUserPhone').innerText=user.phoneNumber||"لا يوجد رقم مسجل";
-  document.getElementById('sidebarUserPoints').innerText=document.getElementById('userPoints').innerText;
-  const ordersContainer=document.getElementById('sidebarOrders'); ordersContainer.innerHTML="";
+// Sidebar
+function openSidebar(){document.getElementById('sidebar').classList.add('show');}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('show');}
+
+// Modal
+function showModal(details){
+  document.getElementById('modal-details').innerHTML=details;
+  document.getElementById('request-modal').style.display='flex';
+}
+function closeModal(){document.getElementById('request-modal').style.display='none';}
+
+// Products
+function loadProducts(){
+  const products=[
+    {name:"60 شدة",points:2,value:"1000 ج.س"},
+    {name:"120 شدة",points:4,value:"2000 ج.س"},
+    {name:"180 شدة",points:6,value:"3000 ج.س"},
+    {name:"240 شدة",points:8,value:"4000 ج.س"},
+    {name:"4000 ج.س",points:30,value:"4000 ج.س"}
+  ];
+  const container=document.getElementById('products-list'); container.innerHTML='';
+  products.forEach(p=>{
+    const card=document.createElement('div');
+    card.className='royal-card p-4 flex justify-between items-center';
+    card.innerHTML=`<div>
+      <p class="font-bold">${p.name}</p>
+      <p class="text-xs text-slate-400">نقاط: ${p.points}</p>
+      <p class="text-xs text-slate-300">السعر: ${p.value}</p>
+    </div>`;
+    card.onclick=()=>{showModal(`<p>${p.name}</p><p>نقاط: ${p.points}</p><p>السعر: ${p.value}</p>`);}
+    container.appendChild(card);
+  });
+}
+
+// Orders (Admin)
+function loadOrders(){
+  const adminCont=document.getElementById('all-orders-list');
   onSnapshot(collection(db,"orders"),snap=>{
+    adminCont.innerHTML='';
     snap.forEach(d=>{
       const o=d.data();
-      if(o.userId===user.uid){
-        const div=document.createElement('div');
-        div.className="bg-gray-100 p-2 rounded-md flex justify-between items-center cursor-pointer hover:bg-gray-200";
-        div.innerHTML=`<span>${o.productName}</span><span class="text-xs text-slate-500">${o.status}</span>`;
-        div.onclick=()=>{ alert(`تفاصيل الطلب:\nالمنتج: ${o.productName}\nالحالة: ${o.status}\nالنقاط المكتسبة: ${o.pointsEarned}`); };
-        ordersContainer.appendChild(div);
-      }
+      adminCont.innerHTML+=`<div class="bg-white/5 p-4 rounded-2xl flex justify-between items-center border border-white/10 cursor-pointer hover:bg-white/10">
+        <div><p class="font-bold">${o.userName}</p><p class="text-xs text-slate-400">${o.productName}</p><p class="text-xs text-green-400">${o.status||'جديد'}</p></div>
+        <button onclick="deleteOrder('${d.id}')" class="bg-red-500/20 text-red-500 p-2 rounded-xl"><i class="fas fa-trash"></i></button>
+      </div>`;
     });
   });
 }
-</script>
+window.deleteOrder=async(id)=>{if(confirm("هل تريد حذف الطلب؟")){await deleteDoc(doc(db,"orders",id));alert("تم الحذف.");}}
 
+// Redeem Points
+function loadRedeemPoints(){
+  const container=document.getElementById('redeemPoints');
+  const items=[
+    {name:"60 شدة",points:30,value:"4000 ج.س"},
+    {name:"120 شدة",points:30,value:"4000 ج.س"},
+    {name:"180 شدة",points:30,value:"4000 ج.س"}
+  ];
+  container.innerHTML='';
+  items.forEach(i=>{
+    const div=document.createElement('div');
+    div.className='bg-white/5 p-3 rounded-xl flex justify-between cursor-pointer hover:bg-white/10';
+    div.innerHTML=`<span>${i.name}</span><span>${i.value} - ${i.points} نقاط</span>`;
+    div.onclick=()=>{showModal(`<p>${i.name}</p><p>نقاط: ${i.points}</p><p>السعر: ${i.value}</p>`);}
+    container.appendChild(div);
+  });
+}
+</script>
 </body>
-          </html>
+  </html>
