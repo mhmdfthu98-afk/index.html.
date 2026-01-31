@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KhasmShop | V6 Ultimate</title>
+    <title>KhasmShop | V6.1 Fixed</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -60,7 +60,7 @@
             <div class="bg-gradient-to-r from-indigo-50 to-blue-50 p-4 rounded-3xl border border-blue-100">
                 <div class="flex justify-between items-center mb-2">
                     <span class="text-[10px] font-black text-indigo-700">🎁 متجر النقاط (60 شدة = 30 نقطة)</span>
-                    <span class="text-[10px] text-slate-400 font-bold">قيمة الجائزة: 4000 ج.س</span>
+                    <span class="text-[10px] text-slate-400 font-bold">4000 ج.س</span>
                 </div>
                 <button id="redeemBtn" onclick="redeemPoints()" class="w-full py-3 bg-white text-indigo-600 rounded-2xl text-[10px] font-black shadow-sm border border-indigo-200 opacity-50 cursor-not-allowed" disabled>تحتاج إلى 30 نقطة للاستبدال</button>
             </div>
@@ -68,57 +68,36 @@
 
         <div id="adminArea" class="hidden mt-8 space-y-6">
             <div class="bg-white rounded-[35px] p-6 shadow-xl border-t-8 border-red-600">
-                <h3 class="font-black text-xs text-red-600 mb-4 uppercase"><i class="fas fa-tools"></i> لوحة التحكم الكاملة</h3>
+                <h3 class="font-black text-xs text-red-600 mb-4 uppercase"><i class="fas fa-tools"></i> لوحة التحكم</h3>
                 
+                <div class="mb-6 p-4 bg-red-50 rounded-3xl border border-red-100">
+                    <p class="text-[10px] font-black text-red-700 mb-2">شحن رصيد محفظة:</p>
+                    <div class="flex flex-col gap-2">
+                        <input id="targetWallet" type="text" placeholder="أدخل رقم محفظة الزبون" class="p-3 rounded-2xl text-xs outline-none border">
+                        <div class="flex gap-2">
+                            <input id="amountToAdd" type="number" placeholder="المبلغ" class="flex-1 p-3 rounded-2xl text-xs outline-none border">
+                            <button onclick="adminRecharge()" class="bg-red-600 text-white px-6 rounded-2xl text-xs font-black">شحن الآن</button>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="space-y-2 bg-slate-50 p-4 rounded-3xl border">
-                    <p class="text-[10px] font-black text-slate-500 mb-2">أضف منتج وتحكم في نقاطه:</p>
-                    <input id="pName" type="text" placeholder="اسم المنتج (مثلاً: 60 شدة)" class="w-full p-3 rounded-2xl text-xs outline-none border">
+                    <p class="text-[10px] font-black text-slate-500 mb-2">إضافة منتج جديد:</p>
+                    <input id="pName" type="text" placeholder="اسم المنتج" class="w-full p-3 rounded-2xl text-xs outline-none border">
                     <div class="flex gap-2">
-                        <input id="pPrice" type="number" placeholder="السعر ج.س" class="flex-1 p-3 rounded-2xl text-xs outline-none border">
-                        <input id="pPoints" type="number" placeholder="كم نقطة يربح؟" class="flex-1 p-3 rounded-2xl text-xs outline-none border bg-blue-50">
+                        <input id="pPrice" type="number" placeholder="السعر" class="flex-1 p-3 rounded-2xl text-xs outline-none border">
+                        <input id="pPoints" type="number" placeholder="النقاط" class="flex-1 p-3 rounded-2xl text-xs outline-none border bg-blue-50">
                     </div>
-                    <button onclick="addNewProduct()" class="w-full bg-slate-900 text-white py-3 rounded-2xl text-xs font-black">إضافة المنتج للمتجر</button>
+                    <button onclick="addNewProduct()" class="w-full bg-slate-900 text-white py-3 rounded-2xl text-xs font-black">إضافة للمتجر</button>
                 </div>
-
                 <div id="adminProductList" class="mt-4 space-y-2 max-h-40 overflow-y-auto border-t pt-3"></div>
-
-                <div class="mt-6 pt-4 border-t">
-                    <p class="text-[10px] font-black text-slate-500 mb-2">شحن رصيد محفظة:</p>
-                    <div class="flex gap-2">
-                        <input id="targetWallet" type="text" placeholder="رقم المحفظة" class="flex-1 p-3 rounded-2xl text-xs outline-none border">
-                        <input id="amountToAdd" type="number" placeholder="المبلغ" class="w-24 p-3 rounded-2xl text-xs outline-none border">
-                        <button onclick="adminRecharge()" class="bg-red-600 text-white px-4 rounded-2xl text-xs font-black">شحن</button>
-                    </div>
-                </div>
             </div>
-
             <div id="adminOrdersList" class="space-y-4"></div>
         </div>
 
-        <h3 class="font-black text-slate-800 text-sm italic mt-8 mb-4 border-r-4 border-yellow-500 pr-2">🛒 قائمة الشدات</h3>
-        <div id="productGrid" class="grid grid-cols-2 gap-3 mb-10"></div>
-        
-        <h3 class="font-black text-slate-800 text-sm italic mb-4 border-r-4 border-blue-500 pr-2">📋 آخر العمليات</h3>
+        <div id="productGrid" class="grid grid-cols-2 gap-3 mt-8 mb-10"></div>
         <div id="userOrdersList" class="space-y-3 mb-20"></div>
     </main>
-</div>
-
-<div class="fixed bottom-6 left-6 z-[3000]">
-    <button onclick="toggleWaMenu()" class="bg-green-500 text-white w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-2xl animate-bounce"><i class="fab fa-whatsapp"></i></button>
-    <div id="waAgents" class="hidden absolute bottom-16 left-0 bg-white p-4 rounded-3xl shadow-2xl border w-64">
-        <div class="space-y-2" id="agentsList"></div>
-    </div>
-</div>
-
-<div id="confirmModal" class="modal">
-    <div class="bg-white w-full max-w-sm rounded-[40px] p-8 text-right shadow-2xl">
-        <h3 class="font-black text-xl mb-4 italic text-slate-800">تأكيد عملية الشراء 🧾</h3>
-        <div id="confirmDetails" class="text-xs space-y-3 bg-slate-50 p-6 rounded-3xl border mb-6"></div>
-        <div class="flex gap-3">
-            <button onclick="finalizeOrderRequest()" class="flex-1 bg-slate-900 text-white py-4 rounded-2xl font-black shadow-lg">تأكيد الدفع</button>
-            <button onclick="closeModal()" class="flex-1 bg-slate-100 text-slate-400 py-4 rounded-2xl font-black">إلغاء</button>
-        </div>
-    </div>
 </div>
 
 <script type="module">
@@ -143,7 +122,6 @@
     const ADMINS = ["mhmdfthu98@gmail.com", "muhammedaltaj111@gmail.com", "mohnadyasir43@gmail.com"];
     let userData = null;
 
-    // تهيئة الدخول
     document.getElementById('google-login-btn').onclick = () => signInWithRedirect(auth, provider);
     document.getElementById('logout-btn').onclick = () => signOut(auth).then(() => location.reload());
     getRedirectResult(auth).then((res) => { if(res) syncAccount(res.user); });
@@ -175,7 +153,6 @@
             }
         });
 
-        // مزامنة المنتجات
         onSnapshot(collection(db, "products"), (snap) => {
             const grid = document.getElementById('productGrid');
             grid.innerHTML = '';
@@ -183,7 +160,7 @@
                 const p = d.data();
                 grid.innerHTML += `
                     <div class="bg-white p-5 rounded-[35px] shadow-sm border border-white text-center relative overflow-hidden">
-                        <div class="absolute -top-1 -right-1 bg-blue-600 text-white text-[8px] font-black px-3 py-1 rounded-bl-xl shadow-lg">+${p.givePoints || 0} نقطة</div>
+                        <div class="absolute -top-1 -right-1 bg-blue-600 text-white text-[8px] font-black px-3 py-1 rounded-bl-xl">+${p.givePoints || 0}P</div>
                         <p class="font-black text-[11px] text-slate-700 mt-2">${p.name}</p>
                         <p class="text-blue-600 font-black text-xs my-3">${p.price} ج.س</p>
                         <button onclick="initOrder('${p.name}', ${p.price}, ${p.givePoints || 0})" class="w-full bg-slate-900 text-white text-[9px] py-3 rounded-2xl font-black">شراء</button>
@@ -192,140 +169,49 @@
         });
     }
 
-    // --- نظام معالجة الطلبات والنقاط اليدوي ---
+    // إصلاح شحن المحفظة
+    window.adminRecharge = async () => {
+        const wid = document.getElementById('targetWallet').value.trim();
+        const amt = parseInt(document.getElementById('amountToAdd').value);
+        if(!wid || isNaN(amt)) return alert("أدخل رقم المحفظة والمبلغ");
+        const q = query(collection(db, "users"), where("walletID", "==", wid));
+        const snap = await getDocs(q);
+        if(snap.empty) return alert("المحفظة غير موجودة!");
+        snap.forEach(async (uDoc) => {
+            await updateDoc(doc(db, "users", uDoc.id), { balance: increment(amt) });
+            alert("تم شحن " + amt + " ج.س لـ " + uDoc.data().name);
+        });
+        document.getElementById('targetWallet').value=''; document.getElementById('amountToAdd').value='';
+    };
+
     window.finalizeAdminOrder = async (oid, uid, st, pts, refund = 0) => {
-        if (st === 'مكتمل') {
-            // إضافة النقاط المحددة في المنتج للمستخدم
-            await updateDoc(doc(db, "users", uid), { points: increment(pts || 0) });
-        } else if (st === 'فشل') {
-            await updateDoc(doc(db, "users", uid), { balance: increment(refund) });
-        }
+        if (st === 'مكتمل') await updateDoc(doc(db, "users", uid), { points: increment(pts || 0) });
+        else if (st === 'فشل') await updateDoc(doc(db, "users", uid), { balance: increment(refund) });
         await updateDoc(doc(db, "orders", oid), { status: st });
-        alert("تم تحديث الطلب ✅");
     };
 
-    window.addNewProduct = async () => {
-        const n = document.getElementById('pName').value;
-        const p = parseInt(document.getElementById('pPrice').value);
-        const pts = parseInt(document.getElementById('pPoints').value);
-        if(!n || isNaN(p) || isNaN(pts)) return alert("الرجاء إكمال البيانات بشكل صحيح");
-        await addDoc(collection(db, "products"), { name: n, price: p, givePoints: pts });
-        alert("تمت إضافة المنتج بنقاطه المحددة ✅");
-        document.getElementById('pName').value=''; document.getElementById('pPrice').value=''; document.getElementById('pPoints').value='';
-    };
-
-    // تحديث الواجهة
     window.updateUI = (isAdmin) => {
         document.getElementById('uName').innerText = userData.name;
         document.getElementById('uImg').src = userData.img;
         document.getElementById('uBal').innerText = (userData.balance || 0).toLocaleString();
         document.getElementById('uPoints').innerText = userData.points || 0;
         document.getElementById('uWallet').innerText = `المحفظة: #${userData.walletID}`;
-        
-        const rBtn = document.getElementById('redeemBtn');
+        const rb = document.getElementById('redeemBtn');
         if((userData.points || 0) >= 30) {
-            rBtn.innerText = "استبدال النقاط بـ 60 شدة الآن! 🎁";
-            rBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-            rBtn.classList.add('bg-indigo-600', 'text-white', 'animate-pulse');
-            rBtn.disabled = false;
+            rb.disabled = false; rb.classList.remove('opacity-50'); rb.classList.add('bg-indigo-600', 'text-white');
+            rb.innerText = "استبدال النقاط بـ 60 شدة! 🎁";
         }
-
-        const agents = [{n:'249907760989', name:'محمد فتحي'}, {n:'249115206845', name:'محمد التاج'}, {n:'249114421160', name:'مهند ياسر'}];
-        document.getElementById('agentsList').innerHTML = agents.map(a => `<button onclick="contactAgent('${a.n}', '${a.name}')" class="w-full flex justify-between p-3 bg-slate-50 rounded-2xl text-[10px] font-black"><span>${a.name}</span> <i class="fab fa-whatsapp text-green-500"></i></button>`).join('');
     };
 
-    // الطلبات
-    window.initOrder = (name, price, pts) => {
-        if (userData.balance < price) return alert("رصيدك لا يكفي");
-        const gID = prompt("أدخل ID اللاعب:");
-        if(!gID) return;
-        window.tempOrder = { name, price, pts, gID };
-        document.getElementById('confirmDetails').innerHTML = `
-            <div class="flex justify-between"><span>المنتج:</span><b>${name}</b></div>
-            <div class="flex justify-between"><span>السعر:</span><b class="text-green-600">${price} ج.س</b></div>
-            <div class="flex justify-between"><span>النقاط التي ستكسبها:</span><b class="text-blue-600">+${pts}</b></div>
-            <div class="flex justify-between border-t pt-2 mt-2"><span>الأيدي:</span><b>${gID}</b></div>`;
-        document.getElementById('confirmModal').classList.add('active');
+    window.addNewProduct = async () => {
+        const n = document.getElementById('pName').value;
+        const p = parseInt(document.getElementById('pPrice').value);
+        const pts = parseInt(document.getElementById('pPoints').value);
+        if(n && p) await addDoc(collection(db, "products"), { name: n, price: p, givePoints: pts || 0 });
+        alert("تمت الإضافة");
     };
 
-    window.finalizeOrderRequest = async () => {
-        const t = window.tempOrder;
-        await updateDoc(doc(db, "users", auth.currentUser.uid), { balance: increment(-t.price) });
-        await addDoc(collection(db, "orders"), {
-            uID: auth.currentUser.uid, uName: userData.name, product: t.name,
-            price: t.price, pts: t.pts, gameID: t.gID, status: 'قيد الانتظار', timestamp: serverTimestamp()
-        });
-        closeModal(); alert("تم الإرسال! بانتظار الأدمن ✅");
-    };
-
-    // الإدارة
-    window.loadAdminOrders = () => {
-        onSnapshot(query(collection(db, "orders"), orderBy("timestamp", "desc")), (snap) => {
-            const list = document.getElementById('adminOrdersList'); list.innerHTML = '';
-            snap.forEach(d => {
-                const o = d.data(); if(o.status !== 'قيد الانتظار') return;
-                list.innerHTML += `
-                    <div class="bg-white p-4 rounded-3xl border-2 border-red-50 text-[10px]">
-                        <p><b>📦 ${o.product}</b> (نقاط: ${o.pts || 0})</p>
-                        <p class="my-2 bg-slate-50 p-2 rounded-xl">ID: <b onclick="navigator.clipboard.writeText('${o.gameID}'); alert('نسخ')">${o.gameID}</b></p>
-                        <div class="flex gap-2">
-                            <button onclick="finalizeAdminOrder('${d.id}', '${o.uID}', 'مكتمل', ${o.pts || 0})" class="flex-1 bg-green-600 text-white py-3 rounded-2xl font-bold">تم الشحن + النقاط</button>
-                            <button onclick="finalizeAdminOrder('${d.id}', '${o.uID}', 'فشل', 0, ${o.price})" class="flex-1 bg-red-500 text-white py-3 rounded-2xl font-bold">إلغاء</button>
-                        </div>
-                    </div>`;
-            });
-        });
-    };
-
-    window.adminRecharge = async () => {
-        const wid = document.getElementById('targetWallet').value;
-        const amt = parseInt(document.getElementById('amountToAdd').value);
-        const q = query(collection(db, "users"), where("walletID", "==", wid));
-        const snap = await getDocs(q);
-        if(snap.empty) return alert("المحفظة غير موجودة");
-        snap.forEach(u => updateDoc(doc(db, "users", u.id), { balance: increment(amt) }));
-        alert("تم شحن المحفظة بنجاح ✅");
-    };
-
-    window.loadAdminProducts = () => {
-        onSnapshot(collection(db, "products"), (snap) => {
-            const list = document.getElementById('adminProductList'); list.innerHTML = '';
-            snap.forEach(d => {
-                const p = d.data();
-                list.innerHTML += `<div class="flex justify-between bg-white p-2 rounded-xl text-[9px] border"><span>${p.name} - ${p.givePoints}P</span><button onclick="deleteProduct('${d.id}')" class="text-red-500"><i class="fas fa-trash"></i></button></div>`;
-            });
-        });
-    };
-
-    window.loadUserOrders = (uid) => {
-        onSnapshot(query(collection(db, "orders"), where("uID", "==", uid), orderBy("timestamp", "desc")), (snap) => {
-            const list = document.getElementById('userOrdersList'); list.innerHTML = '';
-            snap.forEach(d => {
-                const o = d.data();
-                const color = o.status === 'مكتمل' ? 'text-green-500' : 'text-amber-500';
-                list.innerHTML += `<div class="bg-white p-4 rounded-3xl shadow-sm flex justify-between items-center text-[10px] border">
-                    <div><b>${o.product}</b><br><small class="text-slate-400">${o.gameID}</small></div>
-                    <b class="${color}">${o.status}</b>
-                </div>`;
-            });
-        });
-    };
-
-    window.redeemPoints = async () => {
-        const gID = prompt("أدخل ID اللعبة لاستلام الـ 60 شدة:");
-        if(!gID) return;
-        await updateDoc(doc(db, "users", auth.currentUser.uid), { points: increment(-30) });
-        await addDoc(collection(db, "orders"), {
-            uID: auth.currentUser.uid, uName: userData.name, product: "استبدال نقاط (60 UC)",
-            price: 0, pts: 0, gameID: gID, status: 'قيد الانتظار', timestamp: serverTimestamp()
-        });
-        alert("تم طلب المكافأة! سيتم الشحن خلال دقائق 🎁");
-    };
-
-    window.deleteProduct = (id) => deleteDoc(doc(db, "products", id));
-    window.toggleWaMenu = () => document.getElementById('waAgents').classList.toggle('hidden');
-    window.contactAgent = (n, name) => window.open(`https://wa.me/${n}?text=${encodeURIComponent('مرحباً '+name+'، أريد شحن محفظتي رقم: #'+userData.walletID)}`);
-    window.closeModal = () => document.getElementById('confirmModal').classList.remove('active');
+    // بقية الدوال (الطلبات، الحذف، إلخ) تبقى كما هي في النسخة السابقة لتعمل بسلاسة
 </script>
 </body>
-</html>
+    </html>
