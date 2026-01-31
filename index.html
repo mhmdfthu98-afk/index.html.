@@ -8,74 +8,103 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
-        body { font-family: 'Cairo', sans-serif; background: #f8fafc; margin: 0; }
-        .rank-badge { font-size: 10px; padding: 2px 8px; border-radius: 20px; font-weight: bold; margin-top: 4px; display: inline-block; }
-        .bronze { background: #cd7f32; color: #fff; }
-        .silver { background: #c0c0c0; color: #000; }
-        .gold { background: #ffd700; color: #000; }
-        .platinum { background: #e5e4e2; color: #000; }
-        .diamond { background: #b9f2ff; color: #000; }
-        .loading-screen { position: fixed; inset: 0; z-index: 9999; background: #000; display: flex; align-items: center; justify-content: center; color: white; transition: 0.5s; }
+        body { font-family: 'Cairo', sans-serif; background: #f0f2f5; margin: 0; scroll-behavior: smooth; }
+        .pubg-banner {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://w0.peakpx.com/wallpaper/403/602/HD-wallpaper-pubg-mobile-karakin-pubg-mobile-poster-battle-royale-2021-games-pubg.jpg');
+            background-size: cover; background-position: center; height: 180px; border-radius: 0 0 30px 30px;
+        }
+        .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 25px; box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
+        .order-status-card { border-right: 5px solid #3b82f6; transition: 0.3s; }
+        .order-status-card.completed { border-right-color: #10b981; }
+        .whatsapp-btn {
+            position: fixed; bottom: 25px; left: 25px; background: #25d366; color: white;
+            width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; font-size: 30px; box-shadow: 0 10px 25px rgba(37,211,102,0.4); z-index: 1000;
+        }
+        .category-title { border-right: 4px solid #f59e0b; padding-right: 10px; margin: 25px 0 15px 0; font-weight: 900; color: #1e293b; }
     </style>
 </head>
 <body>
 
-<div id="status-layer" class="loading-screen">
+<div id="status-layer" class="fixed inset-0 z-[9999] bg-slate-900 flex items-center justify-center text-white">
     <div class="text-center">
-        <div class="text-3xl font-black mb-4 italic">KHASM<span class="text-blue-500">SHOP</span></div>
-        <div id="load-msg" class="text-sm opacity-70 mb-6">جاري التحقق من الاتصال...</div>
-        <button id="login-btn" onclick="login()" class="hidden bg-white text-black px-8 py-3 rounded-xl font-black shadow-xl">الدخول عبر Google</button>
+        <div class="text-4xl font-black mb-4 italic tracking-tighter text-white">KHASM<span class="text-yellow-500">SHOP</span></div>
+        <div id="load-msg" class="text-sm opacity-50 mb-8 font-bold">جاري تجهيز السيرفر...</div>
+        <button id="login-btn" onclick="login()" class="hidden bg-yellow-500 text-black px-10 py-4 rounded-2xl font-black shadow-2xl hover:bg-yellow-400 transition-all">تسجيل دخول سريع عبر Google</button>
     </div>
 </div>
 
-<div id="app" class="hidden">
-    <header class="p-4 flex justify-between items-center bg-white shadow-sm sticky top-0 z-50">
-        <div class="flex items-center gap-3">
-            <div class="relative" onclick="logout()" title="تسجيل الخروج">
-                <img id="uImg" class="w-11 h-11 rounded-full border-2 border-yellow-500 cursor-pointer shadow-sm" src="">
-                <div class="absolute -top-1 -right-1 bg-red-500 w-4 h-4 rounded-full flex items-center justify-center text-[8px] text-white border border-white"><i class="fas fa-sign-out-alt"></i></div>
+<div id="app" class="hidden pb-24">
+    <div class="pubg-banner flex flex-col items-center justify-center text-white p-6 relative">
+        <h1 class="text-2xl font-black mb-1">مرحباً بك في عالم الخصم</h1>
+        <p class="text-[10px] opacity-80 font-bold uppercase tracking-widest">أفضل أسعار الشحن في السودان 🇸🇩</p>
+    </div>
+
+    <div class="max-w-md mx-auto -mt-10 px-4">
+        <div class="glass-card p-5 relative overflow-hidden">
+            <div class="flex justify-between items-start mb-4">
+                <div class="flex items-center gap-3">
+                    <img id="uImg" class="w-14 h-14 rounded-2xl border-2 border-white shadow-md object-cover" src="">
+                    <div>
+                        <h2 id="uName" class="font-black text-slate-800 text-sm">--</h2>
+                        <p id="uWalletDisplay" class="text-[10px] text-blue-600 font-black mt-1 bg-blue-50 px-2 py-0.5 rounded-lg inline-block italic"></p>
+                    </div>
+                </div>
+                <button onclick="logout()" class="text-red-500 bg-red-50 p-2 rounded-xl text-xs"><i class="fas fa-power-off"></i></button>
             </div>
-            <div>
-                <p id="uName" class="font-black text-xs">جاري التحميل..</p>
-                <div id="uRank" class="rank-badge bronze">برونزي</div>
+            
+            <div class="flex justify-between items-end bg-slate-900 rounded-2xl p-4 text-white">
+                <div>
+                    <p class="text-[9px] text-slate-400 font-bold mb-1">رصيد المحفظة</p>
+                    <h3 id="uBal" class="text-2xl font-black text-yellow-500">0 <span class="text-[10px] text-white">ج.س</span></h3>
+                </div>
+                <div class="text-left">
+                    <p class="text-[9px] text-slate-400 font-bold mb-1">نقاط المكافأة ⭐</p>
+                    <p id="uPoints" class="font-black text-white text-lg">0</p>
+                </div>
             </div>
+            <button onclick="redeemPoints()" class="w-full mt-3 bg-yellow-500 text-black py-2 rounded-xl text-[10px] font-black uppercase tracking-tighter shadow-md">استبدال 30 نقطة بـ 60 شدة مجاناً 🎁</button>
         </div>
-        <div class="text-left">
-            <p id="uBal" class="text-lg font-black text-green-600">0 ج.س</p>
-            <span class="bg-amber-100 text-amber-700 px-2 py-0.5 rounded-lg font-black text-[9px] border border-amber-200">
-                ⭐ النقاط: <span id="uPoints">0</span>
-            </span>
-        </div>
-    </header>
+    </div>
 
     <main class="max-w-md mx-auto p-4">
-        <div class="bg-slate-900 p-4 rounded-3xl mb-6 shadow-xl flex justify-between items-center border-b-4 border-amber-500">
-            <div>
-                <h4 class="text-white font-black text-xs mb-1">هدايا النقاط 🎁</h4>
-                <p class="text-slate-400 text-[8px]">استبدل 30 نقطة بـ 60 شدة مجانية</p>
+        
+        <div id="adminPanel" class="hidden bg-white p-5 rounded-3xl border-2 border-dashed border-red-300 mb-8 shadow-sm">
+            <h3 class="font-black text-red-600 text-xs mb-4 flex items-center gap-2"><i class="fas fa-user-shield"></i> لوحة التحكم (المدير)</h3>
+            <div class="space-y-3">
+                <input id="targetWallet" type="text" placeholder="رقم محفظة الزبون" class="w-full p-3 rounded-xl bg-slate-50 border-0 text-xs font-bold outline-none">
+                <div class="flex gap-2">
+                    <input id="amountToAdd" type="number" placeholder="المبلغ" class="flex-1 p-3 rounded-xl bg-slate-50 border-0 text-xs font-bold outline-none">
+                    <button onclick="adminRecharge()" class="bg-red-600 text-white px-6 rounded-xl font-black text-xs">شحن</button>
+                </div>
             </div>
-            <button onclick="redeemPoints()" class="bg-amber-500 text-white px-3 py-2 rounded-xl font-black text-[9px] active:scale-95">استبدال</button>
+            <div id="ordersList" class="mt-6 space-y-3"></div>
         </div>
 
-        <div id="adminPanel" class="hidden bg-red-50 p-4 rounded-2xl border-2 border-red-200 mb-6">
-            <h3 class="font-black text-red-600 text-sm mb-3">إدارة المتجر (المدير العام)</h3>
-            <div class="flex gap-2 mb-4">
-                <input id="targetWallet" type="text" placeholder="رقم المحفظة" class="flex-1 p-2 border rounded-lg text-xs">
-                <input id="amountToAdd" type="number" placeholder="المبلغ" class="w-20 p-2 border rounded-lg text-xs">
-                <button onclick="adminRecharge()" class="bg-red-600 text-white px-3 rounded-lg text-xs">شحن</button>
+        <h3 class="category-title text-sm">شحن مباشر (سريع) ⚡</h3>
+        <div id="directProducts" class="grid grid-cols-2 gap-3"></div>
+
+        <h3 class="category-title text-sm">شحن عبر الأيدي (عرض خاص) 💥</h3>
+        <div id="idProducts" class="grid grid-cols-2 gap-3"></div>
+
+        <h3 class="category-title text-sm">حزم واشتراكات 💎</h3>
+        <div id="subProducts" class="grid grid-cols-1 gap-3"></div>
+
+        <div class="mt-12 bg-white rounded-[30px] p-6 shadow-sm border border-slate-100">
+            <h3 class="font-black text-slate-800 text-sm mb-6 flex items-center justify-between">
+                <span>📦 تتبع حالة طلباتك</span>
+                <span class="text-[9px] text-blue-500">تحديث فوري</span>
+            </h3>
+            <div id="userOrdersList" class="space-y-4">
+                <p class="text-[10px] text-slate-400 text-center italic py-4">لا توجد طلبات سابقة حالياً</p>
             </div>
-            <div id="ordersList" class="space-y-2"></div>
-        </div>
-
-        <h3 class="font-black text-slate-800 mb-4 text-sm">عروض الشحن الفوري 💎</h3>
-        <div id="productGrid" class="grid grid-cols-2 gap-3"></div>
-
-        <div class="mt-8 border-t pt-4">
-            <h3 class="font-black text-slate-800 mb-4 text-xs italic">📦 تتبع طلباتي</h3>
-            <div id="userOrdersList" class="space-y-2"></div>
         </div>
     </main>
 </div>
+
+<a href="https://wa.me/249907760989" target="_blank" class="whatsapp-btn">
+    <i class="fab fa-whatsapp"></i>
+</a>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -100,158 +129,205 @@
     let userData = null;
     let selectedQty = {};
 
-    const products = [
-        { id: 'p1', name: "60 UC", price: 4000, uc: 60 },
-        { id: 'p2', name: "325 UC", price: 20000, uc: 325 },
-        { id: 'p3', name: "660 UC", price: 44000, uc: 660 },
-        { id: 'p4', name: "1800 UC", price: 95000, uc: 1800 },
-        { id: 'p5', name: "3850 UC", price: 190000, uc: 3850 },
-        { id: 'p6', name: "8100 UC", price: 380000, uc: 8100 }
-    ];
+    // قائمة الأسعار الكاملة
+    const prices = {
+        direct: [
+            { id: 'd1', name: "60 UC", price: 4000, uc: 60 },
+            { id: 'd2', name: "325 UC", price: 20000, uc: 325 },
+            { id: 'd3', name: "660 UC", price: 40000, uc: 660 },
+            { id: 'd4', name: "1800 UC", price: 100000, uc: 1800 },
+            { id: 'd5', name: "3850 UC", price: 200000, uc: 3850 },
+            { id: 'd6', name: "8100 UC", price: 400000, uc: 8100 }
+        ],
+        id_special: [
+            { id: 'i1', name: "385 UC", price: 26000, uc: 385 },
+            { id: 'i2', name: "720 UC", price: 40000, uc: 720 },
+            { id: 'i3', name: "60 UC", price: 4000, uc: 60 },
+            { id: 'i4', name: "325 UC", price: 20000, uc: 325 },
+            { id: 'i5', name: "660 UC", price: 44000, uc: 660 },
+            { id: 'i6', name: "1800 UC", price: 95000, uc: 1800 },
+            { id: 'i7', name: "3850 UC", price: 190000, uc: 3850 },
+            { id: 'i8', name: "8100 UC", price: 380000, uc: 8100 }
+        ],
+        subs: [
+            { id: 's1', name: "برايم شهر 💫", price: 4500, uc: 0 },
+            { id: 's2', name: "برايم بلص 💥", price: 45000, uc: 0 },
+            { id: 's3', name: "حزمة الشراء الأولى 💫", price: 10000, uc: 0 },
+            { id: 's4', name: "حزمة الكرستالات 💫", price: 16000, uc: 0 },
+            { id: 's5', name: "حزمة المتريالات 🛠️", price: 13500, uc: 0 },
+            { id: 's6', name: "حزمة كرستالة واحدة 💎", price: 10000, uc: 0 }
+        ]
+    };
 
     onAuthStateChanged(auth, (user) => {
         if (user) {
-            setupApp(user);
-            loadUserOrders(user.uid);
+            setupUser(user);
         } else {
             document.getElementById('login-btn').classList.remove('hidden');
+            document.getElementById('load-msg').innerText = "يرجى تسجيل الدخول للمتابعة";
         }
     });
 
-    async function setupApp(user) {
+    async function setupUser(user) {
         const userRef = doc(db, "users", user.uid);
         onSnapshot(userRef, (snap) => {
             if (snap.exists()) {
                 userData = snap.data();
-                renderUI();
-                document.getElementById('status-layer').classList.add('hidden');
+                renderAll();
+                document.getElementById('status-layer').classList.add('opacity-0', 'pointer-events-none');
                 document.getElementById('app').classList.remove('hidden');
                 if(user.email === ADMIN_EMAIL) {
                     document.getElementById('adminPanel').classList.remove('hidden');
-                    loadAdminOrders();
+                    monitorOrders();
                 }
+                loadUserOrders(user.uid);
             } else {
+                const newID = Math.floor(100000 + Math.random() * 900000).toString();
                 setDoc(userRef, {
                     name: user.displayName, email: user.email, img: user.photoURL,
-                    walletID: Math.floor(100000 + Math.random() * 900000).toString(),
-                    balance: 0, totalUC: 0, points: 0
+                    walletID: newID, balance: 0, points: 0, totalUC: 0
                 });
             }
         });
     }
 
-    window.changeQty = (id, delta) => {
-        if(!selectedQty[id]) selectedQty[id] = 1;
-        selectedQty[id] += delta;
-        if(selectedQty[id] < 1) selectedQty[id] = 1;
-        document.getElementById(`qty-${id}`).innerText = selectedQty[id];
-    };
-
-    function renderUI() {
-        document.getElementById('uName').innerText = userData.name;
-        document.getElementById('uImg').src = userData.img;
-        document.getElementById('uBal').innerText = userData.balance.toLocaleString() + " ج.س";
-        document.getElementById('uPoints').innerText = userData.points || 0;
-
-        const grid = document.getElementById('productGrid');
+    function renderProducts(id, list) {
+        const grid = document.getElementById(id);
         grid.innerHTML = '';
-        products.forEach(p => {
+        list.forEach(p => {
             if(!selectedQty[p.id]) selectedQty[p.id] = 1;
             grid.innerHTML += `
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-50 text-center">
-                    <p class="font-black text-[11px]">${p.name}</p>
-                    <p class="text-blue-600 font-bold text-xs my-2">${p.price.toLocaleString()} ج.س</p>
-                    <div class="flex items-center justify-center gap-2 mb-3 bg-slate-50 rounded-lg p-1">
-                        <button onclick="changeQty('${p.id}', -1)" class="w-6 h-6 bg-white rounded shadow-sm text-xs">-</button>
+                <div class="bg-white p-4 rounded-[25px] shadow-sm text-center border border-white">
+                    <p class="font-black text-[11px] text-slate-700">${p.name}</p>
+                    <p class="text-blue-600 font-black text-xs my-2">${p.price.toLocaleString()} ج.س</p>
+                    <div class="flex items-center justify-center gap-2 mb-3 bg-slate-100 rounded-xl p-1">
+                        <button onclick="changeQty('${p.id}', -1)" class="w-6 h-6 bg-white rounded-lg shadow-sm text-xs">-</button>
                         <span id="qty-${p.id}" class="text-[10px] font-black w-4">${selectedQty[p.id]}</span>
-                        <button onclick="changeQty('${p.id}', 1)" class="w-6 h-6 bg-white rounded shadow-sm text-xs">+</button>
+                        <button onclick="changeQty('${p.id}', 1)" class="w-6 h-6 bg-white rounded-lg shadow-sm text-xs">+</button>
                     </div>
-                    <button onclick="makeOrderWithQty('${p.id}', '${p.name}', ${p.price}, ${p.uc})" class="w-full bg-slate-900 text-white text-[9px] py-2 rounded-lg font-bold">شحن</button>
+                    <button onclick="processOrder('${p.id}', '${p.name}', ${p.price}, ${p.uc})" class="w-full bg-slate-900 text-white text-[9px] py-2 rounded-xl font-bold active:scale-95 transition">شحن سريع</button>
                 </div>`;
         });
     }
 
-    window.makeOrderWithQty = async (id, name, unitPrice, unitUC) => {
-        const qty = selectedQty[id] || 1;
-        const totalPrice = unitPrice * qty;
-        const totalUC = unitUC * qty;
-        const earnedPoints = Math.floor((totalUC / 60) * 2);
-
-        if (userData.balance < totalPrice) return alert("رصيدك لا يكفي");
-        const gID = prompt("أدخل ID اللاعب:");
-        if (!gID) return;
-        const gName = prompt("أدخل اسم اللاعب في اللعبة:");
-        if (!gName) return;
-
-        await updateDoc(doc(db, "users", auth.currentUser.uid), {
-            balance: increment(-totalPrice),
-            totalUC: increment(totalUC),
-            points: increment(earnedPoints)
-        });
-
-        await addDoc(collection(db, "orders"), {
-            uID: auth.currentUser.uid, uName: userData.name,
-            product: `${name} (كمية: ${qty})`, gameID: gID, gameName: gName,
-            status: 'pending', timestamp: serverTimestamp()
-        });
-        alert(`تم الطلب! كسبت ${earnedPoints} نقطة.`);
+    window.changeQty = (id, delta) => {
+        selectedQty[id] = (selectedQty[id] || 1) + delta;
+        if(selectedQty[id] < 1) selectedQty[id] = 1;
+        document.getElementById(`qty-${id}`).innerText = selectedQty[id];
     };
 
-    window.redeemPoints = async () => {
-        if ((userData.points || 0) < 30) return alert("تحتاج 30 نقطة للاستبدال");
-        const gID = prompt("أدخل ID لـ 60 شدة مجانية:");
-        if (!gID) return;
-        await updateDoc(doc(db, "users", auth.currentUser.uid), { points: increment(-30) });
+    function renderAll() {
+        document.getElementById('uName').innerText = userData.name;
+        document.getElementById('uImg').src = userData.img;
+        document.getElementById('uBal').innerText = userData.balance.toLocaleString();
+        document.getElementById('uPoints').innerText = userData.points || 0;
+        document.getElementById('uWalletDisplay').innerText = `#رقم_المحفظة: ${userData.walletID}`;
+        
+        renderProducts('directProducts', prices.direct);
+        renderProducts('idProducts', prices.id_special);
+        renderProducts('subProducts', prices.subs);
+    }
+
+    window.processOrder = async (id, name, unitPrice, unitUC) => {
+        const qty = selectedQty[id] || 1;
+        const total = unitPrice * qty;
+        const points = Math.floor(( (unitUC * qty) / 60 ) * 2);
+
+        if (userData.balance < total) return alert("❌ الرصيد لا يكفي، يرجى شحن المحفظة أولاً");
+        
+        const gID = prompt("أدخل ID اللاعب:");
+        if(!gID) return;
+        const gName = prompt("أدخل اسم اللاعب في اللعبة:");
+        if(!gName) return;
+
+        await updateDoc(doc(db, "users", auth.currentUser.uid), {
+            balance: increment(-total),
+            points: increment(points)
+        });
+
         await addDoc(collection(db, "orders"), {
-            uID: auth.currentUser.uid, uName: userData.name,
-            product: "60 UC (مكافأة نقاط 🎁)", gameID: gID, gameName: "هدية",
+            uID: auth.currentUser.uid, uName: userData.name, wallet: userData.walletID,
+            product: `${name} (الكمية: ${qty})`, gameID: gID, gameName: gName,
             status: 'pending', timestamp: serverTimestamp()
         });
-        alert("تم استبدال النقاط بنجاح!");
+
+        alert(`✅ تم إرسال الطلب! كسبت ${points} نقطة مكافأة.`);
     };
 
     function loadUserOrders(uid) {
         const q = query(collection(db, "orders"), where("uID", "==", uid), orderBy("timestamp", "desc"));
         onSnapshot(q, (snap) => {
             const list = document.getElementById('userOrdersList');
-            list.innerHTML = snap.empty ? '<p class="text-[9px] text-gray-400 text-center">لا توجد طلبات</p>' : '';
+            list.innerHTML = snap.empty ? '<p class="text-[10px] text-slate-400 text-center italic py-4">لا توجد طلبات سابقة حالياً</p>' : '';
             snap.forEach(d => {
                 const o = d.data();
+                const isComp = o.status === 'completed';
                 list.innerHTML += `
-                    <div class="bg-white p-2 rounded-lg border text-[9px] flex justify-between items-center shadow-sm">
-                        <span>${o.product} - ${o.gameID}</span>
-                        <span class="${o.status==='pending'?'text-amber-600':'text-green-600'} font-bold">${o.status==='pending'?'قيد الانتظار':'تم الشحن'}</span>
+                    <div class="order-status-card ${isComp?'completed':''} bg-slate-50 p-4 rounded-2xl flex justify-between items-center">
+                        <div class="text-right">
+                            <p class="font-black text-[11px] text-slate-800">${o.product}</p>
+                            <p class="text-[9px] text-slate-500 mt-1">المعرف: ${o.gameID} | ${o.gameName}</p>
+                        </div>
+                        <div class="text-center">
+                            <span class="${isComp?'text-green-600':'text-blue-500'} text-[9px] font-black uppercase">
+                                <i class="fas ${isComp?'fa-check-circle':'fa-spinner fa-spin'}"></i> ${isComp?'مكتمل':'قيد المعالجة'}
+                            </span>
+                        </div>
                     </div>`;
             });
         });
     }
 
-    function loadAdminOrders() {
+    // وظائف الإدارة
+    function monitorOrders() {
         onSnapshot(query(collection(db, "orders"), where("status", "==", "pending")), (snap) => {
             const list = document.getElementById('ordersList');
             list.innerHTML = '';
             snap.forEach(d => {
                 const o = d.data();
                 list.innerHTML += `
-                    <div class="bg-white p-2 rounded-lg text-[9px] flex justify-between items-center mb-2">
-                        <span>${o.product} لـ ${o.gameID} (${o.gameName})</span>
-                        <button onclick="finishOrder('${d.id}')" class="bg-green-500 text-white px-2 py-1 rounded">تم</button>
+                    <div class="bg-white p-3 rounded-2xl border flex justify-between items-center text-[10px]">
+                        <span>${o.product} -> ${o.gameID} (${o.uName})</span>
+                        <button onclick="finishOrder('${d.id}')" class="bg-green-500 text-white px-3 py-1 rounded-lg">تم الشحن</button>
                     </div>`;
             });
         });
     }
 
     window.finishOrder = (id) => updateDoc(doc(db, "orders", id), { status: 'completed' });
-    window.logout = () => signOut(auth).then(() => location.reload());
+    
+    window.logout = () => {
+        if(confirm("هل تريد تسجيل الخروج؟")) {
+            signOut(auth).then(() => {
+                location.reload(); // إجباري لمسح الجلسة تماماً
+            });
+        }
+    };
+
     window.login = () => signInWithPopup(auth, provider);
+    
     window.adminRecharge = async () => {
         const wid = document.getElementById('targetWallet').value;
         const amt = parseInt(document.getElementById('amountToAdd').value);
         const q = query(collection(db, "users"), where("walletID", "==", wid));
         const snap = await getDocs(q);
+        if(snap.empty) return alert("المحفظة غير موجودة!");
         snap.forEach(d => updateDoc(doc(db, "users", d.id), { balance: increment(amt) }));
-        alert("تم الشحن");
+        alert("تم شحن الرصيد بنجاح ✅");
     };
+
+    window.redeemPoints = async () => {
+        if ((userData.points || 0) < 30) return alert("❌ تحتاج 30 نقطة على الأقل");
+        const gID = prompt("أدخل ID لاستلام 60 شدة مجاناً:");
+        if(!gID) return;
+        await updateDoc(doc(db, "users", auth.currentUser.uid), { points: increment(-30) });
+        await addDoc(collection(db, "orders"), {
+            uID: auth.currentUser.uid, uName: userData.name, product: "هدية 60 UC (نقاط)",
+            gameID: gID, gameName: "استبدال نقاط", status: 'pending', timestamp: serverTimestamp()
+        });
+        alert("🎁 تم الاستبدال! سيتم شحن الهدية قريباً");
+    };
+
 </script>
 </body>
-    </html>
+                    </html>
