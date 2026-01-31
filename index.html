@@ -1,211 +1,301 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KhasmShop | العروض الملكية</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
-        body { font-family: 'Cairo', sans-serif; background: #fff; margin: 0; }
-        .royal-bg { position: fixed; inset: 0; z-index: -1; background: linear-gradient(135deg, #ffffff 0%, #f0fff4 30%, #fff5f5 60%, #fffdf0 100%); }
-        
-        /* انترو الدخول */
-        #intro-screen { position: fixed; inset: 0; z-index: 9999; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: 0.8s; }
-        .logo-glow { font-size: 3rem; font-weight: 900; color: #fff; text-shadow: 0 0 20px #2563eb; animation: pulse 2s infinite; }
-        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.8; } }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KHASM SHOP | النسخة الملكية</title>
 
-        /* الإعلانات الثلاثية */
-        .m-container { border-bottom: 2px solid #eee; overflow: hidden; background: #fff; }
-        .m-row { white-space: nowrap; padding: 6px 0; font-size: 10px; font-weight: 900; color: #fff; display: block; }
-        .m-blue { background: #1e40af; animation: slideL 20s linear infinite; }
-        .m-red { background: #991b1b; animation: slideR 25s linear infinite; }
-        .m-green { background: #065f46; animation: slideL 30s linear infinite; }
-        @keyframes slideL { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
-        @keyframes slideR { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com"></script>
 
-        /* الكروت */
-        .p-card { background: #fff; border-radius: 20px; padding: 15px; text-align: center; border: 1px solid #f0f0f0; box-shadow: 0 4px 6px rgba(0,0,0,0.02); transition: 0.3s; }
-        .p-card:hover { transform: translateY(-5px); border-color: #fbbf24; }
-        .p-img { width: 60px; height: 60px; margin: 0 auto 10px; border-radius: 12px; }
-        
-        .hidden { display: none !important; }
-    </style>
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<!-- Font -->
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+
+<style>
+body{font-family:'Cairo',sans-serif}
+.hidden{display:none}
+.glow{box-shadow:0 0 25px rgba(34,197,94,.6)}
+</style>
 </head>
-<body>
+<body class="bg-slate-100">
 
-    <div class="royal-bg"></div>
+<!-- INTRO -->
+<div id="intro" class="fixed inset-0 bg-black z-[9999] flex flex-col items-center justify-center text-white">
+  <h1 class="text-4xl font-black mb-8">KHASM <span class="text-green-400">SHOP</span></h1>
+  <button onclick="login()" class="bg-white text-black px-10 py-4 rounded-2xl font-black">
+    الدخول عبر Google
+  </button>
+</div>
 
-    <div id="intro-screen">
-        <div class="logo-glow italic mb-10">KHASM<span class="text-blue-500">SHOP</span></div>
-        <button onclick="login()" class="bg-white text-black px-10 py-4 rounded-2xl font-black flex items-center gap-3 shadow-2xl active:scale-95 transition">
-            <img src="https://www.google.com/favicon.ico" class="w-5"> الدخول عبر Google Play
-        </button>
+<!-- APP -->
+<div id="app" class="hidden max-w-md mx-auto pb-32">
+
+<!-- HEADER -->
+<header class="flex justify-between items-center p-4 bg-white sticky top-0 z-50 shadow">
+  <div class="flex items-center gap-3">
+    <img id="uImg" class="w-12 h-12 rounded-xl border">
+    <div>
+      <p id="uName" class="font-black text-sm">...</p>
+      <p id="uWallet" class="text-xs text-green-600">#---</p>
+      <p id="uLevel" class="text-[10px]">برونزي</p>
     </div>
+  </div>
+  <div class="text-left">
+    <p class="text-xs">الرصيد</p>
+    <p id="uBalance" class="font-black text-green-600">0 ج.س</p>
+  </div>
+</header>
 
-    <div id="app" class="hidden">
-        <div class="m-container">
-            <div class="m-row m-blue">🔥 خصم 5% على كافة عروض شدات ببجي | شحن فوري وآمن عبر الآيدي 🔥</div>
-            <div class="m-row m-red">⚡ روم كل أسبوع على 60 US | شارك الآن وكن الفائز في روماتنا الملكية ⚡</div>
-            <div class="m-row m-green">💎 حزم الاشتراكات والكرستالات متوفرة الآن بأفضل الأسعار في السودان 💎</div>
-        </div>
+<!-- PRODUCTS -->
+<main class="p-4 space-y-6">
+  <h2 class="font-black text-lg">🔥 شدات ببجي</h2>
+  <div id="products" class="grid grid-cols-2 gap-4"></div>
+</main>
 
-        <header class="p-4 flex justify-between items-center bg-white/70 backdrop-blur-md sticky top-0 z-50 border-b">
-            <div class="flex items-center gap-3">
-                <img id="uImg" class="w-12 h-12 rounded-2xl border-2 border-yellow-500 shadow-md" src="">
-                <div>
-                    <p id="uName" class="font-black text-sm text-slate-800">جاري التحميل..</p>
-                    <p id="uID" class="text-[10px] text-blue-600 font-bold bg-blue-50 px-2 rounded italic">محفظة: #------</p>
-                </div>
-            </div>
-            <div class="text-left">
-                <p class="text-[9px] font-bold text-gray-400">الرصيد</p>
-                <p id="uBal" class="font-black text-xs text-green-600">0 ج.س</p>
-            </div>
-        </header>
+</div>
 
-        <main class="max-w-md mx-auto p-4 pb-20">
-            <h3 class="font-black text-slate-800 mb-4 flex items-center gap-2">
-                <span class="w-2 h-6 bg-yellow-500 rounded-full"></span> شدات ببجي (شحن مباشر)
-            </h3>
-            <div class="grid grid-cols-2 gap-4 mb-8">
-                <div class="p-card">
-                    <img class="p-img" src="https://www.pubgmobile.com/common/images/icon_logo.jpg">
-                    <p class="font-black text-[11px]">60 US</p>
-                    <p class="text-blue-600 font-black text-xs">4,000 ج.س</p>
-                    <button onclick="openOrder('60 US', 4000)" class="w-full bg-slate-900 text-white py-2 rounded-xl text-[9px] font-black mt-2">طلب شحن</button>
-                </div>
-                <div class="p-card">
-                    <img class="p-img" src="https://www.pubgmobile.com/common/images/icon_logo.jpg">
-                    <p class="font-black text-[11px]">325 US</p>
-                    <p class="text-blue-600 font-black text-xs">20,000 ج.س</p>
-                    <button onclick="openOrder('325 US', 20000)" class="w-full bg-slate-900 text-white py-2 rounded-xl text-[9px] font-black mt-2">طلب شحن</button>
-                </div>
-                <div class="p-card">
-                    <img class="p-img" src="https://www.pubgmobile.com/common/images/icon_logo.jpg">
-                    <p class="font-black text-[11px]">660 US</p>
-                    <p class="text-blue-600 font-black text-xs">40,000 ج.س</p>
-                    <button onclick="openOrder('660 US', 40000)" class="w-full bg-slate-900 text-white py-2 rounded-xl text-[9px] font-black mt-2">طلب شحن</button>
-                </div>
-                <div class="p-card">
-                    <img class="p-img" src="https://www.pubgmobile.com/common/images/icon_logo.jpg">
-                    <p class="font-black text-[11px]">1800 US</p>
-                    <p class="text-blue-600 font-black text-xs">100,000 ج.س</p>
-                    <button onclick="openOrder('1800 US', 100000)" class="w-full bg-slate-900 text-white py-2 rounded-xl text-[9px] font-black mt-2">طلب شحن</button>
-                </div>
-            </div>
+<!-- ORDER MODAL -->
+<div id="orderModal" class="hidden fixed inset-0 z-[9000] bg-black/60 flex items-end">
+  <div class="bg-white w-full p-6 rounded-t-3xl">
+    <h3 id="orderTitle" class="font-black mb-4 text-center"></h3>
+    <input id="gameID" class="w-full p-3 border rounded mb-3 text-center" placeholder="ID اللاعب">
+    <input id="gameName" class="w-full p-3 border rounded mb-3 text-center" placeholder="اسم داخل اللعبة">
+    <button onclick="confirmOrder()" class="w-full bg-black text-white p-4 rounded-xl font-black">
+      تأكيد الطلب 🚀
+    </button>
+    <button onclick="closeOrder()" class="w-full text-center text-sm mt-2">إلغاء</button>
+  </div>
+</div>
 
-            <h3 class="font-black text-slate-800 mb-4 flex items-center gap-2">
-                <span class="w-2 h-6 bg-blue-500 rounded-full"></span> حزمة الاشتراكات (عبر الآيدي)
-            </h3>
-            <div class="space-y-3 mb-8">
-                <div onclick="openOrder('اشتراك برايم شهر', 4500)" class="flex justify-between items-center bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
-                    <span class="font-black text-xs">اشتراك برايم شهر واحد 💫</span>
-                    <span class="text-blue-600 font-black text-xs text-left">4,500 ج.س</span>
-                </div>
-                <div onclick="openOrder('برايم بلص شهر', 45000)" class="flex justify-between items-center bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
-                    <span class="font-black text-xs">اشتراك برايم بلص شهر واحد 💫</span>
-                    <span class="text-blue-600 font-black text-xs text-left">45,000 ج.س</span>
-                </div>
-                <div onclick="openOrder('حزمة الشراء الأولى', 10000)" class="flex justify-between items-center bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
-                    <span class="font-black text-xs">حزمة الشراء الأولى 💫</span>
-                    <span class="text-blue-600 font-black text-xs text-left">10,000 ج.س</span>
-                </div>
-                <div onclick="openOrder('حزمة المتريلات', 13500)" class="flex justify-between items-center bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
-                    <span class="font-black text-xs">حزمة المتريلات 💫</span>
-                    <span class="text-blue-600 font-black text-xs text-left">13,500 ج.س</span>
-                </div>
-            </div>
+<!-- ADMIN PANEL -->
+<div id="adminPanel" class="hidden max-w-md mx-auto bg-white mt-10 p-4 rounded-xl shadow">
+  <h2 class="font-black text-center mb-4">👑 لوحة تحكم المدير</h2>
 
-            <div class="p-6 bg-slate-900 rounded-[30px] text-white">
-                <h4 class="font-black mb-2 italic">من نحن؟</h4>
-                <p class="text-[10px] leading-loose opacity-80">
-                    هذا من ذوقك الراقي الفخم اختيار متجر "خصم شوب". نحن نوفر لك شحن شدات ببجي والاشتراكات بأرخص الأسعار مع نظام نقاط ملكي ورومات أسبوعية. محفظتك ثابتة وأمانك أولويتنا.
-                </p>
-            </div>
-        </main>
-    </div>
+  <input id="chargeWallet" class="w-full p-3 border mb-2 rounded" placeholder="رقم المحفظة">
+  <input id="chargeAmount" class="w-full p-3 border mb-2 rounded" placeholder="المبلغ">
+  <input id="chargeUC" class="w-full p-3 border mb-2 rounded" placeholder="عدد UC">
 
-    <div id="orderModal" class="fixed inset-0 z-[6000] bg-black/60 backdrop-blur-sm flex items-end justify-center hidden">
-        <div class="w-full max-w-md bg-white rounded-t-[40px] p-8">
-            <h3 class="font-black text-xl text-center mb-6" id="mTitle">تأكيد الطلب</h3>
-            <input id="gID" type="number" placeholder="أدخل أيدي اللاعب (ID)" class="w-full bg-gray-50 p-4 rounded-2xl mb-4 font-bold outline-none border text-center">
-            <input id="gName" type="text" placeholder="اسمك داخل اللعبة" class="w-full bg-gray-50 p-4 rounded-2xl mb-4 font-bold outline-none border text-center">
-            <div class="p-4 bg-yellow-50 rounded-2xl text-[10px] font-bold text-yellow-800 mb-6 text-center italic italic">وسيلة الدفع: محفظة خصم شوب</div>
-            <button onclick="confirmOrder()" class="w-full bg-slate-900 text-white py-5 rounded-2xl font-black shadow-xl">تأكيد وإرسال للمتجر 🚀</button>
-            <button onclick="closeModal()" class="w-full py-2 text-gray-400 font-bold text-xs mt-2">إلغاء</button>
-        </div>
-    </div>
+  <button onclick="chargeUser()" class="w-full bg-green-600 text-white p-4 rounded font-black">
+    شحن المحفظة
+  </button>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+  <hr class="my-4">
 
-        const firebaseConfig = { apiKey: "AIzaSyC0jzecEwKgHpxHpTi8Y-_bwwfzVdtgf3E", authDomain: "khasmshop.firebaseapp.com", projectId: "khasmshop", storageBucket: "khasmshop.firebasestorage.app", messagingSenderId: "238182001615", appId: "1:238182001615:web:d77391030a40a481b440ba" };
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
-        const prov = new GoogleAuthProvider();
+  <h3 class="font-black mb-2">📦 الطلبات</h3>
+  <div id="orders"></div>
+</div>
 
-        let userData = null;
-        let activePrice = 0;
+<!-- WhatsApp Button -->
+<button onclick="openWABox()"
+class="fixed bottom-5 left-5 z-50 bg-green-500 w-16 h-16 rounded-full flex items-center justify-center glow">
+  <i class="fab fa-whatsapp text-white text-3xl"></i>
+</button>
 
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                document.getElementById('intro-screen').style.transform = "translateY(-100%)";
-                setTimeout(() => {
-                    document.getElementById('app').classList.remove('hidden');
-                    document.getElementById('intro-screen').classList.add('hidden');
-                }, 800);
-                initUser(user);
-            }
-        });
+<!-- WhatsApp Box -->
+<div id="waBox" class="hidden fixed inset-0 z-[10000] bg-black/60 flex items-end">
+  <div class="bg-white w-full rounded-t-3xl p-6">
+    <h3 class="font-black text-center mb-4">اختر الخدمة</h3>
 
-        async function initUser(user) {
-            const ref = doc(db, "users", user.uid);
-            onSnapshot(ref, (snap) => {
-                if (snap.exists()) {
-                    userData = snap.data();
-                    document.getElementById('uName').innerText = userData.name;
-                    document.getElementById('uImg').src = userData.img;
-                    document.getElementById('uID').innerText = `محفظة: #${userData.walletID}`;
-                    document.getElementById('uBal').innerText = userData.balance.toLocaleString() + " ج.س";
-                } else {
-                    const wid = Math.floor(100000 + Math.random() * 900000).toString();
-                    setDoc(ref, { name: user.displayName, walletID: wid, balance: 0, points: 0, img: user.photoURL });
-                }
-            });
-        }
+    <button onclick="openAgents('support')" class="w-full bg-slate-900 text-white p-4 rounded-xl font-black mb-3">
+      💬 الدعم الفني
+    </button>
 
-        window.login = () => signInWithPopup(auth, prov);
-        window.openOrder = (t, price) => { 
-            activePrice = price;
-            document.getElementById('mTitle').innerText = t; 
-            document.getElementById('orderModal').classList.remove('hidden'); 
-        };
-        window.closeModal = () => document.getElementById('orderModal').classList.add('hidden');
-        window.confirmOrder = async () => {
-            const id = document.getElementById('gID').value;
-            const name = document.getElementById('gName').value;
-            if(!id || !name) return alert("أدخل البيانات كاملة!");
-            
-            await addDoc(collection(db, "orders"), {
-                uid: auth.currentUser.uid,
-                uName: userData.name,
-                wallet: userData.walletID,
-                product: document.getElementById('mTitle').innerText,
-                gameID: id,
-                gameName: name,
-                price: activePrice,
-                status: 'قيد التنفيذ',
-                date: new Date().toLocaleString('ar-EG')
-            });
-            alert("✅ تم إرسال طلبك للإدارة، سيتم التنفيذ خلال دقائق!");
-            closeModal();
-        };
-    </script>
+    <button onclick="openAgents('charge')" class="w-full bg-green-600 text-white p-4 rounded-xl font-black">
+      💰 شحن محفظة
+    </button>
+
+    <button onclick="closeWABox()" class="w-full mt-3 text-sm text-gray-400">إلغاء</button>
+  </div>
+</div>
+
+<!-- Agents -->
+<div id="agentsBox" class="hidden fixed inset-0 z-[10001] bg-black/60 flex items-end">
+  <div class="bg-white w-full rounded-t-3xl p-6">
+    <h3 class="font-black text-center mb-4">اختر الوكيل</h3>
+
+    <button onclick="goWA('201550165993')" class="w-full bg-gray-100 p-4 rounded-xl mb-2">
+      🇪🇬 محمد فتحي – مصر
+    </button>
+    <button onclick="goWA('249914178935')" class="w-full bg-gray-100 p-4 rounded-xl mb-2">
+      🇸🇩 محمد التاج – السودان
+    </button>
+    <button onclick="goWA('249916581517')" class="w-full bg-gray-100 p-4 rounded-xl mb-2">
+      🇸🇩 مهند ياسر – السودان
+    </button>
+    <button onclick="goWA('249907760989')" class="w-full bg-red-100 p-4 rounded-xl">
+      👑 المدير العام
+    </button>
+
+    <button onclick="closeAgents()" class="w-full mt-4 text-sm text-gray-400">رجوع</button>
+  </div>
+</div>
+
+<!-- Firebase -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC0jzecEwKgHpxHpTi8Y-_bwwfzVdtgf3E",
+  authDomain: "khasmshop.firebaseapp.com",
+  projectId: "khasmshop"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
+
+let userData = null;
+let activeProduct = null;
+let waType = "support";
+
+/* LOGIN */
+window.login = ()=>signInWithPopup(auth,provider);
+
+/* LEVEL SYSTEM */
+function getLevel(t){
+  if(t>=3000) return "ماسي";
+  if(t>=2000) return "بلاتيني";
+  if(t>=1500) return "ذهبي";
+  if(t>=900) return "فضي";
+  return "برونزي";
+}
+function getDiscount(l){
+  return {برونزي:0,فضي:.03,ذهبي:.06,بلاتيني:.09,ماسي:.12}[l];
+}
+
+/* AUTH */
+onAuthStateChanged(auth, async user=>{
+  if(!user) return;
+  intro.classList.add("hidden");
+  app.classList.remove("hidden");
+
+  const ref = doc(db,"users",user.uid);
+  const snap = await getDoc(ref);
+
+  if(!snap.exists()){
+    userData = {
+      name:user.displayName,
+      img:user.photoURL,
+      wallet:Math.floor(100000+Math.random()*900000),
+      balance:0,
+      totalUC:0,
+      level:"برونزي",
+      role:"user"
+    };
+    await setDoc(ref,userData);
+  }else{
+    userData = snap.data();
+  }
+
+  renderUser();
+  loadProducts();
+
+  if(userData.role==="admin"){
+    adminPanel.classList.remove("hidden");
+    loadOrders();
+  }
+});
+
+/* UI */
+function renderUser(){
+  uImg.src=userData.img;
+  uName.innerText=userData.name;
+  uWallet.innerText="#"+userData.wallet;
+  uBalance.innerText=userData.balance+" ج.س";
+  uLevel.innerText=userData.level;
+}
+
+/* PRODUCTS */
+function loadProducts(){
+  const prods=[
+    {name:"60 UC",price:4000,uc:60},
+    {name:"325 UC",price:20000,uc:325},
+    {name:"660 UC",price:40000,uc:660},
+    {name:"1800 UC",price:100000,uc:1800}
+  ];
+  products.innerHTML="";
+  prods.forEach(p=>{
+    const final=Math.round(p.price-p.price*getDiscount(userData.level));
+    products.innerHTML+=`
+    <div class="bg-white p-3 rounded-xl text-center shadow">
+      <p class="font-black">${p.name}</p>
+      <p class="text-green-600 font-black">${final} ج.س</p>
+      <button onclick='openOrder(${JSON.stringify(p)})'
+      class="mt-2 bg-black text-white w-full p-2 rounded">طلب</button>
+    </div>`;
+  });
+}
+
+/* ORDER */
+window.openOrder=p=>{
+  activeProduct=p;
+  orderTitle.innerText=p.name;
+  orderModal.classList.remove("hidden");
+};
+window.closeOrder=()=>orderModal.classList.add("hidden");
+
+window.confirmOrder=async()=>{
+  await addDoc(collection(db,"orders"),{
+    uid:auth.currentUser.uid,
+    wallet:userData.wallet,
+    product:activeProduct.name,
+    uc:activeProduct.uc,
+    status:"قيد التنفيذ",
+    date:new Date()
+  });
+  alert("✅ تم إرسال الطلب");
+  closeOrder();
+};
+
+/* ADMIN */
+async function loadOrders(){
+  const q=await getDocs(collection(db,"orders"));
+  orders.innerHTML="";
+  q.forEach(d=>{
+    const o=d.data();
+    orders.innerHTML+=`<div class="border p-2 mb-2">${o.product}</div>`;
+  });
+}
+
+window.chargeUser=async()=>{
+  const w=chargeWallet.value;
+  const amt=+chargeAmount.value;
+  const uc=+chargeUC.value;
+
+  const users=await getDocs(collection(db,"users"));
+  users.forEach(async d=>{
+    if(d.data().wallet==w){
+      const total=d.data().totalUC+uc;
+      await updateDoc(doc(db,"users",d.id),{
+        balance:d.data().balance+amt,
+        totalUC:total,
+        level:getLevel(total)
+      });
+      alert("تم الشحن بنجاح");
+    }
+  });
+};
+
+/* WHATSAPP */
+window.openWABox=()=>waBox.classList.remove("hidden");
+window.closeWABox=()=>waBox.classList.add("hidden");
+window.openAgents=t=>{waType=t;waBox.classList.add("hidden");agentsBox.classList.remove("hidden");};
+window.closeAgents=()=>agentsBox.classList.add("hidden");
+
+window.goWA=phone=>{
+  const msg=`مرحباً خصم شوب 💫
+أريد ${waType==="charge"?"شحن محفظتي":"الدعم الفني"}
+
+رقم محفظتي: #${userData.wallet}`;
+  window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`);
+};
+</script>
+
 </body>
-</html>
-
+        </html>
