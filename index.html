@@ -124,7 +124,8 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getFirestore, doc, onSnapshot, collection, addDoc, query, where, getDocs, updateDoc, increment, deleteDoc, setDoc, serverTimestamp, orderBy, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-    import { getAuth, signInWithRedirect, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    // تم التعديل هنا لاستخدام Popup بدلاً من Redirect
+    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
     const firebaseConfig = { 
         apiKey: "AIzaSyC0jzecEwKgHpxHpTi8Y-_bwwfzVdtgf3E", 
@@ -144,10 +145,19 @@
     const ADMINS = ["mhmdfthu98@gmail.com", "muhammedaltaj111@gmail.com", "mohnadyasir43@gmail.com"];
     let userData = null;
 
+    // إصلاح تسجيل الدخول ليتوافق مع تطبيقات الـ Android WebView
     document.getElementById('google-login-btn').onclick = () => {
         document.getElementById('loading-screen').classList.remove('hidden');
-        signInWithRedirect(auth, provider);
+        signInWithPopup(auth, provider).then(() => {
+            // النجاح يتم معالجته في onAuthStateChanged
+        }).catch((error) => {
+            console.error(error);
+            document.getElementById('loading-screen').classList.add('hidden');
+            // تنبيه للمستخدم في حال حظر المتصفح الداخلي
+            alert("إذا لم يفتح تسجيل الدخول، يرجى الضغط على خيارات التطبيق واختيار 'فتح في المتصفح' أو 'Open in Browser'.");
+        });
     };
+
     document.getElementById('logout-btn').onclick = () => signOut(auth).then(() => location.reload());
 
     onAuthStateChanged(auth, async (user) => {
@@ -194,7 +204,6 @@
         });
     }
 
-    // --- الوظائف الأساسية ---
     window.updateUI = (isAdmin) => {
         document.getElementById('uName').innerText = userData.name;
         document.getElementById('uImg').src = userData.img;
@@ -313,4 +322,4 @@
     window.contactAgent = (n, name) => window.open(`https://wa.me/${n}?text=${encodeURIComponent('مرحباً '+name+'، أريد شحن محفظتي: #'+userData.walletID)}`);
 </script>
 </body>
-    </html>
+</html>
