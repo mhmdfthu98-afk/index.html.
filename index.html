@@ -19,7 +19,7 @@
         .status-pending { border-right-color: #f59e0b; }
         .loader-spin { border: 3px solid #f3f3f3; border-top: 3px solid #eab308; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .name-badge-v2 { animation: fadeInDown 0.4s ease; }
+        .name-badge-v2 { animation: fadeInDown 0.4s ease; transition: all 0.3s ease; }
         @keyframes fadeInDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
@@ -53,7 +53,7 @@
                     <img id="uImg" class="w-14 h-14 rounded-2xl border-2 border-slate-50 shadow-sm" src="">
                     <div>
                         <h2 id="uName" class="font-black text-slate-800 text-sm">...</h2>
-                        <div id="uWallet" class="text-[10px] text-yellow-600 font-bold bg-yellow-50 px-2 py-0.5 rounded-lg border border-yellow-100 mt-1">المحفظة: #000000</div>
+                        <div id="uWallet" class="text-[10px] text-yellow-600 font-bold bg-yellow-50 px-2 py-0.5 rounded-lg border border-yellow-100 mt-1 italic">#000000</div>
                     </div>
                 </div>
                 <button id="logout-btn" class="w-10 h-10 bg-red-50 text-red-500 rounded-xl"><i class="fas fa-power-off"></i></button>
@@ -87,8 +87,9 @@
                     <div class="relative">
                         <input id="targetWallet" type="number" oninput="checkWalletName(this.value)" placeholder="رقم المحفظة (6 أرقام)" 
                                class="w-full p-4 rounded-2xl text-xs border-2 border-transparent outline-none focus:border-red-500 transition-all font-bold">
-                        <div id="targetUserName" class="hidden mt-2 p-3 rounded-xl bg-orange-400 text-white text-[11px] font-black text-center shadow-lg name-badge-v2">
-                           🔍 جاري البحث عن صاحب المحفظة...
+                        
+                        <div id="targetUserName" class="hidden mt-2 p-3 rounded-xl text-[11px] font-black text-center shadow-lg name-badge-v2">
+                           🔍 جاري البحث...
                         </div>
                     </div>
                     <div class="flex gap-2">
@@ -148,29 +149,35 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
-    provider.setCustomParameters({ prompt: 'select_account' });
-
     const ADMINS = ["mhmdfthu98@gmail.com", "muhammedaltaj111@gmail.com", "mohnadyasir43@gmail.com"];
     let userData = null;
 
-    // وظيفة التحقق من اسم صاحب المحفظة (مربوطة بالـ window لتعمل مع HTML)
+    // --- المحرك الذكي للبحث عن الاسم ---
     window.checkWalletName = async (wid) => {
         const display = document.getElementById('targetUserName');
-        if(wid.length === 6) {
+        const walletValue = wid.toString().trim();
+
+        if(walletValue.length === 6) {
             display.classList.remove('hidden');
-            display.innerText = "🔍 جاري البحث عن صاحب المحفظة...";
+            display.innerText = "🔍 جاري البحث...";
             display.className = "mt-2 p-3 rounded-xl bg-orange-400 text-white text-[11px] font-black text-center shadow-lg name-badge-v2";
 
-            const q = query(collection(db, "users"), where("walletID", "==", wid.toString()));
-            const snap = await getDocs(q);
-            
-            if(!snap.empty) {
-                const u = snap.docs[0].data();
-                display.innerText = `✅ المستخدم: ${u.name}`;
-                display.className = "mt-2 p-3 rounded-xl bg-green-500 text-white text-[11px] font-black text-center shadow-lg name-badge-v2";
-            } else {
-                display.innerText = "❌ عذراً.. المحفظة غير موجودة";
-                display.className = "mt-2 p-3 rounded-xl bg-red-500 text-white text-[11px] font-black text-center shadow-lg name-badge-v2";
+            try {
+                // البحث بصيغتين (نص ورقم) لضمان الوصول للبيانات
+                const q = query(collection(db, "users"), where("walletID", "in", [walletValue, parseInt(walletValue)]));
+                const snap = await getDocs(q);
+                
+                if(!snap.empty) {
+                    const u = snap.docs[0].data();
+                    display.innerText = `✅ صاحب المحفظة: ${u.name}`;
+                    display.className = "mt-2 p-3 rounded-xl bg-green-600 text-white text-[11px] font-black text-center shadow-lg name-badge-v2";
+                } else {
+                    display.innerText = "❌ رقم محفظة غير مسجل!";
+                    display.className = "mt-2 p-3 rounded-xl bg-red-600 text-white text-[11px] font-black text-center shadow-lg name-badge-v2";
+                }
+            } catch (e) {
+                display.innerText = "⚠️ خطأ في الاتصال";
+                display.className = "mt-2 p-3 rounded-xl bg-gray-600 text-white text-[11px] font-black text-center shadow-lg";
             }
         } else {
             display.classList.add('hidden');
@@ -229,16 +236,16 @@
     window.adminRecharge = async () => {
         const wid = document.getElementById('targetWallet').value.trim();
         const amt = parseInt(document.getElementById('amountToAdd').value);
-        const nameDisplay = document.getElementById('targetUserName').innerText;
+        const displayTxt = document.getElementById('targetUserName').innerText;
 
-        if(!wid || !amt || nameDisplay.includes("غير موجود")) return alert("الرجاء التأكد من رقم المحفظة والمبلغ");
+        if(!wid || !amt || displayTxt.includes("❌")) return alert("الرجاء التحقق من البيانات");
 
-        if(confirm(`هل تريد بالتأكيد شحن ${amt} ج.س لـ: \n${nameDisplay}?`)) {
-            const q = query(collection(db, "users"), where("walletID", "==", wid.toString()));
+        if(confirm(`تأكيد شحن مبلغ ${amt} ج.س لـ:\n${displayTxt}`)) {
+            const q = query(collection(db, "users"), where("walletID", "in", [wid, parseInt(wid)]));
             const snap = await getDocs(q);
             if(!snap.empty) {
                 await updateDoc(doc(db, "users", snap.docs[0].id), { balance: increment(amt) });
-                alert("تم الشحن بنجاح ✅");
+                alert("تمت عملية الشحن بنجاح ✅");
                 document.getElementById('targetWallet').value = '';
                 document.getElementById('amountToAdd').value = '';
                 document.getElementById('targetUserName').classList.add('hidden');
@@ -251,31 +258,32 @@
         document.getElementById('uImg').src = userData.img;
         document.getElementById('uBal').innerText = (userData.balance || 0).toLocaleString();
         document.getElementById('uPoints').innerText = userData.points || 0;
-        document.getElementById('uWallet').innerText = `المحفظة: #${userData.walletID}`;
+        document.getElementById('uWallet').innerText = `رقم محفظتك: #${userData.walletID}`;
+        
         const rb = document.getElementById('redeemBtn');
         if(userData.points >= 30) {
             rb.disabled = false; rb.classList.remove('opacity-50', 'text-indigo-300');
             rb.classList.add('bg-indigo-600', 'text-white', 'animate-pulse');
-            rb.innerText = "استرداد الآن! 🎁";
+            rb.innerText = "استرداد 60 شدة! 🎁";
         }
         const agents = [{n:'249907760989', name:'محمد فتحي'}, {n:'249916581517', name:'محمد التاج'}, {n:'249914178935', name:'مهند ياسر'}];
         document.getElementById('agentsList').innerHTML = agents.map(a => `<button onclick="contactAgent('${a.n}', '${a.name}')" class="w-full flex justify-between p-3 bg-slate-50 rounded-2xl text-[10px] font-black border"><span>${a.name}</span> <i class="fab fa-whatsapp text-green-500"></i></button>`).join('');
     };
 
     window.orderNow = async (name, price, pts) => {
-        if (userData.balance < price) return alert("الرصيد لا يكفي");
+        if (userData.balance < price) return alert("رصيدك غير كافٍ");
         const gID = prompt("أدخل ID اللاعب:");
         if(!gID) return;
-        const gName = prompt("اسم اللاعب:") || "غير معروف";
+        const gName = prompt("اسم اللاعب في اللعبة:") || "غير معروف";
         const phone = prompt("رقم هاتفك:");
-        if(confirm(`تأكيد الشحن؟`)) {
+        if(confirm(`هل أنت متأكد من شراء ${name}؟`)) {
             await updateDoc(doc(db, "users", auth.currentUser.uid), { balance: increment(-price) });
             await addDoc(collection(db, "orders"), {
                 uID: auth.currentUser.uid, uName: userData.name, product: name,
                 price: price, pts: pts, gameID: gID, gameName: gName, phone: phone,
                 status: 'قيد الانتظار', timestamp: serverTimestamp()
             });
-            alert("تم إرسال الطلب ✅");
+            alert("تم إرسال طلبك للإدارة ✅");
         }
     };
 
@@ -291,7 +299,7 @@
                 list.innerHTML += `<div class="bg-white p-4 rounded-3xl border-2 border-orange-100 shadow-sm text-[10px]">
                     <div class="flex justify-between mb-2"><b>${o.product}</b> <span class="text-blue-600">+${o.pts}P</span></div>
                     <div class="bg-slate-50 p-3 rounded-xl mb-3 space-y-1">
-                        <p>🆔 الآيدي: <b class="select-all">${o.gameID}</b></p>
+                        <p>🆔 ID: <b class="select-all">${o.gameID}</b></p>
                         <p>👤 الاسم: <b>${o.gameName}</b></p>
                         <p>📞 هاتف: <a href="tel:${o.phone}" class="text-blue-500 underline">${o.phone}</a></p>
                     </div>
@@ -325,6 +333,7 @@
             });
         });
     };
+
     window.updateOrder = async (oid, uid, st, pts, refund = 0) => {
         if (st === 'مكتمل') await updateDoc(doc(db, "users", uid), { points: increment(pts) });
         else if (st === 'فشل') await updateDoc(doc(db, "users", uid), { balance: increment(refund) });
@@ -338,7 +347,7 @@
         if(!gid || !gname || !phone) return;
         await updateDoc(doc(db, "users", auth.currentUser.uid), { points: increment(-30) });
         await addDoc(collection(db, "orders"), { uID: auth.currentUser.uid, uName: userData.name, product: "هدية (60 UC)", price: 0, pts: 0, gameID: gid, gameName: gname, phone: phone, status: 'قيد الانتظار', timestamp: serverTimestamp() });
-        alert("تم طلب الهدية 🎁");
+        alert("تم طلب الهدية بنجاح 🎁");
     };
 
     window.deleteP = (id) => confirm("حذف المنتج؟") && deleteDoc(doc(db, "products", id));
