@@ -3,48 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KhasmShop | الشحن الفوري</title>
+    <title>KhasmShop VIP | المتجر الرسمي</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
-        body { font-family: 'Cairo', sans-serif; background-color: #f8fafc; }
-        .page { display: none; } .active { display: block; }
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
+        body { font-family: 'Cairo', sans-serif; background: #f8fafc; user-select: none; }
+        .page { display: none; } .page.active { display: block; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; } }
+        .glass { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); }
+        .card-vip { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .btn-click:active { transform: scale(0.95); }
     </style>
 </head>
 <body>
 
-<div id="app" class="max-w-md mx-auto bg-white min-h-screen shadow-xl pb-24">
-    <header class="p-4 border-b flex justify-between items-center bg-white sticky top-0 z-50">
-        <div class="flex items-center gap-2">
-            <img id="u-img" class="w-10 h-10 rounded-full border shadow-sm" src="https://via.placeholder.com/40">
+<div id="app" class="max-w-md mx-auto min-h-screen bg-white shadow-2xl relative pb-32">
+    <header class="glass sticky top-0 z-[100] px-5 py-4 border-b flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <img id="u-img" class="w-12 h-12 rounded-2xl border-2 border-amber-400 object-cover" src="https://via.placeholder.com/100">
             <div>
-                <h2 id="u-name" class="text-xs font-bold">جاري التحميل...</h2>
-                <p id="u-id" class="text-[10px] text-gray-400 font-mono">ID: #000000</p>
+                <h2 id="u-name" class="font-black text-sm text-slate-800">تحميل...</h2>
+                <span id="u-id" class="text-[10px] font-bold text-slate-400">ID: #000000</span>
             </div>
         </div>
-        <div class="bg-blue-50 px-3 py-1 rounded-full border border-blue-100">
-            <span id="u-bal" class="text-blue-600 font-black text-sm">0</span> <span class="text-[8px] text-blue-400">SDG</span>
+        <div class="flex gap-2">
+            <button onclick="toggleAgents()" class="w-10 h-10 rounded-xl bg-green-50 text-green-600 flex items-center justify-center border border-green-100"><i class="fab fa-whatsapp text-xl"></i></button>
+            <button onclick="showPage('p-redeem')" class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center border border-amber-100"><i class="fas fa-gift"></i></button>
         </div>
     </header>
 
     <main class="p-4">
-        <div id="p-home" class="page active">
-            <div id="product-list" class="grid grid-cols-2 gap-3">
+        <section id="p-home" class="page active space-y-6">
+            <div class="card-vip p-7 rounded-[40px] text-white shadow-xl relative overflow-hidden">
+                <p class="text-[10px] font-bold opacity-50 uppercase">رصيد المحفظة</p>
+                <h3 class="text-4xl font-black my-2"><span id="u-bal">0</span> <span class="text-xs opacity-40">SDG</span></h3>
+                <div class="flex justify-between items-center border-t border-white/10 mt-5 pt-4">
+                    <div><p class="text-[8px] opacity-40 font-bold">النقاط</p><p id="u-pts" class="text-sm font-black text-amber-400">0</p></div>
+                    <div class="text-left"><p class="text-[8px] opacity-40 font-bold">العضوية</p><p id="sub-timer" class="text-[10px] font-black text-blue-400">حساب عادي</p></div>
                 </div>
-        </div>
+            </div>
+
+            <div class="flex gap-2 overflow-x-auto no-scrollbar py-1">
+                <button onclick="loadProducts('PUBG', this)" class="cat-btn bg-amber-400 text-black px-6 py-3 rounded-2xl text-[11px] font-black shrink-0 shadow-md">PUBG</button>
+                <button onclick="loadProducts('FREEFIRE', this)" class="cat-btn bg-white border text-slate-400 px-6 py-3 rounded-2xl text-[11px] font-black shrink-0">FREE FIRE</button>
+                <button onclick="loadProducts('CARDS', this)" class="cat-btn bg-white border text-slate-400 px-6 py-3 rounded-2xl text-[11px] font-black shrink-0">CARDS</button>
+            </div>
+            <div id="product-list" class="grid grid-cols-2 gap-4"></div>
+        </section>
+
+        <section id="p-admin" class="page space-y-6">
+            <div class="bg-blue-600 p-6 rounded-[35px] text-white">
+                <h4 class="text-xs font-black mb-4"><i class="fas fa-wallet ml-2"></i> شحن المحفظة</h4>
+                <div class="flex gap-2">
+                    <input id="search-uid" type="number" placeholder="رقم محفظة الزبون" class="flex-1 p-3.5 rounded-2xl text-black text-xs font-bold outline-none">
+                    <button onclick="findUser()" class="bg-white text-blue-600 px-5 rounded-2xl text-xs font-black btn-click">بحث</button>
+                </div>
+                <div id="user-info" class="hidden mt-4 bg-blue-700/50 p-3 rounded-2xl flex items-center justify-between border border-white/20">
+                    <div class="flex items-center gap-3"><img id="target-img" class="w-10 h-10 rounded-xl" src=""><p id="target-name" class="text-[11px] font-black truncate w-24"></p></div>
+                    <button onclick="addCash()" class="bg-green-500 text-white px-5 py-2 rounded-xl text-[10px] font-black btn-click">إضافة مبلغ</button>
+                </div>
+            </div>
+            <div id="adm-orders" class="space-y-4">
+                </div>
+        </section>
+
+        <section id="p-redeem" class="page">
+             <h3 class="font-black text-xl text-slate-800 mb-4">سوق النقاط</h3>
+             <p class="text-slate-400 text-xs">قريباً...</p>
+        </section>
+
+        <section id="p-sub" class="page">
+             <h3 class="font-black text-xl text-slate-800 mb-4">العضويات المميزة</h3>
+             <p class="text-slate-400 text-xs">قريباً...</p>
+        </section>
     </main>
 
-    <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white border-t p-3 flex justify-around items-center">
-        <button onclick="location.reload()" class="text-blue-600"><i class="fas fa-home text-xl"></i></button>
-        <button onclick="alert('تواصل مع الوكلاء للشحن: 0907760989') text-gray-400"><i class="fas fa-wallet text-xl"></i></button>
+    <nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] glass shadow-2xl rounded-[35px] p-2 flex justify-around items-center z-[1000] border border-white/20">
+        <button onclick="showPage('p-home', this)" class="nav-btn p-4 text-amber-500 transition-all"><i class="fas fa-home text-2xl"></i></button>
+        <button onclick="showPage('p-sub', this)" class="nav-btn p-4 text-slate-300 transition-all"><i class="fas fa-gem text-2xl"></i></button>
+        <button id="admin-nav" onclick="showPage('p-admin', this)" class="hidden nav-btn p-4 text-slate-300 transition-all"><i class="fas fa-user-shield text-2xl"></i></button>
     </nav>
 </div>
 
+<div id="agents-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md z-[2000] flex items-end">
+    <div class="bg-white w-full rounded-t-[45px] p-8 space-y-5 shadow-2xl">
+        <h3 class="font-black text-center text-lg text-slate-800 italic">الوكلاء المعتمدين للشحن</h3>
+        <button onclick="window.open('https://wa.me/249907760989')" class="w-full p-4 bg-slate-50 rounded-2xl flex justify-between items-center border hover:border-green-500">
+            <div class="text-right"><p class="text-xs font-black">محمد فتحي</p><p class="text-[9px] text-green-600 font-bold">الوكيل المعتمد</p></div>
+            <i class="fab fa-whatsapp text-2xl text-green-500"></i>
+        </button>
+        <button onclick="toggleAgents()" class="w-full text-slate-400 font-bold text-xs py-2">إغلاق</button>
+    </div>
+</div>
+
 <script type="module">
-    // استخدام روابط CDN حديثة ومستقرة لـ Render
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, onSnapshot, query, serverTimestamp, doc, updateDoc, increment, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, doc, onSnapshot, collection, addDoc, query, where, updateDoc, increment, setDoc, serverTimestamp, orderBy, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     const firebaseConfig = {
@@ -61,92 +117,127 @@
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
 
-    let user = null;
-    let userData = null;
+    let user = null; let userData = null; let targetUID = null;
+    const ADMINS = ["mhmdfthu98@gmail.com", "muhammedaltaj111@gmail.com"];
 
-    // مراقبة حالة تسجيل الدخول
     onAuthStateChanged(auth, async (u) => {
         if (u) {
             user = u;
             const userRef = doc(db, "users", u.uid);
-            onSnapshot(userRef, (docSnap) => {
-                if (docSnap.exists()) {
-                    userData = docSnap.data();
-                    renderUI();
+            onSnapshot(userRef, (s) => {
+                if (s.exists()) { 
+                    userData = s.data(); 
+                    updateUI(); 
                 } else {
-                    // إنشاء حساب جديد إذا لم يكن موجوداً
-                    setDoc(userRef, {
-                        name: u.displayName,
-                        img: u.photoURL,
-                        email: u.email,
-                        balance: 0,
-                        walletID: Math.floor(100000 + Math.random() * 900000).toString()
-                    });
+                    setDoc(userRef, { name: u.displayName, img: u.photoURL, email: u.email, balance: 0, points: 0, walletID: Math.floor(100000 + Math.random() * 900000).toString(), subType: 'None', discount: 0 });
                 }
             });
-            loadProducts();
-        } else {
-            signInWithPopup(auth, provider).catch(err => alert("يرجى تفعيل النافذة المنبثقة لتسجيل الدخول"));
+            if (ADMINS.includes(u.email)) { 
+                document.getElementById('admin-nav').classList.remove('hidden'); 
+                loadAdminData(); 
+            }
+            loadProducts('PUBG');
+        } else { 
+            signInWithPopup(auth, provider).catch(e => console.log("Login Cancelled")); 
         }
     });
 
-    function renderUI() {
+    function updateUI() {
         document.getElementById('u-name').innerText = userData.name;
         document.getElementById('u-img').src = userData.img;
-        document.getElementById('u-id').innerText = "ID: #" + userData.walletID;
-        document.getElementById('u-bal').innerText = userData.balance.toLocaleString();
+        document.getElementById('u-id').innerText = `ID: #${userData.walletID}`;
+        document.getElementById('u-bal').innerText = (userData.balance || 0).toLocaleString();
+        document.getElementById('u-pts').innerText = userData.points || 0;
     }
 
-    function loadProducts() {
-        onSnapshot(collection(db, "products"), (snap) => {
-            const list = document.getElementById('product-list');
-            list.innerHTML = '';
-            snap.forEach(d => {
+    window.loadProducts = (cat, btn) => {
+        if(btn) { 
+            document.querySelectorAll('.cat-btn').forEach(b => b.className = 'cat-btn bg-white border text-slate-400 px-6 py-3 rounded-2xl text-[11px] font-black shrink-0'); 
+            btn.className = 'cat-btn bg-amber-400 text-black px-6 py-3 rounded-2xl text-[11px] font-black shrink-0 shadow-md'; 
+        }
+        onSnapshot(query(collection(db, "products"), where("category", "==", cat)), (s) => {
+            const list = document.getElementById('product-list'); list.innerHTML = '';
+            s.forEach(d => {
                 const p = d.data();
                 list.innerHTML += `
-                    <div class="bg-white p-4 rounded-2xl border shadow-sm">
-                        <h3 class="text-[10px] font-bold h-8">${p.name}</h3>
-                        <p class="text-blue-600 font-black text-xs my-2">${p.price} SDG</p>
-                        <button onclick="window.makeOrder('${d.id}', '${p.name}', ${p.price})" class="w-full bg-slate-800 text-white py-2 rounded-xl text-[10px] font-bold">اطلب الآن</button>
+                    <div class="bg-white p-5 rounded-[35px] border shadow-sm relative">
+                        <p class="text-[10px] font-black h-8 mt-2">${p.name}</p>
+                        <p class="text-blue-600 font-black text-sm my-3">${p.price} SDG</p>
+                        <button onclick="makeOrder('${d.id}', '${p.name}', ${p.price})" class="w-full bg-slate-900 text-white py-2.5 rounded-2xl text-[10px] font-black btn-click">اطلب</button>
                     </div>`;
             });
         });
-    }
+    };
 
-    // وظيفة الطلب (مربوطة بالنافذة العالمية)
-    window.makeOrder = async (pid, pname, pprice) => {
-        if (!userData || userData.balance < pprice) {
-            return alert("الرصيد لا يكفي! تواصل مع الوكيل: 0907760989");
-        }
-
-        const gameID = prompt("أدخل آيدي اللاعب (ID):");
-        if (!gameID) return;
+    window.makeOrder = async (id, name, price) => {
+        if (userData.balance < price) return alert("الرصيد لا يكفي!");
+        const gID = prompt("أدخل آيدي اللاعب:");
+        if (!gID) return;
 
         try {
-            // 1. خصم الرصيد
-            await updateDoc(doc(db, "users", user.uid), {
-                balance: increment(-pprice)
-            });
-
-            // 2. إضافة الطلب بالمسميات الصحيحة لصورتك
+            await updateDoc(doc(db, "users", user.uid), { balance: increment(-price) });
             await addDoc(collection(db, "orders"), {
-                uID: user.uid,
-                uName: userData.name,
-                uWallet: userData.walletID,
-                product: pname,
-                price: pprice,
-                gameID: gameID,
-                status: "Pending",
-                timestamp: serverTimestamp(),
-                gameName: "N/A",
-                phone: "N/A"
+                uID: user.uid, uName: userData.name, uWallet: userData.walletID,
+                product: name, price: price, gameID: gID, status: 'Pending',
+                timestamp: serverTimestamp(), gameName: "N/A", phone: "N/A", pts: 3
             });
+            alert("✅ تم إرسال الطلب!");
+        } catch(e) { alert("خطأ!"); }
+    };
 
-            alert("✅ تم إرسال طلبك بنجاح!");
-        } catch (e) {
-            alert("خطأ تقني: " + e.message);
+    window.loadAdminData = () => {
+        onSnapshot(query(collection(db, "orders"), orderBy("timestamp", "desc")), (s) => {
+            const list = document.getElementById('adm-orders'); list.innerHTML = '';
+            s.forEach(d => {
+                const o = d.data();
+                list.innerHTML += `
+                    <div class="bg-white p-5 rounded-[30px] border-2 border-slate-100">
+                        <div class="flex justify-between font-black text-[10px] mb-3"><span>${o.product}</span><span class="text-blue-600">${o.status}</span></div>
+                        <div class="bg-slate-50 p-3 rounded-xl text-[9px] font-bold">
+                            <p>الزبون: ${o.uName}</p><p>ID: ${o.gameID}</p>
+                        </div>
+                        ${o.status !== 'مكتمل' ? `<button onclick="markDone('${d.id}', '${o.uID}', ${o.pts || 0})" class="w-full mt-3 bg-green-500 text-white py-3 rounded-2xl text-[10px] font-black">تأكيد التنفيذ</button>` : ''}
+                    </div>`;
+            });
+        });
+    };
+
+    window.markDone = async (id, uid, pts) => {
+        await updateDoc(doc(db, "orders", id), { status: 'مكتمل' });
+        if(pts > 0) await updateDoc(doc(db, "users", uid), { points: increment(pts) });
+        alert("تم التنفيذ!");
+    };
+
+    window.findUser = async () => {
+        const wid = document.getElementById('search-uid').value;
+        const snap = await getDocs(query(collection(db, "users"), where("walletID", "==", wid.toString())));
+        if(!snap.empty) {
+            const u = snap.docs[0]; targetUID = u.id;
+            document.getElementById('target-name').innerText = u.data().name;
+            document.getElementById('target-img').src = u.data().img;
+            document.getElementById('user-info').classList.remove('hidden');
+        } else alert("المحفظة غير موجودة!");
+    };
+
+    window.addCash = async () => {
+        const amt = Number(prompt("المبلغ:"));
+        if (amt > 0) {
+            await updateDoc(doc(db, "users", targetUID), { balance: increment(amt) });
+            alert("تم الشحن!");
         }
     };
+
+    window.showPage = (pId, btn) => {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(pId).classList.add('active');
+        if(btn) {
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.replace('text-amber-500', 'text-slate-300'));
+            btn.classList.replace('text-slate-300', 'text-amber-500');
+        }
+    };
+
+    window.toggleAgents = () => document.getElementById('agents-modal').classList.toggle('hidden');
+
 </script>
 </body>
-</html>
+    </html>
