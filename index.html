@@ -3,167 +3,247 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KhasmShop VIP | الإصدار الذكي</title>
+    <title>KhasmShop VIP | الإصدار الاحترافي 2026</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
-        body { font-family: 'Cairo', sans-serif; background: #f1f5f9; user-select: none; }
-        .page { display: none; } .page.active { display: block; animation: fadeIn 0.4s; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .glass { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); }
-        .card-vip { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
+        body { font-family: 'Cairo', sans-serif; background: #f1f5f9; user-select: none; overflow-x: hidden; }
+        .page { display: none; min-height: 80vh; } 
+        .page.active { display: block; animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        .glass { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+        .card-vip { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border: 1px solid rgba(255,255,255,0.1); }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .btn-click:active { transform: scale(0.95); }
+        .btn-click:active { transform: scale(0.92); }
+        .loader { border-top-color: #f59e0b; animation: spinner 0.6s linear infinite; }
+        @keyframes spinner { to { transform: rotate(360deg); } }
+        input, select { transition: all 0.3s border; }
+        input:focus { border-color: #f59e0b !important; box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.1); }
     </style>
 </head>
 <body>
 
+<div id="loading-screen" class="fixed inset-0 bg-white z-[9999] flex items-center justify-center">
+    <div class="flex flex-col items-center">
+        <div class="loader w-12 h-12 border-4 border-slate-200 rounded-full mb-4"></div>
+        <p class="text-xs font-black text-slate-400">جاري تأمين المتجر...</p>
+    </div>
+</div>
+
 <div id="app" class="max-w-md mx-auto min-h-screen bg-white shadow-2xl relative pb-32">
     <header class="glass sticky top-0 z-[100] px-5 py-4 border-b flex justify-between items-center">
         <div class="flex items-center gap-3">
-            <img id="u-img" class="w-12 h-12 rounded-2xl border-2 border-amber-400 object-cover" src="">
+            <div class="relative">
+                <img id="u-img" class="w-12 h-12 rounded-2xl border-2 border-amber-400 object-cover shadow-sm" src="https://via.placeholder.com/150">
+                <div id="sub-badge" class="absolute -bottom-1 -right-1 w-4 h-4 bg-blue-500 rounded-full border-2 border-white hidden"></div>
+            </div>
             <div>
-                <h2 id="u-name" class="font-black text-sm text-slate-800 leading-tight">تحميل...</h2>
-                <span id="u-id" class="text-[10px] font-bold text-slate-400">ID: #000000</span>
+                <h2 id="u-name" class="font-black text-sm text-slate-800 leading-tight">زائر</h2>
+                <span id="u-id" class="text-[10px] font-bold text-slate-400 tracking-tighter italic">جارِ جلب المعرف...</span>
             </div>
         </div>
         <div class="flex gap-2">
-            <button onclick="toggleAgents()" class="w-10 h-10 rounded-xl bg-green-50 text-green-600 flex items-center justify-center border border-green-100"><i class="fab fa-whatsapp text-xl"></i></button>
-            <button onclick="showPage('p-redeem')" class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center border border-amber-100"><i class="fas fa-gift"></i></button>
+            <button onclick="toggleAgents()" class="w-11 h-11 rounded-2xl bg-green-50 text-green-600 flex items-center justify-center border border-green-100 btn-click">
+                <i class="fab fa-whatsapp text-xl"></i>
+            </button>
+            <button onclick="showPage('p-redeem')" class="w-11 h-11 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center border border-amber-100 btn-click">
+                <i class="fas fa-gift"></i>
+            </button>
         </div>
     </header>
 
     <main class="p-4">
         <section id="p-home" class="page active space-y-6">
-            <div class="card-vip p-7 rounded-[40px] text-white shadow-xl relative">
-                <p class="text-[10px] font-bold opacity-50 uppercase tracking-widest">المحفظة الرقمية</p>
-                <h3 class="text-4xl font-black my-2"><span id="u-bal">0</span> <span class="text-xs opacity-40">SDG</span></h3>
-                <div class="flex justify-between items-center border-t border-white/10 mt-5 pt-4">
-                    <div><p class="text-[8px] opacity-40 font-bold mb-1">نقاطي</p><p id="u-pts" class="text-sm font-black text-amber-400">0</p></div>
-                    <div class="text-left"><p class="text-[8px] opacity-40 font-bold mb-1">الاشتراك</p><p id="sub-timer" class="text-[10px] font-black text-blue-400">عضو عادي</p></div>
+            <div class="card-vip p-7 rounded-[40px] text-white shadow-2xl relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16"></div>
+                <p class="text-[10px] font-bold opacity-50 uppercase tracking-[0.2em]">رصيد المحفظة</p>
+                <h3 class="text-4xl font-black my-2 flex items-baseline gap-2">
+                    <span id="u-bal">0</span>
+                    <span class="text-xs opacity-40 font-bold">SDG</span>
+                </h3>
+                <div class="flex justify-between items-center border-t border-white/10 mt-6 pt-5">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-lg bg-amber-400/20 flex items-center justify-center">
+                            <i class="fas fa-star text-amber-400 text-xs"></i>
+                        </div>
+                        <div>
+                            <p class="text-[8px] opacity-40 font-bold uppercase">نقاط الولاء</p>
+                            <p id="u-pts" class="text-sm font-black text-amber-400">0</p>
+                        </div>
+                    </div>
+                    <div class="text-left">
+                        <p class="text-[8px] opacity-40 font-bold uppercase">فئة الحساب</p>
+                        <p id="sub-timer" class="text-[10px] font-black text-blue-400 uppercase tracking-tighter">Basic Account</p>
+                    </div>
                 </div>
             </div>
 
-            <div class="flex gap-2 overflow-x-auto no-scrollbar py-1">
-                <button onclick="loadProducts('PUBG', this)" class="cat-btn bg-amber-400 text-black px-6 py-3 rounded-2xl text-[11px] font-black shrink-0 shadow-md">PUBG</button>
-                <button onclick="loadProducts('FREEFIRE', this)" class="cat-btn bg-white border text-slate-400 px-6 py-3 rounded-2xl text-[11px] font-black shrink-0">FREE FIRE</button>
-                <button onclick="loadProducts('CLASH', this)" class="cat-btn bg-white border text-slate-400 px-6 py-3 rounded-2xl text-[11px] font-black shrink-0">CLASH</button>
+            <div class="flex gap-3 overflow-x-auto no-scrollbar py-2">
+                <button onclick="loadProducts('PUBG', this)" class="cat-btn bg-amber-400 text-black px-7 py-3.5 rounded-2xl text-[11px] font-black shrink-0 shadow-lg shadow-amber-200 transition-all">PUBG MOBILE</button>
+                <button onclick="loadProducts('FREEFIRE', this)" class="cat-btn bg-white border border-slate-100 text-slate-400 px-7 py-3.5 rounded-2xl text-[11px] font-black shrink-0 transition-all">FREE FIRE</button>
+                <button onclick="loadProducts('CLASH', this)" class="cat-btn bg-white border border-slate-100 text-slate-400 px-7 py-3.5 rounded-2xl text-[11px] font-black shrink-0 transition-all">CLASH OF CLANS</button>
             </div>
-            <div id="product-list" class="grid grid-cols-2 gap-4"></div>
+
+            <div id="product-list" class="grid grid-cols-2 gap-4">
+                </div>
         </section>
 
         <section id="p-redeem" class="page space-y-4">
-            <h3 class="font-black text-xl text-slate-800">سوق النقاط (30 نقطة)</h3>
+            <div class="flex items-center justify-between">
+                <h3 class="font-black text-xl text-slate-800 tracking-tight">سوق الهدايا</h3>
+                <span class="bg-amber-100 text-amber-600 px-3 py-1 rounded-full text-[10px] font-black">30 نقطة للطلب</span>
+            </div>
             <div class="grid gap-3" id="redeem-list">
-                <div class="bg-white p-5 rounded-[30px] border flex justify-between items-center">
-                    <p class="text-xs font-black text-slate-700">60 شدة ببجي</p>
-                    <button onclick="redeemPoints('60 شدة')" class="bg-black text-white px-5 py-2.5 rounded-xl text-[10px] font-black btn-click">استبدال</button>
+                <div class="bg-white p-5 rounded-[30px] border border-slate-100 flex justify-between items-center shadow-sm">
+                    <div>
+                        <p class="text-xs font-black text-slate-800">شحن 60 شدة</p>
+                        <p class="text-[9px] text-slate-400 font-bold">ببجي موبايل</p>
+                    </div>
+                    <button onclick="redeemPoints('60 شدة ببجي')" class="bg-slate-900 text-white px-6 py-3 rounded-xl text-[10px] font-black btn-click">استبدال</button>
                 </div>
-                <div class="bg-white p-5 rounded-[30px] border flex justify-between items-center">
-                    <p class="text-xs font-black text-slate-700">110 جوهرة فري فاير</p>
-                    <button onclick="redeemPoints('110 جوهرة')" class="bg-black text-white px-5 py-2.5 rounded-xl text-[10px] font-black btn-click">استبدال</button>
-                </div>
-                <div class="bg-white p-5 rounded-[30px] border flex justify-between items-center">
-                    <p class="text-xs font-black text-slate-700">4,000 جنيه كاش</p>
-                    <button onclick="redeemPoints('4000 جنيه')" class="bg-black text-white px-5 py-2.5 rounded-xl text-[10px] font-black btn-click">استبدال</button>
+                <div class="bg-white p-5 rounded-[30px] border border-slate-100 flex justify-between items-center shadow-sm">
+                    <div>
+                        <p class="text-xs font-black text-slate-800">شحن 110 جوهرة</p>
+                        <p class="text-[9px] text-slate-400 font-bold">فري فاير</p>
+                    </div>
+                    <button onclick="redeemPoints('110 جوهرة فري فاير')" class="bg-slate-900 text-white px-6 py-3 rounded-xl text-[10px] font-black btn-click">استبدال</button>
                 </div>
             </div>
         </section>
 
-        <section id="p-sub" class="page space-y-4">
-            <h3 class="font-black text-xl text-slate-800">عضويات VIP</h3>
-            <div class="bg-white p-6 rounded-[35px] border-2 border-blue-500 shadow-lg">
-                <h4 class="font-black text-blue-600 text-lg uppercase tracking-tighter">PRIME</h4>
-                <p class="text-[10px] text-slate-500 font-bold">خصم 5% على كافة المنتجات</p>
-                <div class="flex justify-between items-center mt-5">
-                    <span class="font-black text-lg">5,000 SDG</span>
-                    <button onclick="buySub('Prime', 5000, 5)" class="bg-blue-500 text-white px-6 py-2.5 rounded-2xl font-black text-[11px] btn-click">تفعيل</button>
-                </div>
-            </div>
-            <div class="bg-white p-6 rounded-[35px] border-4 border-amber-400 shadow-lg">
-                <h4 class="font-black text-amber-500 text-lg uppercase tracking-tighter italic">PRIME PLUS</h4>
-                <p class="text-[10px] text-slate-500 font-bold">خصم 10% + تنفيذ فوري</p>
-                <div class="flex justify-between items-center mt-5">
-                    <span class="font-black text-lg">10,000 SDG</span>
-                    <button onclick="buySub('PrimePlus', 10000, 10)" class="bg-amber-400 text-black px-6 py-2.5 rounded-2xl font-black text-[11px] btn-click">تفعيل</button>
+        <section id="p-sub" class="page space-y-5">
+            <h3 class="font-black text-xl text-slate-800">ترقية الحساب</h3>
+            <div class="bg-white p-7 rounded-[40px] border-2 border-blue-500 shadow-xl relative overflow-hidden">
+                <div class="absolute -top-4 -left-4 w-20 h-20 bg-blue-500/10 rounded-full"></div>
+                <h4 class="font-black text-blue-600 text-xl tracking-tighter italic">PRIME MEMBERSHIP</h4>
+                <ul class="mt-4 space-y-2">
+                    <li class="text-[11px] font-bold text-slate-600 flex items-center gap-2"><i class="fas fa-check-circle text-blue-500"></i> خصم ثابت 5% على كل طلباتك</li>
+                    <li class="text-[11px] font-bold text-slate-600 flex items-center gap-2"><i class="fas fa-check-circle text-blue-500"></i> أولوية في التنفيذ</li>
+                </ul>
+                <div class="flex justify-between items-center mt-8 pt-6 border-t border-slate-50">
+                    <span class="font-black text-2xl">5,000 <small class="text-[10px] text-slate-400">SDG</small></span>
+                    <button onclick="buySub('Prime', 5000, 5)" class="bg-blue-600 text-white px-8 py-3.5 rounded-2xl font-black text-xs btn-click shadow-lg shadow-blue-200">تفعيل الآن</button>
                 </div>
             </div>
         </section>
 
         <section id="p-admin" class="page space-y-6">
-            <div class="bg-blue-600 p-6 rounded-[35px] text-white">
-                <h4 class="text-xs font-black mb-4"><i class="fas fa-wallet ml-2"></i> شحن المحفظة</h4>
-                <div class="flex gap-2">
-                    <input id="search-uid" type="number" placeholder="رقم المحفظة" class="flex-1 p-3.5 rounded-2xl text-black text-xs font-bold outline-none">
-                    <button onclick="findUser()" class="bg-white text-blue-600 px-5 rounded-2xl text-xs font-black btn-click">بحث</button>
+            <div class="bg-slate-900 p-6 rounded-[35px] text-white shadow-2xl">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 bg-amber-400 rounded-xl flex items-center justify-center text-slate-900">
+                        <i class="fas fa-plus"></i>
+                    </div>
+                    <h4 class="text-sm font-black italic uppercase">شحن حساب زبون</h4>
                 </div>
-                <div id="user-info" class="hidden mt-4 bg-blue-700/50 p-3 rounded-2xl flex items-center justify-between border border-white/20">
-                    <div class="flex items-center gap-3"><img id="target-img" class="w-10 h-10 rounded-xl" src=""><p id="target-name" class="text-[11px] font-black truncate w-24"></p></div>
-                    <button onclick="addCash()" class="bg-green-500 text-white px-5 py-2 rounded-xl text-[10px] font-black btn-click">إضافة مبلغ</button>
+                <div class="flex gap-2">
+                    <input id="search-uid" type="number" placeholder="أدخل رقم محفظة الزبون" class="flex-1 p-4 rounded-2xl bg-white/10 border border-white/10 text-white text-xs font-bold outline-none placeholder:text-white/30">
+                    <button onclick="findUser()" class="bg-amber-400 text-slate-900 px-6 rounded-2xl text-xs font-black btn-click">بحث</button>
+                </div>
+                <div id="user-info" class="hidden mt-6 bg-white/5 p-4 rounded-3xl border border-white/10 animate-pulse">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <img id="target-img" class="w-12 h-12 rounded-xl border border-white/20" src="">
+                            <div>
+                                <p id="target-name" class="text-xs font-black truncate w-32"></p>
+                                <p id="target-bal-view" class="text-[9px] text-amber-400 font-bold italic"></p>
+                            </div>
+                        </div>
+                        <button onclick="addCash()" class="bg-green-500 text-white px-4 py-2.5 rounded-xl text-[10px] font-black btn-click shadow-lg shadow-green-900">شحن</button>
+                    </div>
                 </div>
             </div>
 
-            <div class="flex bg-slate-100 p-1.5 rounded-2xl border">
-                <button onclick="switchAdminTab('orders', this)" class="adm-tab flex-1 bg-white p-3 rounded-xl text-[11px] font-black shadow-sm">الطلبات الواردة</button>
-                <button onclick="switchAdminTab('add', this)" class="adm-tab flex-1 p-3 rounded-xl text-[11px] font-black text-slate-400">إدارة المتجر</button>
+            <div class="flex bg-slate-100 p-1.5 rounded-2xl">
+                <button onclick="switchAdminTab('orders', this)" class="adm-tab flex-1 bg-white p-3.5 rounded-xl text-[11px] font-black shadow-sm transition-all">الطلبات <span id="ord-count" class="bg-red-500 text-white px-1.5 rounded-md text-[8px]">0</span></button>
+                <button onclick="switchAdminTab('add', this)" class="adm-tab flex-1 p-3.5 rounded-xl text-[11px] font-black text-slate-400 transition-all">إدارة المنتجات</button>
             </div>
             
             <div id="adm-orders" class="space-y-4"></div>
             
             <div id="adm-add" class="hidden space-y-4">
-                <div class="bg-white p-5 rounded-3xl border space-y-3">
-                    <input id="p-name" type="text" placeholder="اسم المنتج" class="w-full p-3.5 bg-slate-50 rounded-xl text-xs font-bold border-none outline-none">
+                <div class="bg-white p-6 rounded-[35px] border border-slate-100 shadow-sm space-y-4">
+                    <input id="p-name" type="text" placeholder="اسم المنتج (مثال: 60 شدة)" class="w-full p-4 bg-slate-50 rounded-2xl text-xs font-bold border-none outline-none">
                     <div class="flex gap-2">
-                        <input id="p-price" type="number" placeholder="السعر" class="flex-1 p-3.5 bg-slate-50 rounded-xl text-xs font-bold border-none">
-                        <input id="p-pts" type="number" placeholder="النقاط" class="w-20 p-3.5 bg-slate-50 rounded-xl text-xs font-bold border-none">
+                        <input id="p-price" type="number" placeholder="السعر" class="flex-1 p-4 bg-slate-50 rounded-2xl text-xs font-bold border-none outline-none">
+                        <input id="p-pts" type="number" placeholder="النقاط" class="w-24 p-4 bg-slate-50 rounded-2xl text-xs font-bold border-none outline-none">
                     </div>
-                    <select id="p-cat" class="w-full p-3.5 bg-slate-50 rounded-xl text-xs font-bold border-none">
-                        <option value="PUBG">PUBG</option><option value="FREEFIRE">FREE FIRE</option><option value="CLASH">CLASH</option>
+                    <select id="p-cat" class="w-full p-4 bg-slate-50 rounded-2xl text-xs font-bold border-none outline-none appearance-none">
+                        <option value="PUBG">PUBG MOBILE</option>
+                        <option value="FREEFIRE">FREE FIRE</option>
+                        <option value="CLASH">CLASH OF CLANS</option>
                     </select>
-                    <button onclick="addProduct()" class="w-full bg-slate-900 text-white py-4 rounded-2xl text-[11px] font-black btn-click shadow-lg">نشر المنتج</button>
+                    <button onclick="addProduct()" class="w-full bg-slate-900 text-white py-4 rounded-2xl text-[11px] font-black btn-click shadow-xl">نشر في المتجر</button>
                 </div>
                 <div id="adm-list" class="space-y-2"></div>
             </div>
         </section>
     </main>
 
-    <nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] glass shadow-2xl rounded-[35px] p-2 flex justify-around items-center z-[1000] border border-white/20">
-        <button onclick="showPage('p-home', this)" class="nav-btn p-4 text-amber-500 transition-all"><i class="fas fa-home text-2xl"></i></button>
-        <button onclick="showPage('p-sub', this)" class="nav-btn p-4 text-slate-300 transition-all"><i class="fas fa-gem text-2xl"></i></button>
-        <button id="admin-nav" onclick="showPage('p-admin', this)" class="hidden nav-btn p-4 text-slate-300 transition-all"><i class="fas fa-user-shield text-2xl"></i></button>
+    <nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[92%] glass shadow-2xl rounded-[30px] p-2.5 flex justify-around items-center z-[1000] border border-white/40 shadow-black/10">
+        <button onclick="showPage('p-home', this)" class="nav-btn p-4 text-amber-500 transition-all flex flex-col items-center gap-1">
+            <i class="fas fa-th-large text-xl"></i>
+            <span class="text-[8px] font-black uppercase">الرئيسية</span>
+        </button>
+        <button onclick="showPage('p-sub', this)" class="nav-btn p-4 text-slate-300 transition-all flex flex-col items-center gap-1">
+            <i class="fas fa-gem text-xl"></i>
+            <span class="text-[8px] font-black uppercase">العضويات</span>
+        </button>
+        <button id="admin-nav" onclick="showPage('p-admin', this)" class="hidden nav-btn p-4 text-slate-300 transition-all flex flex-col items-center gap-1">
+            <i class="fas fa-fingerprint text-xl"></i>
+            <span class="text-[8px] font-black uppercase">الوزارة</span>
+        </button>
     </nav>
 </div>
 
-<div id="agents-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md z-[2000] flex items-end">
-    <div class="bg-white w-full rounded-t-[45px] p-8 space-y-5 shadow-2xl">
-        <h3 class="font-black text-center text-lg text-slate-800">وكلاء الشحن المعتمدين</h3>
-        <div class="grid gap-3">
-            <button onclick="whatsapp('0907760989')" class="p-4 bg-slate-50 rounded-2xl flex justify-between items-center border hover:border-green-500 transition-all">
-                <div class="text-right"><p class="text-xs font-black">محمد فتحي</p><p class="text-[9px] text-green-600 font-bold">الوكيل الأول</p></div>
-                <i class="fab fa-whatsapp text-2xl text-green-500"></i>
+<div id="agents-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[2000] flex items-end transition-all">
+    <div class="bg-white w-full rounded-t-[50px] p-10 space-y-6 shadow-2xl border-t">
+        <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-2"></div>
+        <h3 class="font-black text-center text-xl text-slate-800 tracking-tight italic">الوكلاء المعتمدين للشحن</h3>
+        <div class="grid gap-4">
+            <button onclick="whatsapp('0907760989')" class="p-5 bg-slate-50 rounded-[25px] flex justify-between items-center border border-transparent hover:border-green-500 transition-all group">
+                <div class="text-right flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-black">MF</div>
+                    <div><p class="text-sm font-black text-slate-800">محمد فتحي</p><p class="text-[9px] text-green-600 font-bold tracking-widest uppercase">الوكيل الأول</p></div>
+                </div>
+                <i class="fab fa-whatsapp text-3xl text-green-500 group-hover:scale-110 transition-transform"></i>
             </button>
-            <button onclick="whatsapp('0121111111')" class="p-4 bg-slate-50 rounded-2xl flex justify-between items-center border hover:border-green-500 transition-all">
-                <div class="text-right"><p class="text-xs font-black">محمد التاج</p><p class="text-[9px] text-green-600 font-bold">الوكيل الثاني</p></div>
-                <i class="fab fa-whatsapp text-2xl text-green-500"></i>
+            <button onclick="whatsapp('0121111111')" class="p-5 bg-slate-50 rounded-[25px] flex justify-between items-center border border-transparent hover:border-green-500 transition-all group">
+                <div class="text-right flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-black">MT</div>
+                    <div><p class="text-sm font-black text-slate-800">محمد التاج</p><p class="text-[9px] text-green-600 font-bold tracking-widest uppercase">الوكيل الثاني</p></div>
+                </div>
+                <i class="fab fa-whatsapp text-3xl text-green-500 group-hover:scale-110 transition-transform"></i>
             </button>
-            <button onclick="whatsapp('0122222222')" class="p-4 bg-slate-50 rounded-2xl flex justify-between items-center border hover:border-green-500 transition-all">
-                <div class="text-right"><p class="text-xs font-black">مهند ياسر</p><p class="text-[9px] text-green-600 font-bold">الوكيل الثالث</p></div>
-                <i class="fab fa-whatsapp text-2xl text-green-500"></i>
+            <button onclick="whatsapp('0122222222')" class="p-5 bg-slate-50 rounded-[25px] flex justify-between items-center border border-transparent hover:border-green-500 transition-all group">
+                <div class="text-right flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-black">MY</div>
+                    <div><p class="text-sm font-black text-slate-800">مهند ياسر</p><p class="text-[9px] text-green-600 font-bold tracking-widest uppercase">الوكيل الثالث</p></div>
+                </div>
+                <i class="fab fa-whatsapp text-3xl text-green-500 group-hover:scale-110 transition-transform"></i>
             </button>
         </div>
-        <button onclick="toggleAgents()" class="w-full text-slate-400 font-bold text-xs py-2">إغلاق</button>
+        <button onclick="toggleAgents()" class="w-full text-slate-400 font-black text-xs py-4 uppercase tracking-widest">إغلاق القائمة</button>
     </div>
 </div>
 
-<div id="order-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[3000] flex items-center justify-center p-6">
-    <div class="bg-white w-full max-w-sm rounded-[40px] p-8 space-y-4">
-        <h3 class="font-black text-center text-lg" id="modal-title">تأكيد البيانات</h3>
-        <div id="form-fields" class="space-y-3">
+<div id="order-modal" class="hidden fixed inset-0 bg-slate-900/90 backdrop-blur-md z-[3000] flex items-center justify-center p-6">
+    <div class="bg-white w-full max-w-sm rounded-[45px] p-10 space-y-6 shadow-2xl relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-2 bg-amber-400"></div>
+        <div class="text-center">
+            <h3 class="font-black text-xl text-slate-800" id="modal-title">تأكيد الطلب</h3>
+            <p id="modal-p-name" class="text-[10px] font-bold text-amber-600 mt-1 uppercase italic"></p>
+        </div>
+        
+        <div id="form-fields" class="space-y-4">
             </div>
-        <div class="flex gap-2 pt-2">
-            <button onclick="confirmOrder()" class="flex-1 bg-slate-900 text-white py-4 rounded-2xl font-black text-xs btn-click">إرسال الطلب</button>
-            <button onclick="closeOrderModal()" class="flex-1 bg-slate-100 text-slate-400 py-4 rounded-2xl font-black text-xs btn-click">إلغاء</button>
+
+        <div class="flex gap-3 pt-4">
+            <button id="send-btn" onclick="confirmOrder()" class="flex-[2] bg-slate-900 text-white py-4.5 rounded-2xl font-black text-xs btn-click shadow-xl flex items-center justify-center gap-2">
+                <span>تأكيد الإرسال</span>
+                <i class="fas fa-paper-plane text-[10px]"></i>
+            </button>
+            <button onclick="closeOrderModal()" class="flex-1 bg-slate-100 text-slate-400 py-4.5 rounded-2xl font-black text-xs btn-click">إلغاء</button>
         </div>
     </div>
 </div>
@@ -187,253 +267,330 @@
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
 
-    let user = null; let userData = null; let tempProduct = null;
+    let user = null; 
+    let userData = null; 
+    let tempProduct = null;
+    let targetUID = null; // لشحن رصيد الزبون
+
     const ADMINS = ["mhmdfthu98@gmail.com", "muhammedaltaj111@gmail.com", "mohnadyasir43@gmail.com"];
 
+    // مراقبة حالة تسجيل الدخول
     onAuthStateChanged(auth, async (u) => {
         if (u) {
             user = u;
-            onSnapshot(doc(db, "users", u.uid), (s) => {
-                if (s.exists()) { userData = s.data(); updateUI(); }
-                else { setDoc(doc(db, "users", u.uid), { name: u.displayName, img: u.photoURL, email: u.email, balance: 0, points: 0, walletID: Math.floor(100000 + Math.random() * 900000).toString(), subType: 'None', subEnd: null, discount: 0 }); }
+            const userRef = doc(db, "users", u.uid);
+            onSnapshot(userRef, (s) => {
+                if (s.exists()) {
+                    userData = s.data();
+                    updateUI();
+                    document.getElementById('loading-screen').classList.add('hidden');
+                } else {
+                    // إنشاء حساب جديد إذا لم يوجد
+                    const newID = Math.floor(100000 + Math.random() * 900000).toString();
+                    setDoc(userRef, {
+                        name: u.displayName,
+                        img: u.photoURL,
+                        email: u.email,
+                        balance: 0,
+                        points: 0,
+                        walletID: newID,
+                        subType: 'None',
+                        subEnd: null,
+                        discount: 0
+                    });
+                }
             });
-            if (ADMINS.includes(u.email)) { document.getElementById('admin-nav').classList.remove('hidden'); loadAdminData(); }
+
+            if (ADMINS.includes(u.email)) {
+                document.getElementById('admin-nav').classList.remove('hidden');
+                loadAdminData();
+            }
             loadProducts('PUBG');
-        } else { signInWithPopup(auth, provider); }
+        } else {
+            signInWithPopup(auth, provider).catch(err => console.log("Auth Error"));
+        }
     });
 
+    // تحديث الواجهة
     function updateUI() {
         document.getElementById('u-name').innerText = userData.name;
         document.getElementById('u-img').src = userData.img;
-        document.getElementById('u-id').innerText = `ID: #${userData.walletID}`;
+        document.getElementById('u-id').innerText = `WALLET ID: #${userData.walletID}`;
         document.getElementById('u-bal').innerText = userData.balance.toLocaleString();
         document.getElementById('u-pts').innerText = userData.points;
+        
+        const subTxt = document.getElementById('sub-timer');
+        const badge = document.getElementById('sub-badge');
+        if(userData.subType !== 'None') {
+            subTxt.innerText = `${userData.subType} Member`;
+            subTxt.classList.replace('text-blue-400', 'text-amber-400');
+            badge.classList.remove('hidden');
+        }
     }
 
+    // جلب المنتجات
     window.loadProducts = (cat, btn) => {
-        if(btn) { document.querySelectorAll('.cat-btn').forEach(b => { b.classList.remove('bg-amber-400','text-black','shadow-md'); b.classList.add('bg-white','text-slate-400'); }); btn.classList.add('bg-amber-400','text-black','shadow-md'); }
-        onSnapshot(query(collection(db, "products"), where("category", "==", cat)), (s) => {
-            const list = document.getElementById('product-list'); list.innerHTML = '';
-            s.forEach(d => {
-                const p = d.data(); const finalPrice = Math.floor(p.price - (p.price * (userData.discount / 100)));
-                list.innerHTML += `<div class="bg-white p-5 rounded-[35px] border shadow-sm relative"><span class="absolute top-3 left-3 bg-blue-50 text-blue-600 text-[8px] px-2 py-1 rounded-full font-black">+${p.points} P</span><p class="text-[10px] font-black h-8 mt-2">${p.name}</p><p class="text-blue-600 font-black text-sm my-3">${finalPrice.toLocaleString()} SDG</p><button onclick="openSmartModal('${d.id}', '${p.name}', ${finalPrice}, ${p.points}, '${cat}')" class="w-full bg-slate-900 text-white py-2.5 rounded-2xl text-[10px] font-black btn-click">اطلب</button></div>`;
+        if(btn) {
+            document.querySelectorAll('.cat-btn').forEach(b => {
+                b.classList.remove('bg-amber-400', 'text-black', 'shadow-lg', 'shadow-amber-200');
+                b.classList.add('bg-white', 'text-slate-400', 'border-slate-100');
+            });
+            btn.classList.add('bg-amber-400', 'text-black', 'shadow-lg', 'shadow-amber-200');
+            btn.classList.remove('bg-white', 'text-slate-400', 'border-slate-100');
+        }
+
+        const q = query(collection(db, "products"), where("category", "==", cat));
+        onSnapshot(q, (snapshot) => {
+            const list = document.getElementById('product-list');
+            list.innerHTML = '';
+            snapshot.forEach(docSnap => {
+                const p = docSnap.data();
+                const discountAmount = (p.price * (userData.discount / 100));
+                const finalPrice = Math.floor(p.price - discountAmount);
+
+                list.innerHTML += `
+                    <div class="bg-white p-5 rounded-[35px] border border-slate-50 shadow-sm relative group transition-all hover:shadow-xl">
+                        <span class="absolute top-4 left-4 bg-amber-50 text-amber-600 text-[8px] px-2 py-1 rounded-lg font-black tracking-widest">+${p.points} PTS</span>
+                        <div class="mt-4 mb-4">
+                            <p class="text-[10px] font-black text-slate-800 h-8 line-clamp-2 leading-tight uppercase">${p.name}</p>
+                            <p class="text-blue-600 font-black text-lg mt-2 italic">${finalPrice.toLocaleString()} <small class="text-[9px]">SDG</small></p>
+                        </div>
+                        <button onclick="openSmartModal('${docSnap.id}', '${p.name}', ${finalPrice}, ${p.points}, '${cat}')" 
+                                class="w-full bg-slate-900 text-white py-3.5 rounded-2xl text-[10px] font-black btn-click shadow-lg shadow-slate-200">
+                            اطلب الآن
+                        </button>
+                    </div>`;
             });
         });
     };
 
+    // المودال الذكي حسب طلبك (فري فاير بدون اسم، كلاش رقم فقط)
     window.openSmartModal = (id, name, price, pts, cat) => {
-        if (userData.balance < price) return alert("عذراً، الرصيد غير كافٍ!");
+        if (userData.balance < price) {
+            return alert("عذراً! رصيدك غير كافٍ، تواصل مع الوكلاء لشحن محفظتك.");
+        }
+
         tempProduct = { id, name, price, pts, cat };
+        document.getElementById('modal-p-name').innerText = name;
+        
         const fields = document.getElementById('form-fields');
         fields.innerHTML = '';
-        
-        // منطق الحقول حسب نوع اللعبة
+
         if (cat === 'PUBG') {
             fields.innerHTML = `
-                <input id="f-gameid" type="text" placeholder="آيدي اللاعب" class="w-full p-4 bg-slate-100 rounded-2xl text-xs font-bold outline-none">
-                <input id="f-gamename" type="text" placeholder="اسمك في اللعبة" class="w-full p-4 bg-slate-100 rounded-2xl text-xs font-bold outline-none">
-                <input id="f-realname" type="text" placeholder="اسمك الحقيقي" class="w-full p-4 bg-slate-100 rounded-2xl text-xs font-bold outline-none">
-                <input id="f-phone" type="number" placeholder="رقم الهاتف" class="w-full p-4 bg-slate-100 rounded-2xl text-xs font-bold outline-none">
+                <input id="f-gameid" type="text" placeholder="آيدي اللاعب (ID)" class="w-full p-4 bg-slate-50 rounded-2xl text-xs font-bold outline-none border border-slate-100">
+                <input id="f-gamename" type="text" placeholder="اسمك داخل اللعبة" class="w-full p-4 bg-slate-50 rounded-2xl text-xs font-bold outline-none border border-slate-100">
+                <input id="f-realname" type="text" placeholder="اسمك الحقيقي" class="w-full p-4 bg-slate-50 rounded-2xl text-xs font-bold outline-none border border-slate-100">
+                <input id="f-phone" type="number" placeholder="رقم هاتفك" class="w-full p-4 bg-slate-50 rounded-2xl text-xs font-bold outline-none border border-slate-100">
             `;
         } else if (cat === 'FREEFIRE') {
             fields.innerHTML = `
-                <input id="f-gameid" type="text" placeholder="آيدي اللاعب" class="w-full p-4 bg-slate-100 rounded-2xl text-xs font-bold outline-none">
-                <input id="f-realname" type="text" placeholder="اسمك الحقيقي" class="w-full p-4 bg-slate-100 rounded-2xl text-xs font-bold outline-none">
-                <input id="f-phone" type="number" placeholder="رقم الهاتف" class="w-full p-4 bg-slate-100 rounded-2xl text-xs font-bold outline-none">
+                <input id="f-gameid" type="text" placeholder="آيدي اللاعب (ID)" class="w-full p-4 bg-slate-50 rounded-2xl text-xs font-bold outline-none border border-slate-100">
+                <input id="f-realname" type="text" placeholder="اسمك الحقيقي" class="w-full p-4 bg-slate-50 rounded-2xl text-xs font-bold outline-none border border-slate-100">
+                <input id="f-phone" type="number" placeholder="رقم هاتفك" class="w-full p-4 bg-slate-50 rounded-2xl text-xs font-bold outline-none border border-slate-100">
             `;
         } else if (cat === 'CLASH') {
             fields.innerHTML = `
-                <input id="f-phone" type="number" placeholder="رقم الهاتف" class="w-full p-4 bg-slate-100 rounded-2xl text-xs font-bold outline-none">
+                <input id="f-phone" type="number" placeholder="رقم هاتفك للتواصل" class="w-full p-4 bg-slate-50 rounded-2xl text-xs font-bold outline-none border border-slate-100">
             `;
         }
+
         document.getElementById('order-modal').classList.remove('hidden');
     };
 
+    // إرسال الطلب (الحل النهائي لعمل الطلبات)
     window.confirmOrder = async () => {
-        const data = {
-            uid: user.uid,
-            uName: userData.name,
-            uWallet: userData.walletID, // رقم المحفظة تلقائياً
-            product: tempProduct.name,
-            price: tempProduct.price,
-            gameID: document.getElementById('f-gameid')?.value || 'N/A',
-            pInGame: document.getElementById('f-gamename')?.value || 'N/A',
-            pName: document.getElementById('f-realname')?.value || 'N/A',
-            pPhone: document.getElementById('f-phone')?.value || 'N/A',
-            status: 'Pending',
-            pts: tempProduct.pts,
-            time: serverTimestamp()
-        };
-        
-        await addDoc(collection(db, "orders"), data);
-        await updateDoc(doc(db, "users", user.uid), { balance: increment(-tempProduct.price) });
-        alert("تم إرسال الطلب بنجاح!");
-        closeOrderModal();
+        const btn = document.getElementById('send-btn');
+        btn.disabled = true;
+        btn.innerHTML = '<div class="loader w-4 h-4 border-2 border-white rounded-full"></div>';
+
+        try {
+            const orderData = {
+                uid: user.uid,
+                uName: userData.name,
+                uWallet: userData.walletID, // رقم المحفظة تلقائياً
+                product: tempProduct.name,
+                price: tempProduct.price,
+                category: tempProduct.cat,
+                gameID: document.getElementById('f-gameid')?.value || 'N/A',
+                pInGame: document.getElementById('f-gamename')?.value || 'N/A',
+                pName: document.getElementById('f-realname')?.value || 'N/A',
+                pPhone: document.getElementById('f-phone')?.value || 'N/A',
+                status: 'Pending',
+                pts: tempProduct.pts,
+                time: serverTimestamp()
+            };
+
+            // 1. خصم الرصيد أولاً
+            await updateDoc(doc(db, "users", user.uid), {
+                balance: increment(-tempProduct.price)
+            });
+
+            // 2. إضافة الطلب
+            await addDoc(collection(db, "orders"), orderData);
+
+            alert("✅ تم إرسال طلبك بنجاح وسيتم تنفيذه خلال دقائق!");
+            closeOrderModal();
+        } catch (e) {
+            alert("حدث خطأ في الشبكة، حاول مرة أخرى.");
+            console.error(e);
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = '<span>تأكيد الإرسال</span><i class="fas fa-paper-plane text-[10px]"></i>';
+        }
     };
 
     window.closeOrderModal = () => document.getElementById('order-modal').classList.add('hidden');
 
+    // لوحة الإدارة - جلب الطلبات والمنتجات
     window.loadAdminData = () => {
-        onSnapshot(query(collection(db, "orders"), where("status", "==", "Pending"), orderBy("time", "desc")), (s) => {
-            const list = document.getElementById('adm-orders'); list.innerHTML = '';
-            s.forEach(d => {
+        // مراقبة الطلبات المعلقة
+        const qOrd = query(collection(db, "orders"), where("status", "==", "Pending"), orderBy("time", "desc"));
+        onSnapshot(qOrd, (snap) => {
+            const list = document.getElementById('adm-orders');
+            document.getElementById('ord-count').innerText = snap.size;
+            list.innerHTML = '';
+            snap.forEach(d => {
                 const o = d.data();
                 list.innerHTML += `
-                    <div class="bg-white p-5 rounded-[30px] border-2 border-amber-200">
-                        <div class="flex justify-between font-black text-[10px] mb-3"><span>${o.product}</span><span class="text-blue-600">محفظة: #${o.uWallet}</span></div>
-                        <div class="bg-slate-50 p-3 rounded-xl text-[9px] font-bold space-y-1">
-                            <p>الآيدي: ${o.gameID}</p>
-                            <p>الاسم: ${o.pName} | هاتف: ${o.pPhone}</p>
+                    <div class="bg-white p-5 rounded-[30px] border-2 border-slate-100 shadow-sm relative overflow-hidden">
+                        <div class="absolute top-0 right-0 bg-amber-400 text-[8px] font-black px-3 py-1 rounded-bl-xl uppercase">${o.category}</div>
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <p class="text-xs font-black text-slate-800">${o.product}</p>
+                                <p class="text-[9px] text-blue-600 font-bold italic">المحفظة: #${o.uWallet}</p>
+                            </div>
                         </div>
-                        <button onclick="markDone('${d.id}', '${o.uid}', ${o.pts})" class="w-full mt-3 bg-green-500 text-white py-3 rounded-2xl text-[10px] font-black btn-click">تنفيذ (+${o.pts} P)</button>
+                        <div class="grid grid-cols-2 gap-2 bg-slate-50 p-4 rounded-2xl text-[9px] font-bold text-slate-500 mb-4 border border-slate-100">
+                            <p><i class="fas fa-id-card ml-1"></i> ID: <span class="text-slate-900">${o.gameID}</span></p>
+                            <p><i class="fas fa-user-tag ml-1"></i> اللعبة: <span class="text-slate-900">${o.pInGame}</span></p>
+                            <p><i class="fas fa-user ml-1"></i> الاسم: <span class="text-slate-900">${o.pName}</span></p>
+                            <p><i class="fas fa-phone ml-1"></i> هاتف: <span class="text-slate-900">${o.pPhone}</span></p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="markDone('${d.id}', '${o.uid}', ${o.pts})" class="flex-1 bg-green-500 text-white py-3 rounded-xl text-[10px] font-black btn-click shadow-lg shadow-green-100">تم التنفيذ</button>
+                            <button onclick="refundOrder('${d.id}', '${o.uid}', ${o.price})" class="bg-red-50 text-red-500 px-4 py-3 rounded-xl text-[10px] font-black btn-click border border-red-100">إرجاع</button>
+                        </div>
                     </div>`;
-                });
+            });
         });
 
-        // مراقبة المنتجات للحذف من قبل المسؤول
+        // مراقبة المنتجات للحذف
         onSnapshot(collection(db, "products"), (snap) => {
             const list = document.getElementById('adm-list');
             list.innerHTML = '';
             snap.forEach(d => {
                 const p = d.data();
                 list.innerHTML += `
-                    <div class="flex justify-between items-center bg-white p-4 rounded-2xl border mb-2">
-                        <p class="text-[11px] font-black text-slate-700">${p.name} <span class="text-blue-500">(${p.price} SDG)</span></p>
-                        <button onclick="deleteProduct('${d.id}')" class="text-red-500 p-2"><i class="fas fa-trash-alt"></i></button>
+                    <div class="flex justify-between items-center bg-white p-4 rounded-2xl border mb-2 shadow-sm">
+                        <div>
+                            <p class="text-[10px] font-black text-slate-800">${p.name}</p>
+                            <p class="text-[9px] text-slate-400 font-bold">${p.price} SDG | ${p.category}</p>
+                        </div>
+                        <button onclick="deleteProduct('${d.id}')" class="w-10 h-10 bg-red-50 text-red-500 rounded-xl flex items-center justify-center hover:bg-red-500 hover:text-white transition-all">
+                            <i class="fas fa-trash-alt text-xs"></i>
+                        </button>
                     </div>`;
             });
         });
     };
 
-    // وظيفة تنفيذ الطلب وإعطاء النقاط
     window.markDone = async (id, uid, pts) => {
-        try {
-            await updateDoc(doc(db, "orders", id), { status: 'Completed' });
-            if(pts > 0) {
-                await updateDoc(doc(db, "users", uid), { points: increment(pts) });
-            }
-            alert("✅ تم تنفيذ الطلب وإضافة النقاط بنجاح!");
-        } catch (e) {
-            alert("حدث خطأ في التنفيذ!");
+        await updateDoc(doc(db, "orders", id), { status: 'Completed' });
+        if(pts > 0) await updateDoc(doc(db, "users", uid), { points: increment(pts) });
+        alert("تم التنفيذ بنجاح!");
+    };
+
+    window.refundOrder = async (id, uid, price) => {
+        if(confirm("هل تريد إلغاء الطلب وإرجاع المبلغ للزبون؟")) {
+            await updateDoc(doc(db, "orders", id), { status: 'Refunded' });
+            await updateDoc(doc(db, "users", uid), { balance: increment(price) });
+            alert("تم الإرجاع!");
         }
     };
 
-    // حذف منتج من المتجر
     window.deleteProduct = async (id) => {
-        if(confirm("هل أنت متأكد من حذف هذا المنتج؟")) {
-            await deleteDoc(doc(db, "products", id));
-        }
+        if(confirm("حذف هذا المنتج نهائياً؟")) await deleteDoc(doc(db, "products", id));
     };
 
-    // استبدال النقاط
-    window.redeemPoints = async (gift) => {
-        if (userData.points < 30) return alert("❌ رصيدك من النقاط أقل من 30!");
-        if (confirm(`هل تريد استبدال 30 نقطة بـ ${gift}؟`)) {
-            try {
-                await addDoc(collection(db, "orders"), { 
-                    uid: user.uid, 
-                    uName: userData.name, 
-                    uWallet: userData.walletID, 
-                    product: `استبدال: ${gift}`, 
-                    price: 0, 
-                    status: 'Pending', 
-                    pts: 0, 
-                    time: serverTimestamp(),
-                    gameID: 'N/A',
-                    pInGame: 'N/A',
-                    pName: userData.name,
-                    pPhone: 'N/A'
-                });
-                await updateDoc(doc(db, "users", user.uid), { points: increment(-30) });
-                alert("🎯 تم إرسال طلب الاستبدال للإدارة!");
-            } catch (e) {
-                alert("فشل طلب الاستبدال!");
-            }
-        }
-    };
-
-    // البحث عن مستخدم لشحن محفظته
-    window.findUser = async () => {
-        const wid = document.getElementById('search-uid').value;
-        if(!wid) return alert("أدخل رقم المحفظة!");
-        const q = query(collection(db, "users"), where("walletID", "==", wid.toString()));
-        const snap = await getDocs(q);
-        if(!snap.empty) { 
-            const u = snap.docs[0]; 
-            window.targetUID = u.id; 
-            document.getElementById('target-name').innerText = u.data().name; 
-            document.getElementById('target-img').src = u.data().img; 
-            document.getElementById('user-info').classList.remove('hidden'); 
-        } else {
-            alert("❌ المحفظة غير موجودة!");
-            document.getElementById('user-info').classList.add('hidden');
-        }
-    };
-
-    // إضافة رصيد للمحفظة
-    window.addCash = async () => {
-        const amt = Number(prompt("أدخل المبلغ المراد إضافته:"));
-        if(amt && amt > 0) { 
-            await updateDoc(doc(db, "users", targetUID), { balance: increment(amt) }); 
-            alert("💰 تم شحن الرصيد بنجاح!"); 
-            document.getElementById('user-info').classList.add('hidden');
-        }
-    };
-
-    // إضافة منتج جديد للمتجر
     window.addProduct = async () => {
-        const n = document.getElementById('p-name').value; 
-        const p = Number(document.getElementById('p-price').value); 
-        const pts = Number(document.getElementById('p-pts').value); 
+        const n = document.getElementById('p-name').value;
+        const p = Number(document.getElementById('p-price').value);
+        const pts = Number(document.getElementById('p-pts').value);
         const c = document.getElementById('p-cat').value;
-        if(n && p) { 
-            await addDoc(collection(db, "products"), { name: n, price: p, points: pts, category: c }); 
-            alert("✅ تم نشر المنتج!"); 
+        if(n && p) {
+            await addDoc(collection(db, "products"), { name: n, price: p, points: pts, category: c });
+            alert("تمت الإضافة!");
             document.getElementById('p-name').value = '';
             document.getElementById('p-price').value = '';
-        } else {
-            alert("أكمل بيانات المنتج!");
         }
     };
 
-    // نظام الاشتراكات
-    window.buySub = async (t, p, d) => {
-        if (userData.balance < p) return alert("❌ رصيدك لا يكفي لتفعيل هذا الاشتراك!");
-        if (confirm(`تفعيل اشتراك ${t} بقيمة ${p} SDG؟`)) {
-            const exp = new Date(); 
-            exp.setDate(exp.getDate() + 30);
-            await updateDoc(doc(db, "users", user.uid), { 
-                balance: increment(-p), 
-                subType: t, 
-                discount: d, 
-                subEnd: exp 
+    window.findUser = async () => {
+        const wid = document.getElementById('search-uid').value;
+        const q = query(collection(db, "users"), where("walletID", "==", wid.toString()));
+        const snap = await getDocs(q);
+        if(!snap.empty) {
+            const u = snap.docs[0];
+            targetUID = u.id;
+            document.getElementById('target-name').innerText = u.data().name;
+            document.getElementById('target-img').src = u.data().img;
+            document.getElementById('target-bal-view').innerText = `رصيده الحالي: ${u.data().balance} SDG`;
+            document.getElementById('user-info').classList.remove('hidden');
+        } else alert("رقم محفظة غير صحيح!");
+    };
+
+    window.addCash = async () => {
+        const amt = Number(prompt("المبلغ المراد شحنه:"));
+        if(amt > 0) {
+            await updateDoc(doc(db, "users", targetUID), { balance: increment(amt) });
+            alert("تم الشحن بنجاح!");
+            document.getElementById('user-info').classList.add('hidden');
+        }
+    };
+
+    window.redeemPoints = async (gift) => {
+        if (userData.points < 30) return alert("تحتاج 30 نقطة على الأقل!");
+        if (confirm(`استبدال 30 نقطة بـ ${gift}؟`)) {
+            await updateDoc(doc(db, "users", user.uid), { points: increment(-30) });
+            await addDoc(collection(db, "orders"), {
+                uid: user.uid, uName: userData.name, uWallet: userData.walletID,
+                product: `هدية: ${gift}`, price: 0, status: 'Pending', category: 'GIFT',
+                gameID: 'N/A', pInGame: 'N/A', pName: userData.name, pPhone: 'N/A', time: serverTimestamp()
             });
-            alert("🎉 مبروك! تم تفعيل العضوية والخصم.");
+            alert("تم إرسال طلب الهدية!");
         }
     };
 
-    // وظائف المودال والتنقل
+    window.buySub = async (t, p, d) => {
+        if (userData.balance < p) return alert("رصيدك غير كافٍ للترقية!");
+        const exp = new Date(); exp.setDate(exp.getDate() + 30);
+        await updateDoc(doc(db, "users", user.uid), { balance: increment(-p), subType: t, discount: d, subEnd: exp });
+        alert("مبروك! أنت الآن عضو VIP");
+    };
+
+    // التبديل بين الصفحات
+    window.showPage = (id, btn) => {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        if(btn) {
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.replace('text-amber-500', 'text-slate-300'));
+            btn.classList.replace('text-slate-300', 'text-amber-500');
+        }
+    };
+
+    window.switchAdminTab = (t, btn) => {
+        document.getElementById('adm-orders').classList.toggle('hidden', t !== 'orders');
+        document.getElementById('adm-add').classList.toggle('hidden', t !== 'add');
+        document.querySelectorAll('.adm-tab').forEach(b => {
+            b.classList.remove('bg-white', 'shadow-sm', 'text-slate-800');
+            b.classList.add('text-slate-400');
+        });
+        btn.classList.add('bg-white', 'shadow-sm', 'text-slate-800');
+    };
+
     window.whatsapp = (num) => window.open(`https://wa.me/249${num.substring(1)}`);
     window.toggleAgents = () => document.getElementById('agents-modal').classList.toggle('hidden');
-    
-    window.showPage = (id, btn) => { 
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); 
-        document.getElementById(id).classList.add('active'); 
-        if(btn) { 
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.replace('text-amber-500', 'text-slate-300')); 
-            btn.classList.replace('text-slate-300', 'text-amber-500'); 
-        } 
-    };
-
-    window.switchAdminTab = (t, btn) => { 
-        document.getElementById('adm-orders').classList.toggle('hidden', t !== 'orders'); 
-        document.getElementById('adm-add').classList.toggle('hidden', t !== 'add'); 
-        document.querySelectorAll('.adm-tab').forEach(b => { 
-            b.classList.remove('bg-white','shadow-sm','text-slate-800'); 
-            b.classList.add('text-slate-400'); 
-        }); 
-        btn.classList.add('bg-white','shadow-sm','text-slate-800'); 
-    };
 
 </script>
 </body>
