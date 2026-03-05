@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KhasmShop | V7.0 - النظام المتكامل</title>
+    <title>KhasmShop | V7.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
         
@@ -45,8 +44,8 @@
             border: 3px solid #f3f3f3; 
             border-top: 3px solid #eab308; 
             border-radius: 50%; 
-            width: 24px; 
-            height: 24px; 
+            width: 48px; 
+            height: 48px; 
             animation: spin 1s linear infinite; 
         }
         
@@ -81,15 +80,6 @@
             to { bottom: 100px; opacity: 1; }
         }
         
-        @keyframes slideIn {
-            from { right: -100%; opacity: 0; }
-            to { right: 1rem; opacity: 1; }
-        }
-        
-        .animate-slideIn {
-            animation: slideIn 0.3s ease;
-        }
-        
         /* شاشة التحذير داخل WebView */
         #webview-warning {
             display: none;
@@ -100,7 +90,6 @@
             padding: 20px;
             background: #f8fafc;
             text-align: center;
-            font-family: 'Cairo', sans-serif;
             position: fixed;
             top: 0;
             left: 0;
@@ -134,16 +123,6 @@
             cursor: pointer;
             margin: 8px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: all 0.2s;
-        }
-        
-        #webview-warning button:hover {
-            background: #1d4ed8;
-            transform: scale(1.02);
-        }
-        
-        #webview-warning .copy-btn {
-            background: #64748b;
         }
         
         /* شاشة الصيانة */
@@ -172,12 +151,6 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
         
-        #maintenance-screen p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
-        }
-        
         .maintenance-icon {
             font-size: 5rem;
             margin-bottom: 2rem;
@@ -192,38 +165,42 @@
             100% { transform: rotate(0deg); }
         }
         
-        /* تحسينات للجوال */
-        @media (max-width: 768px) {
-            .grid {
-                grid-template-columns: 1fr !important;
-            }
-            
-            .text-5xl {
-                font-size: 2rem !important;
-            }
-            
-            .p-12 {
-                padding: 1.5rem !important;
-            }
+        /* خطأ Firebase */
+        #firebase-error {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            background: #fee2e2;
+            text-align: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 25000;
         }
         
-        /* Scrollbar مخصص */
-        ::-webkit-scrollbar {
-            width: 8px;
+        #firebase-error h2 {
+            color: #991b1b;
+            font-size: 1.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
         }
         
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: #888;
-            border-radius: 10px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: #555;
+        .error-details {
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            max-width: 500px;
+            margin: 20px auto;
+            font-family: monospace;
+            text-align: left;
+            direction: ltr;
+            overflow: auto;
+            max-height: 200px;
         }
     </style>
 </head>
@@ -232,12 +209,12 @@
 <!-- شاشة التحذير الخاصة بـ WebView -->
 <div id="webview-warning">
     <h2>⛔ لا يمكن تسجيل الدخول من هذا التطبيق</h2>
-    <p>نأسف، سياسة Google تمنع تسجيل الدخول من النوافذ المدمجة (مثل المتصفح داخل التطبيقات). لحل هذه المشكلة، يرجى فتح هذا الرابط في متصفح خارجي مثل Chrome أو Safari.</p>
+    <p>نأسف، سياسة Google تمنع تسجيل الدخول من النوافذ المدمجة. يرجى فتح الرابط في متصفح خارجي.</p>
     <button id="open-browser-btn">فتح في المتصفح</button>
-    <button id="copy-link-btn" class="copy-btn">نسخ الرابط</button>
+    <button id="copy-link-btn">نسخ الرابط</button>
 </div>
 
-<!-- شاشة الصيانة (للمستخدمين العاديين فقط) -->
+<!-- شاشة الصيانة -->
 <div id="maintenance-screen">
     <div class="maintenance-icon">
         <i class="fas fa-tools"></i>
@@ -245,13 +222,24 @@
     <h1>جاري تطوير المتجر</h1>
     <p id="maintenance-message">نحن نعمل على تحسين تجربتك، سيتم العودة قريباً!</p>
     <div class="loader-spin mb-4"></div>
-    <p class="text-sm opacity-75">نقدر تفهمك وصبرك ❤️</p>
+</div>
+
+<!-- شاشة خطأ Firebase -->
+<div id="firebase-error">
+    <i class="fas fa-exclamation-triangle text-6xl text-red-600 mb-4"></i>
+    <h2>خطأ في الاتصال</h2>
+    <p id="error-message">حدث خطأ أثناء الاتصال بقاعدة البيانات</p>
+    <div id="error-details" class="error-details"></div>
+    <button onclick="location.reload()" class="bg-red-600 text-white px-8 py-3 rounded-3xl font-bold mt-4">
+        إعادة تحميل
+    </button>
 </div>
 
 <!-- شاشة التحميل -->
 <div id="loading-screen" class="fixed inset-0 z-[10000] bg-slate-900 flex flex-col items-center justify-center">
     <div class="loader-spin mb-4"></div>
-    <p class="text-white font-bold animate-pulse text-sm">جاري التحميل...</p>
+    <p class="text-white font-bold animate-pulse text-lg">جاري التحميل...</p>
+    <p class="text-slate-400 text-sm mt-2" id="loading-status">تهيئة المتجر...</p>
 </div>
 
 <!-- شاشة تسجيل الدخول -->
@@ -263,266 +251,13 @@
     </button>
 </div>
 
-<!-- المحتوى الرئيسي (يظهر بعد تسجيل الدخول) -->
+<!-- المحتوى الرئيسي -->
 <div id="main-app" class="hidden pb-32">
-    <!-- قائمة جانبية للأدمن -->
-    <div class="fixed right-0 top-0 h-full w-80 bg-gradient-to-b from-slate-900 to-slate-800 text-white z-[9999] transform transition-transform translate-x-full" id="adminSidebar">
-        <div class="p-6">
-            <!-- Admin Profile -->
-            <div class="text-center mb-8">
-                <img id="adminSidebarImg" src="" class="w-20 h-20 rounded-3xl mx-auto mb-3 border-4 border-yellow-500">
-                <h4 class="font-black" id="adminSidebarName">Admin</h4>
-                <p class="text-xs text-yellow-500">Super Admin</p>
-            </div>
-            
-            <!-- Quick Stats -->
-            <div class="grid grid-cols-2 gap-2 mb-6">
-                <div class="bg-slate-700 p-3 rounded-2xl text-center">
-                    <p class="text-2xl font-black text-yellow-500" id="adminPendingOrders">0</p>
-                    <p class="text-xs">قيد الانتظار</p>
-                </div>
-                <div class="bg-slate-700 p-3 rounded-2xl text-center">
-                    <p class="text-2xl font-black text-green-500" id="adminTodaySales">0</p>
-                    <p class="text-xs">مبيعات اليوم</p>
-                </div>
-            </div>
-            
-            <!-- Navigation -->
-            <div class="space-y-2">
-                <a href="#" onclick="showSection('dashboard')" class="flex items-center gap-3 p-3 rounded-2xl hover:bg-slate-700">
-                    <i class="fas fa-chart-pie w-6"></i> <span class="flex-1">الرئيسية</span>
-                    <span class="bg-red-500 text-xs px-2 py-1 rounded-full" id="adminAlertCount">0</span>
-                </a>
-                <a href="#" onclick="showSection('orders')" class="flex items-center gap-3 p-3 rounded-2xl hover:bg-slate-700">
-                    <i class="fas fa-box w-6"></i> <span class="flex-1">الطلبات</span>
-                    <span class="bg-yellow-500 text-xs px-2 py-1 rounded-full" id="adminPendingCount">0</span>
-                </a>
-                <a href="#" onclick="showSection('users')" class="flex items-center gap-3 p-3 rounded-2xl hover:bg-slate-700">
-                    <i class="fas fa-users w-6"></i> <span class="flex-1">العملاء</span>
-                </a>
-                <a href="#" onclick="showSection('products')" class="flex items-center gap-3 p-3 rounded-2xl hover:bg-slate-700">
-                    <i class="fas fa-tag w-6"></i> <span class="flex-1">المنتجات</span>
-                </a>
-                <a href="#" onclick="showSection('offers')" class="flex items-center gap-3 p-3 rounded-2xl hover:bg-slate-700">
-                    <i class="fas fa-percent w-6"></i> <span class="flex-1">العروض</span>
-                </a>
-                <a href="#" onclick="showSection('reports')" class="flex items-center gap-3 p-3 rounded-2xl hover:bg-slate-700">
-                    <i class="fas fa-chart-line w-6"></i> <span class="flex-1">التقارير</span>
-                </a>
-                <a href="#" onclick="showSection('suggestions')" class="flex items-center gap-3 p-3 rounded-2xl hover:bg-slate-700">
-                    <i class="fas fa-comment w-6"></i> <span class="flex-1">الاقتراحات</span>
-                </a>
-                <a href="#" onclick="showSection('settings')" class="flex items-center gap-3 p-3 rounded-2xl hover:bg-slate-700">
-                    <i class="fas fa-cog w-6"></i> <span class="flex-1">الإعدادات</span>
-                </a>
-            </div>
-            
-            <!-- زر الصيانة (للأدمن فقط) -->
-            <div class="mt-6 pt-6 border-t border-slate-700">
-                <button id="maintenanceToggleBtn" onclick="toggleMaintenanceMode()" class="w-full bg-yellow-600 text-white py-3 rounded-2xl font-black text-sm flex items-center justify-center gap-2">
-                    <i class="fas fa-tools"></i>
-                    <span id="maintenanceBtnText">تفعيل وضع الصيانة</span>
-                </button>
-            </div>
-            
-            <!-- Logout -->
-            <button onclick="logout()" class="w-full mt-4 bg-red-600 text-white py-3 rounded-2xl font-black text-sm">
-                <i class="fas fa-sign-out-alt ml-2"></i> تسجيل خروج
-            </button>
-        </div>
-    </div>
-
-    <!-- قائمة جانبية للمستخدم -->
-    <div class="fixed right-0 top-0 h-full w-80 bg-white shadow-2xl z-[9999] transform transition-transform translate-x-full" id="userSidebar">
-        <div class="p-6">
-            <!-- User Profile -->
-            <div class="text-center mb-6">
-                <img id="userSidebarImg" src="" class="w-24 h-24 rounded-3xl mx-auto mb-3 border-4 border-blue-500">
-                <h4 class="font-black text-xl" id="userSidebarName"></h4>
-                <p class="text-sm text-slate-500" id="userSidebarWallet">محفظة: #---</p>
-            </div>
-            
-            <!-- Balance Cards -->
-            <div class="grid grid-cols-2 gap-3 mb-6">
-                <div class="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-4 rounded-2xl">
-                    <p class="text-xs opacity-80">الرصيد</p>
-                    <p class="text-2xl font-black" id="userSidebarBalance">0</p>
-                    <p class="text-[8px] opacity-60">ج.س</p>
-                </div>
-                <div class="bg-gradient-to-br from-yellow-500 to-yellow-600 text-white p-4 rounded-2xl">
-                    <p class="text-xs opacity-80">النقاط</p>
-                    <p class="text-2xl font-black" id="userSidebarPoints">0</p>
-                    <p class="text-[8px] opacity-60">نقطة</p>
-                </div>
-            </div>
-            
-            <!-- Quick Actions -->
-            <div class="grid grid-cols-3 gap-2 mb-6">
-                <button onclick="quickRecharge()" class="bg-slate-100 p-3 rounded-2xl text-center">
-                    <i class="fas fa-wallet text-blue-600 text-xl mb-1"></i>
-                    <p class="text-[9px] font-bold">شحن</p>
-                </button>
-                <button onclick="quickTransfer()" class="bg-slate-100 p-3 rounded-2xl text-center">
-                    <i class="fas fa-exchange-alt text-green-600 text-xl mb-1"></i>
-                    <p class="text-[9px] font-bold">تحويل</p>
-                </button>
-                <button onclick="quickGift()" class="bg-slate-100 p-3 rounded-2xl text-center">
-                    <i class="fas fa-gift text-purple-600 text-xl mb-1"></i>
-                    <p class="text-[9px] font-bold">هدية</p>
-                </button>
-            </div>
-            
-            <!-- User Menu -->
-            <div class="space-y-2">
-                <a href="#" onclick="showUserSection('profile')" class="flex items-center gap-3 p-3 rounded-2xl hover:bg-slate-50">
-                    <i class="fas fa-user w-6 text-blue-500"></i>
-                    <span class="flex-1">الملف الشخصي</span>
-                    <i class="fas fa-chevron-left text-slate-400"></i>
-                </a>
-                <a href="#" onclick="showUserSection('orders')" class="flex items-center gap-3 p-3 rounded-2xl hover:bg-slate-50">
-                    <i class="fas fa-box w-6 text-green-500"></i>
-                    <span class="flex-1">طلباتي</span>
-                    <span class="bg-red-500 text-white text-xs px-2 py-1 rounded-full" id="userOrderCount">0</span>
-                </a>
-                <a href="#" onclick="showUserSection('wallet')" class="flex items-center gap-3 p-3 rounded-2xl hover:bg-slate-50">
-                    <i class="fas fa-wallet w-6 text-yellow-500"></i>
-                    <span class="flex-1">المحفظة</span>
-                </a>
-                <a href="#" onclick="showUserSection('favorites')" class="flex items-center gap-3 p-3 rounded-2xl hover:bg-slate-50">
-                    <i class="fas fa-heart w-6 text-red-500"></i>
-                    <span class="flex-1">المفضلة</span>
-                </a>
-                <a href="#" onclick="showUserSection('notifications')" class="flex items-center gap-3 p-3 rounded-2xl hover:bg-slate-50">
-                    <i class="fas fa-bell w-6 text-purple-500"></i>
-                    <span class="flex-1">الإشعارات</span>
-                    <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full" id="userNotificationCount">0</span>
-                </a>
-            </div>
-            
-            <!-- Support -->
-            <div class="mt-6 p-4 bg-green-50 rounded-3xl">
-                <p class="font-black text-sm mb-2">تحتاج مساعدة؟</p>
-                <button onclick="openSupport()" class="w-full bg-green-600 text-white py-3 rounded-2xl font-black text-sm">
-                    <i class="fab fa-whatsapp ml-2"></i> تواصل معنا
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- أزرار القوائم الجانبية -->
-    <div class="fixed top-20 left-4 z-[9999] flex gap-2">
-        <button onclick="toggleAdminSidebar()" class="bg-purple-600 text-white w-14 h-14 rounded-3xl shadow-2xl admin-only hidden">
-            <i class="fas fa-cog text-xl"></i>
-        </button>
-        <button onclick="toggleUserSidebar()" class="bg-blue-600 text-white w-14 h-14 rounded-3xl shadow-2xl">
-            <i class="fas fa-user text-xl"></i>
-        </button>
-    </div>
-
-    <!-- زر السلة -->
-    <div class="fixed left-4 top-40 z-[9999]">
-        <button onclick="toggleCart()" class="bg-green-600 text-white w-14 h-14 rounded-3xl shadow-2xl relative">
-            <i class="fas fa-shopping-cart text-xl"></i>
-            <span id="cartCount" class="absolute -top-2 -right-2 bg-red-500 text-white w-6 h-6 rounded-full text-xs flex items-center justify-center">0</span>
-        </button>
-    </div>
-
-    <!-- السلة الجانبية -->
-    <div id="cartSidebar" class="fixed left-0 top-0 h-full w-96 bg-white shadow-2xl z-[10000] transform transition-transform -translate-x-full">
-        <div class="p-6 h-full flex flex-col">
-            <!-- Header -->
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-xl font-black">🛒 سلة التسوق</h3>
-                <button onclick="toggleCart()" class="w-10 h-10 bg-slate-100 rounded-2xl">✕</button>
-            </div>
-            
-            <!-- Items -->
-            <div id="cartItems" class="flex-1 overflow-y-auto space-y-4">
-                <!-- Dynamic cart items -->
-            </div>
-            
-            <!-- Summary -->
-            <div class="border-t pt-4 mt-4">
-                <div class="flex justify-between mb-2">
-                    <span>المجموع:</span>
-                    <span class="font-black" id="cartTotal">0 ج.س</span>
-                </div>
-                <div class="flex justify-between mb-4">
-                    <span>النقاط المكتسبة:</span>
-                    <span class="font-black text-yellow-500" id="cartPoints">0</span>
-                </div>
-                
-                <!-- Coupon -->
-                <div class="flex gap-2 mb-4">
-                    <input type="text" id="couponInput" placeholder="كود خصم" class="flex-1 p-3 rounded-2xl border text-sm">
-                    <button onclick="applyCoupon()" class="bg-purple-600 text-white px-4 py-3 rounded-2xl text-sm font-black">تطبيق</button>
-                </div>
-                
-                <!-- Checkout -->
-                <button onclick="checkout()" class="w-full bg-green-600 text-white py-4 rounded-3xl font-black text-lg mb-2">
-
-                    إتمام الشراء
-                </button>
-                <button onclick="clearCart()" class="w-full bg-red-500 text-white py-3 rounded-3xl font-black text-sm">
-                    تفريغ السلة
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- زر الاقتراحات -->
-    <button onclick="toggleSuggestionBox()" class="fixed bottom-24 right-4 z-[3000] bg-blue-600 text-white w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-xl active:scale-90 transition-transform">
-        <i class="fas fa-comment-dots"></i>
-    </button>
-
-    <!-- نافذة الاقتراحات المنبثقة -->
-    <div id="suggestionBox" class="fixed bottom-40 right-4 z-[3000] bg-white p-5 rounded-[30px] shadow-2xl border-2 border-blue-200 w-72 hidden">
-        <h4 class="font-black text-sm mb-3 text-slate-800">اقتراح أو شكوى</h4>
-        <textarea id="suggestionText" rows="3" class="w-full p-3 text-xs border rounded-2xl mb-3" placeholder="اكتب اقتراحك أو شكوتك هنا..."></textarea>
-        <div class="flex gap-2">
-            <button onclick="submitSuggestion()" class="flex-1 bg-blue-600 text-white py-2.5 rounded-2xl text-xs font-black">إرسال</button>
-            <button onclick="toggleSuggestionBox()" class="flex-1 bg-slate-100 text-slate-600 py-2.5 rounded-2xl text-xs font-black">إلغاء</button>
-        </div>
-    </div>
-
-    <!-- زر الواتساب -->
-    <div class="fixed bottom-6 left-6 z-[3000]">
-        <div id="waAgents" class="hidden absolute bottom-16 left-0 bg-white p-4 rounded-3xl shadow-2xl border w-64 mb-2">
-            <div class="space-y-2" id="agentsList"></div>
-        </div>
-        <button onclick="toggleWaMenu()" class="bg-green-500 text-white w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-2xl active:scale-90 transition-transform"><i class="fab fa-whatsapp"></i></button>
-    </div>
-
-    <!-- مبدل الثيمات -->
-    <div class="fixed bottom-24 left-4">
-        <button onclick="toggleThemeMenu()" class="bg-purple-600 text-white w-14 h-14 rounded-3xl shadow-2xl">
-            <i class="fas fa-palette text-xl"></i>
-        </button>
-    </div>
-
-    <div id="themeMenu" class="fixed bottom-40 left-4 w-64 bg-white rounded-[30px] shadow-2xl p-4 hidden">
-        <h4 class="font-black mb-3">🎨 الثيمات</h4>
-        <div class="grid grid-cols-3 gap-2">
-            <button onclick="setTheme('light')" class="p-3 bg-slate-100 rounded-2xl text-center">
-                <div class="w-8 h-8 bg-white border-2 border-slate-300 rounded-full mx-auto mb-1"></div>
-                <span class="text-[9px]">فاتح</span>
-            </button>
-            <button onclick="setTheme('dark')" class="p-3 bg-slate-100 rounded-2xl text-center">
-                <div class="w-8 h-8 bg-slate-800 rounded-full mx-auto mb-1"></div>
-                <span class="text-[9px]">داكن</span>
-            </button>
-            <button onclick="setTheme('blue')" class="p-3 bg-slate-100 rounded-2xl text-center">
-                <div class="w-8 h-8 bg-blue-500 rounded-full mx-auto mb-1"></div>
-                <span class="text-[9px]">أزرق</span>
-            </button>
-        </div>
-    </div>
-
     <!-- البانر الرئيسي -->
     <div class="pubg-banner flex items-center justify-center text-center">
         <div>
             <h1 class="text-3xl font-black text-white italic tracking-tighter">KHASM SHOP</h1>
-            <p class="text-yellow-500 text-[10px] font-bold italic underline decoration-yellow-500/30">بوابة شحن ببجي موبايل - السودان</p>
+            <p class="text-yellow-500 text-[10px] font-bold italic">بوابة شحن ببجي موبايل - السودان</p>
         </div>
     </div>
 
@@ -531,7 +266,7 @@
         <div class="wallet-card bg-white rounded-[40px] p-6 shadow-2xl border border-white/80">
             <div class="flex justify-between items-center mb-6">
                 <div class="flex items-center gap-3">
-                    <img id="uImg" class="w-14 h-14 rounded-2xl border-2 border-slate-50 shadow-sm" src="">
+                    <img id="uImg" class="w-14 h-14 rounded-2xl border-2 border-slate-50 shadow-sm" src="https://via.placeholder.com/50">
                     <div>
                         <h2 id="uName" class="font-black text-slate-800 text-sm">...</h2>
                         <div id="uWallet" class="text-[10px] text-yellow-600 font-bold bg-yellow-50 px-2 py-0.5 rounded-lg border border-yellow-100 mt-1">#000000</div>
@@ -550,214 +285,31 @@
                     <p class="text-2xl font-black text-white leading-none"><span id="uPoints">0</span></p>
                 </div>
             </div>
-
-            <div class="bg-gradient-to-r from-indigo-50 to-blue-50 p-4 rounded-3xl border border-blue-100 flex justify-between items-center">
-                <div class="text-right">
-                    <p class="text-[10px] font-black text-indigo-700 italic">هدية 60 شدة مجاناً</p>
-                    <p class="text-[8px] text-slate-400 font-bold">اجمع 30 نقطة للاستبدال</p>
-                </div>
-                <button id="redeemBtn" onclick="redeemPoints()" class="px-5 py-2.5 bg-white text-indigo-300 rounded-2xl text-[10px] font-black shadow-sm border opacity-50 cursor-not-allowed" disabled>استرداد</button>
-            </div>
         </div>
 
-        <!-- إحصائيات العميل -->
-        <div id="userStats" class="mt-8 bg-gradient-to-r from-indigo-50 to-purple-50 p-5 rounded-[35px] border border-indigo-200 shadow-inner">
-            <h4 class="text-xs font-black text-indigo-800 mb-4 flex items-center gap-2">
-                <i class="fas fa-chart-line text-indigo-500"></i> 
-                إحصائياتك
-            </h4>
-            <div class="grid grid-cols-2 gap-3 text-center">
-                <div class="bg-white p-3 rounded-2xl shadow-sm">
-                    <p class="text-[9px] text-slate-400 font-bold mb-1">الطلبات الناجحة</p>
-                    <p id="successOrdersCount" class="text-xl font-black text-indigo-600">0</p>
-                </div>
-                <div class="bg-white p-3 rounded-2xl shadow-sm">
-                    <p class="text-[9px] text-slate-400 font-bold mb-1">إجمالي الشحن</p>
-                    <p id="totalSpent" class="text-xl font-black text-green-600">0 <span class="text-[8px]">ج.س</span></p>
-                </div>
-                <div class="bg-white p-3 rounded-2xl shadow-sm col-span-2">
-                    <p class="text-[9px] text-slate-400 font-bold mb-1">عضو منذ</p>
-                    <p id="memberSince" class="text-sm font-black text-slate-700">-- يوم</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- تصنيفات المنتجات -->
-        <div class="mt-8 mb-8">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-2xl font-black">تصفح حسب الفئة</h3>
-                <a href="#" onclick="showAllCategories()" class="text-blue-600 text-sm">عرض الكل ←</a>
-            </div>
-            
-            <div class="grid grid-cols-3 md:grid-cols-6 gap-3">
-                <div onclick="filterByCategory('bestseller')" class="bg-white p-4 rounded-3xl text-center hover:shadow-2xl transition cursor-pointer">
-                    <div class="w-16 h-16 bg-blue-100 rounded-2xl mx-auto mb-2 flex items-center justify-center">
-                        <i class="fas fa-fire text-3xl text-blue-600"></i>
-                    </div>
-                    <p class="font-black text-sm">الأكثر مبيعاً</p>
-                </div>
-                
-                <div onclick="filterByCategory('vip')" class="bg-white p-4 rounded-3xl text-center hover:shadow-2xl transition cursor-pointer">
-                    <div class="w-16 h-16 bg-green-100 rounded-2xl mx-auto mb-2 flex items-center justify-center">
-                        <i class="fas fa-gem text-3xl text-green-600"></i>
-                    </div>
-                    <p class="font-black text-sm">VIP</p>
-                </div>
-                
-                <div onclick="filterByCategory('offers')" class="bg-white p-4 rounded-3xl text-center hover:shadow-2xl transition cursor-pointer">
-                    <div class="w-16 h-16 bg-yellow-100 rounded-2xl mx-auto mb-2 flex items-center justify-center">
-                        <i class="fas fa-star text-3xl text-yellow-600"></i>
-                    </div>
-                    <p class="font-black text-sm">عروض حصرية</p>
-                </div>
-                
-                <div onclick="filterByCategory('limited')" class="bg-white p-4 rounded-3xl text-center hover:shadow-2xl transition cursor-pointer">
-                    <div class="w-16 h-16 bg-red-100 rounded-2xl mx-auto mb-2 flex items-center justify-center">
-                        <i class="fas fa-clock text-3xl text-red-600"></i>
-                    </div>
-                    <p class="font-black text-sm">محدودة</p>
-                </div>
-                
-                <div onclick="filterByCategory('gifts')" class="bg-white p-4 rounded-3xl text-center hover:shadow-2xl transition cursor-pointer">
-                    <div class="w-16 h-16 bg-purple-100 rounded-2xl mx-auto mb-2 flex items-center justify-center">
-                        <i class="fas fa-gift text-3xl text-purple-600"></i>
-                    </div>
-                    <p class="font-black text-sm">هدايا</p>
-                </div>
-                
-                <div onclick="filterByCategory('flash')" class="bg-white p-4 rounded-3xl text-center hover:shadow-2xl transition cursor-pointer">
-                    <div class="w-16 h-16 bg-orange-100 rounded-2xl mx-auto mb-2 flex items-center justify-center">
-                        <i class="fas fa-bolt text-3xl text-orange-600"></i>
-                    </div>
-                    <p class="font-black text-sm">فلاش</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- منطقة الأدمن (مخفية عن المستخدمين العاديين) -->
-        <div id="adminArea" class="hidden mt-8 space-y-6">
-            <!-- إحصائيات الأدمن -->
-            <div class="grid grid-cols-2 gap-3 mb-6">
-                <div class="bg-gradient-to-br from-blue-600 to-blue-800 text-white p-5 rounded-3xl shadow-xl">
-                    <p class="text-[9px] opacity-80 mb-1">إجمالي المبيعات</p>
-                    <p class="text-2xl font-black" id="totalSales">0</p>
-                    <small class="text-[8px] opacity-60">هذا الشهر</small>
-                </div>
-                <div class="bg-gradient-to-br from-green-600 to-green-800 text-white p-5 rounded-3xl shadow-xl">
-                    <p class="text-[9px] opacity-80 mb-1">المستخدمين</p>
-                    <p class="text-2xl font-black" id="totalUsers">0</p>
-                    <small class="text-[8px] opacity-60">عضو نشط</small>
-                </div>
-                <div class="bg-gradient-to-br from-orange-600 to-orange-800 text-white p-5 rounded-3xl shadow-xl">
-                    <p class="text-[9px] opacity-80 mb-1">طلبات اليوم</p>
-                    <p class="text-2xl font-black" id="todayOrders">0</p>
-                </div>
-                <div class="bg-gradient-to-br from-purple-600 to-purple-800 text-white p-5 rounded-3xl shadow-xl">
-                    <p class="text-[9px] opacity-80 mb-1">في الانتظار</p>
-                    <p class="text-2xl font-black" id="pendingOrders">0</p>
-                </div>
-            </div>
-
-            <!-- قسم إدارة الصيانة -->
-            <div class="bg-white rounded-[35px] p-6 shadow-xl border-t-8 border-yellow-500">
-                <h3 class="text-xs font-black text-yellow-600 mb-6 uppercase italic flex items-center gap-2">
-                    <i class="fas fa-tools"></i>
-                    وضع الصيانة
-                </h3>
-                <div class="bg-yellow-50 p-4 rounded-3xl border border-yellow-200">
-                    <div class="flex items-center justify-between mb-4">
-                        <div>
-                            <p class="font-black text-sm">حالة المتجر:</p>
-                            <p id="maintenanceStatus" class="text-xs text-slate-600">طبيعي 🟢</p>
-                        </div>
-                        <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" id="maintenanceSwitch" class="sr-only peer" onchange="toggleMaintenanceWithSwitch()">
-                            <div class="w-14 h-7 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-yellow-500"></div>
-                        </label>
-                    </div>
-                    <textarea id="maintenanceMessage" rows="2" class="w-full p-3 text-sm border rounded-2xl mb-3" placeholder="رسالة الصيانة (اختياري)">نحن نعمل على تحسين المتجر، سيتم العودة قريباً!</textarea>
-                    <button onclick="updateMaintenanceMessage()" class="w-full bg-blue-600 text-white py-2 rounded-2xl text-sm font-black">حفظ الرسالة</button>
-                </div>
-            </div>
-
-            <!-- إدارة الرصيد والمنتجات -->
-            <div class="bg-white rounded-[35px] p-6 shadow-xl border-t-8 border-red-600">
-                <h3 class="text-xs font-black text-red-600 mb-6 uppercase italic">إدارة الرصيد والمنتجات</h3>
-                
-                <!-- شحن الرصيد -->
-                <div class="mb-6 p-4 bg-red-50 rounded-3xl border border-red-100 space-y-3">
-                    <input id="targetWallet" type="text" placeholder="رقم المحفظة (مثلاً 123456)" class="w-full p-3.5 rounded-2xl text-xs border outline-none">
-                    <div class="flex gap-2">
-                        <input id="amountToAdd" type="number" placeholder="المبلغ ج.س" class="flex-1 p-3.5 rounded-2xl text-xs border outline-none">
-                        <button onclick="adminRecharge()" class="bg-red-600 text-white px-6 rounded-2xl text-xs font-black shadow-lg">شحن</button>
-                    </div>
-                </div>
-                
-                <!-- إضافة منتج جديد -->
-                <div class="space-y-3 bg-slate-50 p-4 rounded-3xl border">
-                    <input id="pName" type="text" placeholder="اسم الباقة" class="w-full p-3.5 rounded-2xl text-xs border outline-none">
-                    <div class="flex gap-2">
-                        <input id="pPrice" type="number" placeholder="السعر" class="flex-1 p-3.5 rounded-2xl text-xs border outline-none">
-                        <input id="pPoints" type="number" placeholder="النقاط" class="flex-1 p-3.5 rounded-2xl text-xs border outline-none bg-blue-50">
-                    </div>
-                    <div class="flex gap-2">
-                        <input id="pStock" type="number" placeholder="الكمية" class="flex-1 p-3.5 rounded-2xl text-xs border outline-none" value="100">
-                        <select id="pCategory" class="flex-1 p-3.5 rounded-2xl text-xs border outline-none">
-                            <option value="bestseller">الأكثر مبيعاً</option>
-                            <option value="vip">VIP</option>
-                            <option value="offers">عروض</option>
-                            <option value="limited">محدودة</option>
-                            <option value="gifts">هدايا</option>
-                            <option value="flash">فلاش</option>
-                        </select>
-                    </div>
-                    <button onclick="addNewProduct()" class="w-full bg-slate-900 text-white py-3.5 rounded-2xl text-xs font-black shadow-lg">إضافة باقة</button>
-                </div>
-                
-                <!-- قائمة المنتجات للإدارة -->
-                <div id="adminProductList" class="mt-4 space-y-2 max-h-40 overflow-y-auto"></div>
-            </div>
-
-            <!-- طلبات الزبائن -->
-            <div class="bg-white rounded-[35px] p-6 shadow-xl border-t-8 border-orange-500">
-                <h3 class="text-xs font-black text-orange-600 mb-4 uppercase italic">طلبات الزبائن</h3>
-                <div id="adminOrdersList" class="space-y-4 max-h-96 overflow-y-auto"></div>
-            </div>
-
-            <!-- اقتراحات العملاء -->
-            <div id="suggestionsAdmin" class="bg-white rounded-[35px] p-6 shadow-xl border-t-8 border-purple-500">
-                <h3 class="text-xs font-black text-purple-600 mb-6 uppercase italic">اقتراحات العملاء</h3>
-                <div id="suggestionsList" class="space-y-4 max-h-80 overflow-y-auto"></div>
-            </div>
-
-            <!-- جميع المستخدمين -->
-            <div class="bg-white rounded-[35px] p-6 shadow-xl border-t-8 border-indigo-500">
-                <h3 class="text-xs font-black text-indigo-600 mb-4">👥 جميع المستخدمين</h3>
-                <div id="usersList" class="space-y-2 max-h-60 overflow-y-auto"></div>
-            </div>
-
-            <!-- تصدير التقارير -->
-            <div class="bg-white rounded-[35px] p-6 shadow-xl border-t-8 border-green-500">
-                <h3 class="text-xs font-black text-green-600 mb-4">📊 تصدير التقارير</h3>
-                <button onclick="exportOrdersReport()" class="w-full bg-green-600 text-white py-3 rounded-2xl text-sm font-black">
-                    <i class="fas fa-download ml-2"></i> تحميل تقرير المبيعات (CSV)
-                </button>
-            </div>
-        </div>
-
-        <!-- عرض المتجر للمستخدمين -->
+        <!-- المنتجات -->
         <div id="storeView">
-            <h3 class="text-sm font-black text-slate-800 mt-10 mb-4 border-r-4 border-yellow-500 pr-2 italic uppercase tracking-tighter">باقات الشحن المتوفرة</h3>
-            <div id="productGrid" class="grid grid-cols-2 gap-3 mb-10"></div>
-            
-            <h3 class="text-sm font-black text-slate-800 mb-4 border-r-4 border-blue-500 pr-2 italic uppercase">تاريخ طلباتك</h3>
-            <div id="userOrdersList" class="space-y-3 mb-20"></div>
+            <h3 class="text-sm font-black text-slate-800 mt-10 mb-4 border-r-4 border-yellow-500 pr-2">باقات الشحن المتوفرة</h3>
+            <div id="productGrid" class="grid grid-cols-2 gap-3 mb-10">
+                <div class="bg-white p-5 rounded-[35px] shadow-sm text-center">
+                    <p class="text-slate-400">جاري تحميل المنتجات...</p>
+                </div>
+            </div>
         </div>
     </main>
 </div>
 
 <script type="module">
-    // ========== كشف WebView وإظهار التحذير المناسب ==========
+    // ========== كشف الأخطاء ==========
+    window.addEventListener('error', function(e) {
+        console.error('خطأ:', e.error);
+        document.getElementById('loading-screen').classList.add('hidden');
+        document.getElementById('firebase-error').style.display = 'flex';
+        document.getElementById('error-message').innerText = e.error?.message || 'حدث خطأ غير متوقع';
+        document.getElementById('error-details').innerText = e.error?.stack || 'لا توجد تفاصيل إضافية';
+    });
+
+    // ========== كشف WebView ==========
     function isWebView() {
         var ua = navigator.userAgent || navigator.vendor || window.opera;
         if (ua.indexOf('wv') > -1) return true;
@@ -765,16 +317,14 @@
         return false;
     }
 
-    function showWebViewWarning() {
+    if (isWebView()) {
         document.getElementById('loading-screen').classList.add('hidden');
-        document.getElementById('auth-screen').classList.add('hidden');
-        document.getElementById('main-app').classList.add('hidden');
-        const warningDiv = document.getElementById('webview-warning');
-        warningDiv.style.display = 'flex';
+        document.getElementById('webview-warning').style.display = 'flex';
+        throw new Error('WebView detected');
     }
 
-    // التعامل مع أزرار التحذير
-    document.getElementById('open-browser-btn').addEventListener('click', function() {
+    // ========== أزرار التحذير ==========
+    document.getElementById('open-browser-btn')?.addEventListener('click', function() {
         const currentUrl = window.location.href;
         if (/Android/i.test(navigator.userAgent)) {
             window.location.href = 'intent://' + currentUrl.replace(/^https?:\/\//, '') + '#Intent;scheme=https;package=com.android.chrome;end;';
@@ -783,25 +333,17 @@
         }
     });
 
-    document.getElementById('copy-link-btn').addEventListener('click', function() {
-        navigator.clipboard.writeText(window.location.href).then(function() {
-            alert('تم نسخ الرابط! افتحه الآن في متصفحك.');
-        }, function() {
-            alert('فشل النسخ، يمكنك نسخ الرابط يدوياً: ' + window.location.href);
-        });
+    document.getElementById('copy-link-btn')?.addEventListener('click', function() {
+        navigator.clipboard.writeText(window.location.href);
+        alert('تم نسخ الرابط!');
     });
-
-    // إذا كان في WebView، نعرض التحذير فوراً
-    if (isWebView()) {
-        showWebViewWarning();
-        throw new Error('Stopped execution because running in WebView');
-    }
 
     // ========== استيراد Firebase ==========
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, doc, onSnapshot, collection, addDoc, query, where, getDocs, updateDoc, increment, deleteDoc, setDoc, serverTimestamp, orderBy, getDoc, runTransaction, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-    import { getAuth, signInWithRedirect, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, doc, onSnapshot, collection, addDoc, query, where, getDocs, updateDoc, increment, deleteDoc, setDoc, serverTimestamp, orderBy, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
+    // ========== إعداد Firebase ==========
     const firebaseConfig = { 
         apiKey: "AIzaSyC0jzecEwKgHpxHpTi8Y-_bwwfzVdtgf3E", 
         authDomain: "khasmshop.firebaseapp.com", 
@@ -811,849 +353,181 @@
         appId: "1:238182001615:web:d77391030a40a481b440ba" 
     };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const auth = getAuth(app);
-    const provider = new GoogleAuthProvider();
-    provider.setCustomParameters({ prompt: 'select_account' });
+    try {
+        document.getElementById('loading-status').innerText = 'جاري الاتصال بقاعدة البيانات...';
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
 
-    const ADMINS = ["mhmdfthu98@gmail.com", "muhammedaltaj111@gmail.com", "mohnadyasir43@gmail.com"];
-    let userData = null;
-    let currentUser = null;
-    let cart = [];
-    let lastOrderCount = 0;
-    
-    // طلب إذن الإشعارات
-    if(Notification.permission !== "granted") {
-        Notification.requestPermission();
-    }
+        const ADMINS = ["mhmdfthu98@gmail.com", "muhammedaltaj111@gmail.com", "mohnadyasir43@gmail.com"];
+        let userData = null;
 
-    // ========== تسجيل الدخول ==========
-    document.getElementById('google-login-btn').onclick = () => {
-        document.getElementById('loading-screen').classList.remove('hidden');
-        signInWithRedirect(auth, provider);
-    };
-
-    // ========== تسجيل الخروج ==========
-    document.getElementById('logout-btn').onclick = async () => {
-        try {
-            await signOut(auth);
-            document.getElementById('main-app').classList.add('hidden');
-            document.getElementById('auth-screen').classList.remove('hidden');
-            document.getElementById('webview-warning').style.display = 'none';
-        } catch (error) {
-            console.error('Sign out error', error);
-        }
-    };
-    
-    window.logout = async () => {
-        try {
-            await signOut(auth);
-            document.getElementById('main-app').classList.add('hidden');
-            document.getElementById('auth-screen').classList.remove('hidden');
-        } catch (error) {
-            showToast('خطأ في تسجيل الخروج', 'error');
-        }
-    };
-
-    // ========== التحقق من وضع الصيانة ==========
-    async function checkMaintenance(user) {
-        const setting = await getDoc(doc(db, "settings", "maintenance"));
-        const isAdmin = user && ADMINS.includes(user.email);
-        
-        if(setting.exists() && setting.data().active && !isAdmin) {
-            document.getElementById('maintenance-screen').style.display = 'flex';
-            document.getElementById('maintenance-message').textContent = setting.data().message || 'نحن نعمل على تحسين المتجر، سيتم العودة قريباً!';
-            document.getElementById('main-app').classList.add('hidden');
-            document.getElementById('auth-screen').classList.add('hidden');
-            return true;
-        }
-        return false;
-    }
-
-    // ========== مراقبة حالة المصادقة ==========
-    onAuthStateChanged(auth, async (user) => {
-        if (user) {
-            currentUser = user;
-            
-            // تحقق من وضع الصيانة
-            const isMaintenance = await checkMaintenance(user);
-            if(isMaintenance) return;
-            
-            document.getElementById('loading-screen').classList.add('hidden');
-            document.getElementById('auth-screen').classList.add('hidden');
-            document.getElementById('main-app').classList.remove('hidden');
-
-            const userRef = doc(db, "users", user.uid);
-            const userSnap = await getDoc(userRef);
-            
-            if (!userSnap.exists()) {
-                await setDoc(userRef, { 
-                    name: user.displayName, 
-                    email: user.email, 
-                    img: user.photoURL, 
-                    walletID: Math.floor(100000 + Math.random() * 900000).toString(), 
-                    balance: 0, 
-                    points: 0,
-                    lastActive: serverTimestamp(),
-                    createdAt: serverTimestamp()
-                });
-            } else {
-                // تحديث آخر نشاط
-                await updateDoc(userRef, { lastActive: serverTimestamp() });
+        // ========== تسجيل الدخول ==========
+        document.getElementById('google-login-btn').onclick = async () => {
+            try {
+                document.getElementById('loading-screen').classList.remove('hidden');
+                document.getElementById('loading-status').innerText = 'جاري تسجيل الدخول...';
+                const result = await signInWithPopup(auth, provider);
+                console.log('تم تسجيل الدخول:', result.user.email);
+            } catch (error) {
+                console.error('خطأ في تسجيل الدخول:', error);
+                document.getElementById('loading-screen').classList.add('hidden');
+                alert('خطأ في تسجيل الدخول: ' + error.message);
             }
-            
-            startEngine(user);
-        } else {
-            document.getElementById('loading-screen').classList.add('hidden');
-            document.getElementById('auth-screen').classList.remove('hidden');
-            document.getElementById('main-app').classList.add('hidden');
-        }
-    });
+        };
 
-    // ========== بدء تشغيل التطبيق ==========
-    function startEngine(user) {
-        const isAdmin = ADMINS.includes(user.email);
-        
-        // إظهار/إخفاء عناصر الأدمن
-        if(isAdmin) {
-            document.querySelectorAll('.admin-only').forEach(el => el.classList.remove('hidden'));
-            loadAdminTools();
-            document.getElementById('adminArea').classList.remove('hidden');
-            
-            // تحميل إحصائيات الأدمن
-            loadDashboardStats();
-            
-            // مراقبة حالة الصيانة
-            monitorMaintenanceStatus();
-        }
-        
-        // تحديث واجهة المستخدم
-        onSnapshot(doc(db, "users", user.uid), (snap) => {
-            if (snap.exists()) {
-                userData = snap.data();
-                updateUI(isAdmin);
-                updateUserStats(user.uid);
+        // ========== تسجيل الخروج ==========
+        document.getElementById('logout-btn').onclick = async () => {
+            try {
+                await signOut(auth);
+                document.getElementById('main-app').classList.add('hidden');
+                document.getElementById('auth-screen').classList.remove('hidden');
+            } catch (error) {
+                console.error('خطأ في تسجيل الخروج:', error);
+            }
+        };
+
+        // ========== التحقق من وضع الصيانة ==========
+        async function checkMaintenance(user) {
+            try {
+                const setting = await getDoc(doc(db, "settings", "maintenance"));
+                const isAdmin = user && ADMINS.includes(user.email);
                 
-                // تحديث القوائم الجانبية
-                document.getElementById('userSidebarImg').src = userData.img;
-                document.getElementById('userSidebarName').innerText = userData.name;
-                document.getElementById('userSidebarWallet').innerText = `محفظة: #${userData.walletID}`;
-                document.getElementById('userSidebarBalance').innerText = (userData.balance || 0).toLocaleString();
-                document.getElementById('userSidebarPoints').innerText = userData.points || 0;
-                
-                if(isAdmin) {
-                    document.getElementById('adminSidebarImg').src = userData.img;
-                    document.getElementById('adminSidebarName').innerText = userData.name;
+                if(setting.exists() && setting.data().active && !isAdmin) {
+                    document.getElementById('maintenance-screen').style.display = 'flex';
+                    document.getElementById('maintenance-message').innerText = setting.data().message || 'نحن نعمل على تحسين المتجر';
+                    document.getElementById('main-app').classList.add('hidden');
+                    document.getElementById('auth-screen').classList.add('hidden');
+                    document.getElementById('loading-screen').classList.add('hidden');
+                    return true;
                 }
-            }
-        });
-
-        // تحميل المنتجات
-        onSnapshot(collection(db, "products"), (snap) => {
-            const grid = document.getElementById('productGrid'); 
-            grid.innerHTML = '';
-            snap.forEach(d => {
-                const p = d.data();
-                grid.innerHTML += `<div class="bg-white p-5 rounded-[35px] shadow-sm border border-white text-center relative overflow-hidden">
-                    <div class="absolute -top-1 -right-1 bg-blue-600 text-white text-[8px] font-black px-3 py-1 rounded-bl-xl">+${p.givePoints || 0}P</div>
-                    ${p.stock < 10 ? '<div class="absolute -bottom-1 -left-1 bg-red-500 text-white text-[6px] px-2 py-1 rounded-tr-xl">محدود</div>' : ''}
-                    <p class="font-black text-[11px] text-slate-700 mt-2">${p.name}</p>
-                    <p class="text-blue-600 font-black text-xs my-3">${p.price} ج.س</p>
-                    <p class="text-[8px] text-slate-400 mb-2">متبقي: ${p.stock || 0}</p>
-                    <button onclick="addToCart('${d.id}', '${p.name}', ${p.price}, ${p.givePoints || 0})" class="w-full bg-slate-900 text-white text-[9px] py-3 rounded-2xl font-black">➕ أضف للسلة</button>
-                </div>`;
-            });
-        });
-
-        // تحميل طلبات المستخدم
-        loadUserHistory(user.uid);
-        
-        // مراقبة الطلبات الجديدة للأدمن
-        if(isAdmin) {
-            monitorNewOrders();
-        }
-        
-        // استعادة الثيم المحفوظ
-        const savedTheme = localStorage.getItem('theme');
-        if(savedTheme) setTheme(savedTheme);
-    }
-
-    // ========== وظائف الواجهة ==========
-    window.updateUI = (isAdmin) => {
-        document.getElementById('uName').innerText = userData.name;
-        document.getElementById('uImg').src = userData.img;
-        document.getElementById('uBal').innerText = (userData.balance || 0).toLocaleString();
-        document.getElementById('uPoints').innerText = userData.points || 0;
-        document.getElementById('uWallet').innerText = `المحفظة: #${userData.walletID}`;
-        
-        const rb = document.getElementById('redeemBtn');
-        if(userData.points >= 30) {
-            rb.disabled = false; 
-            rb.classList.remove('opacity-50', 'text-indigo-300');
-            rb.classList.add('bg-indigo-600', 'text-white', 'animate-pulse');
-            rb.innerText = "استرداد الآن! 🎁";
-        }
-        
-        const agents = [
-            {n:'249907760989', name:'محمد فتحي'}, 
-            {n:'249916581517', name:'محمد التاج'}, 
-            {n:'249914178935', name:'مهند ياسر'}
-        ];
-        document.getElementById('agentsList').innerHTML = agents.map(a => 
-            `<button onclick="contactAgent('${a.n}', '${a.name}')" class="w-full flex justify-between p-3 bg-slate-50 rounded-2xl text-[10px] font-black border">
-                <span>${a.name}</span> <i class="fab fa-whatsapp text-green-500"></i>
-            </button>`
-        ).join('');
-    };
-
-    // ========== نظام السلة ==========
-    window.addToCart = (id, name, price, points) => {
-        cart.push({ id, name, price, points, quantity: 1 });
-        updateCartUI();
-        showToast('✅ تمت الإضافة للسلة', 'success');
-    };
-    
-    window.updateCartUI = () => {
-        document.getElementById('cartCount').innerText = cart.length;
-        
-        const itemsDiv = document.getElementById('cartItems');
-        let total = 0;
-        let totalPoints = 0;
-        
-        itemsDiv.innerHTML = cart.map((item, index) => {
-            total += item.price * item.quantity;
-            totalPoints += item.points * item.quantity;
-            return `
-            <div class="flex gap-3 border-b pb-3">
-                <div class="flex-1">
-                    <p class="font-black text-sm">${item.name}</p>
-                    <p class="text-xs">${item.price} ج.س × ${item.quantity}</p>
-                </div>
-                <div class="flex items-center gap-2">
-                    <button onclick="changeQuantity(${index}, -1)" class="w-6 h-6 bg-slate-100 rounded-lg">-</button>
-                    <span>${item.quantity}</span>
-                    <button onclick="changeQuantity(${index}, 1)" class="w-6 h-6 bg-slate-100 rounded-lg">+</button>
-                    <button onclick="removeFromCart(${index})" class="text-red-500 mr-2">🗑️</button>
-                </div>
-            </div>
-            `;
-        }).join('');
-        
-        document.getElementById('cartTotal').innerText = total.toLocaleString() + ' ج.س';
-        document.getElementById('cartPoints').innerText = totalPoints;
-    };
-    
-    window.changeQuantity = (index, delta) => {
-        cart[index].quantity = Math.max(1, cart[index].quantity + delta);
-        updateCartUI();
-    };
-    
-    window.removeFromCart = (index) => {
-        cart.splice(index, 1);
-        updateCartUI();
-    };
-    
-    window.clearCart = () => {
-        cart = [];
-        updateCartUI();
-        showToast('تم تفريغ السلة', 'info');
-    };
-    
-    window.checkout = async () => {
-        if(cart.length === 0) {
-            showToast('السلة فارغة', 'error');
-            return;
-        }
-        
-        const gID = prompt("أدخل ID اللاعب:");
-        if(!gID) return;
-        const gName = prompt("أدخل اسم اللاعب في اللعبة:");
-        if(!gName) return;
-        const phone = prompt("أدخل رقم هاتفك للتواصل:");
-        if(!phone) return;
-        
-        let total = 0;
-        let totalPoints = 0;
-        
-        for(let item of cart) {
-            total += item.price * item.quantity;
-            totalPoints += item.points * item.quantity;
-        }
-        
-        if(userData.balance < total) {
-            showToast('الرصيد لا يكفي', 'error');
-            return;
-        }
-        
-        if(confirm(`تأكيد شراء ${cart.length} منتجات بقيمة ${total} ج.س؟`)) {
-            await updateDoc(doc(db, "users", auth.currentUser.uid), { 
-                balance: increment(-total) 
-            });
-            
-            for(let item of cart) {
-                await addDoc(collection(db, "orders"), {
-                    uID: auth.currentUser.uid, 
-                    uName: userData.name, 
-                    product: item.name,
-                    price: item.price * item.quantity, 
-                    pts: item.points * item.quantity, 
-                    gameID: gID, 
-                    gameName: gName, 
-                    phone: phone,
-                    status: 'قيد الانتظار', 
-                    timestamp: serverTimestamp()
-                });
-                
-                // نقص المخزون
-                const productRef = doc(db, "products", item.id);
-                await updateDoc(productRef, {
-                    stock: increment(-item.quantity),
-                    sold: increment(item.quantity)
-                });
-            }
-            
-            clearCart();
-            toggleCart();
-            showToast('✅ تم إرسال طلبك بنجاح!', 'success');
-            
-            // مشاركة على واتساب
-            if(confirm("تم الطلب! هل تريد مشاركته مع أصدقائك على واتساب؟")) {
-                const msg = `🎮 طلب جديد في KhasmShop!\n🛒 عدد المنتجات: ${cart.length}\n💰 الإجمالي: ${total} ج.س\nأشحن أنت كمان من هنا: ${window.location.href}`;
-                window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`);
+                return false;
+            } catch (error) {
+                console.error('خطأ في التحقق من الصيانة:', error);
+                return false;
             }
         }
-    };
 
-    // ========== وظائف الأدمن ==========
-    function loadAdminTools() {
-        // مراقبة المنتجات
-        onSnapshot(collection(db, "products"), (snap) => {
-            const list = document.getElementById('adminProductList'); 
-            list.innerHTML = '';
-            snap.forEach(d => {
-                list.innerHTML += `
-                <div class="flex justify-between items-center bg-white p-3 rounded-xl text-[9px] border mb-1">
-                    <div>
-                        <span class="font-bold">${d.data().name}</span>
-                        <span class="text-blue-600 mr-2">${d.data().price} ج.س</span>
-                        <span class="text-green-600">مخزون: ${d.data().stock || 0}</span>
-                    </div>
-                    <div class="flex gap-2">
-                        <button onclick="editProduct('${d.id}')" class="text-blue-500"><i class="fas fa-edit"></i></button>
-                        <button onclick="deleteP('${d.id}')" class="text-red-500"><i class="fas fa-trash"></i></button>
-                    </div>
-                </div>`;
-            });
-        });
-        
-        // مراقبة الطلبات
-        onSnapshot(query(collection(db, "orders"), orderBy("timestamp", "desc")), (snap) => {
-            const list = document.getElementById('adminOrdersList'); 
-            list.innerHTML = '';
-            snap.forEach(d => {
-                const o = d.data(); 
-                if(o.status !== 'قيد الانتظار') return;
-                
-                list.innerHTML += `
-                <div class="bg-white p-4 rounded-3xl border-2 border-orange-100 shadow-sm text-[10px]">
-                    <div class="flex justify-between mb-2">
-                        <b>${o.product}</b> 
-                        <span class="text-blue-600">+${o.pts || 0}P</span>
-                    </div>
-                    <div class="bg-slate-50 p-3 rounded-xl mb-3 space-y-1">
-                        <p>🆔 الآيدي: <b class="select-all">${o.gameID}</b></p>
-                        <p>👤 الاسم: <b>${o.gameName || 'غير متوفر'}</b></p>
-                        <p>📞 هاتف: <a href="tel:${o.phone}" class="text-blue-500 underline">${o.phone || 'غير متوفر'}</a></p>
-                        <p class="text-[8px] text-slate-400 border-t pt-1">صاحب المحفظة: ${o.uName}</p>
-                        <p class="text-[8px]">💰 ${o.price} ج.س</p>
-                    </div>
-                    <div class="flex gap-2">
-                        <button onclick="updateOrder('${d.id}', '${o.uID}', 'مكتمل', ${o.pts || 0})" class="flex-1 bg-green-600 text-white py-3 rounded-2xl font-bold">شحن ✅</button>
-                        <button onclick="updateOrder('${d.id}', '${o.uID}', 'فشل', 0, ${o.price})" class="flex-1 bg-red-500 text-white py-3 rounded-2xl font-bold">إلغاء ❌</button>
-                    </div>
-                </div>`;
-            });
-        });
+        // ========== مراقبة حالة المصادقة ==========
+        onAuthStateChanged(auth, async (user) => {
+            document.getElementById('loading-status').innerText = user ? 'جاري تحميل بياناتك...' : 'بانتظار تسجيل الدخول...';
+            
+            if (user) {
+                try {
+                    // تحقق من الصيانة
+                    const isMaintenance = await checkMaintenance(user);
+                    if(isMaintenance) return;
 
-        // مراقبة الاقتراحات
-        onSnapshot(query(collection(db, "suggestions"), orderBy("timestamp", "desc")), (snap) => {
-            const list = document.getElementById('suggestionsList'); 
-            if (!list) return;
-            list.innerHTML = '';
-            snap.forEach(d => {
-                const s = d.data();
-                list.innerHTML += `
-                <div class="bg-slate-50 p-4 rounded-3xl border border-purple-100 text-[10px]">
-                    <p class="font-bold mb-2">${s.userName}:</p>
-                    <p class="bg-white p-3 rounded-xl mb-2">${s.text}</p>
-                    <div class="flex justify-between">
-                        <small class="text-slate-400">${s.timestamp?.toDate().toLocaleString('ar')}</small>
-                        <button onclick="markSuggestionRead('${d.id}')" class="text-green-600">✓ تمت القراءة</button>
-                    </div>
-                </div>`;
-            });
-        });
-        
-        // مراقبة المستخدمين
-        onSnapshot(collection(db, "users"), (snap) => {
-            const list = document.getElementById('usersList');
-            if(!list) return;
-            list.innerHTML = '';
-            snap.forEach(doc => {
-                const u = doc.data();
-                list.innerHTML += `
-                <div class="flex justify-between items-center bg-slate-50 p-3 rounded-2xl text-[10px] border">
-                    <div class="flex items-center gap-2">
-                        <img src="${u.img}" class="w-8 h-8 rounded-xl">
-                        <div>
-                            <p class="font-bold">${u.name}</p>
-                            <p class="text-[8px] text-slate-400">#${u.walletID}</p>
-                        </div>
-                    </div>
-                    <div class="text-left">
-                        <p class="text-blue-600 font-bold">${(u.balance || 0).toLocaleString()} ج.س</p>
-                        <p class="text-yellow-600 text-[8px]">⭐ ${u.points || 0}</p>
-                    </div>
-                </div>`;
-            });
-            
-            document.getElementById('totalUsers').innerText = snap.size;
-        });
-    }
-    
-    window.loadDashboardStats = async () => {        
-        const today = new Date();
-        today.setHours(0,0,0,0);
-        
-        const ordersSnap = await getDocs(collection(db, "orders"));
-        let total = 0, todayCount = 0, pending = 0;
-        
-        ordersSnap.forEach(doc => {
-            const o = doc.data();
-            total += o.price || 0;
-            if(o.status === 'قيد الانتظار') pending++;
-            if(o.timestamp?.toDate() > today) todayCount++;
-        });
-        
-        document.getElementById('totalSales').innerText = total.toLocaleString();
-        document.getElementById('todayOrders').innerText = todayCount;
-        document.getElementById('pendingOrders').innerText = pending;
-        document.getElementById('adminPendingOrders').innerText = pending;
-        document.getElementById('adminTodaySales').innerText = total.toLocaleString();
-    };
-    
-    function monitorNewOrders() {
-        onSnapshot(query(collection(db, "orders"), where("status", "==", "قيد الانتظار")), (snap) => {
-            const newCount = snap.size;
-            
-            if(lastOrderCount > 0 && newCount > lastOrderCount) {
-                // صوت التنبيه
-                const audio = new Audio('https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3');
-                audio.play().catch(e => console.log('Audio play failed'));
-                
-                // إشعار المتصفح
-                if(Notification.permission === "granted") {
-                    new Notification("🛒 طلب جديد!", {
-                        body: `عندك ${newCount - lastOrderCount} طلب جديد في الانتظار`,
-                        icon: "https://khasmshop.com/icon.png"
+                    // إنشاء أو تحديث بيانات المستخدم
+                    const userRef = doc(db, "users", user.uid);
+                    const userSnap = await getDoc(userRef);
+                    
+                    if (!userSnap.exists()) {
+                        await setDoc(userRef, { 
+                            name: user.displayName || 'مستخدم', 
+                            email: user.email, 
+                            img: user.photoURL || 'https://via.placeholder.com/100', 
+                            walletID: Math.floor(100000 + Math.random() * 900000).toString(), 
+                            balance: 0, 
+                            points: 0,
+                            createdAt: serverTimestamp(),
+                            lastActive: serverTimestamp()
+                        });
+                    } else {
+                        await updateDoc(userRef, { lastActive: serverTimestamp() });
+                    }
+
+                    // تحديث الواجهة
+                    document.getElementById('loading-screen').classList.add('hidden');
+                    document.getElementById('auth-screen').classList.add('hidden');
+                    document.getElementById('main-app').classList.remove('hidden');
+
+                    // مراقبة بيانات المستخدم
+                    onSnapshot(doc(db, "users", user.uid), (snap) => {
+                        if (snap.exists()) {
+                            userData = snap.data();
+                            document.getElementById('uName').innerText = userData.name;
+                            document.getElementById('uImg').src = userData.img;
+                            document.getElementById('uBal').innerText = (userData.balance || 0).toLocaleString();
+                            document.getElementById('uPoints').innerText = userData.points || 0;
+                            document.getElementById('uWallet').innerText = `#${userData.walletID}`;
+                        }
                     });
+
+                // تحميل المنتجات
+                    onSnapshot(collection(db, "products"), (snap) => {
+                        const grid = document.getElementById('productGrid'); 
+                        if (snap.empty) {
+                            grid.innerHTML = '<div class="col-span-2 text-center p-8 text-slate-400">لا توجد منتجات متوفرة</div>';
+                            return;
+                        }
+                        
+                        grid.innerHTML = '';
+                        snap.forEach(d => {
+                            const p = d.data();
+                            grid.innerHTML += `
+                            <div class="bg-white p-5 rounded-[35px] shadow-sm border border-white text-center relative overflow-hidden">
+                                <div class="absolute -top-1 -right-1 bg-blue-600 text-white text-[8px] font-black px-3 py-1 rounded-bl-xl">+${p.givePoints || 0}P</div>
+                                <p class="font-black text-[11px] text-slate-700 mt-2">${p.name}</p>
+                                <p class="text-blue-600 font-black text-xs my-3">${p.price} ج.س</p>
+                                <button onclick="order('${p.name}', ${p.price}, ${p.givePoints || 0})" class="w-full bg-slate-900 text-white text-[9px] py-3 rounded-2xl font-black">شراء</button>
+                            </div>`;
+                        });
+                    });
+
+                } catch (error) {
+                    console.error('خطأ في تحميل البيانات:', error);
+                    document.getElementById('loading-screen').classList.add('hidden');
+                    document.getElementById('firebase-error').style.display = 'flex';
+                    document.getElementById('error-message').innerText = 'فشل تحميل البيانات';
+                    document.getElementById('error-details').innerText = error.message;
                 }
-                
-                showToast(`🔔 طلب جديد! الإجمالي: ${newCount}`, 'info');
-            }
-            
-            document.getElementById('adminPendingCount').innerText = newCount;
-            document.getElementById('adminAlertCount').innerText = newCount;
-            lastOrderCount = newCount;
-        });
-    }
-    
-    // ========== وظائف الصيانة ==========
-    function monitorMaintenanceStatus() {
-        onSnapshot(doc(db, "settings", "maintenance"), (doc) => {
-            if(doc.exists()) {
-                const data = doc.data();
-                const status = data.active ? 'صيانة 🔴' : 'طبيعي 🟢';
-                document.getElementById('maintenanceStatus').innerHTML = status;
-                document.getElementById('maintenanceSwitch').checked = data.active || false;
-                document.getElementById('maintenanceBtnText').innerText = data.active ? 'إلغاء وضع الصيانة' : 'تفعيل وضع الصيانة';
+            } else {
+                document.getElementById('loading-screen').classList.add('hidden');
+                document.getElementById('auth-screen').classList.remove('hidden');
+                document.getElementById('main-app').classList.add('hidden');
             }
         });
-    }
-    
-    window.toggleMaintenanceMode = async () => {
-        const setting = await getDoc(doc(db, "settings", "maintenance"));
-        const currentStatus = setting.exists() ? setting.data().active : false;
-        const newStatus = !currentStatus;
-        
-        await setDoc(doc(db, "settings", "maintenance"), {
-            active: newStatus,
-            message: document.getElementById('maintenanceMessage').value,
-            lastChanged: serverTimestamp(),
-            changedBy: auth.currentUser.email
-        });
-        
-        await logAdminAction(newStatus ? 'تفعيل وضع الصيانة' : 'إلغاء وضع الصيانة');
-        
-        showToast(newStatus ? '🔧 تم تفعيل وضع الصيانة' : '✅ تم إلغاء وضع الصيانة', 'success');
-    };
-    
-    window.toggleMaintenanceWithSwitch = async () => {
-        const isChecked = document.getElementById('maintenanceSwitch').checked;
-        
-        await setDoc(doc(db, "settings", "maintenance"), {
-            active: isChecked,
-            message: document.getElementById('maintenanceMessage').value,
-            lastChanged: serverTimestamp(),
-            changedBy: auth.currentUser.email
-        });
-        
-        await logAdminAction(isChecked ? 'تفعيل وضع الصيانة' : 'إلغاء وضع الصيانة');
-        
-        showToast(isChecked ? '🔧 تم تفعيل وضع الصيانة' : '✅ تم إلغاء وضع الصيانة', 'success');
-    };
-    
-    window.updateMaintenanceMessage = async () => {
-        const message = document.getElementById('maintenanceMessage').value;
-        await updateDoc(doc(db, "settings", "maintenance"), {
-            message: message
-        });
-        showToast('📝 تم تحديث رسالة الصيانة', 'success');
-    };
 
-    // ========== وظائف المستخدم ==========
-    window.updateUserStats = async (uid) => {
-        const q = query(collection(db, "orders"), where("uID", "==", uid), where("status", "==", "مكتمل"));
-        const querySnapshot = await getDocs(q);
-        
-        let total = 0;
-        querySnapshot.forEach(doc => {
-            total += doc.data().price || 0;
-        });
-        
-        document.getElementById('successOrdersCount').innerText = querySnapshot.size;
-        document.getElementById('totalSpent').innerText = total.toLocaleString();
-        document.getElementById('userOrderCount').innerText = querySnapshot.size;
-        
-        const firstOrderQuery = query(collection(db, "orders"), where("uID", "==", uid), orderBy("timestamp", "asc"), limit(1));
-        const firstSnap = await getDocs(firstOrderQuery);
-        if (!firstSnap.empty) {
-            const firstOrderDate = firstSnap.docs[0].data().timestamp?.toDate();
-            if (firstOrderDate) {
-                const today = new Date();
-                const diffTime = Math.abs(today - firstOrderDate);
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                document.getElementById('memberSince').innerText = `${diffDays} يوم`;
+        // ========== دالة الشراء ==========
+        window.order = async (name, price, pts) => {
+            if (!userData) return alert('الرجاء تسجيل الدخول أولاً');
+            if (userData.balance < price) return alert("الرصيد لا يكفي");
+            
+            const gID = prompt("أدخل ID اللاعب:");
+            if(!gID) return;
+            const phone = prompt("أدخل رقم هاتفك:");
+            if(!phone) return;
+
+            if(confirm(`تأكيد شراء ${name}؟`)) {
+                try {
+                    await updateDoc(doc(db, "users", auth.currentUser.uid), { balance: increment(-price) });
+                    await addDoc(collection(db, "orders"), {
+                        uID: auth.currentUser.uid, 
+                        uName: userData.name, 
+                        product: name,
+                        price: price, 
+                        pts: pts, 
+                        gameID: gID, 
+                        phone: phone,
+                        status: 'قيد الانتظار', 
+                        timestamp: serverTimestamp()
+                    });
+                    alert("تم إرسال طلبك بنجاح ✅");
+                } catch (error) {
+                    alert('خطأ: ' + error.message);
+                }
             }
-        } else {
-            document.getElementById('memberSince').innerText = 'مستخدم جديد 🎉';
-        }
-    };
+        };
 
-    window.loadUserHistory = (uid) => {
-        onSnapshot(query(collection(db, "orders"), where("uID", "==", uid), orderBy("timestamp", "desc")), (snap) => {
-            const list = document.getElementById('userOrdersList'); 
-            list.innerHTML = '';
-            snap.forEach(d => {
-                const o = d.data();
-                const sCls = o.status === 'مكتمل' ? 'status-completed' : 'status-pending';
-                list.innerHTML += `<div class="bg-white p-4 rounded-3xl shadow-sm flex justify-between items-center text-[10px] order-card ${sCls}">
-                    <div>
-                        <b>${o.product}</b><br>
-                        <small class="text-slate-400">${o.gameID}</small>
-                        <br>
-                        <small class="text-blue-600">${o.price} ج.س</small>
-                    </div>
-                    <b class="${o.status==='مكتمل'?'text-green-500':'text-orange-500'} italic">${o.status}</b>
-                </div>`;
-            });
-        });
-    };
-
-    // ========== وظائف الإدارة ==========
-    window.adminRecharge = async () => {
-        const wid = document.getElementById('targetWallet').value.trim();
-        const amt = parseInt(document.getElementById('amountToAdd').value);
-        if(!wid || !amt) return;
-        
-        const q = query(collection(db, "users"), where("walletID", "==", wid));
-        const snap = await getDocs(q);
-        if(snap.empty) return alert("المحفظة غير موجودة");
-        
-        snap.forEach(u => updateDoc(doc(db, "users", u.id), { balance: increment(amt) }));
-        
-        await logAdminAction(`شحن محفظة ${wid} بمبلغ ${amt}`);
-        showToast("✅ تم الشحن", "success");
-        
-        document.getElementById('targetWallet').value=''; 
-        document.getElementById('amountToAdd').value='';
-    };
-
-    window.addNewProduct = async () => {
-        const n = document.getElementById('pName').value;
-        const p = parseInt(document.getElementById('pPrice').value);
-        const pts = parseInt(document.getElementById('pPoints').value) || 0;
-        const stock = parseInt(document.getElementById('pStock').value) || 100;
-        const category = document.getElementById('pCategory').value;
-        
-        if(n && p) {
-            await addDoc(collection(db, "products"), { 
-                name: n, 
-                price: p, 
-                givePoints: pts,
-                stock: stock,
-                sold: 0,
-                category: category,
-                createdAt: serverTimestamp()
-            });
-            
-            await logAdminAction(`أضاف منتج جديد: ${n}`);
-            showToast('✅ تمت إضافة المنتج', 'success');
-        }
-        
-        document.getElementById('pName').value=''; 
-        document.getElementById('pPrice').value='';
-        document.getElementById('pPoints').value='';
-    };
-
-    window.updateOrder = async (oid, uid, st, pts, refund = 0) => {
-        if (st === 'مكتمل') {
-            await updateDoc(doc(db, "users", uid), { points: increment(pts) });
-            await logAdminAction(`أكمل طلب ${oid}`);
-        } else if (st === 'فشل') {
-            await updateDoc(doc(db, "users", uid), { balance: increment(refund) });
-            await logAdminAction(`ألغى طلب ${oid} واسترد ${refund}`);
-        }
-        await updateDoc(doc(db, "orders", oid), { status: st });
-        showToast(`✅ تم تحديث الطلب`, 'success');
-    };
-
-    window.redeemPoints = async () => {
-        if(userData.points < 30) return;
-        
-        const gid = prompt("أدخل آيدي الاستلام:");
-        const gname = prompt("أدخل اسمك في اللعبة:");
-        const phone = prompt("أدخل رقم هاتفك:");
-        if(!gid || !gname || !phone) return;
-        
-        await updateDoc(doc(db, "users", auth.currentUser.uid), { points: increment(-30) });
-        await addDoc(collection(db, "orders"), { 
-            uID: auth.currentUser.uid, 
-            uName: userData.name, 
-            product: "هدية (60 UC)", 
-            price: 0, 
-            pts: 0, 
-            gameID: gid, 
-            gameName: gname, 
-            phone: phone, 
-            status: 'قيد الانتظار', 
-            timestamp: serverTimestamp() 
-        });
-        
-        showToast("🎁 تم طلب الهدية", "success");
-    };
-
-    window.deleteP = async (id) => {
-        if(confirm("حذف المنتج؟")) {
-            await deleteDoc(doc(db, "products", id));
-            await logAdminAction(`حذف منتج ${id}`);
-            showToast('🗑️ تم الحذف', 'info');
-        }
-    };
-
-    window.toggleWaMenu = () => document.getElementById('waAgents').classList.toggle('hidden');
-    window.contactAgent = (n, name) => window.open(`https://wa.me/${n}?text=${encodeURIComponent('مرحباً '+name+'، أريد شحن محفظتي: #'+userData.walletID)}`);
-
-    // ========== نظام الاقتراحات ==========
-    window.toggleSuggestionBox = () => {
-        document.getElementById('suggestionBox').classList.toggle('hidden');
-    };
-
-    window.submitSuggestion = async () => {
-        const text = document.getElementById('suggestionText').value.trim();
-        if (!text) return alert('اكتب شيء أولاً');
-        
-        await addDoc(collection(db, "suggestions"), {
-            uid: auth.currentUser.uid,
-            userName: userData.name,
-            text: text,
-            timestamp: serverTimestamp(),
-            status: 'جديد'
-        });
-        
-        document.getElementById('suggestionText').value = '';
-        toggleSuggestionBox();
-        showToast('تم استلام اقتراحك، شكراً لك!', 'success');
-    };
-
-    window.markSuggestionRead = async (id) => {
-        await updateDoc(doc(db, "suggestions", id), { status: 'مقروء' });
-    };
-
-    // ========== تصدير التقارير ==========
-    window.exportOrdersReport = async () => {
-        const snap = await getDocs(collection(db, "orders"));
-        let data = "المنتج,السعر,الحالة,التاريخ,العميل\n";
-        
-        snap.forEach(doc => {
-            const o = doc.data();
-            const date = o.timestamp?.toDate().toLocaleDateString() || 'غير معروف';
-            data += `${o.product},${o.price},${o.status},${date},${o.uName}\n`;
-        });
-        
-        const blob = new Blob([data], { type: 'text/csv' });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `تقرير_المبيعات_${new Date().toLocaleDateString()}.csv`;
-        a.click();
-        
-        await logAdminAction('صدّر تقرير المبيعات');
-        showToast('📊 تم تصدير التقرير', 'success');
-    };
-
-    // ========== تسجيل أنشطة الأدمن ==========
-    async function logAdminAction(action) {
-        await addDoc(collection(db, "adminLogs"), {
-            admin: auth.currentUser.email,
-            adminName: userData?.name,
-            action: action,
-            timestamp: serverTimestamp()
-        });
+    } catch (error) {
+        console.error('خطأ في تهيئة Firebase:', error);
+        document.getElementById('loading-screen').classList.add('hidden');
+        document.getElementById('firebase-error').style.display = 'flex';
+        document.getElementById('error-message').innerText = 'فشل الاتصال بقاعدة البيانات';
+        document.getElementById('error-details').innerText = error.message;
     }
-
-    // ========== نظام الثيمات ==========
-    window.setTheme = (theme) => {
-        const root = document.documentElement;
-        if(theme === 'dark') {
-            root.style.setProperty('--bg', '#1a1a1a');
-            root.style.setProperty('--text', '#ffffff');
-            root.style.setProperty('--card', '#2d2d2d');
-            document.body.classList.add('dark-mode');
-        } else if(theme === 'light') {
-            root.style.setProperty('--bg', '#f0f2f5');
-            root.style.setProperty('--text', '#000000');
-            root.style.setProperty('--card', '#ffffff');
-            document.body.classList.remove('dark-mode');
-        } else if(theme === 'blue') {
-            root.style.setProperty('--bg', '#e6f0fa');
-            root.style.setProperty('--text', '#000000');
-            root.style.setProperty('--card', '#ffffff');
-        }
-        localStorage.setItem('theme', theme);
-        toggleThemeMenu();
-        showToast(`🎨 تم تغيير الثيم إلى ${theme}`, 'success');
-    };
-
-    window.toggleThemeMenu = () => {
-        document.getElementById('themeMenu').classList.toggle('hidden');
-    };
-
-    // ========== وظائف القوائم الجانبية ==========
-    window.toggleCart = () => {
-        const cart = document.getElementById('cartSidebar');
-        cart.classList.toggle('-translate-x-full');
-    };
-
-    window.toggleAdminSidebar = () => {
-        const sidebar = document.getElementById('adminSidebar');
-        sidebar.classList.toggle('translate-x-full');
-    };
-
-    window.toggleUserSidebar = () => {
-        const sidebar = document.getElementById('userSidebar');
-        sidebar.classList.toggle('translate-x-full');
-    };
-
-    window.showSection = (section) => {
-        // للتبديل بين أقسام الأدمن
-        toggleAdminSidebar();
-        showToast(`🔧 قسم ${section}`, 'info');
-    };
-
-    window.showUserSection = (section) => {
-        toggleUserSidebar();
-        showToast(`👤 ${section}`, 'info');
-    };
-
-    window.filterByCategory = (category) => {
-        showToast(`🔍 عرض فئة ${category}`, 'info');
-    };
-
-    window.quickRecharge = () => {
-        toggleUserSidebar();
-        showToast('💰 سيتم إضافة خاصية الشحن السريع قريباً', 'info');
-    };
-
-    window.quickTransfer = () => {
-        toggleUserSidebar();
-        showToast('💱 سيتم إضافة خاصية التحويل قريباً', 'info');
-    };
-
-    window.quickGift = () => {
-        toggleUserSidebar();
-        showToast('🎁 سيتم إضافة خاصية الهدايا قريباً', 'info');
-    };
-
-    window.openSupport = () => {
-        window.open('https://wa.me/249907760989', '_blank');
-    };
-
-    window.applyCoupon = () => {
-        const code = document.getElementById('couponInput').value;
-        if(code) showToast('🏷️ كود خصم غير صالح', 'error');
-    };
-
-    // ========== نظام الإشعارات ==========
-    window.showToast = (message, type = 'info') => {
-        const toast = document.createElement('div');
-        toast.className = `toast ${type}`;
-        toast.innerText = message;
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 3000);
-    };
-
-    // ========== أوامر سريعة للأدمن ==========
-    window.quickComplete = async (orderID, userID, points) => {
-        await updateDoc(doc(db, "orders", orderID), { status: "مكتمل" });
-        await updateDoc(doc(db, "users", userID), { points: increment(points) });
-        showToast("✅ تم الشحن في ثانية!", "success");
-    };
-
-    window.quickCancel = async (orderID, userID, amount) => {
-        await updateDoc(doc(db, "orders", orderID), { status: "فشل" });
-        await updateDoc(doc(db, "users", userID), { balance: increment(amount) });
-        showToast("💰 تم استرداد المبلغ", "success");
-    };
-
-    window.quickCall = (phone) => {
-        window.location.href = `tel:${phone}`;
-    };
-
-    // كشف الاحتيال
-    window.detectFraud = async (uid, product) => {
-        const oneMinuteAgo = new Date(Date.now() - 60000);
-        const q = query(
-            collection(db, "orders"), 
-            where("uID", "==", uid),
-            where("product", "==", product),
-            where("timestamp", ">", oneMinuteAgo)
-        );
-        
-        const recentOrders = await getDocs(q);
-        if(recentOrders.size > 3) {
-            await updateDoc(doc(db, "users", uid), { 
-                flagged: true,
-                flagReason: "تكرار طلبات غير طبيعي"
-            });
-            
-            showToast('⚠️ تم الإبلاغ عن نشاط مشبوه', 'error');
-            return true;
-        }
-        return false;
-    };
 </script>
 </body>
 </html>
-    
