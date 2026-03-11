@@ -3,40 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KhasmShop | V6.8</title>
+    <title>KhasmShop | V7.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="manifest" href="manifest.json">
-    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
         body { font-family: 'Cairo', sans-serif; background: #f0f2f5; margin: 0; overflow-x: hidden; }
-        
         .pubg-banner {
             background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.4)), url('https://w0.peakpx.com/wallpaper/403/602/HD-wallpaper-pubg-mobile-karakin-pubg-mobile-poster-battle-royale-2021-games-pubg.jpg');
             background-size: cover; background-position: center; height: 180px; border-radius: 0 0 50px 50px;
         }
-        
         .wallet-card { margin-top: -55px; position: relative; z-index: 20; }
-        
         .loader-spin { border: 3px solid #f3f3f3; border-top: 3px solid #eab308; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
         .status-completed { border-right: 4px solid #10b981; }
         .status-pending { border-right: 4px solid #f59e0b; }
-
+        .status-failed { border-right: 4px solid #ef4444; }
         #webview-solution {
             display: none; position: fixed; inset: 0; z-index: 30000;
             background: white; flex-direction: column; align-items: center; justify-content: center; padding: 30px; text-align: center;
         }
-
         .toast {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #1e293b; color: white; padding: 12px 24px; border-radius: 50px; font-size: 14px; font-weight: bold; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3); z-index: 99999; display: none;
         }
+        .admin-tab { cursor: pointer; padding: 12px; border-radius: 30px; font-weight: bold; transition: 0.2s; }
+        .admin-tab.active { background: #1e293b; color: white; }
     </style>
 </head>
 <body>
 
+<!-- WebView حل مشكلة -->
 <div id="webview-solution">
     <div class="bg-red-50 p-6 rounded-[40px] border-2 border-red-100 max-w-sm">
         <i class="fas fa-exclamation-triangle text-5xl text-red-500 mb-4"></i>
@@ -55,9 +51,8 @@
 <div id="auth-screen" class="hidden fixed inset-0 z-[9999] bg-slate-900 flex flex-col items-center justify-center p-6 text-center">
     <h1 class="text-6xl font-black text-yellow-500 mb-2 italic tracking-tighter">KHASM SHOP</h1>
     <p class="text-slate-400 mb-10 text-xs font-bold uppercase tracking-widest text-center">The Elite PUBG Mobile Service</p>
-    <button id="google-login-btn" class="bg-white text-slate-900 px-8 py-5 rounded-[30px] font-black shadow-2xl flex items-center gap-4 text-lg active:scale-95 transition-all">
-        <img src="https://www.google.com/favicon.ico" class="w-6"> دخول عبر حساب جوجل
-    </button>
+    <!-- Google One Tap Button -->
+    <div id="googleBtn" class="mb-4"></div>
 </div>
 
 <div id="main-app" class="hidden pb-32">
@@ -69,6 +64,7 @@
     </div>
 
     <main class="max-w-md mx-auto px-4 text-right">
+        <!-- بطاقة المحفظة -->
         <div class="wallet-card bg-white rounded-[40px] p-6 shadow-2xl border">
             <div class="flex justify-between items-center mb-6">
                 <div class="flex items-center gap-3">
@@ -101,30 +97,54 @@
             </div>
         </div>
 
-        <div id="adminArea" class="hidden mt-8 space-y-6">
+        <!-- لوحة تحكم الأدمن (تظهر فقط للأدمن) -->
+        <div id="adminArea" class="hidden mt-8">
             <div class="bg-white rounded-[35px] p-6 shadow-xl border-t-8 border-red-600">
-                <h3 class="text-xs font-black text-red-600 mb-4 uppercase text-right">إدارة الرصيد</h3>
-                <div class="space-y-3">
-                    <input id="targetWallet" type="text" placeholder="رقم المحفظة" class="w-full p-3.5 rounded-2xl text-xs border text-right">
-                    <div class="flex gap-2">
-                        <input id="amountToAdd" type="number" placeholder="المبلغ" class="flex-1 p-3.5 rounded-2xl text-xs border text-right">
-                        <button onclick="adminRecharge()" class="bg-red-600 text-white px-6 rounded-2xl text-xs font-black">شحن</button>
-                    </div>
+                <div class="flex gap-2 mb-6 border-b pb-4">
+                    <div class="admin-tab active" data-tab="products">المنتجات</div>
+                    <div class="admin-tab" data-tab="users">المستخدمين</div>
+                    <div class="admin-tab" data-tab="orders">الطلبات</div>
                 </div>
-                <div id="adminOrdersList" class="mt-6 space-y-4"></div>
+
+                <!-- تبويب المنتجات -->
+                <div id="tab-products" class="tab-content">
+                    <h3 class="text-xs font-black text-red-600 mb-4 uppercase">إدارة المنتجات</h3>
+                    <form id="addProductForm" class="space-y-3 mb-6">
+                        <input type="text" id="prodName" placeholder="اسم المنتج" class="w-full p-3.5 rounded-2xl text-xs border text-right" required>
+                        <input type="number" id="prodPrice" placeholder="السعر (ج.س)" class="w-full p-3.5 rounded-2xl text-xs border text-right" required>
+                        <input type="number" id="prodPoints" placeholder="النقاط الممنوحة" class="w-full p-3.5 rounded-2xl text-xs border text-right" required>
+                        <button type="submit" class="w-full bg-red-600 text-white py-4 rounded-2xl text-xs font-black">إضافة منتج</button>
+                    </form>
+                    <div id="adminProductsList" class="space-y-3 max-h-96 overflow-y-auto"></div>
+                </div>
+
+                <!-- تبويب المستخدمين -->
+                <div id="tab-users" class="tab-content hidden">
+                    <h3 class="text-xs font-black text-red-600 mb-4 uppercase">جميع المستخدمين</h3>
+                    <input type="text" id="searchUser" placeholder="بحث بالاسم أو البريد أو رقم المحفظة" class="w-full p-3.5 rounded-2xl text-xs border mb-4 text-right">
+                    <div id="adminUsersList" class="space-y-3 max-h-96 overflow-y-auto"></div>
+                </div>
+
+                <!-- تبويب الطلبات -->
+                <div id="tab-orders" class="tab-content hidden">
+                    <h3 class="text-xs font-black text-red-600 mb-4 uppercase">جميع الطلبات</h3>
+                    <div id="adminOrdersList" class="space-y-3 max-h-96 overflow-y-auto"></div>
+                </div>
             </div>
         </div>
 
+        <!-- المتجر العادي -->
         <div id="storeView">
             <h3 class="text-sm font-black text-slate-800 mt-10 mb-4 border-r-4 border-yellow-500 pr-2 text-right">باقات الشحن</h3>
             <div id="productGrid" class="grid grid-cols-2 gap-3 mb-10"></div>
             
-            <h3 class="text-sm font-black text-slate-800 mb-4 border-r-4 border-blue-500 pr-2 text-right">تاريخ الطلبات</h3>
+            <h3 class="text-sm font-black text-slate-800 mb-4 border-r-4 border-blue-500 pr-2 text-right">تاريخ طلباتي</h3>
             <div id="userOrdersList" class="space-y-3 mb-20"></div>
         </div>
     </main>
 </div>
 
+<!-- زر الواتساب -->
 <div class="fixed bottom-6 left-6 z-[3000]">
     <div id="waAgents" class="hidden absolute bottom-16 left-0 bg-white p-4 rounded-3xl shadow-2xl border w-64 mb-2">
         <div class="space-y-2" id="agentsList"></div>
@@ -132,8 +152,11 @@
     <button onclick="toggleWaMenu()" class="bg-green-500 text-white w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-2xl active:scale-90"><i class="fab fa-whatsapp"></i></button>
 </div>
 
-<!-- Toast notification -->
+<!-- Toast -->
 <div id="toast" class="toast"></div>
+
+<!-- Google Identity Services -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 
 <script type="module">
     // -------------------- حل مشكلة الـ WebView --------------------
@@ -143,9 +166,7 @@
         document.getElementById('loading-screen').style.display = 'none';
         const storeUrl = window.location.href;
         document.getElementById('auto-open').onclick = () => {
-            // محاولة فتح الرابط في Chrome خارج التطبيق
             window.location.href = `googlechrome://${storeUrl.replace(/^https?:\/\//, '')}`;
-            // fallback
             setTimeout(() => { window.location.href = storeUrl; }, 500);
         };
         document.getElementById('copy-url').onclick = () => {
@@ -154,24 +175,26 @@
         };
     }
 
-    // -------------------- إعدادات Firebase --------------------
+    // -------------------- إعدادات Firebase (من مشروعك) --------------------
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, doc, onSnapshot, collection, addDoc, query, where, getDocs, updateDoc, increment, setDoc, serverTimestamp, orderBy, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, doc, onSnapshot, collection, addDoc, query, where, getDocs, updateDoc, increment, setDoc, serverTimestamp, orderBy, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getAuth, signInWithCredential, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-    const firebaseConfig = { 
-        apiKey: "AIzaSyC0jzecEwKgHpxHpTi8Y-_bwwfzVdtgf3E", 
-        authDomain: "khasmshop.firebaseapp.com", 
-        projectId: "khasmshop", 
-        storageBucket: "khasmshop.firebasestorage.app", 
-        messagingSenderId: "238182001615", 
-        appId: "1:238182001615:web:d77391030a40a481b440ba" 
+    const firebaseConfig = {
+        apiKey: "AIzaSyC0jzecEwKgHpxHpTi8Y-_bwwfzVdtgf3E",
+        authDomain: "khasmshop.firebaseapp.com",
+        databaseURL: "https://khasmshop-default-rtdb.firebaseio.com",
+        projectId: "khasmshop",
+        storageBucket: "khasmshop.firebasestorage.app",
+        messagingSenderId: "238182001615",
+        appId: "1:238182001615:web:4c7ddea335df2111b440ba",
+        measurementId: "G-FP3FCMHC8L"
     };
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const auth = getAuth(app);
-    const provider = new GoogleAuthProvider();
+    // قائمة الأدمن (عدلها حسب بريدك)
     const ADMINS = ["mhmdfthu98@gmail.com", "muhammedaltaj111@gmail.com", "mohnadyasir43@gmail.com"];
     let userData = null;
     let currentUser = null;
@@ -185,10 +208,33 @@
         setTimeout(() => { toast.style.display = 'none'; }, 3000);
     };
 
-    // -------------------- إدارة تسجيل الدخول --------------------
-    document.getElementById('google-login-btn').onclick = () => signInWithPopup(auth, provider);
-    document.getElementById('logout-btn').onclick = () => signOut(auth);
+    // -------------------- Google One Tap --------------------
+    window.onload = function () {
+        google.accounts.id.initialize({
+            client_id: "238182001615-xxxxxxxxxxxx.apps.googleusercontent.com", // ضع Client ID الصحيح (من Google Cloud)
+            callback: handleCredentialResponse
+        });
+        google.accounts.id.renderButton(
+            document.getElementById("googleBtn"),
+            { theme: "outline", size: "large", width: 250 }
+        );
+        google.accounts.id.prompt();
+    };
 
+    function handleCredentialResponse(response) {
+        const credential = GoogleAuthProvider.credential(response.credential);
+        signInWithCredential(auth, credential)
+            .then((result) => {
+                console.log("تم تسجيل الدخول", result.user);
+                showToast(`مرحباً ${result.user.displayName}`);
+            })
+            .catch((error) => {
+                console.log(error);
+                showToast("فشل تسجيل الدخول", true);
+            });
+    }
+
+    // -------------------- حالة المصادقة --------------------
     onAuthStateChanged(auth, async (user) => {
         const loading = document.getElementById('loading-screen');
         const authScr = document.getElementById('auth-screen');
@@ -199,14 +245,17 @@
             const userRef = doc(db, "users", user.uid);
             const userSnap = await getDoc(userRef);
             if (!userSnap.exists()) {
-                await setDoc(userRef, { 
-                    name: user.displayName, 
-                    email: user.email, 
-                    img: user.photoURL, 
-                    walletID: Math.floor(100000 + Math.random() * 900000).toString(), 
-                    balance: 0, 
-                    points: 0 
+                await setDoc(userRef, {
+                    name: user.displayName,
+                    email: user.email,
+                    img: user.photoURL,
+                    walletID: Math.floor(100000 + Math.random() * 900000).toString(),
+                    balance: 0,
+                    points: 0,
+                    lastLogin: serverTimestamp()
                 });
+            } else {
+                await updateDoc(userRef, { lastLogin: serverTimestamp() });
             }
             loading.classList.add('hidden');
             authScr.classList.add('hidden');
@@ -223,12 +272,10 @@
     function startEngine(user) {
         const isAdmin = ADMINS.includes(user.email);
         
-        // مراقبة بيانات المستخدم
         onSnapshot(doc(db, "users", user.uid), (snap) => {
             if (snap.exists()) {
                 userData = snap.data();
-                updateUI(isAdmin);
-                // تفعيل/تعطيل زر الاسترداد بناءً على النقاط
+                updateUI();
                 const redeemBtn = document.getElementById('redeemBtn');
                 if (userData.points >= 30) {
                     redeemBtn.disabled = false;
@@ -242,7 +289,6 @@
             }
         });
 
-        // جلب المنتجات
         onSnapshot(collection(db, "products"), (snap) => {
             const grid = document.getElementById('productGrid');
             grid.innerHTML = '';
@@ -258,18 +304,18 @@
             });
         });
 
-        // جلب تاريخ طلبات المستخدم
         loadUserHistory(user.uid);
 
-        // إذا كان أدمن، أظهر الأدوات
         if (isAdmin) {
             document.getElementById('adminArea').classList.remove('hidden');
-            loadAdminTools();
+            initAdminTabs();
+            loadAdminProducts();
+            loadAdminUsers();
+            loadAdminOrders();
         }
     }
 
-    // -------------------- تحديث الواجهة --------------------
-    function updateUI(isAdmin) {
+    function updateUI() {
         document.getElementById('uName').innerText = userData.name || '...';
         document.getElementById('uImg').src = userData.img || '';
         document.getElementById('uBal').innerText = (userData.balance || 0).toLocaleString();
@@ -277,7 +323,6 @@
         document.getElementById('uWallet').innerText = `المحفظة: #${userData.walletID || '000000'}`;
     }
 
-    // -------------------- نظام الطلبات --------------------
     let ordering = false;
     window.orderNow = async (name, price, pts) => {
         if (ordering) return;
@@ -294,12 +339,9 @@
 
         ordering = true;
         try {
-            // خصم الرصيد
             await updateDoc(doc(db, "users", auth.currentUser.uid), { 
                 balance: increment(-price) 
             });
-            
-            // إضافة الطلب
             await addDoc(collection(db, "orders"), { 
                 uID: auth.currentUser.uid, 
                 uName: userData.name, 
@@ -311,7 +353,6 @@
                 status: 'قيد الانتظار', 
                 timestamp: serverTimestamp() 
             });
-            
             showToast('تم إرسال الطلب ✅');
         } catch (e) {
             showToast('فشل: ' + e.message, true);
@@ -327,23 +368,22 @@
             list.innerHTML = '';
             snap.forEach(d => {
                 const o = d.data();
-                const cls = o.status === 'مكتمل' ? 'status-completed' : 'status-pending';
+                let statusClass = '';
+                if (o.status === 'مكتمل') statusClass = 'status-completed';
+                else if (o.status === 'فشل') statusClass = 'status-failed';
+                else statusClass = 'status-pending';
                 list.innerHTML += `
-                <div class="bg-white p-4 rounded-3xl shadow-sm flex justify-between items-center text-[10px] ${cls} mb-2">
+                <div class="bg-white p-4 rounded-3xl shadow-sm flex justify-between items-center text-[10px] ${statusClass} mb-2">
                     <div><b>${o.product}</b><br><small class="text-slate-400 text-right">${o.gameID}</small></div>
-                    <b class="${o.status === 'مكتمل' ? 'text-green-500' : 'text-orange-500'}">${o.status}</b>
+                    <b class="${o.status === 'مكتمل' ? 'text-green-500' : (o.status === 'فشل' ? 'text-red-500' : 'text-orange-500')}">${o.status}</b>
                 </div>`;
             });
         });
     };
-
-    // -------------------- استبدال النقاط --------------------
     window.redeemPoints = async () => {
         if (!userData) return;
         if (userData.points < 30) return showToast('تحتاج 30 نقطة على الأقل', true);
-        
         if (!confirm('استبدال 30 نقطة مقابل 60 ج.س؟')) return;
-        
         try {
             await updateDoc(doc(db, "users", auth.currentUser.uid), {
                 points: increment(-30),
@@ -355,31 +395,137 @@
         }
     };
 
-    // -------------------- لوحة الأدمن --------------------
-    window.adminRecharge = async () => {
-        const wid = document.getElementById('targetWallet').value.trim();
-        const amt = parseInt(document.getElementById('amountToAdd').value);
-        if (!wid || isNaN(amt) || amt <= 0) return showToast('بيانات غير صحيحة', true);
+    // -------------------- لوحة تحكم الأدمن --------------------
+    function initAdminTabs() {
+        const tabs = document.querySelectorAll('.admin-tab');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+                document.getElementById(`tab-${tab.dataset.tab}`).classList.remove('hidden');
+            });
+        });
+    }
 
-        const q = query(collection(db, "users"), where("walletID", "==", wid));
-        const snap = await getDocs(q);
-        if (snap.empty) return showToast('المحفظة غير موجودة', true);
+    document.getElementById('addProductForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = document.getElementById('prodName').value.trim();
+        const price = parseInt(document.getElementById('prodPrice').value);
+        const points = parseInt(document.getElementById('prodPoints').value);
+        if (!name || isNaN(price) || isNaN(points)) return showToast('البيانات غير صحيحة', true);
+        try {
+            await addDoc(collection(db, "products"), {
+                name,
+                price,
+                givePoints: points
+            });
+            showToast('تم إضافة المنتج');
+            document.getElementById('addProductForm').reset();
+        } catch (e) {
+            showToast('فشل: ' + e.message, true);
+        }
+    });
 
-        snap.forEach(async (u) => {
-            await updateDoc(doc(db, "users", u.id), { balance: increment(amt) });
-            // تسجيل الحركة (اختياري)
+    function loadAdminProducts() {
+        onSnapshot(collection(db, "products"), (snap) => {
+            const list = document.getElementById('adminProductsList');
+            list.innerHTML = '';
+            snap.forEach(d => {
+                const p = d.data();
+                list.innerHTML += `
+                <div class="bg-slate-50 p-4 rounded-3xl border text-[10px] mb-2 text-right flex justify-between items-center">
+                    <div>
+                        <b>${p.name}</b> - ${p.price} ج.س - نقاط ${p.givePoints}
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="editProduct('${d.id}', '${p.name}', ${p.price}, ${p.givePoints})" class="text-blue-600"><i class="fas fa-edit"></i></button>
+                        <button onclick="deleteProduct('${d.id}')" class="text-red-600"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>`;
+            });
+        });
+    }
+
+    window.editProduct = (id, name, price, points) => {
+        const newName = prompt('الاسم الجديد', name);
+        if (newName === null) return;
+        const newPrice = parseInt(prompt('السعر الجديد', price));
+        if (isNaN(newPrice)) return;
+        const newPoints = parseInt(prompt('النقاط الجديدة', points));
+        if (isNaN(newPoints)) return;
+        updateDoc(doc(db, "products", id), {
+            name: newName,
+            price: newPrice,
+            givePoints: newPoints
+        }).then(() => showToast('تم التحديث')).catch(e => showToast(e.message, true));
+    };
+
+    window.deleteProduct = async (id) => {
+        if (!confirm('تأكيد الحذف؟')) return;
+        try {
+            await deleteDoc(doc(db, "products", id));
+            showToast('تم الحذف');
+        } catch (e) {
+            showToast(e.message, true);
+        }
+    };
+
+    function loadAdminUsers() {
+        onSnapshot(collection(db, "users"), (snap) => {
+            const list = document.getElementById('adminUsersList');
+            list.innerHTML = '';
+            snap.forEach(d => {
+                const u = d.data();
+                list.innerHTML += `
+                <div class="bg-slate-50 p-4 rounded-3xl border text-[10px] mb-2 text-right">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <img src="${u.img || ''}" class="w-8 h-8 rounded-full border">
+                            <div>
+                                <b>${u.name}</b><br>
+                                <span class="text-slate-500">${u.email}</span>
+                            </div>
+                        </div>
+                        <div class="text-left">
+                            <span class="bg-yellow-100 px-2 py-1 rounded">#${u.walletID}</span>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center mt-3">
+                        <div>
+                            الرصيد: <b>${(u.balance || 0).toLocaleString()}</b> ج.س<br>
+                            النقاط: <b>${u.points || 0}</b>
+                        </div>
+                        <div class="flex gap-2">
+                            <input type="number" id="recharge-${d.id}" placeholder="المبلغ" class="w-20 p-2 rounded-xl border text-[10px]">
+                            <button onclick="adminRechargeUser('${d.id}', '${u.walletID}')" class="bg-red-600 text-white px-4 py-2 rounded-xl text-[10px]">شحن</button>
+                        </div>
+                    </div>
+                </div>`;
+            });
+        });
+    }
+
+    window.adminRechargeUser = async (userId, walletID) => {
+        const amt = parseInt(document.getElementById(`recharge-${userId}`).value);
+        if (isNaN(amt) || amt <= 0) return showToast('أدخل مبلغ صحيح', true);
+        try {
+            await updateDoc(doc(db, "users", userId), { balance: increment(amt) });
             await addDoc(collection(db, "transactions"), {
                 admin: auth.currentUser?.email,
-                targetWallet: wid,
+                targetWallet: walletID,
                 amount: amt,
                 timestamp: serverTimestamp()
             });
-        });
-        showToast('تم شحن الحساب بنجاح ✅');
+            showToast('تم الشحن');
+            document.getElementById(`recharge-${userId}`).value = '';
+        } catch (e) {
+            showToast(e.message, true);
+        }
     };
 
-    function loadAdminTools() {
-        const q = query(collection(db, "orders"), where("status", "==", "قيد الانتظار"), orderBy("timestamp", "desc"));
+    function loadAdminOrders() {
+        const q = query(collection(db, "orders"), orderBy("timestamp", "desc"));
         onSnapshot(q, (snap) => {
             const list = document.getElementById('adminOrdersList');
             list.innerHTML = '';
@@ -387,36 +533,34 @@
                 const o = d.data();
                 list.innerHTML += `
                 <div class="bg-slate-50 p-4 rounded-3xl border text-[10px] mb-2 text-right">
-                    <p>📦 <b>${o.product}</b> لـ 🆔 <b>${o.gameID}</b></p>
-                    <div class="flex gap-2 mt-3">
-                        <button onclick="updateOrder('${d.id}', '${o.uID}', 'مكتمل', ${o.pts || 0})" class="flex-1 bg-green-600 text-white py-2 rounded-xl">تم الشحن</button>
+                    <p><b>${o.product}</b> - ${o.price} ج.س - للاعب ${o.gameID}</p>
+                    <p>العميل: ${o.uName} - هاتف: ${o.phone}</p>
+                    <div class="flex justify-between items-center mt-2">
+                        <span class="font-bold">الحالة:</span>
+                        <select onchange="updateOrderStatus('${d.id}', this.value)" ${(o.status === 'مكتمل' || o.status === 'فشل') ? 'disabled' : ''} class="border p-2 rounded-xl text-[10px]">
+                            <option value="قيد الانتظار" ${o.status === 'قيد الانتظار' ? 'selected' : ''}>قيد الانتظار</option>
+                            <option value="مكتمل" ${o.status === 'مكتمل' ? 'selected' : ''}>مكتمل</option>
+                            <option value="فشل" ${o.status === 'فشل' ? 'selected' : ''}>فشل</option>
+                        </select>
                     </div>
                 </div>`;
             });
         });
     }
 
-    window.updateOrder = async (orderId, userId, status, pointsToAdd) => {
+    window.updateOrderStatus = async (orderId, newStatus) => {
         try {
-            await updateDoc(doc(db, "orders", orderId), { status });
-            if (status === 'مكتمل' && pointsToAdd > 0) {
-                await updateDoc(doc(db, "users", userId), {
-                    points: increment(pointsToAdd)
-                });
-            }
-            showToast('تم تحديث الطلب');
+            await updateDoc(doc(db, "orders", orderId), { status: newStatus });
+            showToast('تم تحديث الحالة');
         } catch (e) {
-            showToast('فشل: ' + e.message, true);
+            showToast(e.message, true);
         }
     };
 
     // -------------------- الواتساب --------------------
     window.toggleWaMenu = () => {
-        const menu = document.getElementById('waAgents');
-        menu.classList.toggle('hidden');
+        document.getElementById('waAgents').classList.toggle('hidden');
     };
-
-    // إغلاق قائمة الواتساب عند النقر خارجها
     document.addEventListener('click', (e) => {
         const waBtn = document.querySelector('.fixed.bottom-6.left-6 button');
         const waMenu = document.getElementById('waAgents');
@@ -424,7 +568,6 @@
             waMenu.classList.add('hidden');
         }
     });
-
     const agents = [
         { n: '249907760989', name: 'محمد فتحي' },
         { n: '249916581517', name: 'محمد التاج' },
@@ -436,8 +579,10 @@
         </button>
     `).join('');
 
-    // ربط دالة redeemPoints بالزر
+    // ربط دالة redeemPoints
     document.getElementById('redeemBtn').addEventListener('click', redeemPoints);
+    // تسجيل الخروج
+    document.getElementById('logout-btn').addEventListener('click', () => signOut(auth));
 </script>
 </body>
 </html>
