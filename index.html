@@ -3,11 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>KhasmShop | الإصدار الأسطوري V12</title>
+    <title>KhasmShop | الإصدار النهائي مع One Tap</title>
     <!-- Tailwind + Font Awesome -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Google One Tap Script -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     
     <style>
         * { font-family: 'Cairo', sans-serif; margin: 0; padding: 0; box-sizing: border-box; }
@@ -31,7 +34,12 @@
             background: white; border-radius: 30px; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1);
             border: 1px solid #e2e8f0; transition: all 0.3s;
         }
-        .glass-card:hover { box-shadow: 0 20px 40px -15px rgba(234,179,8,0.2); }
+        
+        /* شارة الخصم */
+        .discount-badge {
+            background: #ef4444; color: white; padding: 5px 15px; border-radius: 30px;
+            font-size: 14px; font-weight: 900; display: inline-flex; align-items: center; gap: 5px;
+        }
         
         /* شارة النقاط */
         .points-badge {
@@ -40,7 +48,7 @@
             display: inline-flex; align-items: center; gap: 5px;
         }
         
-        /* حالات الطلبات المحسنة */
+        /* حالات الطلبات */
         .order-status {
             padding: 6px 15px; border-radius: 30px; font-size: 12px; font-weight: 900;
             display: inline-flex; align-items: center; gap: 5px; border: none;
@@ -49,27 +57,6 @@
         .status-pending { background: #f59e0b; color: white; }
         .status-failed { background: #ef4444; color: white; }
         .status-processing { background: #3b82f6; color: white; }
-        
-        /* بطاقة الطلب */
-        .order-card {
-            background: white; border-radius: 25px; padding: 20px;
-            border: 1px solid #e2e8f0; margin-bottom: 15px;
-            transition: all 0.3s; position: relative; overflow: hidden;
-        }
-        .order-card::before {
-            content: ''; position: absolute; top: 0; right: 0; width: 5px; height: 100%;
-        }
-        .order-card.completed::before { background: #10b981; }
-        .order-card.pending::before { background: #f59e0b; }
-        .order-card.failed::before { background: #ef4444; }
-        .order-card.processing::before { background: #3b82f6; }
-        
-        /* أزرار الفلترة */
-        .filter-btn {
-            padding: 8px 20px; border-radius: 30px; font-size: 13px; font-weight: 700;
-            background: white; border: 1px solid #e2e8f0; cursor: pointer; transition: all 0.3s;
-        }
-        .filter-btn.active { background: #eab308; color: white; border-color: #eab308; }
         
         /* شاشة التحميل */
         #loading-screen {
@@ -89,7 +76,6 @@
             font-size: 30px; box-shadow: 0 10px 25px rgba(37,211,102,0.3);
             cursor: pointer; transition: all 0.3s;
         }
-        .wa-button:hover { transform: scale(1.1); }
         .wa-menu {
             position: absolute; bottom: 80px; left: 0; background: white;
             border-radius: 30px; padding: 15px; width: 250px; box-shadow: 0 10px 40px rgba(0,0,0,0.2);
@@ -107,6 +93,18 @@
             position: fixed; bottom: 30px; right: 30px; background: #1e293b; color: white;
             padding: 15px 30px; border-radius: 50px; font-weight: bold; z-index: 99999;
             display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        /* تخصيص زر Google One Tap */
+        #googleBtn {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+        #googleBtn > div {
+            width: 100% !important;
+            border-radius: 40px !important;
+            overflow: hidden !important;
         }
     </style>
 </head>
@@ -128,15 +126,18 @@
         <p class="text-slate-800 font-bold">جاري التحميل...</p>
     </div>
 
-    <!-- شاشة تسجيل الدخول -->
+    <!-- شاشة تسجيل الدخول (Google One Tap) -->
     <div id="auth-screen" style="display: flex; position: fixed; inset: 0; background: white; z-index: 10000; align-items: center; justify-content: center;">
         <div class="max-w-md w-full mx-4 p-8 text-center">
             <h1 class="text-5xl font-black text-yellow-500 mb-2">KHASM</h1>
             <p class="text-slate-500 mb-8">أسرع متجر شحن ببجي في السودان</p>
-            <button id="google-login-btn" style="background: white; border: 2px solid #e2e8f0; border-radius: 40px; padding: 16px; font-weight: 900; display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%;">
-                <img src="https://www.google.com/favicon.ico" style="width: 24px;">
-                <span>تسجيل الدخول بـ Google</span>
-            </button>
+            
+            <!-- Google One Tap Button -->
+            <div id="googleBtn"></div>
+            
+            <p class="text-slate-400 text-sm mt-6">
+                بالدخول أنت توافق على الشروط والأحكام
+            </p>
         </div>
     </div>
 
@@ -190,14 +191,44 @@
             <div id="adminArea" style="display: none; margin-bottom: 30px;">
                 <div class="glass-card" style="padding: 25px; border-top: 8px solid #ef4444;">
                     
-                    <!-- زر الصيانة -->
-                    <div style="margin-bottom: 20px; display: flex; gap: 10px;">
-                        <button id="maintenance-btn" style="flex: 1; background: #eab308; color: white; padding: 15px; border-radius: 20px; font-weight: 900; border: none;">
-                            <i class="fas fa-tools ml-2"></i> تفعيل وضع الصيانة
+                    <!-- أزرار الصيانة -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;">
+                        <button id="maintenance-on-btn" style="background: #ef4444; color: white; padding: 15px; border-radius: 20px; font-weight: 900; border: none;">
+                            <i class="fas fa-tools ml-2"></i> تفعيل الصيانة
                         </button>
-                        <button id="maintenance-off-btn" style="flex: 1; background: #64748b; color: white; padding: 15px; border-radius: 20px; font-weight: 900; border: none; display: none;">
+                        <button id="maintenance-off-btn" style="background: #10b981; color: white; padding: 15px; border-radius: 20px; font-weight: 900; border: none;">
                             <i class="fas fa-check ml-2"></i> إيقاف الصيانة
                         </button>
+                    </div>
+                    
+                    <!-- نظام الخصم -->
+                    <div style="background: #f1f5f9; padding: 20px; border-radius: 25px; margin-bottom: 20px;">
+                        <h3 style="font-size: 18px; font-weight: 900; margin-bottom: 15px;">🏷️ نظام الخصم</h3>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="number" id="discountPercent" placeholder="نسبة الخصم %" min="0" max="100" style="flex: 1; padding: 15px; border-radius: 20px; border: 1px solid #e2e8f0;">
+                            <button id="applyDiscountBtn" style="background: #eab308; color: white; padding: 15px 25px; border-radius: 20px; font-weight: 900; border: none;">
+                                تفعيل
+                            </button>
+                            <button id="removeDiscountBtn" style="background: #ef4444; color: white; padding: 15px 25px; border-radius: 20px; font-weight: 900; border: none;">
+                                إلغاء
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- إحصائيات سريعة -->
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px;">
+                        <div style="background: #f8fafc; padding: 15px; border-radius: 20px; text-align: center;">
+                            <p style="font-size: 24px; font-weight: 900; color: #eab308;" id="totalUsers">0</p>
+                            <p style="font-size: 12px; color: #64748b;">مستخدم</p>
+                        </div>
+                        <div style="background: #f8fafc; padding: 15px; border-radius: 20px; text-align: center;">
+                            <p style="font-size: 24px; font-weight: 900; color: #eab308;" id="totalOrders">0</p>
+                            <p style="font-size: 12px; color: #64748b;">طلب</p>
+                        </div>
+                        <div style="background: #f8fafc; padding: 15px; border-radius: 20px; text-align: center;">
+                            <p style="font-size: 24px; font-weight: 900; color: #eab308;" id="totalRevenue">0</p>
+                            <p style="font-size: 12px; color: #64748b;">إيرادات</p>
+                        </div>
                     </div>
                     
                     <!-- تبويبات الإدارة -->
@@ -211,9 +242,9 @@
                     <div id="tab-products" class="tab-content">
                         <h3 style="font-size: 18px; font-weight: 900; margin-bottom: 15px;">➕ إضافة منتج جديد</h3>
                         <form id="addProductForm">
-                            <input type="text" id="prodName" placeholder="اسم المنتج" style="width: 100%; padding: 15px; border-radius: 20px; border: 1px solid #e2e8f0; margin-bottom: 10px;">
-                            <input type="number" id="prodPrice" placeholder="السعر (ج.س)" style="width: 100%; padding: 15px; border-radius: 20px; border: 1px solid #e2e8f0; margin-bottom: 10px;">
-                            <input type="number" id="prodPoints" placeholder="النقاط الممنوحة" style="width: 100%; padding: 15px; border-radius: 20px; border: 1px solid #e2e8f0; margin-bottom: 10px;">
+                            <input type="text" id="prodName" placeholder="اسم المنتج" style="width: 100%; padding: 15px; border-radius: 20px; border: 1px solid #e2e8f0; margin-bottom: 10px;" required>
+                            <input type="number" id="prodPrice" placeholder="السعر (ج.س)" style="width: 100%; padding: 15px; border-radius: 20px; border: 1px solid #e2e8f0; margin-bottom: 10px;" required>
+                            <input type="number" id="prodPoints" placeholder="النقاط الممنوحة" style="width: 100%; padding: 15px; border-radius: 20px; border: 1px solid #e2e8f0; margin-bottom: 10px;" required>
                             <button type="submit" style="width: 100%; background: #eab308; color: white; padding: 15px; border-radius: 20px; font-weight: 900; border: none;">إضافة منتج</button>
                         </form>
                         <div id="adminProductsList" style="margin-top: 20px;"></div>
@@ -234,50 +265,26 @@
 
             <!-- المنتجات -->
             <div style="margin-bottom: 30px;">
-                <h2 style="font-size: 24px; font-weight: 900; color: #1e293b; margin-bottom: 20px;">🔥 بطاقات شدات ببجي</h2>
-                <div id="productGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px;"></div>
-            </div>
-
-            <!-- طلبات المستخدم المتطورة -->
-            <div class="glass-card" style="padding: 25px; margin-bottom: 30px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h2 style="font-size: 24px; font-weight: 900; color: #1e293b;">
-                        <i class="fas fa-box-open text-yellow-500 ml-2"></i> طلباتي
-                    </h2>
-                    
-                    <!-- إحصائيات سريعة -->
-                    <div style="display: flex; gap: 15px;">
-                        <div style="text-align: center;">
-                            <span style="font-size: 20px; font-weight: 900; color: #eab308;" id="userTotalOrders">0</span>
-                            <span style="font-size: 12px; color: #64748b; display: block;">إجمالي</span>
-                        </div>
-                        <div style="text-align: center;">
-                            <span style="font-size: 20px; font-weight: 900; color: #10b981;" id="userCompletedOrders">0</span>
-                            <span style="font-size: 12px; color: #64748b; display: block;">مكتمل</span>
-                        </div>
-                        <div style="text-align: center;">
-                            <span style="font-size: 20px; font-weight: 900; color: #eab308;" id="userTotalPoints">0</span>
-                            <span style="font-size: 12px; color: #64748b; display: block;">نقاط</span>
-                        </div>
+                    <h2 style="font-size: 24px; font-weight: 900; color: #1e293b;">🔥 بطاقات شدات ببجي</h2>
+                    <div id="discountBanner" style="display: none; background: #ef4444; color: white; padding: 8px 20px; border-radius: 30px; font-weight: 900;">
+                        خصم <span id="currentDiscount">0</span>% لفترة محدودة!
                     </div>
                 </div>
+                <div id="productGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;"></div>
+            </div>
 
-                <!-- فلترة -->
-                <div style="display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 10px;">
-                    <button class="filter-btn active" onclick="filterOrders('all')">الكل</button>
-                    <button class="filter-btn" onclick="filterOrders('pending')">⏳ قيد الانتظار</button>
-                    <button class="filter-btn" onclick="filterOrders('processing')">🔄 قيد التنفيذ</button>
-                    <button class="filter-btn" onclick="filterOrders('completed')">✅ مكتمل</button>
-                    <button class="filter-btn" onclick="filterOrders('failed')">❌ فشل</button>
-                </div>
-
-                <!-- قائمة الطلبات -->
-                <div id="userOrdersList" style="max-height: 500px; overflow-y: auto;"></div>
+            <!-- طلبات المستخدم -->
+            <div class="glass-card" style="padding: 25px;">
+                <h2 style="font-size: 24px; font-weight: 900; color: #1e293b; margin-bottom: 20px;">
+                    <i class="fas fa-box-open text-yellow-500 ml-2"></i> طلباتي
+                </h2>
+                <div id="userOrdersList"></div>
             </div>
         </div>
     </div>
 
-    <!-- زر الواتساب المتطور -->
+    <!-- زر الواتساب -->
     <div class="wa-float">
         <div class="wa-menu" id="waMenu">
             <div class="wa-item" onclick="window.open('https://wa.me/249907760989', '_blank')">
@@ -327,27 +334,12 @@
                 waMenu.classList.remove('show');
             }
         });
-
-        // فلترة الطلبات
-        window.filterOrders = function(status) {
-            // تحديث الأزرار
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            // تطبيق الفلتر على العناصر
-            const orders = document.querySelectorAll('.order-card');
-            orders.forEach(order => {
-                if (status === 'all') order.style.display = 'block';
-                else if (order.classList.contains(status)) order.style.display = 'block';
-                else order.style.display = 'none';
-            });
-        };
     </script>
-
-    <!-- Firebase -->
+    <!-- Firebase و Google One Tap -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, query, where, onSnapshot, orderBy, addDoc, updateDoc, increment, serverTimestamp, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, query, where, onSnapshot, orderBy, addDoc, updateDoc, increment, serverTimestamp, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyC0jzecEwKgHpxHpTi8Y-_bwwfzVdtgf3E",
@@ -362,14 +354,60 @@
         const db = getFirestore(app);
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
-        provider.setCustomParameters({ prompt: 'select_account' });
+        
+        // إعدادات Google One Tap
+        provider.setCustomParameters({
+            prompt: 'select_account'
+        });
 
-        // قائمة الأدمن (مع محمد التاج)
         const ADMINS = ["mhmdfthu98@gmail.com", "muhammedaltaj111@gmail.com", "mohnadyasir43@gmail.com"];
         let userData = null;
+        let currentDiscount = 0;
         let maintenanceMode = false;
+        let products = [];
 
-        // دوال مساعدة
+        // ==================== Google One Tap ====================
+        window.onload = function() {
+            google.accounts.id.initialize({
+                client_id: "238182001615-xxxxxxxxxxxx.apps.googleusercontent.com", // ضع Client ID الصحيح
+                callback: handleCredentialResponse,
+                auto_select: true,
+                context: 'signin'
+            });
+            
+            google.accounts.id.renderButton(
+                document.getElementById("googleBtn"),
+                { 
+                    theme: "outline", 
+                    size: "large", 
+                    width: 400,
+                    text: "continue_with",
+                    shape: "pill"
+                }
+            );
+            
+            google.accounts.id.prompt();
+        };
+
+        function handleCredentialResponse(response) {
+            document.getElementById('loading-screen').style.display = 'flex';
+            
+            // تحويل الـ credential إلى Firebase
+            const credential = GoogleAuthProvider.credential(response.credential);
+            
+            import("https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js")
+                .then(({ signInWithCredential }) => {
+                    return signInWithCredential(auth, credential);
+                })
+                .then((result) => {
+                    showToast(`مرحباً ${result.user.displayName}`);
+                })
+                .catch((error) => {
+                    document.getElementById('loading-screen').style.display = 'none';
+                    showToast(error.message, true);
+                });
+        }
+
         function showToast(msg, isError = false) {
             const toast = document.getElementById('toast');
             toast.textContent = msg;
@@ -380,34 +418,41 @@
 
         // التحقق من وضع الصيانة
         async function checkMaintenance() {
-            const maintenanceRef = doc(db, "settings", "maintenance");
-            const maintenanceSnap = await getDoc(maintenanceRef);
-            maintenanceMode = maintenanceSnap.exists() ? maintenanceSnap.data().enabled : false;
-            
-            const user = auth.currentUser;
-            if (maintenanceMode && (!user || !ADMINS.includes(user.email))) {
-                document.getElementById('maintenance-screen').style.display = 'flex';
-                document.getElementById('main-app').style.display = 'none';
-            } else {
-                document.getElementById('maintenance-screen').style.display = 'none';
+            try {
+                const maintenanceRef = doc(db, "settings", "maintenance");
+                const maintenanceSnap = await getDoc(maintenanceRef);
+                maintenanceMode = maintenanceSnap.exists() ? maintenanceSnap.data().enabled : false;
+                
+                // التحقق من الخصم
+                const discountRef = doc(db, "settings", "discount");
+                const discountSnap = await getDoc(discountRef);
+                if (discountSnap.exists()) {
+                    currentDiscount = discountSnap.data().percentage || 0;
+                    if (currentDiscount > 0) {
+                        document.getElementById('discountBanner').style.display = 'inline-block';
+                        document.getElementById('currentDiscount').innerText = currentDiscount;
+                    } else {
+                        document.getElementById('discountBanner').style.display = 'none';
+                    }
+                }
+                
+                const user = auth.currentUser;
+                if (maintenanceMode && (!user || !ADMINS.includes(user.email))) {
+                    document.getElementById('maintenance-screen').style.display = 'flex';
+                    document.getElementById('main-app').style.display = 'none';
+                } else {
+                    document.getElementById('maintenance-screen').style.display = 'none';
+                }
+            } catch (error) {
+                console.error("خطأ في التحقق من الصيانة:", error);
             }
         }
-
-        // تسجيل الدخول
-        document.getElementById('google-login-btn').onclick = async () => {
-            document.getElementById('loading-screen').style.display = 'flex';
-            try {
-                await signInWithPopup(auth, provider);
-            } catch (error) {
-                document.getElementById('loading-screen').style.display = 'none';
-                showToast(error.message, true);
-            }
-        };
 
         // تسجيل الخروج
         document.getElementById('logout-btn').onclick = async () => {
             await signOut(auth);
-            showToast('تم تسجيل الخروج');
+            // إعادة تحميل الصفحة لمسح الجلسة
+            window.location.reload();
         };
 
         // حالة المصادقة
@@ -415,31 +460,44 @@
             await checkMaintenance();
             
             if (user) {
-                const userRef = doc(db, "users", user.uid);
-                const userSnap = await getDoc(userRef);
-                
-                if (!userSnap.exists()) {
-                    await setDoc(userRef, {
-                        name: user.displayName,
-                        email: user.email,
-                        img: user.photoURL,
-                        walletID: Math.floor(100000 + Math.random() * 900000).toString(),
-                        balance: 100,
-                        points: 0,
-                        lastLogin: serverTimestamp()
-                    });
-                } else {
-                    await updateDoc(userRef, { lastLogin: serverTimestamp() });
-                }
+                try {
+                    const userRef = doc(db, "users", user.uid);
+                    const userSnap = await getDoc(userRef);
+                    
+                    if (!userSnap.exists()) {
+                        await setDoc(userRef, {
+                            name: user.displayName,
+                            email: user.email,
+                            img: user.photoURL,
+                            walletID: Math.floor(100000 + Math.random() * 900000).toString(),
+                            balance: 100,
+                            points: 0,
+                            lastLogin: serverTimestamp()
+                        });
+                        showToast('✅ مرحباً بك! تم إنشاء حسابك مع 100 ج.س هدية');
+                    } else {
+                        await updateDoc(userRef, { lastLogin: serverTimestamp() });
+                    }
 
-                document.getElementById('loading-screen').style.display = 'none';
-                document.getElementById('auth-screen').style.display = 'none';
-                document.getElementById('main-app').style.display = 'block';
-                
-                startListening(user.uid);
+                    document.getElementById('loading-screen').style.display = 'none';
+                    document.getElementById('auth-screen').style.display = 'none';
+                    document.getElementById('main-app').style.display = 'block';
+                    
+                    startListening(user.uid);
+                    
+                } catch (error) {
+                    document.getElementById('loading-screen').style.display = 'none';
+                    showToast('حدث خطأ في تحميل البيانات', true);
+                }
             } else {
                 document.getElementById('auth-screen').style.display = 'flex';
                 document.getElementById('main-app').style.display = 'none';
+                document.getElementById('loading-screen').style.display = 'none';
+                
+                // إعادة تفعيل One Tap
+                setTimeout(() => {
+                    google.accounts.id.prompt();
+                }, 1000);
             }
         });
 
@@ -469,20 +527,40 @@
                 }
             });
 
-            // المنتجات مع عرض النقاط
+            // المنتجات مع الخصم
             onSnapshot(collection(db, "products"), (snap) => {
+                products = [];
                 const grid = document.getElementById('productGrid');
                 grid.innerHTML = '';
+                
                 snap.forEach(doc => {
                     const p = doc.data();
+                    products.push({ id: doc.id, ...p });
+                    
+                    const finalPrice = currentDiscount > 0 
+                        ? Math.round(p.price * (1 - currentDiscount / 100))
+                        : p.price;
+                    
                     grid.innerHTML += `
-                        <div class="product-card" style="background: white; border-radius: 30px; padding: 25px 20px; border: 1px solid #e2e8f0; position: relative;">
+                        <div style="background: white; border-radius: 30px; padding: 25px 20px; border: 1px solid #e2e8f0; position: relative;">
                             <div class="points-badge" style="position: absolute; top: 15px; left: 15px;">
                                 <i class="fas fa-star ml-1"></i> ${p.givePoints} نقطة
                             </div>
+                            ${currentDiscount > 0 ? `
+                                <div class="discount-badge" style="position: absolute; top: 15px; right: 15px;">
+                                    <i class="fas fa-tag ml-1"></i> خصم ${currentDiscount}%
+                                </div>
+                            ` : ''}
                             <p style="font-size: 20px; font-weight: 900; color: #1e293b; margin-top: 30px;">${p.name}</p>
-                            <p style="font-size: 28px; font-weight: 900; color: #eab308; margin: 15px 0;">${p.price} <span style="font-size: 14px;">ج.س</span></p>
-                            <button onclick="buyNow('${p.name}', ${p.price}, ${p.givePoints})" style="width: 100%; background: #0f172a; color: white; padding: 15px; border-radius: 20px; font-weight: 900; border: none;">
+                            <div style="margin: 15px 0; text-align: center;">
+                                ${currentDiscount > 0 ? `
+                                    <span class="old-price">${p.price} ج.س</span>
+                                    <span class="new-price">${finalPrice} ج.س</span>
+                                ` : `
+                                    <span style="font-size: 28px; font-weight: 900; color: #eab308;">${p.price} <span style="font-size: 14px;">ج.س</span></span>
+                                `}
+                            </div>
+                            <button onclick="buyNow('${p.name}', ${p.price}, ${p.givePoints}, ${finalPrice})" style="width: 100%; background: #0f172a; color: white; padding: 15px; border-radius: 20px; font-weight: 900; border: none;">
                                 <i class="fas fa-bolt ml-2"></i> اشترى الآن
                             </button>
                         </div>
@@ -490,14 +568,10 @@
                 });
             });
 
-            // طلبات المستخدم المتطورة
+            // طلبات المستخدم
             const q = query(collection(db, "orders"), where("uID", "==", uid), orderBy("timestamp", "desc"));
             onSnapshot(q, (snap) => {
                 const list = document.getElementById('userOrdersList');
-                let totalOrders = 0;
-                let completedOrders = 0;
-                let totalPoints = 0;
-                
                 list.innerHTML = '';
                 
                 if (snap.empty) {
@@ -507,85 +581,79 @@
                 
                 snap.forEach(doc => {
                     const o = doc.data();
-                    totalOrders++;
-                    if (o.status === 'مكتمل') {
-                        completedOrders++;
-                        totalPoints += o.pts || 0;
-                    }
-                    
                     const date = o.timestamp ? new Date(o.timestamp.toDate()).toLocaleDateString('ar-EG') : '';
-                    const statusClass = o.status === 'مكتمل' ? 'completed' : 
-                                       o.status === 'فشل' ? 'failed' : 
-                                       o.status === 'قيد التنفيذ' ? 'processing' : 'pending';
-                    
-                    const statusText = o.status === 'مكتمل' ? '✅ مكتمل' :
-                                      o.status === 'فشل' ? '❌ فشل' :
-                                      o.status === 'قيد التنفيذ' ? '🔄 قيد التنفيذ' : '⏳ قيد الانتظار';
+                    const statusClass = o.status === 'مكتمل' ? 'status-completed' : 
+                                       o.status === 'فشل' ? 'status-failed' : 
+                                       o.status === 'قيد التنفيذ' ? 'status-processing' : 'status-pending';
                     
                     list.innerHTML += `
-                        <div class="order-card ${statusClass}">
-                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
-                                <div>
-                                    <p style="font-size: 16px; font-weight: 900; color: #1e293b;">${o.product} ${o.quantity ? 'x' + o.quantity : ''}</p>
-                                    <p style="font-size: 13px; color: #64748b;">رقم الطلب: ${doc.id.slice(0,8)}</p>
-                                </div>
-                                <span class="order-status status-${statusClass}">${statusText}</span>
+                        <div class="order-card">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                <p style="font-weight: 900;">${o.product} ${o.quantity ? 'x' + o.quantity : ''}</p>
+                                <span class="order-status ${statusClass}">${o.status}</span>
                             </div>
-                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 10px; padding: 10px; background: #f8fafc; border-radius: 20px;">
-                                <div>
-                                    <p style="font-size: 11px; color: #64748b;">Player ID</p>
-                                    <p style="font-weight: 700;">${o.gameID}</p>
-                                </div>
-                                <div>
-                                    <p style="font-size: 11px; color: #64748b;">اسم اللعبة</p>
-                                    <p style="font-weight: 700;">${o.ingameName || 'غير محدد'}</p>
-                                </div>
-                                <div>
-                                    <p style="font-size: 11px; color: #64748b;">الهاتف</p>
-                                    <p style="font-weight: 700;">${o.phone}</p>
-                                </div>
+                            <div style="background: #f8fafc; padding: 10px; border-radius: 15px; margin-bottom: 10px;">
+                                <p style="font-size: 13px;"><span style="color: #64748b;">Player ID:</span> ${o.gameID}</p>
+                                <p style="font-size: 13px;"><span style="color: #64748b;">اسم اللعبة:</span> ${o.ingameName}</p>
                             </div>
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <p style="color: #eab308; font-weight: 900;">⭐ ${o.pts || 0} نقطة</p>
-                                <p style="font-weight: 900;">${o.price} ج.س</p>
-                                <p style="font-size: 12px; color: #94a3b8;">${date}</p>
+                            <div style="display: flex; justify-content: space-between; font-size: 14px;">
+                                <span>💰 ${o.price} ج.س</span>
+                                <span>⭐ ${o.pts} نقطة</span>
+                                <span style="color: #94a3b8;">${date}</span>
                             </div>
                         </div>
                     `;
                 });
-                
-                // تحديث الإحصائيات
-                document.getElementById('userTotalOrders').innerText = totalOrders;
-                document.getElementById('userCompletedOrders').innerText = completedOrders;
-                document.getElementById('userTotalPoints').innerText = totalPoints;
             });
 
             // لوحة الأدمن
             if (ADMINS.includes(auth.currentUser?.email)) {
                 document.getElementById('adminArea').style.display = 'block';
                 
-                // زر الصيانة
-                document.getElementById('maintenance-btn').onclick = async () => {
+                // أزرار الصيانة
+                document.getElementById('maintenance-on-btn').onclick = async () => {
                     await setDoc(doc(db, "settings", "maintenance"), { enabled: true });
-                    showToast('تم تفعيل وضع الصيانة');
+                    showToast('✅ تم تفعيل وضع الصيانة');
                     checkMaintenance();
                 };
+                
                 document.getElementById('maintenance-off-btn').onclick = async () => {
                     await setDoc(doc(db, "settings", "maintenance"), { enabled: false });
-                    showToast('تم إيقاف وضع الصيانة');
+                    showToast('✅ تم إيقاف وضع الصيانة');
                     checkMaintenance();
+                };
+                
+                // نظام الخصم
+                document.getElementById('applyDiscountBtn').onclick = async () => {
+                    const percent = parseInt(document.getElementById('discountPercent').value);
+                    if (isNaN(percent) || percent < 0 || percent > 100) {
+                        showToast('❌ أدخل نسبة صحيحة بين 0 و 100', true);
+                        return;
+                    }
+                    await setDoc(doc(db, "settings", "discount"), { percentage: percent });
+                    currentDiscount = percent;
+                    showToast(`✅ تم تفعيل خصم ${percent}% على جميع المنتجات`);
+                };
+                
+                document.getElementById('removeDiscountBtn').onclick = async () => {
+                    await setDoc(doc(db, "settings", "discount"), { percentage: 0 });
+                    currentDiscount = 0;
+                    document.getElementById('discountBanner').style.display = 'none';
+                    showToast('✅ تم إلغاء الخصم');
                 };
                 
                 loadAdminData();
             }
         }
 
-        // شراء الآن مع بيانات كاملة
-        window.buyNow = async (name, price, points) => {
+        // شراء الآن
+        window.buyNow = async (name, originalPrice, points, finalPrice) => {
             if (!userData) return showToast('سجل الدخول أولاً', true);
-            if (userData.balance < price) return showToast('الرصيد غير كافٍ', true);
             
-            // نموذج إدخال البيانات (نفس الصورة)
+            const priceToPay = finalPrice || originalPrice;
+            
+            if (userData.balance < priceToPay) return showToast('الرصيد غير كافٍ', true);
+            
             const gameID = prompt('أدخل ID اللاعب (Player ID):');
             if (!gameID || !/^\d+$/.test(gameID)) return showToast('ID غير صالح', true);
             
@@ -598,25 +666,25 @@
             const phone = prompt('رقم الهاتف للتواصل:');
             if (!phone || !/^\d+$/.test(phone)) return showToast('رقم الهاتف غير صالح', true);
 
-            if (!confirm(`تأكيد شراء ${name} بقيمة ${price} ج.س؟`)) return;
+            if (!confirm(`تأكيد شراء ${name} بقيمة ${priceToPay} ج.س؟`)) return;
 
             try {
-                // خصم الرصيد
                 await updateDoc(doc(db, "users", auth.currentUser.uid), { 
-                    balance: increment(-price) 
+                    balance: increment(-priceToPay) 
                 });
                 
-                // إضافة الطلب
                 await addDoc(collection(db, "orders"), {
                     uID: auth.currentUser.uid,
                     uName: userData.name,
                     product: name,
-                    price: price,
+                    price: priceToPay,
+                    originalPrice: originalPrice,
                     pts: points,
                     gameID, 
                     ingameName, 
                     realName, 
                     phone,
+                    discount: currentDiscount,
                     status: 'قيد الانتظار',
                     timestamp: serverTimestamp()
                 });
@@ -640,7 +708,20 @@
         };
 
         // دوال الأدمن
-        function loadAdminData() {
+        async function loadAdminData() {
+            // إحصائيات
+            const usersSnap = await getDocs(collection(db, "users"));
+            const ordersSnap = await getDocs(collection(db, "orders"));
+            
+            let totalRevenue = 0;
+            ordersSnap.forEach(doc => {
+                totalRevenue += doc.data().price || 0;
+            });
+            
+            document.getElementById('totalUsers').innerText = usersSnap.size;
+            document.getElementById('totalOrders').innerText = ordersSnap.size;
+            document.getElementById('totalRevenue').innerText = totalRevenue.toLocaleString();
+            
             // المنتجات
             onSnapshot(collection(db, "products"), (snap) => {
                 const list = document.getElementById('adminProductsList');
@@ -661,7 +742,6 @@
                     `;
                 });
             });
-
             // المستخدمين
             onSnapshot(collection(db, "users"), (snap) => {
                 const list = document.getElementById('adminUsersList');
@@ -677,12 +757,12 @@
                                 </div>
                                 <span style="background: #fef3c7; color: #eab308; padding: 5px 15px; border-radius: 30px;">#${u.walletID}</span>
                             </div>
-                            <div style="display: flex; justify-content: space-between;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <span>💰 ${u.balance || 0} ج.س</span>
                                 <span>⭐ ${u.points || 0}</span>
                                 <div>
-                                    <input type="number" id="recharge-${doc.id}" placeholder="المبلغ" style="width: 80px; padding: 5px; border-radius: 10px; border: 1px solid #e2e8f0;">
-                                    <button onclick="rechargeUser('${doc.id}')" style="background: #eab308; color: white; padding: 5px 15px; border-radius: 10px; border: none;">شحن</button>
+                                    <input type="number" id="recharge-${doc.id}" placeholder="المبلغ" style="width: 80px; padding: 8px; border-radius: 10px; border: 1px solid #e2e8f0;">
+                                    <button onclick="rechargeUser('${doc.id}')" style="background: #eab308; color: white; padding: 8px 15px; border-radius: 10px; border: none; margin-right: 5px;">شحن</button>
                                 </div>
                             </div>
                         </div>
@@ -690,7 +770,7 @@
                 });
             });
 
-        // الطلبات
+            // الطلبات
             const q = query(collection(db, "orders"), orderBy("timestamp", "desc"));
             onSnapshot(q, (snap) => {
                 const list = document.getElementById('adminOrdersList');
@@ -700,10 +780,10 @@
                     const date = o.timestamp ? new Date(o.timestamp.toDate()).toLocaleString('ar-EG') : '';
                     list.innerHTML += `
                         <div style="background: #f8fafc; padding: 20px; border-radius: 25px; margin-bottom: 15px;">
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
                                 <div>
                                     <p style="font-weight: 900;">${o.product} ${o.quantity ? 'x'+o.quantity : ''}</p>
-                                    <p style="font-size: 12px;">👤 ${o.uName}</p>
+                                    <p style="font-size: 13px; color: #64748b;">👤 ${o.uName}</p>
                                 </div>
                                 <select onchange="updateOrderStatus('${doc.id}', this.value)" 
                                         style="padding: 8px 15px; border-radius: 30px; border: 2px solid #e2e8f0; font-weight: 700;"
@@ -714,27 +794,17 @@
                                     <option value="فشل" ${o.status === 'فشل' ? 'selected' : ''}>❌ فشل</option>
                                 </select>
                             </div>
-                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 10px;">
-                                <div>
-                                    <p style="font-size: 11px; color: #64748b;">Player ID</p>
-                                    <p style="font-weight: 700;">${o.gameID}</p>
-                                </div>
-                                <div>
-                                    <p style="font-size: 11px; color: #64748b;">اسم اللعبة</p>
-                                    <p style="font-weight: 700;">${o.ingameName || 'غير محدد'}</p>
-                                </div>
-                                <div>
-                                    <p style="font-size: 11px; color: #64748b;">الاسم الحقيقي</p>
-                                    <p style="font-weight: 700;">${o.realName || 'غير محدد'}</p>
-                                </div>
-                                <div>
-                                    <p style="font-size: 11px; color: #64748b;">الهاتف</p>
-                                    <p style="font-weight: 700;">${o.phone}</p>
-                                </div>
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; background: white; padding: 15px; border-radius: 20px; margin-bottom: 10px;">
+                                <div><span style="color: #64748b;">Player ID:</span> ${o.gameID}</div>
+                                <div><span style="color: #64748b;">اسم اللعبة:</span> ${o.ingameName}</div>
+                                <div><span style="color: #64748b;">الاسم الحقيقي:</span> ${o.realName}</div>
+                                <div><span style="color: #64748b;">الهاتف:</span> ${o.phone}</div>
                             </div>
-                            <div style="display: flex; justify-content: space-between; font-size: 12px; color: #64748b;">
-                                <span>${date}</span>
-                                <span style="color: #eab308; font-weight: 900;">⭐ ${o.pts || 0} نقطة</span>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-weight: 900;">💰 ${o.price} ج.س</span>
+                                <span style="color: #eab308;">⭐ ${o.pts} نقطة</span>
+                                ${o.discount ? `<span style="color: #ef4444;">خصم ${o.discount}%</span>` : ''}
+                                <span style="color: #94a3b8; font-size: 12px;">${date}</span>
                             </div>
                         </div>
                     `;
@@ -746,13 +816,13 @@
         window.deleteProduct = async (id) => {
             if (confirm('حذف المنتج؟')) {
                 await deleteDoc(doc(db, "products", id));
-                showToast('تم الحذف');
+                showToast('✅ تم الحذف');
             }
         };
 
         window.rechargeUser = async (userId) => {
             const amount = parseInt(document.getElementById(`recharge-${userId}`).value);
-            if (isNaN(amount) || amount <= 0) return showToast('أدخل مبلغ صحيح', true);
+            if (isNaN(amount) || amount <= 0) return showToast('❌ أدخل مبلغ صحيح', true);
             await updateDoc(doc(db, "users", userId), { balance: increment(amount) });
             showToast('✅ تم الشحن');
             document.getElementById(`recharge-${userId}`).value = '';
@@ -761,7 +831,6 @@
         window.updateOrderStatus = async (orderId, newStatus) => {
             await updateDoc(doc(db, "orders", orderId), { status: newStatus });
             
-            // إذا كانت الحالة مكتمل، نضيف النقاط للمستخدم
             if (newStatus === 'مكتمل') {
                 const orderSnap = await getDoc(doc(db, "orders", orderId));
                 const order = orderSnap.data();
@@ -770,8 +839,20 @@
                 });
             }
             
-            showToast('تم تحديث الحالة');
+            showToast('✅ تم تحديث الحالة');
         };
+
+        // إضافة منتج
+        document.getElementById('addProductForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('prodName').value;
+            const price = parseInt(document.getElementById('prodPrice').value);
+            const points = parseInt(document.getElementById('prodPoints').value);
+            
+            await addDoc(collection(db, "products"), { name, price, givePoints: points });
+            showToast('✅ تمت الإضافة');
+            document.getElementById('addProductForm').reset();
+        });
 
         // تبويبات الأدمن
         document.querySelectorAll('.admin-tab').forEach(tab => {
@@ -786,18 +867,6 @@
                 document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
                 document.getElementById(`tab-${tab.dataset.tab}`).style.display = 'block';
             });
-        });
-
-        // إضافة منتج
-        document.getElementById('addProductForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const name = document.getElementById('prodName').value;
-            const price = parseInt(document.getElementById('prodPrice').value);
-            const points = parseInt(document.getElementById('prodPoints').value);
-            
-            await addDoc(collection(db, "products"), { name, price, givePoints: points });
-            showToast('✅ تمت الإضافة');
-            document.getElementById('addProductForm').reset();
         });
 
         // فحص الصيانة كل دقيقة
