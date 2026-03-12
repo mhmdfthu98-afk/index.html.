@@ -540,23 +540,115 @@
         let notifications = [];
         let unreadCount = 0;
         
-        // ========== Google One Tap ==========
-        window.onload = function() {
-            google.accounts.id.initialize({
-                client_id: "238182001615-pnsma6c6sdlblmh3mre4sb7ce2t743uo.apps.googleusercontent.com",
-                callback: handleCredentialResponse,
-                auto_select: true,
-                context: 'signin'
-            });
-            
-            google.accounts.id.renderButton(
-                document.getElementById("googleBtn"),
-                { theme: "outline", size: "large", width: 400, text: "continue_with", shape: "pill" }
-            );
-            
-            google.accounts.id.prompt();
-        };
+        // ========== Google One Tap وحل مشكلة WebView ==========
+// دالة ذكية لاكتشاف إذا كان المستخدم داخل تطبيق (WebView)
+function isRunningInWebView() {
+    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+    // كشف التطبيقات المضمنة (WebView)
+    return (userAgent.indexOf('wv') > -1 || 
+            userAgent.indexOf('WebView') > -1 || 
+            (userAgent.indexOf('Android') > -1 && userAgent.indexOf('Chrome') === -1) ||
+            /wv|mobi/i.test(navigator.userAgent) && !/chrome|safari/i.test(navigator.userAgent));
+}
+
+// التعامل مع نتيجة الـ Redirect بعد العودة من المتصفح
+getRedirectResult(auth).then((result) => {
+    if (result) {
+        // المستخدم رجع من المتصفح بعد تسجيل الدخول بنجاح
+        console.log("✅ تم تسجيل الدخول عبر Redirect", result.user);
+        document.getElementById('loading-screen').style.display = 'none';
+        showToast(`مرحباً ${result.user.displayName}`);
+    }
+}).catch((error) => {
+    console.error("❌ خطأ في Redirect:", error);
+    document.getElementById('loading-screen').style.display = 'none';
+    showToast("فشل تسجيل الدخول بعد العودة", true);
+});
+
+// وظيفة تسجيل الدخول الذكية
+async function handleSignIn() {
+    document.getElementById('loading-screen').style.display = 'flex';
+    
+    try {
+        if (isRunningInWebView()) {
+            // 🟢 المستخدم داخل تطبيق (WebView) → نستخدم الـ Redirect
+            console.log("📱 WebView detected, using signInWithRedirect");
+            showToast("جاري فتح المتصفح لتسجيل الدخول...");
+            // نعطي المستخدم رسالة قبل التحويل
+            setTimeout(() => signInWithRedirect(auth, provider), 1500);
+        } else {
+            // 🟢 المستخدم في متصفح عادي → نستخدم الـ Popup السريع
+            console.log("💻 Browser detected, using signInWithPopup");
+            const result = await signInWithPopup(auth, provider);
+            document.getElementById('loading-screen').style.display = 'none';
+            showToast(`مرحباً ${result.user.displayName}`);
+        }
+    } catch (error) {
+        document.getElementById('loading-screen').style.display = 'none';
+        console.error("Sign-in error:", error);
         
+        // إذا فشل الـ Popup (مثلاً لو كان محجوباً)، نستخدم الـ Redirect كبديل
+        if (error.code === 'auth/popup-blocked' || error.code === 'auth/popup-closed-by-user') {
+            console.log("Popup failed, falling back to redirect");
+            showToast("جاري فتح المتصفح لتسجيل الدخول...");
+            setTimeout(() => signInWithRedirect(auth, provider), 1500);
+        } else {
+            showToast("فشل تسجيل الدخول: " + error.message, true);
+        }
+    }
+}
+
+// Google One Tap - نستخدمه فقط إذا كان المتصفح يدعمه
+window.onload = function() {
+    // نحاول استخدام One Tap فقط إذا كان المستخدم في متصفح عادي وليس WebView
+    if (!isRunningInWebView() && typeof google !== 'undefined' && google.accounts) {
+        google.accounts.id.initialize({
+            client_id: "238182001615-pnsma6c6sdlblmh3mre4sb7ce2t743uo.apps.googleusercontent.com",
+            callback: handleCredentialResponse,
+            auto_select: true,
+            context: 'signin'
+        });
+        
+        google.accounts.id.renderButton(
+            document.getElementById("googleBtn"),
+            { theme: "outline", size: "large", width: 400, text: "continue_with", shape: "pill" }
+        );
+        
+        google.accounts.id.prompt();
+    } else {
+        // إذا كان في WebView، نخفي One Tap ونستخدم زر عادي
+        console.log("📱 WebView detected, using fallback button");
+        const googleBtn = document.getElementById("googleBtn");
+        if (googleBtn) {
+            googleBtn.innerHTML = `
+                <button onclick="handleSignIn()" style="width:100%; background:white; border:2px solid #e2e8f0; border-radius:40px; padding:16px; font-weight:900; display:flex; align-items:center; justify-content:center; gap:12px;">
+                    <img src="https://www.google.com/favicon.ico" style="width:24px;">
+                    <span>تسجيل الدخول بـ Google</span>
+                </button>
+            `;
+        }
+    }
+};
+
+function handleCredentialResponse(response) {
+    document.getElementById('loading-screen').style.display = 'flex';
+    const credential = GoogleAuthProvider.credential(response.credential);
+    
+    import("https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js")
+        .then(({ signInWithCredential }) => signInWithCredential(auth, credential))
+        .then(result => {
+            document.getElementById('loading-screen').style.display = 'none';
+            showToast(`مرحباً ${result.user.displayName}`);
+        })
+        .catch(error => {
+            document.getElementById('loading-screen').style.display = 'none';
+            showToast(error.message, true);
+        });
+}
+
+// ربط الدالة بزر تسجيل الدخول العادي
+document.getElementById('google-login-btn').addEventListener('click', handleSignIn);
+
         function handleCredentialResponse(response) {
             document.getElementById('loading-screen').style.display = 'flex';
             const credential = GoogleAuthProvider.credential(response.credential);
@@ -1269,4 +1361,5 @@
     </script>
 </body>
 </html>
+
 
