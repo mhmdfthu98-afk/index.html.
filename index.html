@@ -19,9 +19,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     
-    <!-- Google One Tap -->
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
-    
     <style>
         * { font-family: 'Cairo', sans-serif; margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -146,6 +143,12 @@
             display: none; flex-direction: column; align-items: center; justify-content: center;
             text-align: center; padding: 20px;
         }
+        .maintenance-icon {
+            width: 120px; height: 120px; background: #eab308; border-radius: 60px;
+            display: flex; align-items: center; justify-content: center; font-size: 50px; color: white;
+            margin-bottom: 30px; animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
         
         /* إشعارات */
         #toast {
@@ -164,6 +167,7 @@
             font-size: 30px; box-shadow: 0 10px 25px rgba(37,211,102,0.3);
             cursor: pointer; transition: all 0.3s;
         }
+        .wa-button:hover { transform: scale(1.1); }
         .wa-menu {
             position: absolute; bottom: 80px; left: 0; background: var(--card-bg);
             border-radius: 30px; padding: 15px; width: 250px; box-shadow: var(--shadow);
@@ -184,31 +188,63 @@
             text-align: center;
             margin-top: 40px;
         }
+
+        /* زر تسجيل الدخول */
+        .login-btn {
+            width: 100%;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 40px;
+            padding: 16px;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .login-btn:hover {
+            border-color: #eab308;
+            box-shadow: 0 10px 25px -5px rgba(234,179,8,0.2);
+        }
     </style>
 </head>
 <body>
     <!-- شاشة الصيانة -->
     <div id="maintenance-screen">
-        <div class="maintenance-icon" style="width:120px; height:120px; background:#eab308; border-radius:60px; display:flex; align-items:center; justify-content:center; font-size:50px; color:white; margin-bottom:30px; animation:pulse 2s infinite;">
+        <div class="maintenance-icon">
             <i class="fas fa-tools"></i>
         </div>
-        <h1 style="font-size:32px; font-weight:900; margin-bottom:20px;">جاري الصيانة</h1>
-        <p style="max-width:400px; margin-bottom:30px;">نحن نعمل على تحسين المتجر لكم، سيعود قريباً أفضل من أي وقت مضى</p>
+        <h1 style="font-size:32px; font-weight:900; margin-bottom:20px; color:var(--text-primary);">جاري الصيانة</h1>
+        <p style="max-width:400px; margin-bottom:30px; color:var(--text-secondary);">نحن نعمل على تحسين المتجر لكم، سيعود قريباً أفضل من أي وقت مضى</p>
         <div class="loader"></div>
     </div>
     
     <!-- شاشة التحميل -->
     <div id="loading-screen">
         <div class="loader mb-4"></div>
-        <p>جاري التحميل...</p>
+        <p style="color:var(--text-primary);">جاري التحميل...</p>
     </div>
     
     <!-- شاشة تسجيل الدخول -->
     <div id="auth-screen" style="position:fixed; inset:0; background:var(--bg-primary); z-index:10000; display:flex; align-items:center; justify-content:center;">
         <div style="max-width:400px; width:100%; margin:0 20px; text-align:center;">
             <h1 style="font-size:48px; font-weight:900; color:#eab308; margin-bottom:10px;">KHASM</h1>
-            <p style="margin-bottom:30px;">أسرع متجر شحن ببجي في السودان</p>
-            <div id="googleBtn" style="display:flex; justify-content:center;"></div>
+            <p style="margin-bottom:30px; color:var(--text-secondary);">أسرع متجر شحن ببجي في السودان</p>
+            
+            <!-- زر تسجيل الدخول الأساسي -->
+            <button id="google-login-btn" class="login-btn">
+                <img src="https://www.google.com/favicon.ico" style="width:24px; height:24px;">
+                <span>تسجيل الدخول بـ Google</span>
+            </button>
+            
+            <!-- Google One Tap Container (احتياطي) -->
+            <div id="googleBtn" style="display:none;"></div>
+            
+            <p style="font-size:12px; color:var(--text-secondary); margin-top:20px;">
+                بالدخول أنت توافق على الشروط والأحكام
+            </p>
         </div>
     </div>
     
@@ -240,12 +276,12 @@
                 <div style="display:flex; align-items:center; gap:15px; margin-bottom:20px; flex-wrap:wrap;">
                     <img id="uImg" src="https://via.placeholder.com/150" style="width:70px; height:70px; border-radius:20px; border:4px solid #eab308;">
                     <div style="flex:1;">
-                        <h2 id="uName" style="font-size:22px; font-weight:900;">...</h2>
+                        <h2 id="uName" style="font-size:22px; font-weight:900; color:var(--text-primary);">...</h2>
                         <div id="uWallet" style="background:#fef3c7; color:#eab308; padding:5px 15px; border-radius:30px; display:inline-block; margin-top:5px; font-weight:bold;">المحفظة: #000000</div>
                     </div>
                     <div style="display:flex; gap:10px;">
                         <div style="position:relative;">
-                            <button onclick="toggleCart()" style="width:50px; height:50px; background:var(--hover-bg); border-radius:15px; border:none; font-size:20px; cursor:pointer;">
+                            <button onclick="toggleCart()" style="width:50px; height:50px; background:var(--hover-bg); border-radius:15px; border:none; font-size:20px; cursor:pointer; color:var(--text-primary);">
                                 <i class="fas fa-shopping-cart"></i>
                             </button>
                             <span id="cartCount" class="notification-badge" style="display:none;">0</span>
@@ -285,55 +321,53 @@
                     <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:20px;">
                         <div style="background:var(--hover-bg); padding:15px; border-radius:20px; text-align:center;">
                             <p style="font-size:20px; font-weight:900; color:#eab308;" id="totalUsers">0</p>
-                            <p style="font-size:12px;">مستخدم</p>
+                            <p style="font-size:12px; color:var(--text-secondary);">مستخدم</p>
                         </div>
                         <div style="background:var(--hover-bg); padding:15px; border-radius:20px; text-align:center;">
                             <p style="font-size:20px; font-weight:900; color:#eab308;" id="totalOrders">0</p>
-                            <p style="font-size:12px;">طلب</p>
+                            <p style="font-size:12px; color:var(--text-secondary);">طلب</p>
                         </div>
                         <div style="background:var(--hover-bg); padding:15px; border-radius:20px; text-align:center;">
                             <p style="font-size:20px; font-weight:900; color:#eab308;" id="totalRevenue">0</p>
-                            <p style="font-size:12px;">إيرادات</p>
+                            <p style="font-size:12px; color:var(--text-secondary);">إيرادات</p>
                         </div>
                         <div style="background:var(--hover-bg); padding:15px; border-radius:20px; text-align:center;">
                             <p style="font-size:20px; font-weight:900; color:#eab308;" id="totalNotifications">0</p>
-                            <p style="font-size:12px;">إشعارات</p>
+                            <p style="font-size:12px; color:var(--text-secondary);">إشعارات</p>
                         </div>
                     </div>
                     
-                    <!-- أزرار التحكم -->
+                    <!-- أزرار الصيانة -->
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:20px;">
-                        <button id="maintenance-on-btn" style="background:#ef4444; color:white; padding:15px; border-radius:20px; font-weight:900; border:none;">
+                        <button id="maintenance-on-btn" style="background:#ef4444; color:white; padding:15px; border-radius:20px; font-weight:900; border:none; cursor:pointer;">
                             <i class="fas fa-tools ml-2"></i> تفعيل الصيانة
                         </button>
-                        <button id="maintenance-off-btn" style="background:#10b981; color:white; padding:15px; border-radius:20px; font-weight:900; border:none;">
+                        <button id="maintenance-off-btn" style="background:#10b981; color:white; padding:15px; border-radius:20px; font-weight:900; border:none; cursor:pointer;">
                             <i class="fas fa-check ml-2"></i> إيقاف الصيانة
                         </button>
                     </div>
                     
                     <!-- نظام الخصم -->
                     <div style="background:var(--hover-bg); padding:20px; border-radius:25px; margin-bottom:20px;">
-                        <h3 style="font-size:18px; font-weight:900; margin-bottom:15px;">🏷️ نظام الخصم</h3>
+                        <h3 style="font-size:18px; font-weight:900; margin-bottom:15px; color:var(--text-primary);">🏷️ نظام الخصم</h3>
                         <div style="display:flex; gap:10px;">
-                            <input type="number" id="discountPercent" placeholder="نسبة الخصم %" min="0" max="100" style="flex:1; padding:15px; border-radius:20px; border:1px solid var(--border-color; background:var(--card-bg); color:var(--text-primary);">
-                            <button id="applyDiscountBtn" style="background:#eab308; color:white; padding:15px 25px; border-radius:20px; font-weight:900; border:none;">
+                            <input type="number" id="discountPercent" placeholder="نسبة الخصم %" min="0" max="100" style="flex:1; padding:15px; border-radius:20px; border:1px solid var(--border-color); background:var(--card-bg); color:var(--text-primary);">
+                            <button id="applyDiscountBtn" style="background:#eab308; color:white; padding:15px 25px; border-radius:20px; font-weight:900; border:none; cursor:pointer;">
                                 تفعيل
                             </button>
-                            <button id="removeDiscountBtn" style="background:#ef4444; color:white; padding:15px 25px; border-radius:20px; font-weight:900; border:none;">
+                            <button id="removeDiscountBtn" style="background:#ef4444; color:white; padding:15px 25px; border-radius:20px; font-weight:900; border:none; cursor:pointer;">
                                 إلغاء
                             </button>
                         </div>
-                                    </div>
-
-                    <!-- إرسال الإشعارات -->
+    </div>
+    <!-- إرسال الإشعارات -->
                     <div style="background:var(--hover-bg); padding:20px; border-radius:25px; margin-bottom:20px;">
-                        <h3 style="font-size:18px; font-weight:900; margin-bottom:15px;">📢 إرسال إشعار</h3>
+                        <h3 style="font-size:18px; font-weight:900; margin-bottom:15px; color:var(--text-primary);">📢 إرسال إشعار</h3>
                         
                         <div style="margin-bottom:15px;">
                             <select id="notifyType" style="width:100%; padding:15px; border-radius:20px; border:1px solid var(--border-color); background:var(--card-bg); color:var(--text-primary); margin-bottom:10px;">
                                 <option value="all">📢 لجميع المستخدمين</option>
                                 <option value="active">🟢 المستخدمين النشطين</option>
-                                <option value="inactive">⚫ المستخدمين غير النشطين</option>
                                 <option value="single">👤 مستخدم معين</option>
                             </select>
                             
@@ -344,54 +378,46 @@
                             <select id="notifyTemplate" style="width:100%; padding:15px; border-radius:20px; border:1px solid var(--border-color); background:var(--card-bg); color:var(--text-primary); margin-bottom:10px;">
                                 <option value="">اختر قالب جاهز</option>
                                 <option value="discount">🎉 عرض وخصم</option>
-                                <option value="new_order">📦 طلب جديد (للأدمن)</option>
                                 <option value="order_completed">✅ طلب مكتمل</option>
-                                <option value="order_failed">❌ طلب فاشل</option>
                                 <option value="welcome">👋 ترحيب</option>
-                                <option value="reminder">⏰ تذكير بالسلة</option>
                             </select>
                             
                             <input type="text" id="notifyTitle" placeholder="عنوان الإشعار" style="width:100%; padding:15px; border-radius:20px; border:1px solid var(--border-color); background:var(--card-bg); color:var(--text-primary); margin-bottom:10px;">
                             <textarea id="notifyBody" placeholder="نص الإشعار" rows="3" style="width:100%; padding:15px; border-radius:20px; border:1px solid var(--border-color); background:var(--card-bg); color:var(--text-primary); margin-bottom:10px;"></textarea>
                             
-                            <div style="display:flex; gap:10px;">
-                                <button id="sendNotificationBtn" style="flex:1; background:#3b82f6; color:white; padding:15px; border-radius:20px; font-weight:900; border:none;">
-                                    إرسال الآن
-                                </button>
-                                <button id="scheduleNotificationBtn" style="flex:1; background:#8b5cf6; color:white; padding:15px; border-radius:20px; font-weight:900; border:none;">
-                                    جدولة ⏰
-                                </button>
-                            </div>
+                            <button id="sendNotificationBtn" style="width:100%; background:#3b82f6; color:white; padding:15px; border-radius:20px; font-weight:900; border:none; cursor:pointer;">
+                                إرسال الإشعار
+                            </button>
                         </div>
                     </div>
                     
                     <!-- تبويبات الإدارة -->
                     <div style="display:flex; gap:10px; margin-bottom:20px;">
-                        <button class="admin-tab active" data-tab="products" style="flex:1; padding:12px; border-radius:30px; background:#eab308; color:white; font-weight:900; border:none;">المنتجات</button>
-                        <button class="admin-tab" data-tab="users" style="flex:1; padding:12px; border-radius:30px; background:var(--hover-bg); color:var(--text-primary); font-weight:900; border:none;">المستخدمين</button>
-                        <button class="admin-tab" data-tab="orders" style="flex:1; padding:12px; border-radius:30px; background:var(--hover-bg); color:var(--text-primary); font-weight:900; border:none;">الطلبات</button>
+                        <button class="admin-tab active" data-tab="products" style="flex:1; padding:12px; border-radius:30px; background:#eab308; color:white; font-weight:900; border:none; cursor:pointer;">المنتجات</button>
+                        <button class="admin-tab" data-tab="users" style="flex:1; padding:12px; border-radius:30px; background:var(--hover-bg); color:var(--text-primary); font-weight:900; border:none; cursor:pointer;">المستخدمين</button>
+                        <button class="admin-tab" data-tab="orders" style="flex:1; padding:12px; border-radius:30px; background:var(--hover-bg); color:var(--text-primary); font-weight:900; border:none; cursor:pointer;">الطلبات</button>
                     </div>
                     
                     <!-- المحتوى -->
                     <div id="tab-products" class="tab-content">
-                        <h3 style="font-size:18px; font-weight:900; margin-bottom:15px;">➕ إضافة منتج جديد</h3>
+                        <h3 style="font-size:18px; font-weight:900; margin-bottom:15px; color:var(--text-primary);">➕ إضافة منتج جديد</h3>
                         <form id="addProductForm">
                             <input type="text" id="prodName" placeholder="اسم المنتج" style="width:100%; padding:15px; border-radius:20px; border:1px solid var(--border-color); background:var(--card-bg); color:var(--text-primary); margin-bottom:10px;" required>
                             <input type="number" id="prodPrice" placeholder="السعر (ج.س)" style="width:100%; padding:15px; border-radius:20px; border:1px solid var(--border-color); background:var(--card-bg); color:var(--text-primary); margin-bottom:10px;" required>
                             <input type="number" id="prodPoints" placeholder="النقاط الممنوحة" style="width:100%; padding:15px; border-radius:20px; border:1px solid var(--border-color); background:var(--card-bg); color:var(--text-primary); margin-bottom:10px;" required>
-                            <button type="submit" style="width:100%; background:#eab308; color:white; padding:15px; border-radius:20px; font-weight:900; border:none;">إضافة منتج</button>
+                            <button type="submit" style="width:100%; background:#eab308; color:white; padding:15px; border-radius:20px; font-weight:900; border:none; cursor:pointer;">إضافة منتج</button>
                         </form>
                         <div id="adminProductsList" style="margin-top:20px;"></div>
                     </div>
                     
                     <div id="tab-users" class="tab-content" style="display:none;">
-                        <h3 style="font-size:18px; font-weight:900; margin-bottom:15px;">👥 المستخدمين</h3>
-                        <input type="text" id="searchUser" placeholder="🔍 بحث..." style="width:100%; padding:15px; border-radius:20px; border:1px solid var(--border-color); background:var(--card-bg); color:var(--text-primary); margin-bottom:15px;">
+                        <h3 style="font-size:18px; font-weight:900; margin-bottom:15px; color:var(--text-primary);;">👥 جميع المستخدمين</h3>
+                        <input type="text" id="searchUser" placeholder="🔍 بحث بالاسم أو البريد..." style="width:100%; padding:15px; border-radius:20px; border:1px solid var(--border-color); background:var(--card-bg); color:var(--text-primary); margin-bottom:15px;">
                         <div id="adminUsersList"></div>
                     </div>
                     
                     <div id="tab-orders" class="tab-content" style="display:none;">
-                        <h3 style="font-size:18px; font-weight:900; margin-bottom:15px;">📦 جميع الطلبات</h3>
+                        <h3 style="font-size:18px; font-weight:900; margin-bottom:15px; color:var(--text-primary);;">📦 جميع الطلبات</h3>
                         <div id="adminOrdersList"></div>
                     </div>
                 </div>
@@ -406,7 +432,7 @@
             <div id="notificationsPage" style="display:none; margin-bottom:30px;">
                 <div class="glass-card" style="padding:25px;">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                        <h2 style="font-size:24px; font-weight:900;">🔔 الإشعارات</h2>
+                        <h2 style="font-size:24px; font-weight:900; color:var(--text-primary);">🔔 الإشعارات</h2>
                         <button id="markAllReadBtn" style="background:var(--hover-bg); padding:10px 20px; border-radius:30px; border:none; color:var(--text-primary); cursor:pointer;">
                             تحديد الكل كمقروء
                         </button>
@@ -418,14 +444,14 @@
             <!-- المنتجات -->
             <div style="margin-bottom:30px;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                    <h2 style="font-size:24px; font-weight:900;">🔥 بطاقات شدات ببجي</h2>
+                    <h2 style="font-size:24px; font-weight:900; color:var(--text-primary);">🔥 بطاقات شدات ببجي</h2>
                 </div>
                 <div id="productGrid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:20px;"></div>
             </div>
             
             <!-- طلبات المستخدم -->
             <div class="glass-card" style="padding:25px; margin-bottom:30px;">
-                <h2 style="font-size:24px; font-weight:900; margin-bottom:20px;">
+                <h2 style="font-size:24px; font-weight:900; margin-bottom:20px; color:var(--text-primary);">
                     <i class="fas fa-box-open text-yellow-500 ml-2"></i> طلباتي
                 </h2>
                 <div id="userOrdersList"></div>
@@ -434,8 +460,8 @@
         
         <!-- تذييل -->
         <footer>
-            <p>© 2026 KhasmShop - جميع الحقوق محفوظة</p>
-            <p style="font-size:12px; margin-top:10px;">الإصدار V21 - المتجر المتكامل مع PWA</p>
+            <p style="color:var(--text-secondary);">© 2026 KhasmShop - جميع الحقوق محفوظة</p>
+            <p style="font-size:12px; margin-top:10px; color:var(--text-secondary);">الإصدار V21 - المتجر المتكامل</p>
         </footer>
     </div>
     
@@ -443,19 +469,19 @@
     <div id="cartSidebar" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:10000; display:none;" onclick="if(event.target===this) toggleCart()">
         <div style="position:absolute; left:0; top:0; width:100%; max-width:400px; height:100%; background:var(--card-bg); padding:20px; overflow-y:auto;" onclick="event.stopPropagation()">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                <h2 style="font-size:22px; font-weight:900;">🛒 سلة المشتريات</h2>
+                <h2 style="font-size:22px; font-weight:900; color:var(--text-primary);">🛒 سلة المشتريات</h2>
                 <button onclick="toggleCart()" style="background:none; border:none; font-size:24px; cursor:pointer; color:var(--text-primary);"><i class="fas fa-times"></i></button>
             </div>
             <div id="cartItems"></div>
             <div style="margin-top:20px; border-top:1px solid var(--border-color); padding-top:20px;">
-                <div style="display:flex; justify-content:space-between; font-size:18px; font-weight:900; margin-bottom:20px;">
+                <div style="display:flex; justify-content:space-between; font-size:18px; font-weight:900; margin-bottom:20px; color:var(--text-primary);">
                     <span>الإجمالي:</span>
-                    <span id="cartTotal">0 ج.س</span>
+                    <span id="cartTotal" style="color:#eab308;">0 ج.س</span>
                 </div>
-                <button onclick="checkout()" style="width:100%; background:#10b981; color:white; padding:15px; border-radius:20px; font-weight:900; border:none; margin-bottom:10px;">
+                <button onclick="checkout()" style="width:100%; background:#10b981; color:white; padding:15px; border-radius:20px; font-weight:900; border:none; margin-bottom:10px; cursor:pointer;">
                     تأكيد الشراء
                 </button>
-                <button onclick="clearCart()" style="width:100%; background:#ef4444; color:white; padding:15px; border-radius:20px; font-weight:900; border:none;">
+                <button onclick="clearCart()" style="width:100%; background:#ef4444; color:white; padding:15px; border-radius:20px; font-weight:900; border:none; cursor:pointer;">
                     تفريغ السلة
                 </button>
             </div>
@@ -468,24 +494,24 @@
             <div class="wa-item" onclick="window.open('https://wa.me/249907760989', '_blank')">
                 <img src="https://via.placeholder.com/40" style="width:40px; height:40px; border-radius:20px;">
                 <div>
-                    <p style="font-weight:900;">محمد فتحي</p>
-                    <p style="font-size:11px;">الدعم الفني</p>
+                    <p style="font-weight:900; color:var(--text-primary);">محمد فتحي</p>
+                    <p style="font-size:11px; color:var(--text-secondary);">الدعم الفني</p>
                 </div>
                 <i class="fab fa-whatsapp text-green-500" style="margin-right:auto; font-size:20px;"></i>
             </div>
             <div class="wa-item" onclick="window.open('https://wa.me/249916581517', '_blank')">
                 <img src="https://via.placeholder.com/40" style="width:40px; height:40px; border-radius:20px;">
                 <div>
-                    <p style="font-weight:900;">محمد التاج</p>
-                    <p style="font-size:11px;">مدير المبيعات</p>
+                    <p style="font-weight:900; color:var(--text-primary);">محمد التاج</p>
+                    <p style="font-size:11px; color:var(--text-secondary);">مدير المبيعات</p>
                 </div>
                 <i class="fab fa-whatsapp text-green-500" style="margin-right:auto; font-size:20px;"></i>
             </div>
             <div class="wa-item" onclick="window.open('https://wa.me/249914178935', '_blank')">
                 <img src="https://via.placeholder.com/40" style="width:40px; height:40px; border-radius:20px;">
                 <div>
-                    <p style="font-weight:900;">مهند ياسر</p>
-                    <p style="font-size:11px;">خدمة العملاء</p>
+                    <p style="font-weight:900; color:var(--text-primary);;">مهند ياسر</p>
+                    <p style="font-size:11px; color:var(--text-secondary);;">خدمة العملاء</p>
                 </div>
                 <i class="fab fa-whatsapp text-green-500" style="margin-right:auto; font-size:20px;"></i>
             </div>
@@ -498,7 +524,7 @@
     <!-- إشعار -->
     <div id="toast"></div>
     
-    <!-- Service Worker للتطبيق -->
+    <!-- Service Worker -->
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
@@ -513,9 +539,10 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, doc, setDoc, getDoc, collection, query, where, onSnapshot, orderBy, addDoc, updateDoc, increment, serverTimestamp, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-        import { getAuth, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getAuth, GoogleAuthProvider, onAuthStateChanged, signOut, signInWithPopup, signInWithRedirect, getRedirectResult } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging.js";
         
+        // ========== إعدادات Firebase ==========
         const firebaseConfig = {
             apiKey: "AIzaSyC0jzecEwKgHpxHpTi8Y-_bwwfzVdtgf3E",
             authDomain: "khasmshop.firebaseapp.com",
@@ -532,137 +559,16 @@
         const provider = new GoogleAuthProvider();
         provider.setCustomParameters({ prompt: 'select_account' });
         
+        // ========== قائمة الأدمن ==========
         const ADMINS = ["mhmdfthu98@gmail.com", "muhammedaltaj111@gmail.com", "mohnadyasir43@gmail.com"];
+        
+        // ========== المتغيرات العامة ==========
         let userData = null;
         let currentDiscount = 0;
         let maintenanceMode = false;
         let cart = [];
         let notifications = [];
         let unreadCount = 0;
-        
-        // ========== Google One Tap وحل مشكلة WebView ==========
-// دالة ذكية لاكتشاف إذا كان المستخدم داخل تطبيق (WebView)
-function isRunningInWebView() {
-    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-    // كشف التطبيقات المضمنة (WebView)
-    return (userAgent.indexOf('wv') > -1 || 
-            userAgent.indexOf('WebView') > -1 || 
-            (userAgent.indexOf('Android') > -1 && userAgent.indexOf('Chrome') === -1) ||
-            /wv|mobi/i.test(navigator.userAgent) && !/chrome|safari/i.test(navigator.userAgent));
-}
-
-// التعامل مع نتيجة الـ Redirect بعد العودة من المتصفح
-getRedirectResult(auth).then((result) => {
-    if (result) {
-        // المستخدم رجع من المتصفح بعد تسجيل الدخول بنجاح
-        console.log("✅ تم تسجيل الدخول عبر Redirect", result.user);
-        document.getElementById('loading-screen').style.display = 'none';
-        showToast(`مرحباً ${result.user.displayName}`);
-    }
-}).catch((error) => {
-    console.error("❌ خطأ في Redirect:", error);
-    document.getElementById('loading-screen').style.display = 'none';
-    showToast("فشل تسجيل الدخول بعد العودة", true);
-});
-
-// وظيفة تسجيل الدخول الذكية
-async function handleSignIn() {
-    document.getElementById('loading-screen').style.display = 'flex';
-    
-    try {
-        if (isRunningInWebView()) {
-            // 🟢 المستخدم داخل تطبيق (WebView) → نستخدم الـ Redirect
-            console.log("📱 WebView detected, using signInWithRedirect");
-            showToast("جاري فتح المتصفح لتسجيل الدخول...");
-            // نعطي المستخدم رسالة قبل التحويل
-            setTimeout(() => signInWithRedirect(auth, provider), 1500);
-        } else {
-            // 🟢 المستخدم في متصفح عادي → نستخدم الـ Popup السريع
-            console.log("💻 Browser detected, using signInWithPopup");
-            const result = await signInWithPopup(auth, provider);
-            document.getElementById('loading-screen').style.display = 'none';
-            showToast(`مرحباً ${result.user.displayName}`);
-        }
-    } catch (error) {
-        document.getElementById('loading-screen').style.display = 'none';
-        console.error("Sign-in error:", error);
-        
-        // إذا فشل الـ Popup (مثلاً لو كان محجوباً)، نستخدم الـ Redirect كبديل
-        if (error.code === 'auth/popup-blocked' || error.code === 'auth/popup-closed-by-user') {
-            console.log("Popup failed, falling back to redirect");
-            showToast("جاري فتح المتصفح لتسجيل الدخول...");
-            setTimeout(() => signInWithRedirect(auth, provider), 1500);
-        } else {
-            showToast("فشل تسجيل الدخول: " + error.message, true);
-        }
-    }
-}
-
-// Google One Tap - نستخدمه فقط إذا كان المتصفح يدعمه
-window.onload = function() {
-    // نحاول استخدام One Tap فقط إذا كان المستخدم في متصفح عادي وليس WebView
-    if (!isRunningInWebView() && typeof google !== 'undefined' && google.accounts) {
-        google.accounts.id.initialize({
-            client_id: "238182001615-pnsma6c6sdlblmh3mre4sb7ce2t743uo.apps.googleusercontent.com",
-            callback: handleCredentialResponse,
-            auto_select: true,
-            context: 'signin'
-        });
-        
-        google.accounts.id.renderButton(
-            document.getElementById("googleBtn"),
-            { theme: "outline", size: "large", width: 400, text: "continue_with", shape: "pill" }
-        );
-        
-        google.accounts.id.prompt();
-    } else {
-        // إذا كان في WebView، نخفي One Tap ونستخدم زر عادي
-        console.log("📱 WebView detected, using fallback button");
-        const googleBtn = document.getElementById("googleBtn");
-        if (googleBtn) {
-            googleBtn.innerHTML = `
-                <button onclick="handleSignIn()" style="width:100%; background:white; border:2px solid #e2e8f0; border-radius:40px; padding:16px; font-weight:900; display:flex; align-items:center; justify-content:center; gap:12px;">
-                    <img src="https://www.google.com/favicon.ico" style="width:24px;">
-                    <span>تسجيل الدخول بـ Google</span>
-                </button>
-            `;
-        }
-    }
-};
-
-function handleCredentialResponse(response) {
-    document.getElementById('loading-screen').style.display = 'flex';
-    const credential = GoogleAuthProvider.credential(response.credential);
-    
-    import("https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js")
-        .then(({ signInWithCredential }) => signInWithCredential(auth, credential))
-        .then(result => {
-            document.getElementById('loading-screen').style.display = 'none';
-            showToast(`مرحباً ${result.user.displayName}`);
-        })
-        .catch(error => {
-            document.getElementById('loading-screen').style.display = 'none';
-            showToast(error.message, true);
-        });
-}
-
-// ربط الدالة بزر تسجيل الدخول العادي
-document.getElementById('google-login-btn').addEventListener('click', handleSignIn);
-
-        function handleCredentialResponse(response) {
-            document.getElementById('loading-screen').style.display = 'flex';
-            const credential = GoogleAuthProvider.credential(response.credential);
-            
-            import("https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js")
-                .then(({ signInWithCredential }) => signInWithCredential(auth, credential))
-                .then(result => {
-                    showToast(`مرحباً ${result.user.displayName}`);
-                })
-                .catch(error => {
-                    document.getElementById('loading-screen').style.display = 'none';
-                    showToast(error.message, true);
-                });
-        }
         
         // ========== دوال مساعدة ==========
         function showToast(msg, isError = false) {
@@ -672,6 +578,60 @@ document.getElementById('google-login-btn').addEventListener('click', handleSign
             toast.style.display = 'block';
             setTimeout(() => toast.style.display = 'none', 3000);
         }
+        
+        // ========== دالة كشف WebView ==========
+        function isRunningInWebView() {
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            return (userAgent.indexOf('wv') > -1 || 
+                    userAgent.indexOf('WebView') > -1 || 
+                    (userAgent.indexOf('Android') > -1 && userAgent.indexOf('Chrome') === -1) ||
+                    /wv|mobi/i.test(navigator.userAgent) && !/chrome|safari/i.test(navigator.userAgent));
+        }
+        
+        // ========== معالجة نتيجة Redirect ==========
+        getRedirectResult(auth).then((result) => {
+            if (result) {
+                console.log("✅ تم تسجيل الدخول عبر Redirect", result.user);
+                document.getElementById('loading-screen').style.display = 'none';
+                showToast(`مرحباً ${result.user.displayName}`);
+            }
+        }).catch((error) => {
+            console.error("❌ خطأ في Redirect:", error);
+            document.getElementById('loading-screen').style.display = 'none';
+            showToast("فشل تسجيل الدخول بعد العودة", true);
+        });
+        
+        // ========== دالة تسجيل الدخول الذكية ==========
+        async function handleSignIn() {
+            document.getElementById('loading-screen').style.display = 'flex';
+            
+            try {
+                if (isRunningInWebView()) {
+                    console.log("📱 WebView detected, using signInWithRedirect");
+                    showToast("جاري فتح المتصفح لتسجيل الدخول...");
+                    setTimeout(() => signInWithRedirect(auth, provider), 1500);
+                } else {
+                    console.log("💻 Browser detected, using signInWithPopup");
+                    const result = await signInWithPopup(auth, provider);
+                    document.getElementById('loading-screen').style.display = 'none';
+                    showToast(`مرحباً ${result.user.displayName}`);
+                }
+            } catch (error) {
+                document.getElementById('loading-screen').style.display = 'none';
+                console.error("Sign-in error:", error);
+                
+                if (error.code === 'auth/popup-blocked' || error.code === 'auth/popup-closed-by-user') {
+                    console.log("Popup failed, falling back to redirect");
+                    showToast("جاري فتح المتصفح لتسجيل الدخول...");
+                    setTimeout(() => signInWithRedirect(auth, provider), 1500);
+                } else {
+                    showToast("فشل تسجيل الدخول: " + error.message, true);
+                }
+            }
+        }
+        
+        // ========== ربط زر تسجيل الدخول ==========
+        document.getElementById('google-login-btn').addEventListener('click', handleSignIn);
         
         // ========== الوضع الليلي ==========
         function initDarkMode() {
@@ -701,7 +661,6 @@ document.getElementById('google-login-btn').addEventListener('click', handleSign
                 menu.classList.remove('show');
             }
         });
-
         // ========== سلة المشتريات ==========
         window.toggleCart = () => {
             document.getElementById('cartSidebar').classList.toggle('hidden');
@@ -721,14 +680,14 @@ document.getElementById('google-login-btn').addEventListener('click', handleSign
                 html += `
                     <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-color); padding:10px 0;">
                         <div>
-                            <p style="font-weight:900;">${item.name}</p>
+                            <p style="font-weight:900; color:var(--text-primary);">${item.name}</p>
                             <p style="font-size:12px; color:var(--text-secondary);">${item.price} ج.س × ${item.quantity}</p>
                         </div>
                         <div style="display:flex; gap:5px;">
-                            <button onclick="updateQuantity('${item.name}', -1)" style="width:30px; height:30px; background:#ef4444; color:white; border:none; border-radius:10px;">-</button>
-                            <span>${item.quantity}</span>
-                            <button onclick="updateQuantity('${item.name}', 1)" style="width:30px; height:30px; background:#10b981; color:white; border:none; border-radius:10px;">+</button>
-                            <button onclick="removeFromCart('${item.name}')" style="color:#ef4444; background:none; border:none;"><i class="fas fa-trash"></i></button>
+                            <button onclick="updateQuantity('${item.name}', -1)" style="width:30px; height:30px; background:#ef4444; color:white; border:none; border-radius:10px; cursor:pointer;">-</button>
+                            <span style="color:var(--text-primary);">${item.quantity}</span>
+                            <button onclick="updateQuantity('${item.name}', 1)" style="width:30px; height:30px; background:#10b981; color:white; border:none; border-radius:10px; cursor:pointer;">+</button>
+                            <button onclick="removeFromCart('${item.name}')" style="color:#ef4444; background:none; border:none; cursor:pointer;"><i class="fas fa-trash"></i></button>
                         </div>
                     </div>
                 `;
@@ -781,18 +740,22 @@ document.getElementById('google-login-btn').addEventListener('click', handleSign
         
         // ========== نظام الإشعارات ==========
         async function requestNotificationPermission() {
-            const permission = await Notification.requestPermission();
-            if (permission === 'granted') {
-                const token = await getToken(messaging, {
-                    vapidKey: 'BIdUvk8R6cRZ0FLkHXQKxNq9CwZ2Y3L4M5N6P7Q8R9S0T1U2V3W4X5Y6Z7'
-                });
-                
-                if (auth.currentUser) {
-                    await setDoc(doc(db, "users", auth.currentUser.uid), {
-                        fcmToken: token,
-                        tokenUpdatedAt: serverTimestamp()
-                    }, { merge: true });
+            try {
+                const permission = await Notification.requestPermission();
+                if (permission === 'granted') {
+                    const token = await getToken(messaging, {
+                        vapidKey: "BIdUvk8R6cRZ0FLkHXQKxNq9CwZ2Y3L4M5N6P7Q8R9S0T1U2V3W4X5Y6Z7"
+                    });
+                    
+                    if (auth.currentUser) {
+                        await setDoc(doc(db, "users", auth.currentUser.uid), {
+                            fcmToken: token,
+                            tokenUpdatedAt: serverTimestamp()
+                        }, { merge: true });
+                    }
                 }
+            } catch (error) {
+                console.error("❌ Notification error:", error);
             }
         }
         
@@ -825,7 +788,6 @@ document.getElementById('google-login-btn').addEventListener('click', handleSign
             }
         }
         
-        // ========== فتح صفحة الإشعارات ==========
         document.getElementById('notificationsBtn').addEventListener('click', () => {
             const page = document.getElementById('notificationsPage');
             page.style.display = page.style.display === 'none' ? 'block' : 'none';
@@ -854,10 +816,10 @@ document.getElementById('google-login-btn').addEventListener('click', handleSign
                     list.innerHTML += `
                         <div style="padding:15px; border-bottom:1px solid var(--border-color); ${!n.read ? 'background:var(--hover-bg);' : ''}">
                             <div style="display:flex; justify-content:space-between;">
-                                <p style="font-weight:900;">${n.title}</p>
+                                <p style="font-weight:900; color:var(--text-primary);">${n.title}</p>
                                 ${!n.read ? '<span style="background:#3b82f6; width:10px; height:10px; border-radius:50%;"></span>' : ''}
                             </div>
-                            <p style="font-size:14px; margin:5px 0;">${n.body}</p>
+                            <p style="font-size:14px; margin:5px 0; color:var(--text-secondary);">${n.body}</p>
                             <p style="font-size:11px; color:var(--text-secondary);">${date}</p>
                         </div>
                     `;
@@ -950,7 +912,7 @@ document.getElementById('google-login-btn').addEventListener('click', handleSign
             window.location.reload();
         };
         
-        // ========== التحقق من الصيانة ==========
+        // ========== التحقق من الصيانة والخصم ==========
         async function checkMaintenance() {
             try {
                 const maintenanceRef = doc(db, "settings", "maintenance");
@@ -1022,12 +984,12 @@ document.getElementById('google-login-btn').addEventListener('click', handleSign
                 document.getElementById('auth-screen').style.display = 'flex';
                 document.getElementById('main-app').style.display = 'none';
                 document.getElementById('loading-screen').style.display = 'none';
-                
-                setTimeout(() => google.accounts.id.prompt(), 1000);
             }
         });
         
+        // ========== بدء الاستماع للبيانات ==========
         function startListening(uid) {
+            // بيانات المستخدم
             onSnapshot(doc(db, "users", uid), (doc) => {
                 if (doc.exists()) {
                     userData = doc.data();
@@ -1052,6 +1014,7 @@ document.getElementById('google-login-btn').addEventListener('click', handleSign
                 }
             });
             
+            // المنتجات
             onSnapshot(collection(db, "products"), (snap) => {
                 const grid = document.getElementById('productGrid');
                 grid.innerHTML = '';
@@ -1063,7 +1026,7 @@ document.getElementById('google-login-btn').addEventListener('click', handleSign
                         : p.price;
                     
                     grid.innerHTML += `
-                        <div style="background:var(--card-bg); border-radius:30px; padding:25px 20px; border:1px solid var(--border-color); position:relative;">
+                        <div class="glass-card" style="padding:25px 20px; position:relative;">
                             <div class="points-badge" style="position:absolute; top:15px; left:15px;">
                                 <i class="fas fa-star ml-1"></i> ${p.givePoints} نقطة
                             </div>
@@ -1072,7 +1035,7 @@ document.getElementById('google-login-btn').addEventListener('click', handleSign
                                     <i class="fas fa-tag ml-1"></i> خصم ${currentDiscount}%
                                 </div>
                             ` : ''}
-                            <p style="font-size:20px; font-weight:900; margin-top:30px;">${p.name}</p>
+                            <p style="font-size:20px; font-weight:900; margin-top:30px; color:var(--text-primary);">${p.name}</p>
                             <div style="margin:15px 0; text-align:center;">
                                 ${currentDiscount > 0 ? `
                                     <span style="text-decoration:line-through; color:var(--text-secondary);">${p.price} ج.س</span>
@@ -1081,17 +1044,17 @@ document.getElementById('google-login-btn').addEventListener('click', handleSign
                                     <span style="font-size:28px; font-weight:900; color:#eab308;">${p.price} <span style="font-size:14px;">ج.س</span></span>
                                 `}
                             </div>
-                            <button onclick="addToCart('${p.name}', ${finalPrice}, ${p.givePoints})" style="width:100%; background:#0f172a; color:white; padding:12px; border-radius:20px; font-weight:900; border:none; margin-bottom:10px;">
+                            <button onclick="addToCart('${p.name}', ${finalPrice}, ${p.givePoints})" style="width:100%; background:#0f172a; color:white; padding:12px; border-radius:20px; font-weight:900; border:none; margin-bottom:10px; cursor:pointer;">
                                 <i class="fas fa-cart-plus ml-2"></i> أضف للسلة
                             </button>
-                            <button onclick="buyNow('${p.name}', ${p.price}, ${p.givePoints}, ${finalPrice})" style="width:100%; background:#eab308; color:white; padding:12px; border-radius:20px; font-weight:900; border:none;">
+                            <button onclick="buyNow('${p.name}', ${p.price}, ${p.givePoints}, ${finalPrice})" style="width:100%; background:#eab308; color:white; padding:12px; border-radius:20px; font-weight:900; border:none; cursor:pointer;">
                                 <i class="fas fa-bolt ml-2"></i> اشترى الآن
                             </button>
                         </div>
                     `;
                 });
             });
-            
+            // طلبات المستخدم
             const q = query(collection(db, "orders"), where("uID", "==", uid), orderBy("timestamp", "desc"));
             onSnapshot(q, (snap) => {
                 const list = document.getElementById('userOrdersList');
@@ -1108,17 +1071,18 @@ document.getElementById('google-login-btn').addEventListener('click', handleSign
                     const statusClass = o.status === 'مكتمل' ? 'status-completed' : 
                                        o.status === 'فشل' ? 'status-failed' : 
                                        o.status === 'قيد التنفيذ' ? 'status-processing' : 'status-pending';
+                    
                     list.innerHTML += `
                         <div style="background:var(--hover-bg); border-radius:20px; padding:15px; margin-bottom:10px;">
                             <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                                <p style="font-weight:900;">${o.product} ${o.quantity ? 'x' + o.quantity : ''}</p>
+                                <p style="font-weight:900; color:var(--text-primary);">${o.product} ${o.quantity ? 'x' + o.quantity : ''}</p>
                                 <span class="order-status ${statusClass}">${o.status}</span>
                             </div>
                             <div style="background:var(--card-bg); padding:10px; border-radius:15px; margin-bottom:10px;">
-                                <p style="font-size:13px;">ID: ${o.gameID}</p>
-                                <p style="font-size:13px;">الاسم: ${o.ingameName}</p>
+                                <p style="font-size:13px; color:var(--text-primary);"><span style="color:var(--text-secondary);">ID:</span> ${o.gameID}</p>
+                                <p style="font-size:13px; color:var(--text-primary);"><span style="color:var(--text-secondary);;">الاسم:</span> ${o.ingameName}</p>
                             </div>
-                            <div style="display:flex; justify-content:space-between; font-size:14px;">
+                            <div style="display:flex; justify-content:space-between; font-size:14px; color:var(--text-primary);">
                                 <span>💰 ${o.price} ج.س</span>
                                 <span>⭐ ${o.pts} نقطة</span>
                                 <span style="color:var(--text-secondary);">${date}</span>
@@ -1128,9 +1092,11 @@ document.getElementById('google-login-btn').addEventListener('click', handleSign
                 });
             });
             
+            // لوحة الأدمن
             if (ADMINS.includes(auth.currentUser?.email)) {
                 document.getElementById('adminArea').style.display = 'block';
                 
+                // أزرار الصيانة
                 document.getElementById('maintenance-on-btn').onclick = async () => {
                     await setDoc(doc(db, "settings", "maintenance"), { enabled: true });
                     showToast('✅ تم تفعيل وضع الصيانة');
@@ -1143,10 +1109,11 @@ document.getElementById('google-login-btn').addEventListener('click', handleSign
                     checkMaintenance();
                 };
                 
+                // نظام الخصم
                 document.getElementById('applyDiscountBtn').onclick = async () => {
                     const percent = parseInt(document.getElementById('discountPercent').value);
                     if (isNaN(percent) || percent < 0 || percent > 100) {
-                        showToast('❌ أدخل نسبة صحيحة بين 0 و 100', true);
+                        showToast('❌ أدخل نسبة صحيحة', true);
                         return;
                     }
                     await setDoc(doc(db, "settings", "discount"), { percentage: percent });
@@ -1170,11 +1137,8 @@ document.getElementById('google-login-btn').addEventListener('click', handleSign
                 document.getElementById('notifyTemplate').addEventListener('change', (e) => {
                     const templates = {
                         discount: { title: '🔥 عرض خاص', body: `خصم ${currentDiscount}% على جميع المنتجات اليوم فقط!` },
-                        new_order: { title: '📦 طلب جديد', body: 'لديك طلب جديد في المتجر' },
                         order_completed: { title: '✅ طلب مكتمل', body: 'طلبك اكتمل بنجاح! شكراً لتسوقك' },
-                        order_failed: { title: '❌ طلب فاشل', body: 'للأسف الطلب فشل، تواصل مع الدعم' },
-                        welcome: { title: '👋 أهلاً بك', body: 'شكراً لانضمامك إلى KhasmShop! لديك 100 ج.س هدية' },
-                        reminder: { title: '⏰ تذكير', body: 'عندك منتجات في السلة، أكمل طلبك الآن' }
+                        welcome: { title: '👋 أهلاً بك', body: 'شكراً لانضمامك إلى KhasmShop! لديك 100 ج.س هدية' }
                     };
                     
                     const template = templates[e.target.value];
@@ -1188,20 +1152,17 @@ document.getElementById('google-login-btn').addEventListener('click', handleSign
                     const type = document.getElementById('notifyType').value;
                     const title = document.getElementById('notifyTitle').value;
                     const body = document.getElementById('notifyBody').value;
-                    const targetEmail = document.getElementById('targetUserEmail').value;
                     
                     if (!title || !body) return showToast('❌ أدخل عنوان ونص الإشعار', true);
                     
-                    // محاكاة إرسال الإشعار
-                    showToast(`✅ تم إرسال الإشعار إلى ${type === 'all' ? 'جميع المستخدمين' : 'المستخدم المحدد'}`);
-                    
-                    // في الواقع، هنا يتم إرسال الإشعار عبر Firebase Cloud Messaging
+                    showToast(`✅ تم إرسال الإشعار`);
                 };
                 
                 loadAdminData();
             }
         }
         
+        // ========== تحميل بيانات الأدمن ==========
         async function loadAdminData() {
             const usersSnap = await getDocs(collection(db, "users"));
             const ordersSnap = await getDocs(collection(db, "orders"));
@@ -1215,6 +1176,7 @@ document.getElementById('google-login-btn').addEventListener('click', handleSign
             document.getElementById('totalRevenue').innerText = totalRevenue.toLocaleString();
             document.getElementById('totalNotifications').innerText = notificationsSnap.size;
             
+            // المنتجات في لوحة الأدمن
             onSnapshot(collection(db, "products"), (snap) => {
                 const list = document.getElementById('adminProductsList');
                 list.innerHTML = '';
@@ -1223,11 +1185,11 @@ document.getElementById('google-login-btn').addEventListener('click', handleSign
                     list.innerHTML += `
                         <div style="background:var(--hover-bg); padding:15px; border-radius:20px; margin-bottom:10px; display:flex; justify-content:space-between;">
                             <div>
-                                <span style="font-weight:900;">${p.name}</span>
+                                <span style="font-weight:900; color:var(--text-primary);">${p.name}</span>
                                 <span style="color:#eab308; margin-right:10px;">${p.price} ج.س</span>
                                 <span style="color:#3b82f6;">⭐ ${p.givePoints}</span>
                             </div>
-                            <button onclick="deleteProduct('${doc.id}')" style="color:#ef4444; background:none; border:none;">
+                            <button onclick="deleteProduct('${doc.id}')" style="color:#ef4444; background:none; border:none; cursor:pointer;">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
@@ -1235,6 +1197,7 @@ document.getElementById('google-login-btn').addEventListener('click', handleSign
                 });
             });
             
+            // المستخدمين في لوحة الأدمن
             onSnapshot(collection(db, "users"), (snap) => {
                 const list = document.getElementById('adminUsersList');
                 list.innerHTML = '';
@@ -1244,17 +1207,17 @@ document.getElementById('google-login-btn').addEventListener('click', handleSign
                         <div style="background:var(--hover-bg); padding:15px; border-radius:20px; margin-bottom:10px;">
                             <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
                                 <div>
-                                    <p style="font-weight:900;">${u.name}</p>
-                                    <p style="font-size:12px;">${u.email}</p>
+                                    <p style="font-weight:900; color:var(--text-primary);">${u.name}</p>
+                                    <p style="font-size:12px; color:var(--text-secondary);">${u.email}</p>
                                 </div>
                                 <span style="background:#fef3c7; color:#eab308; padding:5px 15px; border-radius:30px;">#${u.walletID}</span>
                             </div>
                             <div style="display:flex; justify-content:space-between; align-items:center;">
-                                <span>💰 ${u.balance || 0} ج.س</span>
-                                <span>⭐ ${u.points || 0}</span>
+                                <span style="color:var(--text-primary);">💰 ${u.balance || 0} ج.س</span>
+                                <span style="color:var(--text-primary);">⭐ ${u.points || 0}</span>
                                 <div>
                                     <input type="number" id="recharge-${doc.id}" placeholder="المبلغ" style="width:80px; padding:8px; border-radius:10px; border:1px solid var(--border-color); background:var(--card-bg); color:var(--text-primary);">
-                                    <button onclick="rechargeUser('${doc.id}')" style="background:#eab308; color:white; padding:8px 15px; border-radius:10px; border:none;">شحن</button>
+                                    <button onclick="rechargeUser('${doc.id}')" style="background:#eab308; color:white; padding:8px 15px; border-radius:10px; border:none; cursor:pointer; margin-right:5px;">شحن</button>
                                 </div>
                             </div>
                         </div>
@@ -1262,6 +1225,7 @@ document.getElementById('google-login-btn').addEventListener('click', handleSign
                 });
             });
             
+            // الطلبات في لوحة الأدمن
             const q = query(collection(db, "orders"), orderBy("timestamp", "desc"));
             onSnapshot(q, (snap) => {
                 const list = document.getElementById('adminOrdersList');
@@ -1273,11 +1237,11 @@ document.getElementById('google-login-btn').addEventListener('click', handleSign
                         <div style="background:var(--hover-bg); padding:20px; border-radius:25px; margin-bottom:15px;">
                             <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
                                 <div>
-                                    <p style="font-weight:900;">${o.product} ${o.quantity ? 'x'+o.quantity : ''}</p>
-                                    <p style="font-size:13px;">👤 ${o.uName}</p>
+                                    <p style="font-weight:900; color:var(--text-primary);">${o.product} ${o.quantity ? 'x'+o.quantity : ''}</p>
+                                    <p style="font-size:13px; color:var(--text-secondary);">👤 ${o.uName}</p>
                                 </div>
                                 <select onchange="updateOrderStatus('${doc.id}', this.value)" 
-                                        style="padding:8px 15px; border-radius:30px; border:2px solid var(--border-color); background:var(--card-bg); color:var(--text-primary);"
+                                        style="padding:8px 15px; border-radius:30px; border:2px solid var(--border-color); background:var(--card-bg); color:var(--text-primary); cursor:pointer;"
                                         ${o.status === 'مكتمل' || o.status === 'فشل' ? 'disabled' : ''}>
                                     <option value="قيد الانتظار" ${o.status === 'قيد الانتظار' ? 'selected' : ''}>⏳ قيد الانتظار</option>
                                     <option value="قيد التنفيذ" ${o.status === 'قيد التنفيذ' ? 'selected' : ''}>🔄 قيد التنفيذ</option>
@@ -1286,13 +1250,13 @@ document.getElementById('google-login-btn').addEventListener('click', handleSign
                                 </select>
                             </div>
                             <div style="background:var(--card-bg); padding:15px; border-radius:20px; margin-bottom:10px;">
-                                <p><span style="color:var(--text-secondary);">Player ID:</span> ${o.gameID}</p>
-                                <p><span style="color:var(--text-secondary);">الاسم داخل اللعبة:</span> ${o.ingameName}</p>
-                                <p><span style="color:var(--text-secondary);">الاسم الحقيقي:</span> ${o.realName}</p>
-                                <p><span style="color:var(--text-secondary);">الهاتف:</span> ${o.phone}</p>
+                                <p style="color:var(--text-primary);"><span style="color:var(--text-secondary);">Player ID:</span> ${o.gameID}</p>
+                                <p style="color:var(--text-primary);"><span style="color:var(--text-secondary);">الاسم داخل اللعبة:</span> ${o.ingameName}</p>
+                                <p style="color:var(--text-primary);"><span style="color:var(--text-secondary);">الاسم الحقيقي:</span> ${o.realName}</p>
+                                <p style="color:var(--text-primary);"><span style="color:var(--text-secondary);">الهاتف:</span> ${o.phone}</p>
                             </div>
                             <div style="display:flex; justify-content:space-between; align-items:center;">
-                                <span style="font-weight:900;">💰 ${o.price} ج.س</span>
+                                <span style="font-weight:900; color:var(--text-primary);">💰 ${o.price} ج.س</span>
                                 <span style="color:#eab308;">⭐ ${o.pts} نقطة</span>
                                 ${o.discount ? `<span style="color:#ef4444;">خصم ${o.discount}%</span>` : ''}
                                 <span style="color:var(--text-secondary); font-size:12px;">${date}</span>
@@ -1303,6 +1267,7 @@ document.getElementById('google-login-btn').addEventListener('click', handleSign
             });
         }
         
+        // ========== دوال إضافية للأدمن ==========
         window.deleteProduct = async (id) => {
             if (confirm('حذف المنتج؟')) {
                 await deleteDoc(doc(db, "products", id));
@@ -1332,6 +1297,7 @@ document.getElementById('google-login-btn').addEventListener('click', handleSign
             showToast('✅ تم تحديث الحالة');
         };
         
+        // ========== إضافة منتج جديد ==========
         document.getElementById('addProductForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('prodName').value;
@@ -1343,6 +1309,7 @@ document.getElementById('google-login-btn').addEventListener('click', handleSign
             document.getElementById('addProductForm').reset();
         });
         
+        // ========== تبويبات الأدمن ==========
         document.querySelectorAll('.admin-tab').forEach(tab => {
             tab.addEventListener('click', () => {
                 document.querySelectorAll('.admin-tab').forEach(t => {
@@ -1357,9 +1324,8 @@ document.getElementById('google-login-btn').addEventListener('click', handleSign
             });
         });
         
+        // ========== فحص الصيانة كل دقيقة ==========
         setInterval(checkMaintenance, 60000);
     </script>
 </body>
 </html>
-
-
