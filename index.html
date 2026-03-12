@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>KhasmShop | المتجر المتكامل V21</title>
+    <title>KhasmShop | المتجر المتكامل - تسجيل الدخول عبر كروم</title>
     
     <!-- PWA Tags -->
     <link rel="manifest" href="manifest.json">
@@ -189,22 +189,20 @@
             margin-top: 40px;
         }
 
-        /* زر تسجيل الدخول */
-        .login-btn {
+        /* زر تسجيل الدخول عبر كروم */
+        .chrome-login-btn {
+            display: block;
             width: 100%;
             background: white;
             border: 2px solid #e2e8f0;
             border-radius: 40px;
             padding: 16px;
             font-weight: 900;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            cursor: pointer;
+            text-decoration: none;
+            color: black;
             transition: all 0.3s;
         }
-        .login-btn:hover {
+        .chrome-login-btn:hover {
             border-color: #eab308;
             box-shadow: 0 10px 25px -5px rgba(234,179,8,0.2);
         }
@@ -227,20 +225,19 @@
         <p style="color:var(--text-primary);">جاري التحميل...</p>
     </div>
     
-    <!-- شاشة تسجيل الدخول -->
+    <!-- شاشة تسجيل الدخول - كروم فقط -->
     <div id="auth-screen" style="position:fixed; inset:0; background:var(--bg-primary); z-index:10000; display:flex; align-items:center; justify-content:center;">
         <div style="max-width:400px; width:100%; margin:0 20px; text-align:center;">
             <h1 style="font-size:48px; font-weight:900; color:#eab308; margin-bottom:10px;">KHASM</h1>
             <p style="margin-bottom:30px; color:var(--text-secondary);">أسرع متجر شحن ببجي في السودان</p>
             
-            <!-- زر تسجيل الدخول الأساسي -->
-            <button id="google-login-btn" class="login-btn">
-                <img src="https://www.google.com/favicon.ico" style="width:24px; height:24px;">
-                <span>تسجيل الدخول بـ Google</span>
-            </button>
-            
-            <!-- Google One Tap Container (احتياطي) -->
-            <div id="googleBtn" style="display:none;"></div>
+            <!-- رابط تسجيل الدخول عبر كروم (بيفتح المتصفح الخارجي) -->
+            <a href="https://accounts.google.com/o/oauth2/v2/auth?redirect_uri=https://index-html-ww06.onrender.com/__/auth/handler&response_type=code&client_id=238182001615-pnsma6c6sdlblmh3mre4sb7ce2t743uo.apps.googleusercontent.com&scope=email%20profile&access_type=offline&prompt=select_account" 
+               target="_blank"
+               class="chrome-login-btn">
+                <img src="https://www.google.com/favicon.ico" style="width:24px; height:24px; vertical-align:middle; margin-left:10px;">
+                <span style="vertical-align:middle;">تسجيل الدخول عبر كروم</span>
+            </a>
             
             <p style="font-size:12px; color:var(--text-secondary); margin-top:20px;">
                 بالدخول أنت توافق على الشروط والأحكام
@@ -359,10 +356,10 @@
                                 إلغاء
                             </button>
                         </div>
-    </div>
-    <!-- إرسال الإشعارات -->
+                </div>
+                <!-- إرسال الإشعارات -->
                     <div style="background:var(--hover-bg); padding:20px; border-radius:25px; margin-bottom:20px;">
-                        <h3 style="font-size:18px; font-weight:900; margin-bottom:15px; color:var(--text-primary);">📢 إرسال إشعار</h3>
+                        <h3 style="font-size:18px; font-weight:900; margin-bottom:15px; color:var(--text-primary);;">📢 إرسال إشعار</h3>
                         
                         <div style="margin-bottom:15px;">
                             <select id="notifyType" style="width:100%; padding:15px; border-radius:20px; border:1px solid var(--border-color); background:var(--card-bg); color:var(--text-primary); margin-bottom:10px;">
@@ -400,7 +397,7 @@
                     
                     <!-- المحتوى -->
                     <div id="tab-products" class="tab-content">
-                        <h3 style="font-size:18px; font-weight:900; margin-bottom:15px; color:var(--text-primary);">➕ إضافة منتج جديد</h3>
+                        <h3 style="font-size:18px; font-weight:900; margin-bottom:15px; color:var(--text-primary);;">➕ إضافة منتج جديد</h3>
                         <form id="addProductForm">
                             <input type="text" id="prodName" placeholder="اسم المنتج" style="width:100%; padding:15px; border-radius:20px; border:1px solid var(--border-color); background:var(--card-bg); color:var(--text-primary); margin-bottom:10px;" required>
                             <input type="number" id="prodPrice" placeholder="السعر (ج.س)" style="width:100%; padding:15px; border-radius:20px; border:1px solid var(--border-color); background:var(--card-bg); color:var(--text-primary); margin-bottom:10px;" required>
@@ -444,7 +441,7 @@
             <!-- المنتجات -->
             <div style="margin-bottom:30px;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                    <h2 style="font-size:24px; font-weight:900; color:var(--text-primary);">🔥 بطاقات شدات ببجي</h2>
+                    <h2 style="font-size:24px; font-weight:900; color:var(--text-primary);;">🔥 بطاقات شدات ببجي</h2>
                 </div>
                 <div id="productGrid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:20px;"></div>
             </div>
@@ -460,8 +457,8 @@
         
         <!-- تذييل -->
         <footer>
-            <p style="color:var(--text-secondary);">© 2026 KhasmShop - جميع الحقوق محفوظة</p>
-            <p style="font-size:12px; margin-top:10px; color:var(--text-secondary);">الإصدار V21 - المتجر المتكامل</p>
+            <p style="color:var(--text-secondary);;">© 2026 KhasmShop - جميع الحقوق محفوظة</p>
+            <p style="font-size:12px; margin-top:10px; color:var(--text-secondary);;">الإصدار V22 - تسجيل الدخول عبر كروم</p>
         </footer>
     </div>
     
@@ -539,7 +536,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, doc, setDoc, getDoc, collection, query, where, onSnapshot, orderBy, addDoc, updateDoc, increment, serverTimestamp, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-        import { getAuth, GoogleAuthProvider, onAuthStateChanged, signOut, signInWithPopup, signInWithRedirect, getRedirectResult } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getAuth, GoogleAuthProvider, onAuthStateChanged, signOut, getRedirectResult } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging.js";
         
         // ========== إعدادات Firebase ==========
@@ -579,59 +576,22 @@
             setTimeout(() => toast.style.display = 'none', 3000);
         }
         
-        // ========== دالة كشف WebView ==========
-        function isRunningInWebView() {
-            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-            return (userAgent.indexOf('wv') > -1 || 
-                    userAgent.indexOf('WebView') > -1 || 
-                    (userAgent.indexOf('Android') > -1 && userAgent.indexOf('Chrome') === -1) ||
-                    /wv|mobi/i.test(navigator.userAgent) && !/chrome|safari/i.test(navigator.userAgent));
-        }
-        
-        // ========== معالجة نتيجة Redirect ==========
-        getRedirectResult(auth).then((result) => {
+        // ========== التعامل مع العودة من كروم ==========
+        getRedirectResult(auth).then(async (result) => {
             if (result) {
-                console.log("✅ تم تسجيل الدخول عبر Redirect", result.user);
+                console.log("✅ تم تسجيل الدخول عبر كروم", result.user);
                 document.getElementById('loading-screen').style.display = 'none';
+                document.getElementById('auth-screen').style.display = 'none';
+                document.getElementById('main-app').style.display = 'block';
                 showToast(`مرحباً ${result.user.displayName}`);
+                
+                // بدء تحميل البيانات
+                startListening(result.user.uid);
             }
         }).catch((error) => {
-            console.error("❌ خطأ في Redirect:", error);
+            console.error("❌ خطأ:", error);
             document.getElementById('loading-screen').style.display = 'none';
-            showToast("فشل تسجيل الدخول بعد العودة", true);
         });
-        
-        // ========== دالة تسجيل الدخول الذكية ==========
-        async function handleSignIn() {
-            document.getElementById('loading-screen').style.display = 'flex';
-            
-            try {
-                if (isRunningInWebView()) {
-                    console.log("📱 WebView detected, using signInWithRedirect");
-                    showToast("جاري فتح المتصفح لتسجيل الدخول...");
-                    setTimeout(() => signInWithRedirect(auth, provider), 1500);
-                } else {
-                    console.log("💻 Browser detected, using signInWithPopup");
-                    const result = await signInWithPopup(auth, provider);
-                    document.getElementById('loading-screen').style.display = 'none';
-                    showToast(`مرحباً ${result.user.displayName}`);
-                }
-            } catch (error) {
-                document.getElementById('loading-screen').style.display = 'none';
-                console.error("Sign-in error:", error);
-                
-                if (error.code === 'auth/popup-blocked' || error.code === 'auth/popup-closed-by-user') {
-                    console.log("Popup failed, falling back to redirect");
-                    showToast("جاري فتح المتصفح لتسجيل الدخول...");
-                    setTimeout(() => signInWithRedirect(auth, provider), 1500);
-                } else {
-                    showToast("فشل تسجيل الدخول: " + error.message, true);
-                }
-            }
-        }
-        
-        // ========== ربط زر تسجيل الدخول ==========
-        document.getElementById('google-login-btn').addEventListener('click', handleSignIn);
         
         // ========== الوضع الليلي ==========
         function initDarkMode() {
@@ -1054,7 +1014,7 @@
                     `;
                 });
             });
-            // طلبات المستخدم
+        // طلبات المستخدم
             const q = query(collection(db, "orders"), where("uID", "==", uid), orderBy("timestamp", "desc"));
             onSnapshot(q, (snap) => {
                 const list = document.getElementById('userOrdersList');
