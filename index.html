@@ -2,146 +2,125 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KhasmShop | لوحة التحكم الفاخرة</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>KhasmShop | الإصدار الأسطوري V12</title>
     <!-- Tailwind + Font Awesome -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    
     <style>
         * { font-family: 'Cairo', sans-serif; margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #ffffff; min-height: 100vh; }
+        body { background: #f8fafc; min-height: 100vh; }
+        
+        /* شاشة الصيانة */
+        #maintenance-screen {
+            position: fixed; inset: 0; background: white; z-index: 99999;
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; padding: 20px;
+        }
+        .maintenance-icon {
+            width: 120px; height: 120px; background: #eab308; border-radius: 60px;
+            display: flex; align-items: center; justify-content: center; font-size: 50px; color: white;
+            margin-bottom: 30px; animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
         
         /* تصميم البطاقات */
-        .product-card {
-            background: white;
-            border-radius: 30px;
-            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1);
-            border: 1px solid #f0f0f0;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
+        .glass-card {
+            background: white; border-radius: 30px; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1);
+            border: 1px solid #e2e8f0; transition: all 0.3s;
         }
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px -15px rgba(234, 179, 8, 0.3);
-            border-color: #eab308;
+        .glass-card:hover { box-shadow: 0 20px 40px -15px rgba(234,179,8,0.2); }
+        
+        /* شارة النقاط */
+        .points-badge {
+            background: linear-gradient(135deg, #eab308, #f59e0b); color: white;
+            padding: 5px 15px; border-radius: 30px; font-size: 13px; font-weight: 900;
+            display: inline-flex; align-items: center; gap: 5px;
         }
         
-        /* تقييم النجوم */
-        .stars {
-            color: #eab308;
-            font-size: 14px;
-            margin: 5px 0;
+        /* حالات الطلبات المحسنة */
+        .order-status {
+            padding: 6px 15px; border-radius: 30px; font-size: 12px; font-weight: 900;
+            display: inline-flex; align-items: center; gap: 5px; border: none;
         }
+        .status-completed { background: #10b981; color: white; }
+        .status-pending { background: #f59e0b; color: white; }
+        .status-failed { background: #ef4444; color: white; }
+        .status-processing { background: #3b82f6; color: white; }
         
-        /* شارة المنتج */
-        .product-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: linear-gradient(135deg, #eab308, #ef4444);
-            color: white;
-            padding: 5px 15px;
-            border-radius: 30px;
-            font-size: 12px;
-            font-weight: 900;
-            box-shadow: 0 5px 15px rgba(234, 179, 8, 0.3);
+        /* بطاقة الطلب */
+        .order-card {
+            background: white; border-radius: 25px; padding: 20px;
+            border: 1px solid #e2e8f0; margin-bottom: 15px;
+            transition: all 0.3s; position: relative; overflow: hidden;
         }
-        
-        /* أزرار ثلاثية الأبعاد */
-        .btn-3d {
-            transition: all 0.2s;
-            transform: translateY(0);
-            box-shadow: 0 5px 15px -5px rgba(0,0,0,0.2);
+        .order-card::before {
+            content: ''; position: absolute; top: 0; right: 0; width: 5px; height: 100%;
         }
-        .btn-3d:active { transform: translateY(2px); box-shadow: 0 2px 8px -3px rgba(0,0,0,0.2); }
+        .order-card.completed::before { background: #10b981; }
+        .order-card.pending::before { background: #f59e0b; }
+        .order-card.failed::before { background: #ef4444; }
+        .order-card.processing::before { background: #3b82f6; }
         
-        /* حالة الطلبات المحسنة */
-        .status-select {
-            background: white;
-            border: 2px solid #e2e8f0;
-            border-radius: 20px;
-            padding: 8px 15px;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            outline: none;
-            transition: all 0.3s;
-            width: 100%;
+        /* أزرار الفلترة */
+        .filter-btn {
+            padding: 8px 20px; border-radius: 30px; font-size: 13px; font-weight: 700;
+            background: white; border: 1px solid #e2e8f0; cursor: pointer; transition: all 0.3s;
         }
-        .status-select:hover { border-color: #eab308; }
-        .status-select option { font-weight: 700; padding: 10px; }
-        
-        .status-completed { color: #10b981; background: #d1fae5; border-color: #10b981; }
-        .status-pending { color: #f59e0b; background: #fef3c7; border-color: #f59e0b; }
-        .status-failed { color: #ef4444; background: #fee2e2; border-color: #ef4444; }
+        .filter-btn.active { background: #eab308; color: white; border-color: #eab308; }
         
         /* شاشة التحميل */
         #loading-screen {
             position: fixed; inset: 0; background: white; z-index: 9999;
             display: none; flex-direction: column; align-items: center; justify-content: center;
         }
-        .loader {
-            width: 50px; height: 50px; border: 3px solid #f3f3f3;
-            border-top: 3px solid #eab308; border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
+        .loader { width: 50px; height: 50px; border: 3px solid #e2e8f0; border-top: 3px solid #eab308; border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
-        /* شاشة تسجيل الدخول */
-        #auth-screen {
-            position: fixed; inset: 0; background: white; z-index: 10000;
-            display: flex; align-items: center; justify-content: center;
+        /* زر الواتساب */
+        .wa-float {
+            position: fixed; bottom: 30px; left: 30px; z-index: 1000;
         }
-        
-        /* زر جوجل */
-        .google-btn {
-            background: white; border: 2px solid #e2e8f0; color: #1e293b;
-            border-radius: 40px; padding: 16px; font-weight: 900;
-            display: flex; align-items: center; justify-content: center; gap: 12px;
-            width: 100%; transition: all 0.3s;
+        .wa-button {
+            width: 65px; height: 65px; background: #25D366; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; color: white;
+            font-size: 30px; box-shadow: 0 10px 25px rgba(37,211,102,0.3);
+            cursor: pointer; transition: all 0.3s;
         }
-        .google-btn:hover { border-color: #eab308; box-shadow: 0 10px 25px -5px rgba(234,179,8,0.2); }
-        
-        /* لوحة تحكم المسؤول */
-        .admin-stats {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 30px;
+        .wa-button:hover { transform: scale(1.1); }
+        .wa-menu {
+            position: absolute; bottom: 80px; left: 0; background: white;
+            border-radius: 30px; padding: 15px; width: 250px; box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            display: none; border: 1px solid #e2e8f0;
         }
-        .stat-card {
-            background: #f8fafc; border-radius: 25px; padding: 20px; text-align: center;
-            border: 1px solid #e2e8f0;
+        .wa-menu.show { display: block; }
+        .wa-item {
+            display: flex; align-items: center; gap: 10px; padding: 12px;
+            border-radius: 20px; transition: all 0.3s; cursor: pointer;
         }
-        .stat-value { font-size: 28px; font-weight: 900; color: #eab308; }
-        .stat-label { font-size: 12px; color: #64748b; font-weight: 700; }
-        
-        .admin-menu {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 20px;
-        }
-        .admin-menu-item {
-            background: #f8fafc; border-radius: 25px; padding: 20px; text-align: center;
-            border: 1px solid #e2e8f0; cursor: pointer; transition: all 0.3s;
-        }
-        .admin-menu-item:hover { border-color: #eab308; transform: translateY(-3px); }
-        .admin-menu-item i { font-size: 30px; color: #eab308; margin-bottom: 10px; }
+        .wa-item:hover { background: #f0fdf4; }
         
         /* إشعارات */
         #toast {
-            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-            background: #1e293b; color: white; padding: 12px 30px; border-radius: 50px;
-            font-weight: bold; z-index: 99999; display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: fixed; bottom: 30px; right: 30px; background: #1e293b; color: white;
+            padding: 15px 30px; border-radius: 50px; font-weight: bold; z-index: 99999;
+            display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
-        
-        /* بطاقة المنتج في المتجر */
-        .store-product {
-            background: white; border-radius: 30px; padding: 25px 20px;
-            border: 1px solid #e2e8f0; text-align: center; position: relative;
-        }
-        .price-tag { font-size: 28px; font-weight: 900; color: #eab308; margin: 10px 0; }
-        .review-count { color: #64748b; font-size: 13px; margin-bottom: 15px; }
     </style>
 </head>
 <body>
+
+    <!-- شاشة الصيانة -->
+    <div id="maintenance-screen">
+        <div class="maintenance-icon">
+            <i class="fas fa-tools"></i>
+        </div>
+        <h1 class="text-4xl font-black text-slate-800 mb-4">جاري الصيانة</h1>
+        <p class="text-slate-500 mb-8 max-w-md">نحن نعمل على تحسين المتجر لكم، سيعود قريباً أفضل من أي وقت مضى</p>
+        <div class="loader"></div>
+    </div>
 
     <!-- شاشة التحميل -->
     <div id="loading-screen">
@@ -150,218 +129,224 @@
     </div>
 
     <!-- شاشة تسجيل الدخول -->
-    <div id="auth-screen">
+    <div id="auth-screen" style="display: flex; position: fixed; inset: 0; background: white; z-index: 10000; align-items: center; justify-content: center;">
         <div class="max-w-md w-full mx-4 p-8 text-center">
             <h1 class="text-5xl font-black text-yellow-500 mb-2">KHASM</h1>
-            <p class="text-slate-500 mb-8">تسجيل الدخول بحساب Google</p>
-            <button id="google-login-btn" class="google-btn">
-                <img src="https://www.google.com/favicon.ico" class="w-6">
+            <p class="text-slate-500 mb-8">أسرع متجر شحن ببجي في السودان</p>
+            <button id="google-login-btn" style="background: white; border: 2px solid #e2e8f0; border-radius: 40px; padding: 16px; font-weight: 900; display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%;">
+                <img src="https://www.google.com/favicon.ico" style="width: 24px;">
                 <span>تسجيل الدخول بـ Google</span>
             </button>
         </div>
     </div>
 
     <!-- التطبيق الرئيسي -->
-    <div id="main-app" class="hidden">
+    <div id="main-app" style="display: none;">
         
         <!-- الهيدر -->
-        <div class="bg-gradient-to-r from-yellow-500 to-red-500 p-8 text-center text-white">
-            <h1 class="text-3xl font-black">KHASM SHOP</h1>
-            <p class="text-white/90">بطاقات شدات ببجي موبايل العالمية</p>
+        <div style="background: linear-gradient(135deg, #eab308, #f59e0b); padding: 30px 20px; text-align: center; color: white;">
+            <h1 style="font-size: 32px; font-weight: 900;">KHASM SHOP</h1>
+            <p style="opacity: 0.9;">بطاقات شدات ببجي موبايل العالمية</p>
         </div>
 
-        <div class="max-w-6xl mx-auto px-4 py-8">
+        <div style="max-width: 1200px; margin: 0 auto; padding: 20px;">
             
             <!-- بطاقة المستخدم -->
-            <div class="bg-white rounded-[40px] p-6 shadow-lg border border-slate-100 mb-8">
-                <div class="flex items-center gap-4">
-                    <img id="uImg" class="w-16 h-16 rounded-2xl border-4 border-yellow-500" src="https://via.placeholder.com/150">
-                    <div class="flex-1">
-                        <h2 id="uName" class="font-black text-slate-800 text-xl">...</h2>
-                        <div id="uWallet" class="text-sm text-yellow-600 bg-yellow-50 px-3 py-1 rounded-full inline-block mt-1">المحفظة: #000000</div>
+            <div class="glass-card" style="padding: 25px; margin-bottom: 30px; margin-top: -30px; background: white;">
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                    <img id="uImg" src="https://via.placeholder.com/150" style="width: 70px; height: 70px; border-radius: 20px; border: 4px solid #eab308;">
+                    <div style="flex: 1;">
+                        <h2 id="uName" style="font-size: 22px; font-weight: 900; color: #1e293b;">...</h2>
+                        <div id="uWallet" style="background: #fef3c7; color: #eab308; padding: 5px 15px; border-radius: 30px; display: inline-block; margin-top: 5px; font-weight: bold;">المحفظة: #000000</div>
                     </div>
-                    <div class="flex gap-3">
-                        <div class="relative">
-                            <button onclick="toggleCart()" class="w-12 h-12 bg-slate-100 rounded-xl text-yellow-600 btn-3d">
-                                <i class="fas fa-shopping-cart"></i>
-                            </button>
-                            <span id="cartCount" class="absolute -top-2 -right-2 bg-red-500 text-white w-5 h-5 rounded-full text-xs flex items-center justify-center hidden">0</span>
-                        </div>
-                        <button id="logout-btn" class="w-12 h-12 bg-red-50 text-red-500 rounded-xl btn-3d">
-                            <i class="fas fa-power-off"></i>
-                        </button>
+                    <button id="logout-btn" style="width: 50px; height: 50px; background: #fee2e2; color: #ef4444; border-radius: 15px; border: none; font-size: 20px;">
+                        <i class="fas fa-power-off"></i>
+                    </button>
+                </div>
+                
+                <!-- الرصيد والنقاط -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                    <div style="background: #0f172a; padding: 20px; border-radius: 30px; text-align: center;">
+                        <p style="color: #94a3b8; font-size: 14px; margin-bottom: 5px;">الرصيد</p>
+                        <p style="font-size: 32px; font-weight: 900; color: #eab308;"><span id="uBal">0</span> <span style="font-size: 16px;">ج.س</span></p>
+                    </div>
+                    <div style="background: #2563eb; padding: 20px; border-radius: 30px; text-align: center;">
+                        <p style="color: #bfdbfe; font-size: 14px; margin-bottom: 5px;">النقاط</p>
+                        <p style="font-size: 32px; font-weight: 900; color: white;"><span id="uPoints">0</span> ⭐</p>
                     </div>
                 </div>
                 
-                <div class="grid grid-cols-2 gap-4 mt-6">
-                    <div class="bg-slate-900 p-5 rounded-3xl text-center">
-                        <p class="text-slate-400 text-sm mb-1">الرصيد</p>
-                        <p class="text-3xl font-black text-yellow-500"><span id="uBal">0</span> <span class="text-sm">ريال</span></p>
-                    </div>
-                    <div class="bg-blue-600 p-5 rounded-3xl text-center">
-                        <p class="text-blue-100 text-sm mb-1">النقاط</p>
-                        <p class="text-3xl font-black text-white"><span id="uPoints">0</span> ⭐</p>
-                    </div>
-                </div>
-                
-                <div class="mt-4 bg-indigo-50 p-4 rounded-2xl flex justify-between items-center">
+                <!-- استبدال النقاط -->
+                <div style="background: #eef2ff; padding: 15px; border-radius: 20px; display: flex; justify-content: space-between; align-items: center;">
                     <div>
-                        <p class="font-black text-indigo-700">🎁 هدية 60 شدة مجاناً</p>
-                        <p class="text-xs text-slate-500">استبدل 30 نقطة</p>
+                        <p style="font-weight: 900; color: #4f46e5;">🎁 هدية 60 شدة مجاناً</p>
+                        <p style="font-size: 12px; color: #64748b;">استبدل 30 نقطة</p>
                     </div>
-                    <button id="redeemBtn" class="px-6 py-3 bg-white text-indigo-300 rounded-2xl text-sm font-black border opacity-50 cursor-not-allowed" disabled>استرداد</button>
+                    <button id="redeemBtn" style="padding: 10px 25px; background: white; color: #cbd5e1; border-radius: 20px; border: 1px solid #e2e8f0; font-weight: 900; opacity: 0.5; cursor: not-allowed;" disabled>استرداد</button>
                 </div>
             </div>
 
             <!-- لوحة تحكم المسؤول -->
-            <div id="adminArea" class="hidden mb-8">
-                <div class="bg-white rounded-[40px] p-8 shadow-lg border border-slate-100">
-                    <h2 class="text-2xl font-black text-slate-800 mb-6">لوحة تحكم المسؤول</h2>
+            <div id="adminArea" style="display: none; margin-bottom: 30px;">
+                <div class="glass-card" style="padding: 25px; border-top: 8px solid #ef4444;">
                     
-                    <!-- إحصائيات -->
-                    <div class="admin-stats">
-                        <div class="stat-card">
-                            <div class="stat-value" id="totalRevenue">0</div>
-                            <div class="stat-label">إجمالي الإيرادات</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value" id="totalOrders">0</div>
-                            <div class="stat-label">إجمالي الطلبات</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value" id="pendingOrders">0</div>
-                            <div class="stat-label">طلبات معلقة</div>
-                        </div>
+                    <!-- زر الصيانة -->
+                    <div style="margin-bottom: 20px; display: flex; gap: 10px;">
+                        <button id="maintenance-btn" style="flex: 1; background: #eab308; color: white; padding: 15px; border-radius: 20px; font-weight: 900; border: none;">
+                            <i class="fas fa-tools ml-2"></i> تفعيل وضع الصيانة
+                        </button>
+                        <button id="maintenance-off-btn" style="flex: 1; background: #64748b; color: white; padding: 15px; border-radius: 20px; font-weight: 900; border: none; display: none;">
+                            <i class="fas fa-check ml-2"></i> إيقاف الصيانة
+                        </button>
                     </div>
                     
-                    <!-- قائمة التحكم -->
-                    <div class="admin-menu">
-                        <div class="admin-menu-item" onclick="showTab('users')">
-                            <i class="fas fa-users"></i>
-                            <h3 class="font-bold">إدارة المستخدمين</h3>
-                            <p class="text-xs text-slate-500">عرض وإدارة الحسابات</p>
-                        </div>
-                        <div class="admin-menu-item" onclick="showTab('products')">
-                            <i class="fas fa-box"></i>
-                            <h3 class="font-bold">إدارة المنتجات</h3>
-                            <p class="text-xs text-slate-500">إضافة وتعديل المنتجات</p>
-                        </div>
-                        <div class="admin-menu-item" onclick="showTab('orders')">
-                            <i class="fas fa-truck"></i>
-                            <h3 class="font-bold">إدارة الطلبات</h3>
-                            <p class="text-xs text-slate-500">عرض جميع الطلبات</p>
-                        </div>
-                    </div>
-
                     <!-- تبويبات الإدارة -->
-                    <div id="adminTabs" class="mt-8">
-                        
-                        <!-- المستخدمين -->
-                        <div id="tab-users" class="hidden">
-                            <h3 class="text-lg font-black mb-4">👥 المستخدمين</h3>
-                            <input type="text" id="searchUser" placeholder="🔍 بحث..." class="w-full p-4 rounded-2xl border border-slate-200 mb-4">
-                            <div id="adminUsersList" class="space-y-4 max-h-96 overflow-y-auto"></div>
-                        </div>
-                        
-                        <!-- المنتجات -->
-                        <div id="tab-products" class="hidden">
-                            <h3 class="text-lg font-black mb-4">➕ إضافة منتج</h3>
-                            <form id="addProductForm" class="space-y-4 mb-8">
-                                <input type="text" id="prodName" placeholder="اسم المنتج" class="w-full p-4 rounded-2xl border border-slate-200" required>
-                                <input type="number" id="prodPrice" placeholder="السعر (ريال)" class="w-full p-4 rounded-2xl border border-slate-200" required>
-                                <input type="number" id="prodPoints" placeholder="النقاط الممنوحة" class="w-full p-4 rounded-2xl border border-slate-200" required>
-                                <button type="submit" class="w-full bg-yellow-500 text-white py-4 rounded-2xl font-black btn-3d">إضافة منتج</button>
-                            </form>
-                            <div id="adminProductsList" class="space-y-3"></div>
-                        </div>
-                        
-                        <!-- الطلبات -->
-                        <div id="tab-orders" class="hidden">
-                            <h3 class="text-lg font-black mb-4">📦 جميع الطلبات</h3>
-                            <div id="adminOrdersList" class="space-y-4 max-h-96 overflow-y-auto"></div>
-                        </div>
+                    <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                        <button class="admin-tab active" data-tab="products" style="flex: 1; padding: 12px; border-radius: 30px; background: #eab308; color: white; font-weight: 900; border: none;">المنتجات</button>
+                        <button class="admin-tab" data-tab="users" style="flex: 1; padding: 12px; border-radius: 30px; background: #f1f5f9; color: #64748b; font-weight: 900; border: none;">المستخدمين</button>
+                        <button class="admin-tab" data-tab="orders" style="flex: 1; padding: 12px; border-radius: 30px; background: #f1f5f9; color: #64748b; font-weight: 900; border: none;">الطلبات</button>
+                    </div>
+
+                    <!-- المحتوى -->
+                    <div id="tab-products" class="tab-content">
+                        <h3 style="font-size: 18px; font-weight: 900; margin-bottom: 15px;">➕ إضافة منتج جديد</h3>
+                        <form id="addProductForm">
+                            <input type="text" id="prodName" placeholder="اسم المنتج" style="width: 100%; padding: 15px; border-radius: 20px; border: 1px solid #e2e8f0; margin-bottom: 10px;">
+                            <input type="number" id="prodPrice" placeholder="السعر (ج.س)" style="width: 100%; padding: 15px; border-radius: 20px; border: 1px solid #e2e8f0; margin-bottom: 10px;">
+                            <input type="number" id="prodPoints" placeholder="النقاط الممنوحة" style="width: 100%; padding: 15px; border-radius: 20px; border: 1px solid #e2e8f0; margin-bottom: 10px;">
+                            <button type="submit" style="width: 100%; background: #eab308; color: white; padding: 15px; border-radius: 20px; font-weight: 900; border: none;">إضافة منتج</button>
+                        </form>
+                        <div id="adminProductsList" style="margin-top: 20px;"></div>
+                    </div>
+
+                    <div id="tab-users" class="tab-content" style="display: none;">
+                        <h3 style="font-size: 18px; font-weight: 900; margin-bottom: 15px;">👥 المستخدمين</h3>
+                        <input type="text" id="searchUser" placeholder="🔍 بحث..." style="width: 100%; padding: 15px; border-radius: 20px; border: 1px solid #e2e8f0; margin-bottom: 15px;">
+                        <div id="adminUsersList"></div>
+                    </div>
+
+                    <div id="tab-orders" class="tab-content" style="display: none;">
+                        <h3 style="font-size: 18px; font-weight: 900; margin-bottom: 15px;">📦 جميع الطلبات</h3>
+                        <div id="adminOrdersList"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- المتجر - بطاقات شدات ببجي -->
-            <div class="mb-8">
-                <div class="flex items-center gap-2 mb-6">
-                    <i class="fas fa-star text-yellow-500 text-2xl"></i>
-                    <h2 class="text-2xl font-black text-slate-800">بطاقات شدات ببجي موبايل العالمية</h2>
-                </div>
-                
-                <div class="flex items-center gap-2 mb-4">
-                    <div class="stars">
-                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                    </div>
-                    <span class="text-slate-500">(128 مراجعة)</span>
-                </div>
-
-                <!-- شبكة المنتجات -->
-                <div id="productGrid" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8"></div>
-
-                <!-- وصف المنتج -->
-                <div class="bg-white rounded-[40px] p-8 shadow-lg border border-slate-100 mt-8">
-                    <div class="flex gap-6 border-b border-slate-200 pb-4 mb-6">
-                        <button class="font-black text-yellow-500 border-b-2 border-yellow-500 pb-2">الوصف</button>
-                        <button class="font-black text-slate-400">معلومات إضافية</button>
-                        <button class="font-black text-slate-400">مراجعات (128)</button>
-                    </div>
-                    <p class="text-slate-600 leading-relaxed">
-                        بطاقات شدات ببجي موبايل العالمية: اشحن رصيدك واستمتع بأقصى مستويات الإثارة!
-                    </p>
-                </div>
+            <!-- المنتجات -->
+            <div style="margin-bottom: 30px;">
+                <h2 style="font-size: 24px; font-weight: 900; color: #1e293b; margin-bottom: 20px;">🔥 بطاقات شدات ببجي</h2>
+                <div id="productGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px;"></div>
             </div>
 
-            <!-- طلباتي -->
-            <div class="bg-white rounded-[40px] p-6 shadow-lg border border-slate-100">
-                <h3 class="text-xl font-black mb-4 flex items-center gap-2">
-                    <i class="fas fa-box-open text-yellow-500"></i> طلباتي
-                </h3>
-                <div id="userOrdersList" class="space-y-3"></div>
+            <!-- طلبات المستخدم المتطورة -->
+            <div class="glass-card" style="padding: 25px; margin-bottom: 30px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 style="font-size: 24px; font-weight: 900; color: #1e293b;">
+                        <i class="fas fa-box-open text-yellow-500 ml-2"></i> طلباتي
+                    </h2>
+                    
+                    <!-- إحصائيات سريعة -->
+                    <div style="display: flex; gap: 15px;">
+                        <div style="text-align: center;">
+                            <span style="font-size: 20px; font-weight: 900; color: #eab308;" id="userTotalOrders">0</span>
+                            <span style="font-size: 12px; color: #64748b; display: block;">إجمالي</span>
+                        </div>
+                        <div style="text-align: center;">
+                            <span style="font-size: 20px; font-weight: 900; color: #10b981;" id="userCompletedOrders">0</span>
+                            <span style="font-size: 12px; color: #64748b; display: block;">مكتمل</span>
+                        </div>
+                        <div style="text-align: center;">
+                            <span style="font-size: 20px; font-weight: 900; color: #eab308;" id="userTotalPoints">0</span>
+                            <span style="font-size: 12px; color: #64748b; display: block;">نقاط</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- فلترة -->
+                <div style="display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 10px;">
+                    <button class="filter-btn active" onclick="filterOrders('all')">الكل</button>
+                    <button class="filter-btn" onclick="filterOrders('pending')">⏳ قيد الانتظار</button>
+                    <button class="filter-btn" onclick="filterOrders('processing')">🔄 قيد التنفيذ</button>
+                    <button class="filter-btn" onclick="filterOrders('completed')">✅ مكتمل</button>
+                    <button class="filter-btn" onclick="filterOrders('failed')">❌ فشل</button>
+                </div>
+
+                <!-- قائمة الطلبات -->
+                <div id="userOrdersList" style="max-height: 500px; overflow-y: auto;"></div>
             </div>
         </div>
     </div>
 
-    <!-- سلة المشتريات -->
-    <div id="cartSidebar" class="fixed top-0 left-0 w-full h-full bg-black/50 z-[10000] hidden" onclick="if(event.target===this) toggleCart()">
-        <div class="absolute left-0 top-0 w-full max-w-md bg-white h-full shadow-2xl p-6 overflow-y-auto" onclick="event.stopPropagation()">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-black">🛒 سلة المشتريات</h2>
-                <button onclick="toggleCart()" class="text-slate-400"><i class="fas fa-times text-2xl"></i></button>
-            </div>
-            <div id="cartItems" class="space-y-4"></div>
-            <div class="mt-6 border-t pt-4">
-                <div class="flex justify-between font-bold text-xl mb-4">
-                    <span>الإجمالي:</span>
-                    <span id="cartTotal" class="text-yellow-500">0 ريال</span>
+    <!-- زر الواتساب المتطور -->
+    <div class="wa-float">
+        <div class="wa-menu" id="waMenu">
+            <div class="wa-item" onclick="window.open('https://wa.me/249907760989', '_blank')">
+                <img src="https://via.placeholder.com/40" style="width: 40px; height: 40px; border-radius: 20px;">
+                <div>
+                    <p style="font-weight: 900;">محمد فتحي</p>
+                    <p style="font-size: 11px; color: #64748b;">الدعم الفني</p>
                 </div>
-                <button onclick="checkout()" class="w-full bg-green-600 text-white py-4 rounded-2xl font-black btn-3d mb-2">
-                    <i class="fas fa-check ml-2"></i> تأكيد الشراء
-                </button>
-                <button onclick="clearCart()" class="w-full bg-red-50 text-red-500 py-3 rounded-2xl font-black btn-3d">
-                    تفريغ السلة
-                </button>
+                <i class="fab fa-whatsapp text-green-500" style="margin-right: auto; font-size: 20px;"></i>
+            </div>
+            <div class="wa-item" onclick="window.open('https://wa.me/249916581517', '_blank')">
+                <img src="https://via.placeholder.com/40" style="width: 40px; height: 40px; border-radius: 20px;">
+                <div>
+                    <p style="font-weight: 900;">محمد التاج</p>
+                    <p style="font-size: 11px; color: #64748b;">مدير المبيعات</p>
+                </div>
+                <i class="fab fa-whatsapp text-green-500" style="margin-right: auto; font-size: 20px;"></i>
+            </div>
+            <div class="wa-item" onclick="window.open('https://wa.me/249914178935', '_blank')">
+                <img src="https://via.placeholder.com/40" style="width: 40px; height: 40px; border-radius: 20px;">
+                <div>
+                    <p style="font-weight: 900;">مهند ياسر</p>
+                    <p style="font-size: 11px; color: #64748b;">خدمة العملاء</p>
+                </div>
+                <i class="fab fa-whatsapp text-green-500" style="margin-right: auto; font-size: 20px;"></i>
             </div>
         </div>
-    </div>
-
-    <!-- زر الواتساب -->
-    <div class="fixed bottom-6 left-6 z-50">
-        <button onclick="window.open('https://wa.me/249907760989?text=' + encodeURIComponent('مرحباً، أحتاج مساعدة'), '_blank')" 
-                class="bg-green-500 text-white w-16 h-16 rounded-full shadow-2xl flex items-center justify-center text-3xl btn-3d">
+        <div class="wa-button" onclick="toggleWaMenu()">
             <i class="fab fa-whatsapp"></i>
-        </button>
+        </div>
     </div>
 
-    <!-- إشعارات -->
+    <!-- إشعار -->
     <div id="toast"></div>
+
+    <script>
+        // وظيفة قائمة الواتساب
+        function toggleWaMenu() {
+            document.getElementById('waMenu').classList.toggle('show');
+        }
+
+        // إغلاق القائمة عند النقر خارجها
+        document.addEventListener('click', function(event) {
+            const waBtn = document.querySelector('.wa-button');
+            const waMenu = document.getElementById('waMenu');
+            if (!waBtn.contains(event.target) && !waMenu.contains(event.target)) {
+                waMenu.classList.remove('show');
+            }
+        });
+
+        // فلترة الطلبات
+        window.filterOrders = function(status) {
+            // تحديث الأزرار
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            // تطبيق الفلتر على العناصر
+            const orders = document.querySelectorAll('.order-card');
+            orders.forEach(order => {
+                if (status === 'all') order.style.display = 'block';
+                else if (order.classList.contains(status)) order.style.display = 'block';
+                else order.style.display = 'none';
+            });
+        };
+    </script>
 
     <!-- Firebase -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, query, where, onSnapshot, orderBy, addDoc, updateDoc, increment, serverTimestamp, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, query, where, onSnapshot, orderBy, addDoc, updateDoc, increment, serverTimestamp, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
         const firebaseConfig = {
@@ -379,10 +364,12 @@
         const provider = new GoogleAuthProvider();
         provider.setCustomParameters({ prompt: 'select_account' });
 
-        const ADMINS = ["mhmdfthu98@gmail.com", "mohnadyasir43@gmail.com"]; // تم إزالة محمد التاج
+        // قائمة الأدمن (مع محمد التاج)
+        const ADMINS = ["mhmdfthu98@gmail.com", "muhammedaltaj111@gmail.com", "mohnadyasir43@gmail.com"];
         let userData = null;
-        let cart = [];
+        let maintenanceMode = false;
 
+        // دوال مساعدة
         function showToast(msg, isError = false) {
             const toast = document.getElementById('toast');
             toast.textContent = msg;
@@ -391,8 +378,23 @@
             setTimeout(() => toast.style.display = 'none', 3000);
         }
 
+        // التحقق من وضع الصيانة
+        async function checkMaintenance() {
+            const maintenanceRef = doc(db, "settings", "maintenance");
+            const maintenanceSnap = await getDoc(maintenanceRef);
+            maintenanceMode = maintenanceSnap.exists() ? maintenanceSnap.data().enabled : false;
+            
+            const user = auth.currentUser;
+            if (maintenanceMode && (!user || !ADMINS.includes(user.email))) {
+                document.getElementById('maintenance-screen').style.display = 'flex';
+                document.getElementById('main-app').style.display = 'none';
+            } else {
+                document.getElementById('maintenance-screen').style.display = 'none';
+            }
+        }
+
         // تسجيل الدخول
-        document.getElementById('google-login-btn').addEventListener('click', async () => {
+        document.getElementById('google-login-btn').onclick = async () => {
             document.getElementById('loading-screen').style.display = 'flex';
             try {
                 await signInWithPopup(auth, provider);
@@ -400,15 +402,18 @@
                 document.getElementById('loading-screen').style.display = 'none';
                 showToast(error.message, true);
             }
-        });
+        };
 
         // تسجيل الخروج
-        document.getElementById('logout-btn').addEventListener('click', async () => {
+        document.getElementById('logout-btn').onclick = async () => {
             await signOut(auth);
             showToast('تم تسجيل الخروج');
-        });
+        };
+
         // حالة المصادقة
         onAuthStateChanged(auth, async (user) => {
+            await checkMaintenance();
+            
             if (user) {
                 const userRef = doc(db, "users", user.uid);
                 const userSnap = await getDoc(userRef);
@@ -429,12 +434,12 @@
 
                 document.getElementById('loading-screen').style.display = 'none';
                 document.getElementById('auth-screen').style.display = 'none';
-                document.getElementById('main-app').classList.remove('hidden');
+                document.getElementById('main-app').style.display = 'block';
                 
                 startListening(user.uid);
             } else {
                 document.getElementById('auth-screen').style.display = 'flex';
-                document.getElementById('main-app').classList.add('hidden');
+                document.getElementById('main-app').style.display = 'none';
             }
         });
 
@@ -452,33 +457,32 @@
                     const redeemBtn = document.getElementById('redeemBtn');
                     if (userData.points >= 30) {
                         redeemBtn.disabled = false;
-                        redeemBtn.classList.remove('opacity-50', 'cursor-not-allowed', 'text-indigo-300');
-                        redeemBtn.classList.add('bg-indigo-600', 'text-white');
+                        redeemBtn.style.opacity = '1';
+                        redeemBtn.style.background = '#4f46e5';
+                        redeemBtn.style.color = 'white';
                     } else {
                         redeemBtn.disabled = true;
-                        redeemBtn.classList.add('opacity-50', 'cursor-not-allowed', 'text-indigo-300');
-                        redeemBtn.classList.remove('bg-indigo-600', 'text-white');
+                        redeemBtn.style.opacity = '0.5';
+                        redeemBtn.style.background = 'white';
+                        redeemBtn.style.color = '#cbd5e1';
                     }
                 }
             });
 
-            // المنتجات مع التصميم الجديد
+            // المنتجات مع عرض النقاط
             onSnapshot(collection(db, "products"), (snap) => {
                 const grid = document.getElementById('productGrid');
                 grid.innerHTML = '';
                 snap.forEach(doc => {
                     const p = doc.data();
                     grid.innerHTML += `
-                        <div class="product-card store-product">
-                            <div class="product-badge">⭐️⭐️⭐️⭐️⭐️</div>
-                            <p class="font-black text-xl text-slate-800 mt-4">${p.name}</p>
-                            <p class="text-slate-500 text-sm mb-2">شدة</p>
-                            <div class="price-tag">${p.price} <span class="text-sm">ريال</span></div>
-                            <div class="review-count">⭐️⭐️⭐️⭐️⭐️ (128 مراجعة)</div>
-                            <button onclick="addToCart('${p.name}', ${p.price}, ${p.givePoints})" class="w-full bg-yellow-500 text-white py-3 rounded-2xl font-bold mb-2 btn-3d">
-                                <i class="fas fa-cart-plus ml-2"></i> إضافة إلى السلة
-                            </button>
-                            <button onclick="buyNow('${p.name}', ${p.price}, ${p.givePoints})" class="w-full bg-slate-900 text-white py-3 rounded-2xl font-bold btn-3d">
+                        <div class="product-card" style="background: white; border-radius: 30px; padding: 25px 20px; border: 1px solid #e2e8f0; position: relative;">
+                            <div class="points-badge" style="position: absolute; top: 15px; left: 15px;">
+                                <i class="fas fa-star ml-1"></i> ${p.givePoints} نقطة
+                            </div>
+                            <p style="font-size: 20px; font-weight: 900; color: #1e293b; margin-top: 30px;">${p.name}</p>
+                            <p style="font-size: 28px; font-weight: 900; color: #eab308; margin: 15px 0;">${p.price} <span style="font-size: 14px;">ج.س</span></p>
+                            <button onclick="buyNow('${p.name}', ${p.price}, ${p.givePoints})" style="width: 100%; background: #0f172a; color: white; padding: 15px; border-radius: 20px; font-weight: 900; border: none;">
                                 <i class="fas fa-bolt ml-2"></i> اشترى الآن
                             </button>
                         </div>
@@ -486,68 +490,102 @@
                 });
             });
 
-            // طلبات المستخدم
+            // طلبات المستخدم المتطورة
             const q = query(collection(db, "orders"), where("uID", "==", uid), orderBy("timestamp", "desc"));
             onSnapshot(q, (snap) => {
                 const list = document.getElementById('userOrdersList');
+                let totalOrders = 0;
+                let completedOrders = 0;
+                let totalPoints = 0;
+                
                 list.innerHTML = '';
+                
                 if (snap.empty) {
-                    list.innerHTML = '<p class="text-center text-slate-500 py-4">لا توجد طلبات سابقة</p>';
+                    list.innerHTML = '<p style="text-align: center; color: #64748b; padding: 40px;">لا توجد طلبات سابقة</p>';
                     return;
                 }
+                
                 snap.forEach(doc => {
                     const o = doc.data();
+                    totalOrders++;
+                    if (o.status === 'مكتمل') {
+                        completedOrders++;
+                        totalPoints += o.pts || 0;
+                    }
+                    
                     const date = o.timestamp ? new Date(o.timestamp.toDate()).toLocaleDateString('ar-EG') : '';
-                    const statusClass = o.status === 'مكتمل' ? 'status-completed' : (o.status === 'فشل' ? 'status-failed' : 'status-pending');
+                    const statusClass = o.status === 'مكتمل' ? 'completed' : 
+                                       o.status === 'فشل' ? 'failed' : 
+                                       o.status === 'قيد التنفيذ' ? 'processing' : 'pending';
+                    
+                    const statusText = o.status === 'مكتمل' ? '✅ مكتمل' :
+                                      o.status === 'فشل' ? '❌ فشل' :
+                                      o.status === 'قيد التنفيذ' ? '🔄 قيد التنفيذ' : '⏳ قيد الانتظار';
                     
                     list.innerHTML += `
-                        <div class="bg-slate-50 p-4 rounded-2xl flex justify-between items-center border-r-4 border-${o.status === 'مكتمل' ? 'green' : (o.status === 'فشل' ? 'red' : 'yellow')}-500">
-                            <div>
-                                <p class="font-bold">${o.product} ${o.quantity ? 'x'+o.quantity : ''}</p>
-                                <p class="text-xs text-slate-500">ID: ${o.gameID} • ${date}</p>
+                        <div class="order-card ${statusClass}">
+                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                                <div>
+                                    <p style="font-size: 16px; font-weight: 900; color: #1e293b;">${o.product} ${o.quantity ? 'x' + o.quantity : ''}</p>
+                                    <p style="font-size: 13px; color: #64748b;">رقم الطلب: ${doc.id.slice(0,8)}</p>
+                                </div>
+                                <span class="order-status status-${statusClass}">${statusText}</span>
                             </div>
-                            <span class="px-3 py-1 rounded-full text-xs font-bold ${statusClass}">${o.status}</span>
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 10px; padding: 10px; background: #f8fafc; border-radius: 20px;">
+                                <div>
+                                    <p style="font-size: 11px; color: #64748b;">Player ID</p>
+                                    <p style="font-weight: 700;">${o.gameID}</p>
+                                </div>
+                                <div>
+                                    <p style="font-size: 11px; color: #64748b;">اسم اللعبة</p>
+                                    <p style="font-weight: 700;">${o.ingameName || 'غير محدد'}</p>
+                                </div>
+                                <div>
+                                    <p style="font-size: 11px; color: #64748b;">الهاتف</p>
+                                    <p style="font-weight: 700;">${o.phone}</p>
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <p style="color: #eab308; font-weight: 900;">⭐ ${o.pts || 0} نقطة</p>
+                                <p style="font-weight: 900;">${o.price} ج.س</p>
+                                <p style="font-size: 12px; color: #94a3b8;">${date}</p>
+                            </div>
                         </div>
                     `;
                 });
+                
+                // تحديث الإحصائيات
+                document.getElementById('userTotalOrders').innerText = totalOrders;
+                document.getElementById('userCompletedOrders').innerText = completedOrders;
+                document.getElementById('userTotalPoints').innerText = totalPoints;
             });
 
-            // إحصائيات الأدمن
+            // لوحة الأدمن
             if (ADMINS.includes(auth.currentUser?.email)) {
-                document.getElementById('adminArea').classList.remove('hidden');
+                document.getElementById('adminArea').style.display = 'block';
                 
-                // حساب الإحصائيات
-                onSnapshot(collection(db, "orders"), (snap) => {
-                    let total = 0, pending = 0;
-                    snap.forEach(doc => {
-                        const o = doc.data();
-                        total += o.price * (o.quantity || 1);
-                        if (o.status === 'قيد الانتظار') pending++;
-                    });
-                    document.getElementById('totalRevenue').innerText = total.toLocaleString();
-                    document.getElementById('totalOrders').innerText = snap.size;
-                    document.getElementById('pendingOrders').innerText = pending;
-                });
-
-                loadAdminUsers();
-                loadAdminProducts();
-                loadAdminOrders();
+                // زر الصيانة
+                document.getElementById('maintenance-btn').onclick = async () => {
+                    await setDoc(doc(db, "settings", "maintenance"), { enabled: true });
+                    showToast('تم تفعيل وضع الصيانة');
+                    checkMaintenance();
+                };
+                document.getElementById('maintenance-off-btn').onclick = async () => {
+                    await setDoc(doc(db, "settings", "maintenance"), { enabled: false });
+                    showToast('تم إيقاف وضع الصيانة');
+                    checkMaintenance();
+                };
+                
+                loadAdminData();
             }
         }
 
-        // دوال السلة
-        window.addToCart = (name, price, points) => {
-            const existing = cart.find(item => item.name === name);
-            if (existing) existing.quantity++;
-            else cart.push({ name, price, points, quantity: 1 });
-            showToast('✅ تمت الإضافة للسلة');
-            updateCartBadge();
-        };
-
+        // شراء الآن مع بيانات كاملة
         window.buyNow = async (name, price, points) => {
             if (!userData) return showToast('سجل الدخول أولاً', true);
             if (userData.balance < price) return showToast('الرصيد غير كافٍ', true);
             
+            // نموذج إدخال البيانات (نفس الصورة)
             const gameID = prompt('أدخل ID اللاعب (Player ID):');
             if (!gameID || !/^\d+$/.test(gameID)) return showToast('ID غير صالح', true);
             
@@ -560,197 +598,157 @@
             const phone = prompt('رقم الهاتف للتواصل:');
             if (!phone || !/^\d+$/.test(phone)) return showToast('رقم الهاتف غير صالح', true);
 
-            if (!confirm(`تأكيد شراء ${name} بقيمة ${price} ريال؟`)) return;
+            if (!confirm(`تأكيد شراء ${name} بقيمة ${price} ج.س؟`)) return;
 
             try {
-                await updateDoc(doc(db, "users", auth.currentUser.uid), { balance: increment(-price) });
+                // خصم الرصيد
+                await updateDoc(doc(db, "users", auth.currentUser.uid), { 
+                    balance: increment(-price) 
+                });
+                
+                // إضافة الطلب
                 await addDoc(collection(db, "orders"), {
                     uID: auth.currentUser.uid,
                     uName: userData.name,
                     product: name,
                     price: price,
                     pts: points,
-                    gameID, ingameName, realName, phone,
+                    gameID, 
+                    ingameName, 
+                    realName, 
+                    phone,
                     status: 'قيد الانتظار',
                     timestamp: serverTimestamp()
                 });
-                showToast('✅ تم إرسال الطلب');
-            } catch (error) {
-                showToast(error.message, true);
-            }
-        };
-
-        window.updateCartBadge = () => {
-            const count = cart.reduce((a, i) => a + i.quantity, 0);
-            const badge = document.getElementById('cartCount');
-            if (count > 0) {
-                badge.innerText = count;
-                badge.classList.remove('hidden');
-            } else {
-                badge.classList.add('hidden');
-            }
-        };
-
-        window.toggleCart = () => {
-            document.getElementById('cartSidebar').classList.toggle('hidden');
-            updateCartSidebar();
-        };
-
-        window.updateCartSidebar = () => {
-            const container = document.getElementById('cartItems');
-            if (!cart.length) {
-                container.innerHTML = '<p class="text-center text-slate-500">السلة فارغة</p>';
-                document.getElementById('cartTotal').innerText = '0 ريال';
-                return;
-            }
-            let html = '', total = 0;
-            cart.forEach(item => {
-                total += item.price * item.quantity;
-                html += `
-                    <div class="flex justify-between items-center border-b pb-2">
-                        <div>
-                            <p class="font-bold">${item.name}</p>
-                            <p class="text-xs text-slate-500">${item.price} ريال × ${item.quantity}</p>
-                        </div>
-                        <div class="flex gap-2 items-center">
-                            <button onclick="updateQuantity('${item.name}', -1)" class="w-7 h-7 bg-red-100 rounded-full">-</button>
-                            <span>${item.quantity}</span>
-                            <button onclick="updateQuantity('${item.name}', 1)" class="w-7 h-7 bg-green-100 rounded-full">+</button>
-                            <button onclick="removeFromCart('${item.name}')" class="text-red-500"><i class="fas fa-trash"></i></button>
-                        </div>
-                    </div>
-                `;
-            });
-            container.innerHTML = html;
-            document.getElementById('cartTotal').innerText = total + ' ريال';
-        };
-
-        window.updateQuantity = (name, delta) => {
-            const item = cart.find(i => i.name === name);
-            if (item) {
-                item.quantity += delta;
-                if (item.quantity <= 0) cart = cart.filter(i => i.name !== name);
-            }
-            updateCartBadge();
-            updateCartSidebar();
-        };
-
-        window.removeFromCart = (name) => {
-            cart = cart.filter(i => i.name !== name);
-            updateCartBadge();
-            updateCartSidebar();
-        };
-
-        window.clearCart = () => {
-            cart = [];
-            updateCartBadge();
-            updateCartSidebar();
-            showToast('تم تفريغ السلة');
-        };
-
-        window.checkout = async () => {
-            if (!userData) return showToast('سجل الدخول أولاً', true);
-            if (!cart.length) return showToast('السلة فارغة', true);
-            
-            const totalPrice = cart.reduce((a, i) => a + i.price * i.quantity, 0);
-            if (userData.balance < totalPrice) return showToast('الرصيد غير كافٍ', true);
-            
-            const gameID = prompt('أدخل ID اللاعب (Player ID):');
-            if (!gameID || !/^\d+$/.test(gameID)) return showToast('ID غير صالح', true);
-            
-            const ingameName = prompt('اسمك داخل اللعبة:');
-            if (!ingameName) return showToast('الاسم مطلوب', true);
-            
-            const realName = prompt('اسمك الحقيقي:');
-            if (!realName) return showToast('الاسم مطلوب', true);
-            
-            const phone = prompt('رقم الهاتف للتواصل:');
-            if (!phone || !/^\d+$/.test(phone)) return showToast('رقم الهاتف غير صالح', true);
-
-            if (!confirm(`تأكيد شراء المنتجات بقيمة ${totalPrice} ريال؟`)) return;
-
-            try {
-                await updateDoc(doc(db, "users", auth.currentUser.uid), { balance: increment(-totalPrice) });
-                
-                for (const item of cart) {
-                    await addDoc(collection(db, "orders"), {
-                        uID: auth.currentUser.uid,
-                        uName: userData.name,
-                        product: item.name,
-                        price: item.price,
-                        pts: item.points,
-                        quantity: item.quantity,
-                        gameID, ingameName, realName, phone,
-                        status: 'قيد الانتظار',
-                        timestamp: serverTimestamp()
-                    });
-                }
                 
                 showToast('✅ تم إرسال الطلب');
-                cart = [];
-                updateCartBadge();
-                toggleCart();
             } catch (error) {
                 showToast(error.message, true);
             }
         };
 
         // استبدال النقاط
-        document.getElementById('redeemBtn').addEventListener('click', async () => {
+        document.getElementById('redeemBtn').onclick = async () => {
             if (!userData || userData.points < 30) return showToast('تحتاج 30 نقطة', true);
-            if (!confirm('استبدال 30 نقطة مقابل 60 ريال؟')) return;
+            if (!confirm('استبدال 30 نقطة مقابل 60 ج.س؟')) return;
             
             await updateDoc(doc(db, "users", auth.currentUser.uid), {
                 points: increment(-30),
                 balance: increment(60)
             });
             showToast('🎉 تم الاستبدال');
-        });
-
-        // دوال الأدمن
-        window.showTab = (tab) => {
-            document.querySelectorAll('#adminTabs > div').forEach(el => el.classList.add('hidden'));
-            document.getElementById(`tab-${tab}`).classList.remove('hidden');
         };
 
-        document.getElementById('addProductForm')?.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const name = document.getElementById('prodName').value;
-            const price = parseInt(document.getElementById('prodPrice').value);
-            const points = parseInt(document.getElementById('prodPoints').value);
-            
-            await addDoc(collection(db, "products"), { name, price, givePoints: points });
-            showToast('✅ تمت إضافة المنتج');
-            document.getElementById('addProductForm').reset();
-        });
+        // دوال الأدمن
+        function loadAdminData() {
+            // المنتجات
+            onSnapshot(collection(db, "products"), (snap) => {
+                const list = document.getElementById('adminProductsList');
+                list.innerHTML = '';
+                snap.forEach(doc => {
+                    const p = doc.data();
+                    list.innerHTML += `
+                        <div style="background: #f8fafc; padding: 15px; border-radius: 20px; margin-bottom: 10px; display: flex; justify-content: space-between;">
+                            <div>
+                                <span style="font-weight: 900;">${p.name}</span>
+                                <span style="color: #eab308; margin-right: 10px;">${p.price} ج.س</span>
+                                <span style="color: #3b82f6;">⭐ ${p.givePoints}</span>
+                            </div>
+                            <button onclick="deleteProduct('${doc.id}')" style="color: #ef4444; background: none; border: none;">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                });
+            });
 
-        function loadAdminUsers() {
+            // المستخدمين
             onSnapshot(collection(db, "users"), (snap) => {
                 const list = document.getElementById('adminUsersList');
                 list.innerHTML = '';
                 snap.forEach(doc => {
                     const u = doc.data();
                     list.innerHTML += `
-                        <div class="bg-slate-50 p-4 rounded-2xl border">
-                            <div class="flex justify-between items-center">
+                        <div style="background: #f8fafc; padding: 15px; border-radius: 20px; margin-bottom: 10px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
                                 <div>
-                                    <p class="font-bold">${u.name}</p>
-                                    <p class="text-xs text-slate-500">${u.email}</p>
+                                    <p style="font-weight: 900;">${u.name}</p>
+                                    <p style="font-size: 12px; color: #64748b;">${u.email}</p>
                                 </div>
-                                <span class="bg-yellow-100 px-2 py-1 rounded-full text-xs">#${u.walletID}</span>
+                                <span style="background: #fef3c7; color: #eab308; padding: 5px 15px; border-radius: 30px;">#${u.walletID}</span>
                             </div>
-                            <div class="flex justify-between mt-3">
-                                <span>💰 ${(u.balance||0).toLocaleString()} ريال | ⭐ ${u.points||0}</span>
-                                <div class="flex gap-2">
-                                    <input type="number" id="recharge-${doc.id}" placeholder="المبلغ" class="w-20 p-2 rounded-xl border text-xs">
-                                    <button onclick="rechargeUser('${doc.id}')" class="bg-yellow-500 text-white px-3 py-1 rounded-xl text-xs">شحن</button>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>💰 ${u.balance || 0} ج.س</span>
+                                <span>⭐ ${u.points || 0}</span>
+                                <div>
+                                    <input type="number" id="recharge-${doc.id}" placeholder="المبلغ" style="width: 80px; padding: 5px; border-radius: 10px; border: 1px solid #e2e8f0;">
+                                    <button onclick="rechargeUser('${doc.id}')" style="background: #eab308; color: white; padding: 5px 15px; border-radius: 10px; border: none;">شحن</button>
                                 </div>
                             </div>
                         </div>
                     `;
                 });
             });
+
+        // الطلبات
+            const q = query(collection(db, "orders"), orderBy("timestamp", "desc"));
+            onSnapshot(q, (snap) => {
+                const list = document.getElementById('adminOrdersList');
+                list.innerHTML = '';
+                snap.forEach(doc => {
+                    const o = doc.data();
+                    const date = o.timestamp ? new Date(o.timestamp.toDate()).toLocaleString('ar-EG') : '';
+                    list.innerHTML += `
+                        <div style="background: #f8fafc; padding: 20px; border-radius: 25px; margin-bottom: 15px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                <div>
+                                    <p style="font-weight: 900;">${o.product} ${o.quantity ? 'x'+o.quantity : ''}</p>
+                                    <p style="font-size: 12px;">👤 ${o.uName}</p>
+                                </div>
+                                <select onchange="updateOrderStatus('${doc.id}', this.value)" 
+                                        style="padding: 8px 15px; border-radius: 30px; border: 2px solid #e2e8f0; font-weight: 700;"
+                                        ${o.status === 'مكتمل' || o.status === 'فشل' ? 'disabled' : ''}>
+                                    <option value="قيد الانتظار" ${o.status === 'قيد الانتظار' ? 'selected' : ''}>⏳ قيد الانتظار</option>
+                                    <option value="قيد التنفيذ" ${o.status === 'قيد التنفيذ' ? 'selected' : ''}>🔄 قيد التنفيذ</option>
+                                    <option value="مكتمل" ${o.status === 'مكتمل' ? 'selected' : ''}>✅ مكتمل</option>
+                                    <option value="فشل" ${o.status === 'فشل' ? 'selected' : ''}>❌ فشل</option>
+                                </select>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 10px;">
+                                <div>
+                                    <p style="font-size: 11px; color: #64748b;">Player ID</p>
+                                    <p style="font-weight: 700;">${o.gameID}</p>
+                                </div>
+                                <div>
+                                    <p style="font-size: 11px; color: #64748b;">اسم اللعبة</p>
+                                    <p style="font-weight: 700;">${o.ingameName || 'غير محدد'}</p>
+                                </div>
+                                <div>
+                                    <p style="font-size: 11px; color: #64748b;">الاسم الحقيقي</p>
+                                    <p style="font-weight: 700;">${o.realName || 'غير محدد'}</p>
+                                </div>
+                                <div>
+                                    <p style="font-size: 11px; color: #64748b;">الهاتف</p>
+                                    <p style="font-weight: 700;">${o.phone}</p>
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-size: 12px; color: #64748b;">
+                                <span>${date}</span>
+                                <span style="color: #eab308; font-weight: 900;">⭐ ${o.pts || 0} نقطة</span>
+                            </div>
+                        </div>
+                    `;
+                });
+            });
         }
+
+        // دوال إضافية
+        window.deleteProduct = async (id) => {
+            if (confirm('حذف المنتج؟')) {
+                await deleteDoc(doc(db, "products", id));
+                showToast('تم الحذف');
+            }
+        };
 
         window.rechargeUser = async (userId) => {
             const amount = parseInt(document.getElementById(`recharge-${userId}`).value);
@@ -760,69 +758,50 @@
             document.getElementById(`recharge-${userId}`).value = '';
         };
 
-        function loadAdminProducts() {
-            onSnapshot(collection(db, "products"), (snap) => {
-                const list = document.getElementById('adminProductsList');
-                list.innerHTML = '';
-                snap.forEach(doc => {
-                    const p = doc.data();
-                    list.innerHTML += `
-                        <div class="bg-slate-50 p-3 rounded-2xl flex justify-between items-center">
-                            <div>
-                                <span class="font-bold">${p.name}</span>
-                                <span class="text-yellow-500 mr-2">${p.price} ريال</span>
-                                <span class="text-blue-500">(${p.givePoints} نقطة)</span>
-                            </div>
-                            <button onclick="deleteProduct('${doc.id}')" class="text-red-500"><i class="fas fa-trash"></i></button>
-                        </div>
-                    `;
-                });
-            });
-        }
-
-        window.deleteProduct = async (id) => {
-            if (confirm('حذف المنتج؟')) {
-                await deleteDoc(doc(db, "products", id));
-                showToast('تم الحذف');
-            }
-        };
-
-        function loadAdminOrders() {
-            const q = query(collection(db, "orders"), orderBy("timestamp", "desc"));
-            onSnapshot(q, (snap) => {
-                const list = document.getElementById('adminOrdersList');
-                list.innerHTML = '';
-                snap.forEach(doc => {
-                    const o = doc.data();
-                    const date = o.timestamp ? new Date(o.timestamp.toDate()).toLocaleString('ar-EG') : '';
-                    list.innerHTML += `
-                        <div class="bg-slate-50 p-5 rounded-2xl border">
-                            <div class="flex justify-between items-start mb-3">
-                                <div>
-                                    <p class="font-bold">${o.product} ${o.quantity ? 'x'+o.quantity : ''}</p>
-                                    <p class="text-xs text-slate-600">العميل: ${o.uName}</p>
-                                    <p class="text-xs text-slate-600">Player ID: ${o.gameID}</p>
-                                    <p class="text-xs text-slate-600">الاسم داخل اللعبة: ${o.ingameName || 'غير محدد'}</p>
-                                    <p class="text-xs text-slate-600">الاسم الحقيقي: ${o.realName || 'غير محدد'}</p>
-                                    <p class="text-xs text-slate-600">الهاتف: ${o.phone}</p>
-                                    <p class="text-xs text-slate-400">${date}</p>
-                                </div>
-                                <select onchange="updateOrderStatus('${doc.id}', this.value)" class="status-select ${o.status === 'مكتمل' ? 'status-completed' : (o.status === 'فشل' ? 'status-failed' : 'status-pending')}">
-                                    <option value="قيد الانتظار" ${o.status === 'قيد الانتظار' ? 'selected' : ''}>⏳ قيد الانتظار</option>
-                                    <option value="مكتمل" ${o.status === 'مكتمل' ? 'selected' : ''}>✅ مكتمل</option>
-                                    <option value="فشل" ${o.status === 'فشل' ? 'selected' : ''}>❌ فشل</option>
-                                </select>
-                            </div>
-                        </div>
-                    `;
-                });
-            });
-        }
-
         window.updateOrderStatus = async (orderId, newStatus) => {
             await updateDoc(doc(db, "orders", orderId), { status: newStatus });
+            
+            // إذا كانت الحالة مكتمل، نضيف النقاط للمستخدم
+            if (newStatus === 'مكتمل') {
+                const orderSnap = await getDoc(doc(db, "orders", orderId));
+                const order = orderSnap.data();
+                await updateDoc(doc(db, "users", order.uID), {
+                    points: increment(order.pts || 0)
+                });
+            }
+            
             showToast('تم تحديث الحالة');
         };
+
+        // تبويبات الأدمن
+        document.querySelectorAll('.admin-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.admin-tab').forEach(t => {
+                    t.style.background = '#f1f5f9';
+                    t.style.color = '#64748b';
+                });
+                tab.style.background = '#eab308';
+                tab.style.color = 'white';
+                
+                document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+                document.getElementById(`tab-${tab.dataset.tab}`).style.display = 'block';
+            });
+        });
+
+        // إضافة منتج
+        document.getElementById('addProductForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('prodName').value;
+            const price = parseInt(document.getElementById('prodPrice').value);
+            const points = parseInt(document.getElementById('prodPoints').value);
+            
+            await addDoc(collection(db, "products"), { name, price, givePoints: points });
+            showToast('✅ تمت الإضافة');
+            document.getElementById('addProductForm').reset();
+        });
+
+        // فحص الصيانة كل دقيقة
+        setInterval(checkMaintenance, 60000);
     </script>
 </body>
 </html>
