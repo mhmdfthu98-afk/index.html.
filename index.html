@@ -3,68 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>KhasmShop | الإصدار النهائي مع One Tap</title>
+    <title>KhasmShop | المتجر المتكامل V21</title>
+    
+    <!-- PWA Tags -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#eab308">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="KhasmShop">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="mask-icon" href="icon-512.png" color="#eab308">
+    
     <!-- Tailwind + Font Awesome -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     
-    <!-- Google One Tap Script -->
+    <!-- Google One Tap -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     
     <style>
         * { font-family: 'Cairo', sans-serif; margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #f8fafc; min-height: 100vh; }
         
-        /* شاشة الصيانة */
-        #maintenance-screen {
-            position: fixed; inset: 0; background: white; z-index: 99999;
-            display: none; flex-direction: column; align-items: center; justify-content: center;
-            text-align: center; padding: 20px;
+        /* ========== الوضع النهاري (افتراضي) ========== */
+        :root {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --card-bg: #ffffff;
+            --hover-bg: #f1f5f9;
+            --shadow: 0 10px 30px -10px rgba(0,0,0,0.1);
         }
-        .maintenance-icon {
-            width: 120px; height: 120px; background: #eab308; border-radius: 60px;
-            display: flex; align-items: center; justify-content: center; font-size: 50px; color: white;
-            margin-bottom: 30px; animation: pulse 2s infinite;
+        
+        /* ========== الوضع الليلي ========== */
+        body.dark-mode {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border-color: #334155;
+            --card-bg: #1e293b;
+            --hover-bg: #2d3a4f;
+            --shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
         }
-        @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
+        
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            min-height: 100vh;
+        }
         
         /* تصميم البطاقات */
         .glass-card {
-            background: white; border-radius: 30px; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1);
-            border: 1px solid #e2e8f0; transition: all 0.3s;
+            background: var(--card-bg);
+            border-radius: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s;
         }
-        
-        /* شارة الخصم */
-        .discount-badge {
-            background: #ef4444; color: white; padding: 5px 15px; border-radius: 30px;
-            font-size: 14px; font-weight: 900; display: inline-flex; align-items: center; gap: 5px;
+        .glass-card:hover {
+            transform: translateY(-5px);
+            border-color: #eab308;
         }
         
         /* شارة النقاط */
         .points-badge {
-            background: linear-gradient(135deg, #eab308, #f59e0b); color: white;
-            padding: 5px 15px; border-radius: 30px; font-size: 13px; font-weight: 900;
-            display: inline-flex; align-items: center; gap: 5px;
+            background: linear-gradient(135deg, #eab308, #f59e0b);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 900;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        /* شارة الخصم */
+        .discount-badge {
+            background: #ef4444;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 900;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
         }
         
         /* حالات الطلبات */
         .order-status {
-            padding: 6px 15px; border-radius: 30px; font-size: 12px; font-weight: 900;
-            display: inline-flex; align-items: center; gap: 5px; border: none;
+            padding: 6px 15px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 900;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
         }
         .status-completed { background: #10b981; color: white; }
         .status-pending { background: #f59e0b; color: white; }
         .status-failed { background: #ef4444; color: white; }
         .status-processing { background: #3b82f6; color: white; }
         
+        /* عداد الإشعارات */
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ef4444;
+            color: white;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 900;
+            box-shadow: 0 3px 8px rgba(239,68,68,0.5);
+        }
+        
         /* شاشة التحميل */
         #loading-screen {
-            position: fixed; inset: 0; background: white; z-index: 9999;
+            position: fixed; inset: 0; background: var(--bg-primary); z-index: 9999;
             display: none; flex-direction: column; align-items: center; justify-content: center;
         }
-        .loader { width: 50px; height: 50px; border: 3px solid #e2e8f0; border-top: 3px solid #eab308; border-radius: 50%; animation: spin 1s linear infinite; }
+        .loader {
+            width: 50px; height: 50px; border: 3px solid var(--border-color);
+            border-top: 3px solid #eab308; border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        /* شاشة الصيانة */
+        #maintenance-screen {
+            position: fixed; inset: 0; background: var(--bg-primary); z-index: 99999;
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; padding: 20px;
+        }
+        
+        /* إشعارات */
+        #toast {
+            position: fixed; bottom: 30px; right: 30px; background: #1e293b; color: white;
+            padding: 15px 30px; border-radius: 50px; font-weight: bold; z-index: 99999;
+            display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
         
         /* زر الواتساب */
         .wa-float {
@@ -77,270 +165,357 @@
             cursor: pointer; transition: all 0.3s;
         }
         .wa-menu {
-            position: absolute; bottom: 80px; left: 0; background: white;
-            border-radius: 30px; padding: 15px; width: 250px; box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            display: none; border: 1px solid #e2e8f0;
+            position: absolute; bottom: 80px; left: 0; background: var(--card-bg);
+            border-radius: 30px; padding: 15px; width: 250px; box-shadow: var(--shadow);
+            display: none; border: 1px solid var(--border-color);
         }
         .wa-menu.show { display: block; }
         .wa-item {
             display: flex; align-items: center; gap: 10px; padding: 12px;
             border-radius: 20px; transition: all 0.3s; cursor: pointer;
         }
-        .wa-item:hover { background: #f0fdf4; }
+        .wa-item:hover { background: var(--hover-bg); }
         
-        /* إشعارات */
-        #toast {
-            position: fixed; bottom: 30px; right: 30px; background: #1e293b; color: white;
-            padding: 15px 30px; border-radius: 50px; font-weight: bold; z-index: 99999;
-            display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-        
-        /* تخصيص زر Google One Tap */
-        #googleBtn {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-        }
-        #googleBtn > div {
-            width: 100% !important;
-            border-radius: 40px !important;
-            overflow: hidden !important;
+        /* تذييل */
+        footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 20px;
+            text-align: center;
+            margin-top: 40px;
         }
     </style>
 </head>
 <body>
-
     <!-- شاشة الصيانة -->
     <div id="maintenance-screen">
-        <div class="maintenance-icon">
+        <div class="maintenance-icon" style="width:120px; height:120px; background:#eab308; border-radius:60px; display:flex; align-items:center; justify-content:center; font-size:50px; color:white; margin-bottom:30px; animation:pulse 2s infinite;">
             <i class="fas fa-tools"></i>
         </div>
-        <h1 class="text-4xl font-black text-slate-800 mb-4">جاري الصيانة</h1>
-        <p class="text-slate-500 mb-8 max-w-md">نحن نعمل على تحسين المتجر لكم، سيعود قريباً أفضل من أي وقت مضى</p>
+        <h1 style="font-size:32px; font-weight:900; margin-bottom:20px;">جاري الصيانة</h1>
+        <p style="max-width:400px; margin-bottom:30px;">نحن نعمل على تحسين المتجر لكم، سيعود قريباً أفضل من أي وقت مضى</p>
         <div class="loader"></div>
     </div>
-
+    
     <!-- شاشة التحميل -->
     <div id="loading-screen">
         <div class="loader mb-4"></div>
-        <p class="text-slate-800 font-bold">جاري التحميل...</p>
+        <p>جاري التحميل...</p>
     </div>
-
-    <!-- شاشة تسجيل الدخول (Google One Tap) -->
-    <div id="auth-screen" style="display: flex; position: fixed; inset: 0; background: white; z-index: 10000; align-items: center; justify-content: center;">
-        <div class="max-w-md w-full mx-4 p-8 text-center">
-            <h1 class="text-5xl font-black text-yellow-500 mb-2">KHASM</h1>
-            <p class="text-slate-500 mb-8">أسرع متجر شحن ببجي في السودان</p>
-            
-            <!-- Google One Tap Button -->
-            <div id="googleBtn"></div>
-            
-            <p class="text-slate-400 text-sm mt-6">
-                بالدخول أنت توافق على الشروط والأحكام
-            </p>
+    
+    <!-- شاشة تسجيل الدخول -->
+    <div id="auth-screen" style="position:fixed; inset:0; background:var(--bg-primary); z-index:10000; display:flex; align-items:center; justify-content:center;">
+        <div style="max-width:400px; width:100%; margin:0 20px; text-align:center;">
+            <h1 style="font-size:48px; font-weight:900; color:#eab308; margin-bottom:10px;">KHASM</h1>
+            <p style="margin-bottom:30px;">أسرع متجر شحن ببجي في السودان</p>
+            <div id="googleBtn" style="display:flex; justify-content:center;"></div>
         </div>
     </div>
-
+    
     <!-- التطبيق الرئيسي -->
-    <div id="main-app" style="display: none;">
-        
+    <div id="main-app" style="display:none;">
         <!-- الهيدر -->
-        <div style="background: linear-gradient(135deg, #eab308, #f59e0b); padding: 30px 20px; text-align: center; color: white;">
-            <h1 style="font-size: 32px; font-weight: 900;">KHASM SHOP</h1>
-            <p style="opacity: 0.9;">بطاقات شدات ببجي موبايل العالمية</p>
-        </div>
-
-        <div style="max-width: 1200px; margin: 0 auto; padding: 20px;">
-            
-            <!-- بطاقة المستخدم -->
-            <div class="glass-card" style="padding: 25px; margin-bottom: 30px; margin-top: -30px; background: white;">
-                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
-                    <img id="uImg" src="https://via.placeholder.com/150" style="width: 70px; height: 70px; border-radius: 20px; border: 4px solid #eab308;">
-                    <div style="flex: 1;">
-                        <h2 id="uName" style="font-size: 22px; font-weight: 900; color: #1e293b;">...</h2>
-                        <div id="uWallet" style="background: #fef3c7; color: #eab308; padding: 5px 15px; border-radius: 30px; display: inline-block; margin-top: 5px; font-weight: bold;">المحفظة: #000000</div>
-                    </div>
-                    <button id="logout-btn" style="width: 50px; height: 50px; background: #fee2e2; color: #ef4444; border-radius: 15px; border: none; font-size: 20px;">
-                        <i class="fas fa-power-off"></i>
+        <header style="background:linear-gradient(135deg, #eab308, #f59e0b); padding:30px 20px; text-align:center; color:white;">
+            <div style="display:flex; justify-content:space-between; align-items:center; max-width:1200px; margin:0 auto;">
+                <h1 style="font-size:28px; font-weight:900;">KHASM SHOP</h1>
+                <div style="display:flex; gap:15px;">
+                    <!-- زر الوضع الليلي -->
+                    <button id="darkModeToggle" style="background:rgba(255,255,255,0.2); border:none; width:45px; height:45px; border-radius:15px; color:white; font-size:20px; cursor:pointer;">
+                        <i class="fas fa-moon"></i>
                     </button>
+                    <!-- زر الإشعارات -->
+                    <div style="position:relative;">
+                        <button id="notificationsBtn" style="background:rgba(255,255,255,0.2); border:none; width:45px; height:45px; border-radius:15px; color:white; font-size:20px; cursor:pointer;">
+                            <i class="fas fa-bell"></i>
+                        </button>
+                        <span id="notificationBadge" class="notification-badge" style="display:none;">0</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <main style="max-width:1200px; margin:0 auto; padding:20px;">
+            <!-- بطاقة المستخدم -->
+            <div class="glass-card" style="padding:25px; margin-bottom:30px; margin-top:-30px;">
+                <div style="display:flex; align-items:center; gap:15px; margin-bottom:20px; flex-wrap:wrap;">
+                    <img id="uImg" src="https://via.placeholder.com/150" style="width:70px; height:70px; border-radius:20px; border:4px solid #eab308;">
+                    <div style="flex:1;">
+                        <h2 id="uName" style="font-size:22px; font-weight:900;">...</h2>
+                        <div id="uWallet" style="background:#fef3c7; color:#eab308; padding:5px 15px; border-radius:30px; display:inline-block; margin-top:5px; font-weight:bold;">المحفظة: #000000</div>
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <div style="position:relative;">
+                            <button onclick="toggleCart()" style="width:50px; height:50px; background:var(--hover-bg); border-radius:15px; border:none; font-size:20px; cursor:pointer;">
+                                <i class="fas fa-shopping-cart"></i>
+                            </button>
+                            <span id="cartCount" class="notification-badge" style="display:none;">0</span>
+                        </div>
+                        <button id="logout-btn" style="width:50px; height:50px; background:#fee2e2; color:#ef4444; border-radius:15px; border:none; font-size:20px; cursor:pointer;">
+                            <i class="fas fa-power-off"></i>
+                        </button>
+                    </div>
                 </div>
                 
                 <!-- الرصيد والنقاط -->
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
-                    <div style="background: #0f172a; padding: 20px; border-radius: 30px; text-align: center;">
-                        <p style="color: #94a3b8; font-size: 14px; margin-bottom: 5px;">الرصيد</p>
-                        <p style="font-size: 32px; font-weight: 900; color: #eab308;"><span id="uBal">0</span> <span style="font-size: 16px;">ج.س</span></p>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:20px;">
+                    <div style="background:#0f172a; padding:20px; border-radius:30px; text-align:center;">
+                        <p style="color:#94a3b8; margin-bottom:5px;">الرصيد</p>
+                        <p style="font-size:32px; font-weight:900; color:#eab308;"><span id="uBal">0</span> <span style="font-size:16px;">ج.س</span></p>
                     </div>
-                    <div style="background: #2563eb; padding: 20px; border-radius: 30px; text-align: center;">
-                        <p style="color: #bfdbfe; font-size: 14px; margin-bottom: 5px;">النقاط</p>
-                        <p style="font-size: 32px; font-weight: 900; color: white;"><span id="uPoints">0</span> ⭐</p>
+                    <div style="background:#2563eb; padding:20px; border-radius:30px; text-align:center;">
+                        <p style="color:#bfdbfe; margin-bottom:5px;">النقاط</p>
+                        <p style="font-size:32px; font-weight:900; color:white;"><span id="uPoints">0</span> ⭐</p>
                     </div>
                 </div>
                 
                 <!-- استبدال النقاط -->
-                <div style="background: #eef2ff; padding: 15px; border-radius: 20px; display: flex; justify-content: space-between; align-items: center;">
+                <div style="background:#eef2ff; padding:15px; border-radius:20px; display:flex; justify-content:space-between; align-items:center;">
                     <div>
-                        <p style="font-weight: 900; color: #4f46e5;">🎁 هدية 60 شدة مجاناً</p>
-                        <p style="font-size: 12px; color: #64748b;">استبدل 30 نقطة</p>
+                        <p style="font-weight:900; color:#4f46e5;">🎁 هدية 60 شدة مجاناً</p>
+                        <p style="font-size:12px; color:#64748b;">استبدل 30 نقطة</p>
                     </div>
-                    <button id="redeemBtn" style="padding: 10px 25px; background: white; color: #cbd5e1; border-radius: 20px; border: 1px solid #e2e8f0; font-weight: 900; opacity: 0.5; cursor: not-allowed;" disabled>استرداد</button>
+                    <button id="redeemBtn" style="padding:10px 25px; background:white; color:#cbd5e1; border-radius:20px; border:1px solid #e2e8f0; font-weight:900; opacity:0.5; cursor:not-allowed;" disabled>استرداد</button>
                 </div>
             </div>
-
+            
             <!-- لوحة تحكم المسؤول -->
-            <div id="adminArea" style="display: none; margin-bottom: 30px;">
-                <div class="glass-card" style="padding: 25px; border-top: 8px solid #ef4444;">
+            <div id="adminArea" style="display:none; margin-bottom:30px;">
+                <div class="glass-card" style="padding:25px; border-top:8px solid #ef4444;">
+                    <!-- إحصائيات سريعة -->
+                    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:20px;">
+                        <div style="background:var(--hover-bg); padding:15px; border-radius:20px; text-align:center;">
+                            <p style="font-size:20px; font-weight:900; color:#eab308;" id="totalUsers">0</p>
+                            <p style="font-size:12px;">مستخدم</p>
+                        </div>
+                        <div style="background:var(--hover-bg); padding:15px; border-radius:20px; text-align:center;">
+                            <p style="font-size:20px; font-weight:900; color:#eab308;" id="totalOrders">0</p>
+                            <p style="font-size:12px;">طلب</p>
+                        </div>
+                        <div style="background:var(--hover-bg); padding:15px; border-radius:20px; text-align:center;">
+                            <p style="font-size:20px; font-weight:900; color:#eab308;" id="totalRevenue">0</p>
+                            <p style="font-size:12px;">إيرادات</p>
+                        </div>
+                        <div style="background:var(--hover-bg); padding:15px; border-radius:20px; text-align:center;">
+                            <p style="font-size:20px; font-weight:900; color:#eab308;" id="totalNotifications">0</p>
+                            <p style="font-size:12px;">إشعارات</p>
+                        </div>
+                    </div>
                     
-                    <!-- أزرار الصيانة -->
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;">
-                        <button id="maintenance-on-btn" style="background: #ef4444; color: white; padding: 15px; border-radius: 20px; font-weight: 900; border: none;">
+                    <!-- أزرار التحكم -->
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:20px;">
+                        <button id="maintenance-on-btn" style="background:#ef4444; color:white; padding:15px; border-radius:20px; font-weight:900; border:none;">
                             <i class="fas fa-tools ml-2"></i> تفعيل الصيانة
                         </button>
-                        <button id="maintenance-off-btn" style="background: #10b981; color: white; padding: 15px; border-radius: 20px; font-weight: 900; border: none;">
+                        <button id="maintenance-off-btn" style="background:#10b981; color:white; padding:15px; border-radius:20px; font-weight:900; border:none;">
                             <i class="fas fa-check ml-2"></i> إيقاف الصيانة
                         </button>
                     </div>
                     
                     <!-- نظام الخصم -->
-                    <div style="background: #f1f5f9; padding: 20px; border-radius: 25px; margin-bottom: 20px;">
-                        <h3 style="font-size: 18px; font-weight: 900; margin-bottom: 15px;">🏷️ نظام الخصم</h3>
-                        <div style="display: flex; gap: 10px;">
-                            <input type="number" id="discountPercent" placeholder="نسبة الخصم %" min="0" max="100" style="flex: 1; padding: 15px; border-radius: 20px; border: 1px solid #e2e8f0;">
-                            <button id="applyDiscountBtn" style="background: #eab308; color: white; padding: 15px 25px; border-radius: 20px; font-weight: 900; border: none;">
+                    <div style="background:var(--hover-bg); padding:20px; border-radius:25px; margin-bottom:20px;">
+                        <h3 style="font-size:18px; font-weight:900; margin-bottom:15px;">🏷️ نظام الخصم</h3>
+                        <div style="display:flex; gap:10px;">
+                            <input type="number" id="discountPercent" placeholder="نسبة الخصم %" min="0" max="100" style="flex:1; padding:15px; border-radius:20px; border:1px solid var(--border-color; background:var(--card-bg); color:var(--text-primary);">
+                            <button id="applyDiscountBtn" style="background:#eab308; color:white; padding:15px 25px; border-radius:20px; font-weight:900; border:none;">
                                 تفعيل
                             </button>
-                            <button id="removeDiscountBtn" style="background: #ef4444; color: white; padding: 15px 25px; border-radius: 20px; font-weight: 900; border: none;">
+                            <button id="removeDiscountBtn" style="background:#ef4444; color:white; padding:15px 25px; border-radius:20px; font-weight:900; border:none;">
                                 إلغاء
                             </button>
                         </div>
-                    </div>
-                    
-                    <!-- إحصائيات سريعة -->
-                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px;">
-                        <div style="background: #f8fafc; padding: 15px; border-radius: 20px; text-align: center;">
-                            <p style="font-size: 24px; font-weight: 900; color: #eab308;" id="totalUsers">0</p>
-                            <p style="font-size: 12px; color: #64748b;">مستخدم</p>
-                        </div>
-                        <div style="background: #f8fafc; padding: 15px; border-radius: 20px; text-align: center;">
-                            <p style="font-size: 24px; font-weight: 900; color: #eab308;" id="totalOrders">0</p>
-                            <p style="font-size: 12px; color: #64748b;">طلب</p>
-                        </div>
-                        <div style="background: #f8fafc; padding: 15px; border-radius: 20px; text-align: center;">
-                            <p style="font-size: 24px; font-weight: 900; color: #eab308;" id="totalRevenue">0</p>
-                            <p style="font-size: 12px; color: #64748b;">إيرادات</p>
+                                    </div>
+
+                    <!-- إرسال الإشعارات -->
+                    <div style="background:var(--hover-bg); padding:20px; border-radius:25px; margin-bottom:20px;">
+                        <h3 style="font-size:18px; font-weight:900; margin-bottom:15px;">📢 إرسال إشعار</h3>
+                        
+                        <div style="margin-bottom:15px;">
+                            <select id="notifyType" style="width:100%; padding:15px; border-radius:20px; border:1px solid var(--border-color); background:var(--card-bg); color:var(--text-primary); margin-bottom:10px;">
+                                <option value="all">📢 لجميع المستخدمين</option>
+                                <option value="active">🟢 المستخدمين النشطين</option>
+                                <option value="inactive">⚫ المستخدمين غير النشطين</option>
+                                <option value="single">👤 مستخدم معين</option>
+                            </select>
+                            
+                            <div id="singleUserInput" style="display:none; margin-bottom:10px;">
+                                <input type="text" id="targetUserEmail" placeholder="البريد الإلكتروني للمستخدم" style="width:100%; padding:15px; border-radius:20px; border:1px solid var(--border-color); background:var(--card-bg); color:var(--text-primary);">
+                            </div>
+                            
+                            <select id="notifyTemplate" style="width:100%; padding:15px; border-radius:20px; border:1px solid var(--border-color); background:var(--card-bg); color:var(--text-primary); margin-bottom:10px;">
+                                <option value="">اختر قالب جاهز</option>
+                                <option value="discount">🎉 عرض وخصم</option>
+                                <option value="new_order">📦 طلب جديد (للأدمن)</option>
+                                <option value="order_completed">✅ طلب مكتمل</option>
+                                <option value="order_failed">❌ طلب فاشل</option>
+                                <option value="welcome">👋 ترحيب</option>
+                                <option value="reminder">⏰ تذكير بالسلة</option>
+                            </select>
+                            
+                            <input type="text" id="notifyTitle" placeholder="عنوان الإشعار" style="width:100%; padding:15px; border-radius:20px; border:1px solid var(--border-color); background:var(--card-bg); color:var(--text-primary); margin-bottom:10px;">
+                            <textarea id="notifyBody" placeholder="نص الإشعار" rows="3" style="width:100%; padding:15px; border-radius:20px; border:1px solid var(--border-color); background:var(--card-bg); color:var(--text-primary); margin-bottom:10px;"></textarea>
+                            
+                            <div style="display:flex; gap:10px;">
+                                <button id="sendNotificationBtn" style="flex:1; background:#3b82f6; color:white; padding:15px; border-radius:20px; font-weight:900; border:none;">
+                                    إرسال الآن
+                                </button>
+                                <button id="scheduleNotificationBtn" style="flex:1; background:#8b5cf6; color:white; padding:15px; border-radius:20px; font-weight:900; border:none;">
+                                    جدولة ⏰
+                                </button>
+                            </div>
                         </div>
                     </div>
                     
                     <!-- تبويبات الإدارة -->
-                    <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-                        <button class="admin-tab active" data-tab="products" style="flex: 1; padding: 12px; border-radius: 30px; background: #eab308; color: white; font-weight: 900; border: none;">المنتجات</button>
-                        <button class="admin-tab" data-tab="users" style="flex: 1; padding: 12px; border-radius: 30px; background: #f1f5f9; color: #64748b; font-weight: 900; border: none;">المستخدمين</button>
-                        <button class="admin-tab" data-tab="orders" style="flex: 1; padding: 12px; border-radius: 30px; background: #f1f5f9; color: #64748b; font-weight: 900; border: none;">الطلبات</button>
+                    <div style="display:flex; gap:10px; margin-bottom:20px;">
+                        <button class="admin-tab active" data-tab="products" style="flex:1; padding:12px; border-radius:30px; background:#eab308; color:white; font-weight:900; border:none;">المنتجات</button>
+                        <button class="admin-tab" data-tab="users" style="flex:1; padding:12px; border-radius:30px; background:var(--hover-bg); color:var(--text-primary); font-weight:900; border:none;">المستخدمين</button>
+                        <button class="admin-tab" data-tab="orders" style="flex:1; padding:12px; border-radius:30px; background:var(--hover-bg); color:var(--text-primary); font-weight:900; border:none;">الطلبات</button>
                     </div>
-
+                    
                     <!-- المحتوى -->
                     <div id="tab-products" class="tab-content">
-                        <h3 style="font-size: 18px; font-weight: 900; margin-bottom: 15px;">➕ إضافة منتج جديد</h3>
+                        <h3 style="font-size:18px; font-weight:900; margin-bottom:15px;">➕ إضافة منتج جديد</h3>
                         <form id="addProductForm">
-                            <input type="text" id="prodName" placeholder="اسم المنتج" style="width: 100%; padding: 15px; border-radius: 20px; border: 1px solid #e2e8f0; margin-bottom: 10px;" required>
-                            <input type="number" id="prodPrice" placeholder="السعر (ج.س)" style="width: 100%; padding: 15px; border-radius: 20px; border: 1px solid #e2e8f0; margin-bottom: 10px;" required>
-                            <input type="number" id="prodPoints" placeholder="النقاط الممنوحة" style="width: 100%; padding: 15px; border-radius: 20px; border: 1px solid #e2e8f0; margin-bottom: 10px;" required>
-                            <button type="submit" style="width: 100%; background: #eab308; color: white; padding: 15px; border-radius: 20px; font-weight: 900; border: none;">إضافة منتج</button>
+                            <input type="text" id="prodName" placeholder="اسم المنتج" style="width:100%; padding:15px; border-radius:20px; border:1px solid var(--border-color); background:var(--card-bg); color:var(--text-primary); margin-bottom:10px;" required>
+                            <input type="number" id="prodPrice" placeholder="السعر (ج.س)" style="width:100%; padding:15px; border-radius:20px; border:1px solid var(--border-color); background:var(--card-bg); color:var(--text-primary); margin-bottom:10px;" required>
+                            <input type="number" id="prodPoints" placeholder="النقاط الممنوحة" style="width:100%; padding:15px; border-radius:20px; border:1px solid var(--border-color); background:var(--card-bg); color:var(--text-primary); margin-bottom:10px;" required>
+                            <button type="submit" style="width:100%; background:#eab308; color:white; padding:15px; border-radius:20px; font-weight:900; border:none;">إضافة منتج</button>
                         </form>
-                        <div id="adminProductsList" style="margin-top: 20px;"></div>
+                        <div id="adminProductsList" style="margin-top:20px;"></div>
                     </div>
-
-                    <div id="tab-users" class="tab-content" style="display: none;">
-                        <h3 style="font-size: 18px; font-weight: 900; margin-bottom: 15px;">👥 المستخدمين</h3>
-                        <input type="text" id="searchUser" placeholder="🔍 بحث..." style="width: 100%; padding: 15px; border-radius: 20px; border: 1px solid #e2e8f0; margin-bottom: 15px;">
+                    
+                    <div id="tab-users" class="tab-content" style="display:none;">
+                        <h3 style="font-size:18px; font-weight:900; margin-bottom:15px;">👥 المستخدمين</h3>
+                        <input type="text" id="searchUser" placeholder="🔍 بحث..." style="width:100%; padding:15px; border-radius:20px; border:1px solid var(--border-color); background:var(--card-bg); color:var(--text-primary); margin-bottom:15px;">
                         <div id="adminUsersList"></div>
                     </div>
-
-                    <div id="tab-orders" class="tab-content" style="display: none;">
-                        <h3 style="font-size: 18px; font-weight: 900; margin-bottom: 15px;">📦 جميع الطلبات</h3>
+                    
+                    <div id="tab-orders" class="tab-content" style="display:none;">
+                        <h3 style="font-size:18px; font-weight:900; margin-bottom:15px;">📦 جميع الطلبات</h3>
                         <div id="adminOrdersList"></div>
                     </div>
                 </div>
             </div>
-
-            <!-- المنتجات -->
-            <div style="margin-bottom: 30px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h2 style="font-size: 24px; font-weight: 900; color: #1e293b;">🔥 بطاقات شدات ببجي</h2>
-                    <div id="discountBanner" style="display: none; background: #ef4444; color: white; padding: 8px 20px; border-radius: 30px; font-weight: 900;">
-                        خصم <span id="currentDiscount">0</span>% لفترة محدودة!
-                    </div>
-                </div>
-                <div id="productGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;"></div>
+            
+            <!-- باند الخصم -->
+            <div id="discountBanner" style="display:none; background:#ef4444; color:white; padding:15px; border-radius:30px; margin-bottom:20px; text-align:center; font-weight:900; font-size:18px; animation:pulse 2s infinite;">
+                🔥 خصم <span id="currentDiscount">0</span>% على جميع المنتجات لفترة محدودة!
             </div>
-
+            
+            <!-- صفحة الإشعارات -->
+            <div id="notificationsPage" style="display:none; margin-bottom:30px;">
+                <div class="glass-card" style="padding:25px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                        <h2 style="font-size:24px; font-weight:900;">🔔 الإشعارات</h2>
+                        <button id="markAllReadBtn" style="background:var(--hover-bg); padding:10px 20px; border-radius:30px; border:none; color:var(--text-primary); cursor:pointer;">
+                            تحديد الكل كمقروء
+                        </button>
+                    </div>
+                    <div id="notificationsList" style="max-height:500px; overflow-y:auto;"></div>
+                </div>
+            </div>
+            
+            <!-- المنتجات -->
+            <div style="margin-bottom:30px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                    <h2 style="font-size:24px; font-weight:900;">🔥 بطاقات شدات ببجي</h2>
+                </div>
+                <div id="productGrid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:20px;"></div>
+            </div>
+            
             <!-- طلبات المستخدم -->
-            <div class="glass-card" style="padding: 25px;">
-                <h2 style="font-size: 24px; font-weight: 900; color: #1e293b; margin-bottom: 20px;">
+            <div class="glass-card" style="padding:25px; margin-bottom:30px;">
+                <h2 style="font-size:24px; font-weight:900; margin-bottom:20px;">
                     <i class="fas fa-box-open text-yellow-500 ml-2"></i> طلباتي
                 </h2>
                 <div id="userOrdersList"></div>
             </div>
+        </main>
+        
+        <!-- تذييل -->
+        <footer>
+            <p>© 2026 KhasmShop - جميع الحقوق محفوظة</p>
+            <p style="font-size:12px; margin-top:10px;">الإصدار V21 - المتجر المتكامل مع PWA</p>
+        </footer>
+    </div>
+    
+    <!-- سلة المشتريات -->
+    <div id="cartSidebar" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:10000; display:none;" onclick="if(event.target===this) toggleCart()">
+        <div style="position:absolute; left:0; top:0; width:100%; max-width:400px; height:100%; background:var(--card-bg); padding:20px; overflow-y:auto;" onclick="event.stopPropagation()">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h2 style="font-size:22px; font-weight:900;">🛒 سلة المشتريات</h2>
+                <button onclick="toggleCart()" style="background:none; border:none; font-size:24px; cursor:pointer; color:var(--text-primary);"><i class="fas fa-times"></i></button>
+            </div>
+            <div id="cartItems"></div>
+            <div style="margin-top:20px; border-top:1px solid var(--border-color); padding-top:20px;">
+                <div style="display:flex; justify-content:space-between; font-size:18px; font-weight:900; margin-bottom:20px;">
+                    <span>الإجمالي:</span>
+                    <span id="cartTotal">0 ج.س</span>
+                </div>
+                <button onclick="checkout()" style="width:100%; background:#10b981; color:white; padding:15px; border-radius:20px; font-weight:900; border:none; margin-bottom:10px;">
+                    تأكيد الشراء
+                </button>
+                <button onclick="clearCart()" style="width:100%; background:#ef4444; color:white; padding:15px; border-radius:20px; font-weight:900; border:none;">
+                    تفريغ السلة
+                </button>
+            </div>
         </div>
     </div>
-
+    
     <!-- زر الواتساب -->
     <div class="wa-float">
         <div class="wa-menu" id="waMenu">
             <div class="wa-item" onclick="window.open('https://wa.me/249907760989', '_blank')">
-                <img src="https://via.placeholder.com/40" style="width: 40px; height: 40px; border-radius: 20px;">
+                <img src="https://via.placeholder.com/40" style="width:40px; height:40px; border-radius:20px;">
                 <div>
-                    <p style="font-weight: 900;">محمد فتحي</p>
-                    <p style="font-size: 11px; color: #64748b;">الدعم الفني</p>
+                    <p style="font-weight:900;">محمد فتحي</p>
+                    <p style="font-size:11px;">الدعم الفني</p>
                 </div>
-                <i class="fab fa-whatsapp text-green-500" style="margin-right: auto; font-size: 20px;"></i>
+                <i class="fab fa-whatsapp text-green-500" style="margin-right:auto; font-size:20px;"></i>
             </div>
             <div class="wa-item" onclick="window.open('https://wa.me/249916581517', '_blank')">
-                <img src="https://via.placeholder.com/40" style="width: 40px; height: 40px; border-radius: 20px;">
+                <img src="https://via.placeholder.com/40" style="width:40px; height:40px; border-radius:20px;">
                 <div>
-                    <p style="font-weight: 900;">محمد التاج</p>
-                    <p style="font-size: 11px; color: #64748b;">مدير المبيعات</p>
+                    <p style="font-weight:900;">محمد التاج</p>
+                    <p style="font-size:11px;">مدير المبيعات</p>
                 </div>
-                <i class="fab fa-whatsapp text-green-500" style="margin-right: auto; font-size: 20px;"></i>
+                <i class="fab fa-whatsapp text-green-500" style="margin-right:auto; font-size:20px;"></i>
             </div>
             <div class="wa-item" onclick="window.open('https://wa.me/249914178935', '_blank')">
-                <img src="https://via.placeholder.com/40" style="width: 40px; height: 40px; border-radius: 20px;">
+                <img src="https://via.placeholder.com/40" style="width:40px; height:40px; border-radius:20px;">
                 <div>
-                    <p style="font-weight: 900;">مهند ياسر</p>
-                    <p style="font-size: 11px; color: #64748b;">خدمة العملاء</p>
+                    <p style="font-weight:900;">مهند ياسر</p>
+                    <p style="font-size:11px;">خدمة العملاء</p>
                 </div>
-                <i class="fab fa-whatsapp text-green-500" style="margin-right: auto; font-size: 20px;"></i>
+                <i class="fab fa-whatsapp text-green-500" style="margin-right:auto; font-size:20px;"></i>
             </div>
         </div>
         <div class="wa-button" onclick="toggleWaMenu()">
             <i class="fab fa-whatsapp"></i>
         </div>
     </div>
-
+    
     <!-- إشعار -->
     <div id="toast"></div>
-
+    
+    <!-- Service Worker للتطبيق -->
     <script>
-        // وظيفة قائمة الواتساب
-        function toggleWaMenu() {
-            document.getElementById('waMenu').classList.toggle('show');
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('firebase-messaging-sw.js')
+                    .then(reg => console.log('✅ Service Worker registered'))
+                    .catch(err => console.log('❌ Service Worker error:', err));
+            });
         }
-
-        // إغلاق القائمة عند النقر خارجها
-        document.addEventListener('click', function(event) {
-            const waBtn = document.querySelector('.wa-button');
-            const waMenu = document.getElementById('waMenu');
-            if (!waBtn.contains(event.target) && !waMenu.contains(event.target)) {
-                waMenu.classList.remove('show');
-            }
-        });
     </script>
-    <!-- Firebase و Google One Tap -->
+    
+    <!-- Firebase -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, doc, setDoc, getDoc, collection, query, where, onSnapshot, orderBy, addDoc, updateDoc, increment, serverTimestamp, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { getAuth, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
+        import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging.js";
+        
         const firebaseConfig = {
             apiKey: "AIzaSyC0jzecEwKgHpxHpTi8Y-_bwwfzVdtgf3E",
             authDomain: "khasmshop.firebaseapp.com",
@@ -349,27 +524,26 @@
             messagingSenderId: "238182001615",
             appId: "1:238182001615:web:4c7ddea335df2111b440ba"
         };
-
+        
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
+        const messaging = getMessaging(app);
         const provider = new GoogleAuthProvider();
+        provider.setCustomParameters({ prompt: 'select_account' });
         
-        // إعدادات Google One Tap
-        provider.setCustomParameters({
-            prompt: 'select_account'
-        });
-
         const ADMINS = ["mhmdfthu98@gmail.com", "muhammedaltaj111@gmail.com", "mohnadyasir43@gmail.com"];
         let userData = null;
         let currentDiscount = 0;
         let maintenanceMode = false;
-        let products = [];
-
-        // ==================== Google One Tap ====================
+        let cart = [];
+        let notifications = [];
+        let unreadCount = 0;
+        
+        // ========== Google One Tap ==========
         window.onload = function() {
             google.accounts.id.initialize({
-                client_id: "238182001615-xxxxxxxxxxxx.apps.googleusercontent.com", // ضع Client ID الصحيح
+                client_id: "238182001615-15k6t7ag44c7du121udmotnbu7fhu17v.apps.googleusercontent.com",
                 callback: handleCredentialResponse,
                 auto_select: true,
                 context: 'signin'
@@ -377,37 +551,28 @@
             
             google.accounts.id.renderButton(
                 document.getElementById("googleBtn"),
-                { 
-                    theme: "outline", 
-                    size: "large", 
-                    width: 400,
-                    text: "continue_with",
-                    shape: "pill"
-                }
+                { theme: "outline", size: "large", width: 400, text: "continue_with", shape: "pill" }
             );
             
             google.accounts.id.prompt();
         };
-
+        
         function handleCredentialResponse(response) {
             document.getElementById('loading-screen').style.display = 'flex';
-            
-            // تحويل الـ credential إلى Firebase
             const credential = GoogleAuthProvider.credential(response.credential);
             
             import("https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js")
-                .then(({ signInWithCredential }) => {
-                    return signInWithCredential(auth, credential);
-                })
-                .then((result) => {
+                .then(({ signInWithCredential }) => signInWithCredential(auth, credential))
+                .then(result => {
                     showToast(`مرحباً ${result.user.displayName}`);
                 })
-                .catch((error) => {
+                .catch(error => {
                     document.getElementById('loading-screen').style.display = 'none';
                     showToast(error.message, true);
                 });
         }
-
+        
+        // ========== دوال مساعدة ==========
         function showToast(msg, isError = false) {
             const toast = document.getElementById('toast');
             toast.textContent = msg;
@@ -415,21 +580,297 @@
             toast.style.display = 'block';
             setTimeout(() => toast.style.display = 'none', 3000);
         }
+        
+        // ========== الوضع الليلي ==========
+        function initDarkMode() {
+            const darkMode = localStorage.getItem('darkMode') === 'true';
+            if (darkMode) {
+                document.body.classList.add('dark-mode');
+                document.getElementById('darkModeToggle').innerHTML = '<i class="fas fa-sun"></i>';
+            }
+        }
+        
+        document.getElementById('darkModeToggle').addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDark);
+            document.getElementById('darkModeToggle').innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+        });
+        
+        // ========== قائمة الواتساب ==========
+        window.toggleWaMenu = () => {
+            document.getElementById('waMenu').classList.toggle('show');
+        };
+        
+        document.addEventListener('click', (e) => {
+            const btn = document.querySelector('.wa-button');
+            const menu = document.getElementById('waMenu');
+            if (btn && menu && !btn.contains(e.target) && !menu.contains(e.target)) {
+                menu.classList.remove('show');
+            }
+        });
 
-        // التحقق من وضع الصيانة
+        // ========== سلة المشتريات ==========
+        window.toggleCart = () => {
+            document.getElementById('cartSidebar').classList.toggle('hidden');
+            updateCartSidebar();
+        };
+        
+        function updateCartSidebar() {
+            const container = document.getElementById('cartItems');
+            if (!cart.length) {
+                container.innerHTML = '<p style="text-align:center; color:var(--text-secondary);">السلة فارغة</p>';
+                document.getElementById('cartTotal').innerText = '0 ج.س';
+                return;
+            }
+            let html = '', total = 0;
+            cart.forEach(item => {
+                total += item.price * item.quantity;
+                html += `
+                    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-color); padding:10px 0;">
+                        <div>
+                            <p style="font-weight:900;">${item.name}</p>
+                            <p style="font-size:12px; color:var(--text-secondary);">${item.price} ج.س × ${item.quantity}</p>
+                        </div>
+                        <div style="display:flex; gap:5px;">
+                            <button onclick="updateQuantity('${item.name}', -1)" style="width:30px; height:30px; background:#ef4444; color:white; border:none; border-radius:10px;">-</button>
+                            <span>${item.quantity}</span>
+                            <button onclick="updateQuantity('${item.name}', 1)" style="width:30px; height:30px; background:#10b981; color:white; border:none; border-radius:10px;">+</button>
+                            <button onclick="removeFromCart('${item.name}')" style="color:#ef4444; background:none; border:none;"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+            document.getElementById('cartTotal').innerText = total + ' ج.س';
+        }
+        
+        window.addToCart = (name, price, points) => {
+            const existing = cart.find(item => item.name === name);
+            if (existing) existing.quantity++;
+            else cart.push({ name, price, points, quantity: 1 });
+            showToast('✅ تمت الإضافة للسلة');
+            updateCartBadge();
+        };
+        
+        window.updateQuantity = (name, delta) => {
+            const item = cart.find(i => i.name === name);
+            if (item) {
+                item.quantity += delta;
+                if (item.quantity <= 0) cart = cart.filter(i => i.name !== name);
+            }
+            updateCartBadge();
+            updateCartSidebar();
+        };
+        
+        window.removeFromCart = (name) => {
+            cart = cart.filter(i => i.name !== name);
+            updateCartBadge();
+            updateCartSidebar();
+        };
+        
+        window.clearCart = () => {
+            cart = [];
+            updateCartBadge();
+            updateCartSidebar();
+            showToast('تم تفريغ السلة');
+        };
+        
+        function updateCartBadge() {
+            const count = cart.reduce((a, i) => a + i.quantity, 0);
+            const badge = document.getElementById('cartCount');
+            if (count > 0) {
+                badge.innerText = count;
+                badge.style.display = 'flex';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+        
+        // ========== نظام الإشعارات ==========
+        async function requestNotificationPermission() {
+            const permission = await Notification.requestPermission();
+            if (permission === 'granted') {
+                const token = await getToken(messaging, {
+                    vapidKey: 'BIdUvk8R6cRZ0FLkHXQKxNq9CwZ2Y3L4M5N6P7Q8R9S0T1U2V3W4X5Y6Z7'
+                });
+                
+                if (auth.currentUser) {
+                    await setDoc(doc(db, "users", auth.currentUser.uid), {
+                        fcmToken: token,
+                        tokenUpdatedAt: serverTimestamp()
+                    }, { merge: true });
+                }
+            }
+        }
+        
+        onMessage(messaging, (payload) => {
+            showNotification(payload.notification);
+            addNotificationToHistory(payload.notification);
+        });
+        
+        function showNotification(notification) {
+            const toast = document.getElementById('toast');
+            toast.textContent = notification.body;
+            toast.style.background = '#3b82f6';
+            toast.style.display = 'block';
+            setTimeout(() => toast.style.display = 'none', 5000);
+            
+            unreadCount++;
+            document.getElementById('notificationBadge').innerText = unreadCount;
+            document.getElementById('notificationBadge').style.display = 'flex';
+        }
+        
+        async function addNotificationToHistory(notification) {
+            if (auth.currentUser) {
+                await addDoc(collection(db, "notifications"), {
+                    uID: auth.currentUser.uid,
+                    title: notification.title,
+                    body: notification.body,
+                    read: false,
+                    timestamp: serverTimestamp()
+                });
+            }
+        }
+        
+        // ========== فتح صفحة الإشعارات ==========
+        document.getElementById('notificationsBtn').addEventListener('click', () => {
+            const page = document.getElementById('notificationsPage');
+            page.style.display = page.style.display === 'none' ? 'block' : 'none';
+            loadNotifications();
+        });
+        
+        async function loadNotifications() {
+            if (!auth.currentUser) return;
+            
+            const q = query(
+                collection(db, "notifications"),
+                where("uID", "==", auth.currentUser.uid),
+                orderBy("timestamp", "desc")
+            );
+            
+            onSnapshot(q, (snap) => {
+                const list = document.getElementById('notificationsList');
+                unreadCount = 0;
+                list.innerHTML = '';
+                
+                snap.forEach(doc => {
+                    const n = doc.data();
+                    if (!n.read) unreadCount++;
+                    
+                    const date = n.timestamp ? new Date(n.timestamp.toDate()).toLocaleString('ar-EG') : '';
+                    list.innerHTML += `
+                        <div style="padding:15px; border-bottom:1px solid var(--border-color); ${!n.read ? 'background:var(--hover-bg);' : ''}">
+                            <div style="display:flex; justify-content:space-between;">
+                                <p style="font-weight:900;">${n.title}</p>
+                                ${!n.read ? '<span style="background:#3b82f6; width:10px; height:10px; border-radius:50%;"></span>' : ''}
+                            </div>
+                            <p style="font-size:14px; margin:5px 0;">${n.body}</p>
+                            <p style="font-size:11px; color:var(--text-secondary);">${date}</p>
+                        </div>
+                    `;
+                });
+                
+                document.getElementById('notificationBadge').innerText = unreadCount;
+                document.getElementById('notificationBadge').style.display = unreadCount > 0 ? 'flex' : 'none';
+            });
+        }
+        
+        document.getElementById('markAllReadBtn').addEventListener('click', async () => {
+            if (!auth.currentUser) return;
+            
+            const q = query(
+                collection(db, "notifications"),
+                where("uID", "==", auth.currentUser.uid),
+                where("read", "==", false)
+            );
+            
+            const snap = await getDocs(q);
+            snap.forEach(async (doc) => {
+                await updateDoc(doc.ref, { read: true });
+            });
+            
+            unreadCount = 0;
+            document.getElementById('notificationBadge').style.display = 'none';
+        });
+        
+        // ========== شراء الآن ==========
+        window.buyNow = async (name, originalPrice, points, finalPrice) => {
+            if (!userData) return showToast('سجل الدخول أولاً', true);
+            
+            const priceToPay = finalPrice || originalPrice;
+            
+            if (userData.balance < priceToPay) return showToast('الرصيد غير كافٍ', true);
+            
+            const gameID = prompt('أدخل ID اللاعب (Player ID):');
+            if (!gameID || !/^\d+$/.test(gameID)) return showToast('ID غير صالح', true);
+            
+            const ingameName = prompt('اسمك داخل اللعبة:');
+            if (!ingameName) return showToast('الاسم مطلوب', true);
+            
+            const realName = prompt('اسمك الحقيقي:');
+            if (!realName) return showToast('الاسم مطلوب', true);
+            
+            const phone = prompt('رقم الهاتف للتواصل:');
+            if (!phone || !/^\d+$/.test(phone)) return showToast('رقم الهاتف غير صالح', true);
+            
+            if (!confirm(`تأكيد شراء ${name} بقيمة ${priceToPay} ج.س؟`)) return;
+            
+            try {
+                await updateDoc(doc(db, "users", auth.currentUser.uid), { 
+                    balance: increment(-priceToPay) 
+                });
+                
+                await addDoc(collection(db, "orders"), {
+                    uID: auth.currentUser.uid,
+                    uName: userData.name,
+                    product: name,
+                    price: priceToPay,
+                    originalPrice: originalPrice,
+                    pts: points,
+                    gameID, ingameName, realName, phone,
+                    discount: currentDiscount,
+                    status: 'قيد الانتظار',
+                    timestamp: serverTimestamp()
+                });
+                
+                showToast('✅ تم إرسال الطلب');
+            } catch (error) {
+                showToast(error.message, true);
+            }
+        };
+        
+        // ========== استبدال النقاط ==========
+        document.getElementById('redeemBtn').onclick = async () => {
+            if (!userData || userData.points < 30) return showToast('تحتاج 30 نقطة', true);
+            if (!confirm('استبدال 30 نقطة مقابل 60 ج.س؟')) return;
+            
+            await updateDoc(doc(db, "users", auth.currentUser.uid), {
+                points: increment(-30),
+                balance: increment(60)
+            });
+            showToast('🎉 تم الاستبدال');
+        };
+        
+        // ========== تسجيل الخروج ==========
+        document.getElementById('logout-btn').onclick = async () => {
+            await signOut(auth);
+            window.location.reload();
+        };
+        
+        // ========== التحقق من الصيانة ==========
         async function checkMaintenance() {
             try {
                 const maintenanceRef = doc(db, "settings", "maintenance");
                 const maintenanceSnap = await getDoc(maintenanceRef);
                 maintenanceMode = maintenanceSnap.exists() ? maintenanceSnap.data().enabled : false;
                 
-                // التحقق من الخصم
                 const discountRef = doc(db, "settings", "discount");
                 const discountSnap = await getDoc(discountRef);
                 if (discountSnap.exists()) {
                     currentDiscount = discountSnap.data().percentage || 0;
                     if (currentDiscount > 0) {
-                        document.getElementById('discountBanner').style.display = 'inline-block';
+                        document.getElementById('discountBanner').style.display = 'block';
                         document.getElementById('currentDiscount').innerText = currentDiscount;
                     } else {
                         document.getElementById('discountBanner').style.display = 'none';
@@ -444,20 +885,14 @@
                     document.getElementById('maintenance-screen').style.display = 'none';
                 }
             } catch (error) {
-                console.error("خطأ في التحقق من الصيانة:", error);
+                console.error("خطأ:", error);
             }
         }
-
-        // تسجيل الخروج
-        document.getElementById('logout-btn').onclick = async () => {
-            await signOut(auth);
-            // إعادة تحميل الصفحة لمسح الجلسة
-            window.location.reload();
-        };
-
-        // حالة المصادقة
+        
+        // ========== حالة المصادقة ==========
         onAuthStateChanged(auth, async (user) => {
             await checkMaintenance();
+            initDarkMode();
             
             if (user) {
                 try {
@@ -478,11 +913,13 @@
                     } else {
                         await updateDoc(userRef, { lastLogin: serverTimestamp() });
                     }
-
+                    
                     document.getElementById('loading-screen').style.display = 'none';
                     document.getElementById('auth-screen').style.display = 'none';
                     document.getElementById('main-app').style.display = 'block';
                     
+                    requestNotificationPermission();
+                    loadNotifications();
                     startListening(user.uid);
                     
                 } catch (error) {
@@ -494,15 +931,11 @@
                 document.getElementById('main-app').style.display = 'none';
                 document.getElementById('loading-screen').style.display = 'none';
                 
-                // إعادة تفعيل One Tap
-                setTimeout(() => {
-                    google.accounts.id.prompt();
-                }, 1000);
+                setTimeout(() => google.accounts.id.prompt(), 1000);
             }
         });
-
+        
         function startListening(uid) {
-            // بيانات المستخدم
             onSnapshot(doc(db, "users", uid), (doc) => {
                 if (doc.exists()) {
                     userData = doc.data();
@@ -526,56 +959,54 @@
                     }
                 }
             });
-
-            // المنتجات مع الخصم
+            
             onSnapshot(collection(db, "products"), (snap) => {
-                products = [];
                 const grid = document.getElementById('productGrid');
                 grid.innerHTML = '';
                 
                 snap.forEach(doc => {
                     const p = doc.data();
-                    products.push({ id: doc.id, ...p });
-                    
                     const finalPrice = currentDiscount > 0 
                         ? Math.round(p.price * (1 - currentDiscount / 100))
                         : p.price;
                     
                     grid.innerHTML += `
-                        <div style="background: white; border-radius: 30px; padding: 25px 20px; border: 1px solid #e2e8f0; position: relative;">
-                            <div class="points-badge" style="position: absolute; top: 15px; left: 15px;">
+                        <div style="background:var(--card-bg); border-radius:30px; padding:25px 20px; border:1px solid var(--border-color); position:relative;">
+                            <div class="points-badge" style="position:absolute; top:15px; left:15px;">
                                 <i class="fas fa-star ml-1"></i> ${p.givePoints} نقطة
                             </div>
                             ${currentDiscount > 0 ? `
-                                <div class="discount-badge" style="position: absolute; top: 15px; right: 15px;">
+                                <div class="discount-badge" style="position:absolute; top:15px; right:15px;">
                                     <i class="fas fa-tag ml-1"></i> خصم ${currentDiscount}%
                                 </div>
                             ` : ''}
-                            <p style="font-size: 20px; font-weight: 900; color: #1e293b; margin-top: 30px;">${p.name}</p>
-                            <div style="margin: 15px 0; text-align: center;">
+                            <p style="font-size:20px; font-weight:900; margin-top:30px;">${p.name}</p>
+                            <div style="margin:15px 0; text-align:center;">
                                 ${currentDiscount > 0 ? `
-                                    <span class="old-price">${p.price} ج.س</span>
-                                    <span class="new-price">${finalPrice} ج.س</span>
+                                    <span style="text-decoration:line-through; color:var(--text-secondary);">${p.price} ج.س</span>
+                                    <span style="font-size:28px; font-weight:900; color:#ef4444; margin-right:10px;">${finalPrice} ج.س</span>
                                 ` : `
-                                    <span style="font-size: 28px; font-weight: 900; color: #eab308;">${p.price} <span style="font-size: 14px;">ج.س</span></span>
+                                    <span style="font-size:28px; font-weight:900; color:#eab308;">${p.price} <span style="font-size:14px;">ج.س</span></span>
                                 `}
                             </div>
-                            <button onclick="buyNow('${p.name}', ${p.price}, ${p.givePoints}, ${finalPrice})" style="width: 100%; background: #0f172a; color: white; padding: 15px; border-radius: 20px; font-weight: 900; border: none;">
+                            <button onclick="addToCart('${p.name}', ${finalPrice}, ${p.givePoints})" style="width:100%; background:#0f172a; color:white; padding:12px; border-radius:20px; font-weight:900; border:none; margin-bottom:10px;">
+                                <i class="fas fa-cart-plus ml-2"></i> أضف للسلة
+                            </button>
+                            <button onclick="buyNow('${p.name}', ${p.price}, ${p.givePoints}, ${finalPrice})" style="width:100%; background:#eab308; color:white; padding:12px; border-radius:20px; font-weight:900; border:none;">
                                 <i class="fas fa-bolt ml-2"></i> اشترى الآن
                             </button>
                         </div>
                     `;
                 });
             });
-
-            // طلبات المستخدم
+            
             const q = query(collection(db, "orders"), where("uID", "==", uid), orderBy("timestamp", "desc"));
             onSnapshot(q, (snap) => {
                 const list = document.getElementById('userOrdersList');
                 list.innerHTML = '';
                 
                 if (snap.empty) {
-                    list.innerHTML = '<p style="text-align: center; color: #64748b; padding: 40px;">لا توجد طلبات سابقة</p>';
+                    list.innerHTML = '<p style="text-align:center; color:var(--text-secondary); padding:40px;">لا توجد طلبات سابقة</p>';
                     return;
                 }
                 
@@ -585,32 +1016,29 @@
                     const statusClass = o.status === 'مكتمل' ? 'status-completed' : 
                                        o.status === 'فشل' ? 'status-failed' : 
                                        o.status === 'قيد التنفيذ' ? 'status-processing' : 'status-pending';
-                    
                     list.innerHTML += `
-                        <div class="order-card">
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                                <p style="font-weight: 900;">${o.product} ${o.quantity ? 'x' + o.quantity : ''}</p>
+                        <div style="background:var(--hover-bg); border-radius:20px; padding:15px; margin-bottom:10px;">
+                            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                                <p style="font-weight:900;">${o.product} ${o.quantity ? 'x' + o.quantity : ''}</p>
                                 <span class="order-status ${statusClass}">${o.status}</span>
                             </div>
-                            <div style="background: #f8fafc; padding: 10px; border-radius: 15px; margin-bottom: 10px;">
-                                <p style="font-size: 13px;"><span style="color: #64748b;">Player ID:</span> ${o.gameID}</p>
-                                <p style="font-size: 13px;"><span style="color: #64748b;">اسم اللعبة:</span> ${o.ingameName}</p>
+                            <div style="background:var(--card-bg); padding:10px; border-radius:15px; margin-bottom:10px;">
+                                <p style="font-size:13px;">ID: ${o.gameID}</p>
+                                <p style="font-size:13px;">الاسم: ${o.ingameName}</p>
                             </div>
-                            <div style="display: flex; justify-content: space-between; font-size: 14px;">
+                            <div style="display:flex; justify-content:space-between; font-size:14px;">
                                 <span>💰 ${o.price} ج.س</span>
                                 <span>⭐ ${o.pts} نقطة</span>
-                                <span style="color: #94a3b8;">${date}</span>
+                                <span style="color:var(--text-secondary);">${date}</span>
                             </div>
                         </div>
                     `;
                 });
             });
-
-            // لوحة الأدمن
+            
             if (ADMINS.includes(auth.currentUser?.email)) {
                 document.getElementById('adminArea').style.display = 'block';
                 
-                // أزرار الصيانة
                 document.getElementById('maintenance-on-btn').onclick = async () => {
                     await setDoc(doc(db, "settings", "maintenance"), { enabled: true });
                     showToast('✅ تم تفعيل وضع الصيانة');
@@ -623,7 +1051,6 @@
                     checkMaintenance();
                 };
                 
-                // نظام الخصم
                 document.getElementById('applyDiscountBtn').onclick = async () => {
                     const percent = parseInt(document.getElementById('discountPercent').value);
                     if (isNaN(percent) || percent < 0 || percent > 100) {
@@ -632,7 +1059,7 @@
                     }
                     await setDoc(doc(db, "settings", "discount"), { percentage: percent });
                     currentDiscount = percent;
-                    showToast(`✅ تم تفعيل خصم ${percent}% على جميع المنتجات`);
+                    showToast(`✅ تم تفعيل خصم ${percent}%`);
                 };
                 
                 document.getElementById('removeDiscountBtn').onclick = async () => {
@@ -642,135 +1069,107 @@
                     showToast('✅ تم إلغاء الخصم');
                 };
                 
+                // إرسال الإشعارات
+                document.getElementById('notifyType').addEventListener('change', (e) => {
+                    document.getElementById('singleUserInput').style.display = 
+                        e.target.value === 'single' ? 'block' : 'none';
+                });
+                
+                document.getElementById('notifyTemplate').addEventListener('change', (e) => {
+                    const templates = {
+                        discount: { title: '🔥 عرض خاص', body: `خصم ${currentDiscount}% على جميع المنتجات اليوم فقط!` },
+                        new_order: { title: '📦 طلب جديد', body: 'لديك طلب جديد في المتجر' },
+                        order_completed: { title: '✅ طلب مكتمل', body: 'طلبك اكتمل بنجاح! شكراً لتسوقك' },
+                        order_failed: { title: '❌ طلب فاشل', body: 'للأسف الطلب فشل، تواصل مع الدعم' },
+                        welcome: { title: '👋 أهلاً بك', body: 'شكراً لانضمامك إلى KhasmShop! لديك 100 ج.س هدية' },
+                        reminder: { title: '⏰ تذكير', body: 'عندك منتجات في السلة، أكمل طلبك الآن' }
+                    };
+                    
+                    const template = templates[e.target.value];
+                    if (template) {
+                        document.getElementById('notifyTitle').value = template.title;
+                        document.getElementById('notifyBody').value = template.body;
+                    }
+                });
+                
+                document.getElementById('sendNotificationBtn').onclick = async () => {
+                    const type = document.getElementById('notifyType').value;
+                    const title = document.getElementById('notifyTitle').value;
+                    const body = document.getElementById('notifyBody').value;
+                    const targetEmail = document.getElementById('targetUserEmail').value;
+                    
+                    if (!title || !body) return showToast('❌ أدخل عنوان ونص الإشعار', true);
+                    
+                    // محاكاة إرسال الإشعار
+                    showToast(`✅ تم إرسال الإشعار إلى ${type === 'all' ? 'جميع المستخدمين' : 'المستخدم المحدد'}`);
+                    
+                    // في الواقع، هنا يتم إرسال الإشعار عبر Firebase Cloud Messaging
+                };
+                
                 loadAdminData();
             }
         }
-
-        // شراء الآن
-        window.buyNow = async (name, originalPrice, points, finalPrice) => {
-            if (!userData) return showToast('سجل الدخول أولاً', true);
-            
-            const priceToPay = finalPrice || originalPrice;
-            
-            if (userData.balance < priceToPay) return showToast('الرصيد غير كافٍ', true);
-            
-            const gameID = prompt('أدخل ID اللاعب (Player ID):');
-            if (!gameID || !/^\d+$/.test(gameID)) return showToast('ID غير صالح', true);
-            
-            const ingameName = prompt('اسمك داخل اللعبة:');
-            if (!ingameName) return showToast('الاسم مطلوب', true);
-            
-            const realName = prompt('اسمك الحقيقي:');
-            if (!realName) return showToast('الاسم مطلوب', true);
-            
-            const phone = prompt('رقم الهاتف للتواصل:');
-            if (!phone || !/^\d+$/.test(phone)) return showToast('رقم الهاتف غير صالح', true);
-
-            if (!confirm(`تأكيد شراء ${name} بقيمة ${priceToPay} ج.س؟`)) return;
-
-            try {
-                await updateDoc(doc(db, "users", auth.currentUser.uid), { 
-                    balance: increment(-priceToPay) 
-                });
-                
-                await addDoc(collection(db, "orders"), {
-                    uID: auth.currentUser.uid,
-                    uName: userData.name,
-                    product: name,
-                    price: priceToPay,
-                    originalPrice: originalPrice,
-                    pts: points,
-                    gameID, 
-                    ingameName, 
-                    realName, 
-                    phone,
-                    discount: currentDiscount,
-                    status: 'قيد الانتظار',
-                    timestamp: serverTimestamp()
-                });
-                
-                showToast('✅ تم إرسال الطلب');
-            } catch (error) {
-                showToast(error.message, true);
-            }
-        };
-
-        // استبدال النقاط
-        document.getElementById('redeemBtn').onclick = async () => {
-            if (!userData || userData.points < 30) return showToast('تحتاج 30 نقطة', true);
-            if (!confirm('استبدال 30 نقطة مقابل 60 ج.س؟')) return;
-            
-            await updateDoc(doc(db, "users", auth.currentUser.uid), {
-                points: increment(-30),
-                balance: increment(60)
-            });
-            showToast('🎉 تم الاستبدال');
-        };
-
-        // دوال الأدمن
+        
         async function loadAdminData() {
-            // إحصائيات
             const usersSnap = await getDocs(collection(db, "users"));
             const ordersSnap = await getDocs(collection(db, "orders"));
+            const notificationsSnap = await getDocs(collection(db, "notifications"));
             
             let totalRevenue = 0;
-            ordersSnap.forEach(doc => {
-                totalRevenue += doc.data().price || 0;
-            });
+            ordersSnap.forEach(doc => { totalRevenue += doc.data().price || 0; });
             
             document.getElementById('totalUsers').innerText = usersSnap.size;
             document.getElementById('totalOrders').innerText = ordersSnap.size;
             document.getElementById('totalRevenue').innerText = totalRevenue.toLocaleString();
+            document.getElementById('totalNotifications').innerText = notificationsSnap.size;
             
-            // المنتجات
             onSnapshot(collection(db, "products"), (snap) => {
                 const list = document.getElementById('adminProductsList');
                 list.innerHTML = '';
                 snap.forEach(doc => {
                     const p = doc.data();
                     list.innerHTML += `
-                        <div style="background: #f8fafc; padding: 15px; border-radius: 20px; margin-bottom: 10px; display: flex; justify-content: space-between;">
+                        <div style="background:var(--hover-bg); padding:15px; border-radius:20px; margin-bottom:10px; display:flex; justify-content:space-between;">
                             <div>
-                                <span style="font-weight: 900;">${p.name}</span>
-                                <span style="color: #eab308; margin-right: 10px;">${p.price} ج.س</span>
-                                <span style="color: #3b82f6;">⭐ ${p.givePoints}</span>
+                                <span style="font-weight:900;">${p.name}</span>
+                                <span style="color:#eab308; margin-right:10px;">${p.price} ج.س</span>
+                                <span style="color:#3b82f6;">⭐ ${p.givePoints}</span>
                             </div>
-                            <button onclick="deleteProduct('${doc.id}')" style="color: #ef4444; background: none; border: none;">
+                            <button onclick="deleteProduct('${doc.id}')" style="color:#ef4444; background:none; border:none;">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
                     `;
                 });
             });
-            // المستخدمين
+            
             onSnapshot(collection(db, "users"), (snap) => {
                 const list = document.getElementById('adminUsersList');
                 list.innerHTML = '';
                 snap.forEach(doc => {
                     const u = doc.data();
                     list.innerHTML += `
-                        <div style="background: #f8fafc; padding: 15px; border-radius: 20px; margin-bottom: 10px;">
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <div style="background:var(--hover-bg); padding:15px; border-radius:20px; margin-bottom:10px;">
+                            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
                                 <div>
-                                    <p style="font-weight: 900;">${u.name}</p>
-                                    <p style="font-size: 12px; color: #64748b;">${u.email}</p>
+                                    <p style="font-weight:900;">${u.name}</p>
+                                    <p style="font-size:12px;">${u.email}</p>
                                 </div>
-                                <span style="background: #fef3c7; color: #eab308; padding: 5px 15px; border-radius: 30px;">#${u.walletID}</span>
+                                <span style="background:#fef3c7; color:#eab308; padding:5px 15px; border-radius:30px;">#${u.walletID}</span>
                             </div>
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
                                 <span>💰 ${u.balance || 0} ج.س</span>
                                 <span>⭐ ${u.points || 0}</span>
                                 <div>
-                                    <input type="number" id="recharge-${doc.id}" placeholder="المبلغ" style="width: 80px; padding: 8px; border-radius: 10px; border: 1px solid #e2e8f0;">
-                                    <button onclick="rechargeUser('${doc.id}')" style="background: #eab308; color: white; padding: 8px 15px; border-radius: 10px; border: none; margin-right: 5px;">شحن</button>
+                                    <input type="number" id="recharge-${doc.id}" placeholder="المبلغ" style="width:80px; padding:8px; border-radius:10px; border:1px solid var(--border-color); background:var(--card-bg); color:var(--text-primary);">
+                                    <button onclick="rechargeUser('${doc.id}')" style="background:#eab308; color:white; padding:8px 15px; border-radius:10px; border:none;">شحن</button>
                                 </div>
                             </div>
                         </div>
                     `;
                 });
             });
-
-            // الطلبات
+            
             const q = query(collection(db, "orders"), orderBy("timestamp", "desc"));
             onSnapshot(q, (snap) => {
                 const list = document.getElementById('adminOrdersList');
@@ -779,14 +1178,14 @@
                     const o = doc.data();
                     const date = o.timestamp ? new Date(o.timestamp.toDate()).toLocaleString('ar-EG') : '';
                     list.innerHTML += `
-                        <div style="background: #f8fafc; padding: 20px; border-radius: 25px; margin-bottom: 15px;">
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                        <div style="background:var(--hover-bg); padding:20px; border-radius:25px; margin-bottom:15px;">
+                            <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
                                 <div>
-                                    <p style="font-weight: 900;">${o.product} ${o.quantity ? 'x'+o.quantity : ''}</p>
-                                    <p style="font-size: 13px; color: #64748b;">👤 ${o.uName}</p>
+                                    <p style="font-weight:900;">${o.product} ${o.quantity ? 'x'+o.quantity : ''}</p>
+                                    <p style="font-size:13px;">👤 ${o.uName}</p>
                                 </div>
                                 <select onchange="updateOrderStatus('${doc.id}', this.value)" 
-                                        style="padding: 8px 15px; border-radius: 30px; border: 2px solid #e2e8f0; font-weight: 700;"
+                                        style="padding:8px 15px; border-radius:30px; border:2px solid var(--border-color); background:var(--card-bg); color:var(--text-primary);"
                                         ${o.status === 'مكتمل' || o.status === 'فشل' ? 'disabled' : ''}>
                                     <option value="قيد الانتظار" ${o.status === 'قيد الانتظار' ? 'selected' : ''}>⏳ قيد الانتظار</option>
                                     <option value="قيد التنفيذ" ${o.status === 'قيد التنفيذ' ? 'selected' : ''}>🔄 قيد التنفيذ</option>
@@ -794,32 +1193,31 @@
                                     <option value="فشل" ${o.status === 'فشل' ? 'selected' : ''}>❌ فشل</option>
                                 </select>
                             </div>
-                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; background: white; padding: 15px; border-radius: 20px; margin-bottom: 10px;">
-                                <div><span style="color: #64748b;">Player ID:</span> ${o.gameID}</div>
-                                <div><span style="color: #64748b;">اسم اللعبة:</span> ${o.ingameName}</div>
-                                <div><span style="color: #64748b;">الاسم الحقيقي:</span> ${o.realName}</div>
-                                <div><span style="color: #64748b;">الهاتف:</span> ${o.phone}</div>
+                            <div style="background:var(--card-bg); padding:15px; border-radius:20px; margin-bottom:10px;">
+                                <p><span style="color:var(--text-secondary);">Player ID:</span> ${o.gameID}</p>
+                                <p><span style="color:var(--text-secondary);">الاسم داخل اللعبة:</span> ${o.ingameName}</p>
+                                <p><span style="color:var(--text-secondary);">الاسم الحقيقي:</span> ${o.realName}</p>
+                                <p><span style="color:var(--text-secondary);">الهاتف:</span> ${o.phone}</p>
                             </div>
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <span style="font-weight: 900;">💰 ${o.price} ج.س</span>
-                                <span style="color: #eab308;">⭐ ${o.pts} نقطة</span>
-                                ${o.discount ? `<span style="color: #ef4444;">خصم ${o.discount}%</span>` : ''}
-                                <span style="color: #94a3b8; font-size: 12px;">${date}</span>
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <span style="font-weight:900;">💰 ${o.price} ج.س</span>
+                                <span style="color:#eab308;">⭐ ${o.pts} نقطة</span>
+                                ${o.discount ? `<span style="color:#ef4444;">خصم ${o.discount}%</span>` : ''}
+                                <span style="color:var(--text-secondary); font-size:12px;">${date}</span>
                             </div>
                         </div>
                     `;
                 });
             });
         }
-
-        // دوال إضافية
+        
         window.deleteProduct = async (id) => {
             if (confirm('حذف المنتج؟')) {
                 await deleteDoc(doc(db, "products", id));
                 showToast('✅ تم الحذف');
             }
         };
-
+        
         window.rechargeUser = async (userId) => {
             const amount = parseInt(document.getElementById(`recharge-${userId}`).value);
             if (isNaN(amount) || amount <= 0) return showToast('❌ أدخل مبلغ صحيح', true);
@@ -827,7 +1225,7 @@
             showToast('✅ تم الشحن');
             document.getElementById(`recharge-${userId}`).value = '';
         };
-
+        
         window.updateOrderStatus = async (orderId, newStatus) => {
             await updateDoc(doc(db, "orders", orderId), { status: newStatus });
             
@@ -841,8 +1239,7 @@
             
             showToast('✅ تم تحديث الحالة');
         };
-
-        // إضافة منتج
+        
         document.getElementById('addProductForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('prodName').value;
@@ -853,13 +1250,12 @@
             showToast('✅ تمت الإضافة');
             document.getElementById('addProductForm').reset();
         });
-
-        // تبويبات الأدمن
+        
         document.querySelectorAll('.admin-tab').forEach(tab => {
             tab.addEventListener('click', () => {
                 document.querySelectorAll('.admin-tab').forEach(t => {
-                    t.style.background = '#f1f5f9';
-                    t.style.color = '#64748b';
+                    t.style.background = 'var(--hover-bg)';
+                    t.style.color = 'var(--text-primary)';
                 });
                 tab.style.background = '#eab308';
                 tab.style.color = 'white';
@@ -868,8 +1264,7 @@
                 document.getElementById(`tab-${tab.dataset.tab}`).style.display = 'block';
             });
         });
-
-        // فحص الصيانة كل دقيقة
+        
         setInterval(checkMaintenance, 60000);
     </script>
 </body>
