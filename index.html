@@ -3,16 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KhasmShop | V7.0</title>
+    <title>KhasmShop | PUBG Mobile</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
-        body { font-family: 'Cairo', sans-serif; background: #f0f2f5; margin: 0; overflow-x: hidden; }
+        * { font-family: 'Cairo', sans-serif; }
+        body { background: #f0f2f5; margin: 0; overflow-x: hidden; }
+
+        /* البانر مع صورتك */
         .pubg-banner {
-            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.4)), url('https://w0.peakpx.com/wallpaper/403/602/HD-wallpaper-pubg-mobile-karakin-pubg-mobile-poster-battle-royale-2021-games-pubg.jpg');
-            background-size: cover; background-position: center; height: 180px; border-radius: 0 0 50px 50px;
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.4)), url('https://i.ibb.co/chkhr746/unnamed-5.png');
+            background-size: cover;
+            background-position: center;
+            height: 200px;
+            border-radius: 0 0 50px 50px;
+            animation: zoomEffect 20s infinite alternate;
         }
+        @keyframes zoomEffect {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
+        }
+
         .wallet-card { margin-top: -55px; position: relative; z-index: 20; }
         .loader-spin { border: 3px solid #f3f3f3; border-top: 3px solid #eab308; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -20,20 +32,48 @@
         .status-pending { border-right: 4px solid #f59e0b; }
         .animate-slideUp { animation: slideUp 0.3s ease; }
         @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        /* تنسيقات إضافية للمنتجات */
+        .product-item {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: slideIn 0.3s ease;
+        }
+        .product-item:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* شريط التمرير المخصص */
+        #productsList::-webkit-scrollbar, #liveActivity::-webkit-scrollbar {
+            width: 6px;
+        }
+        #productsList::-webkit-scrollbar-track, #liveActivity::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        #productsList::-webkit-scrollbar-thumb, #liveActivity::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+        }
+
+        /* مؤشرات حية */
+        .live-indicator {
+            animation: pulse-green 2s infinite;
+        }
+        @keyframes pulse-green {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
         #webview-warning {
             display: none; flex-direction: column; align-items: center; justify-content: center;
             min-height: 100vh; padding: 20px; background: #f8fafc; text-align: center;
             font-family: 'Cairo', sans-serif; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 20000;
         }
-        #webview-warning h2 { color: #dc2626; font-size: 1.5rem; font-weight: 900; margin-bottom: 1rem; }
-        #webview-warning p { font-size: 1rem; color: #334155; margin: 20px 0; line-height: 1.6; }
-        #webview-warning button {
-            background: #2563eb; color: white; padding: 12px 24px; border-radius: 30px;
-            border: none; font-weight: bold; font-size: 1rem; cursor: pointer; margin: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: all 0.2s;
-        }
-        #webview-warning button:hover { background: #1d4ed8; transform: scale(1.02); }
-        #webview-warning .copy-btn { background: #64748b; }
     </style>
 </head>
 <body>
@@ -63,10 +103,14 @@
 
 <!-- المحتوى الرئيسي -->
 <div id="main-app" class="hidden pb-32">
-    <div class="pubg-banner flex items-center justify-center text-center">
-        <div>
-            <h1 class="text-3xl font-black text-white italic tracking-tighter">KHASM SHOP</h1>
-            <p class="text-yellow-500 text-[10px] font-bold italic underline">بوابة شحن ببجي موبايل - السودان</p>
+    <!-- البانر مع صورتك -->
+    <div class="pubg-banner flex items-center justify-center text-center relative overflow-hidden">
+        <div class="absolute inset-0 bg-black/40"></div>
+        <div class="relative z-10">
+            <h1 class="text-4xl font-black text-white mb-2 tracking-tighter">
+                <span class="bg-yellow-500/20 px-6 py-2 rounded-full">KHASM SHOP</span>
+            </h1>
+            <p class="text-yellow-400 text-sm font-bold">بوابة شحن PUBG MOBILE الرسمية في السودان</p>
         </div>
     </div>
 
@@ -84,7 +128,6 @@
                 <button id="logout-btn" class="w-10 h-10 bg-red-50 text-red-500 rounded-xl"><i class="fas fa-power-off"></i></button>
             </div>
             
-            <!-- الرصيد والنقاط -->
             <div class="grid grid-cols-2 gap-4 mb-4">
                 <div class="bg-slate-900 p-5 rounded-[30px] text-center shadow-lg">
                     <p class="text-[9px] text-slate-400 font-bold mb-1">رصيدك</p>
@@ -96,7 +139,6 @@
                 </div>
             </div>
             
-            <!-- هدية النقاط -->
             <div class="bg-indigo-50 p-4 rounded-3xl border border-blue-100 flex justify-between items-center">
                 <div class="text-right">
                     <p class="text-[10px] font-black text-indigo-700">هدية 60 شدة مجاناً</p>
@@ -106,67 +148,178 @@
             </div>
         </div>
 
-        <!-- لوحة تحكم المشرفين -->
+        <!-- لوحة تحكم المشرفين (تظهر للمشرف فقط) -->
         <div id="adminArea" class="hidden mt-8 space-y-6">
-            <!-- إحصائيات سريعة -->
-            <div class="grid grid-cols-3 gap-2 mb-6">
-                <div class="bg-gradient-to-br from-blue-600 to-blue-800 p-3 rounded-2xl text-white text-center">
-                    <p class="text-[8px] opacity-80">إجمالي المستخدمين</p>
-                    <p class="text-lg font-black" id="totalUsers">0</p>
-                </div>
-                <div class="bg-gradient-to-br from-green-600 to-green-800 p-3 rounded-2xl text-white text-center">
-                    <p class="text-[8px] opacity-80">مبيعات اليوم</p>
-                    <p class="text-lg font-black" id="todaySales">0</p>
-                </div>
-                <div class="bg-gradient-to-br from-yellow-600 to-yellow-800 p-3 rounded-2xl text-white text-center">
-                    <p class="text-[8px] opacity-80">طلبات معلقة</p>
-                    <p class="text-lg font-black" id="pendingOrders">0</p>
-                </div>
-            </div>
-            
-            <!-- إدارة الرصيد -->
-            <div class="bg-white rounded-[35px] p-6 shadow-xl border-t-8 border-red-600">
-                <h3 class="text-xs font-black text-red-600 mb-4 uppercase">💰 إدارة الرصيد</h3>
-                <div class="space-y-3">
-                    <input id="targetWallet" type="text" placeholder="رقم المحفظة" class="w-full p-3.5 rounded-2xl text-xs border">
-                    <div class="flex gap-2">
-                        <input id="amountToAdd" type="number" placeholder="المبلغ" class="flex-1 p-3.5 rounded-2xl text-xs border">
-                        <button onclick="adminRecharge()" class="bg-red-600 text-white px-6 rounded-2xl text-xs font-black">شحن</button>
-                    </div>
-                </div>
-                <div id="adminOrdersList" class="mt-6 space-y-4"></div>
+            <!-- شريط التنقل السريع -->
+            <div class="grid grid-cols-5 gap-2">
+                <button onclick="showSection('products')" class="bg-white p-4 rounded-3xl shadow-lg hover:shadow-xl transition text-center">
+                    <span class="text-2xl block mb-2">📦</span>
+                    <span class="text-xs font-black">المنتجات</span>
+                </button>
+                <button onclick="showSection('orders')" class="bg-white p-4 rounded-3xl shadow-lg hover:shadow-xl transition text-center">
+                    <span class="text-2xl block mb-2">📋</span>
+                    <span class="text-xs font-black">الطلبات</span>
+                </button>
+                <button onclick="showSection('users')" class="bg-white p-4 rounded-3xl shadow-lg hover:shadow-xl transition text-center">
+                    <span class="text-2xl block mb-2">👥</span>
+                    <span class="text-xs font-black">العملاء</span>
+                </button>
+                <button onclick="showSection('analytics')" class="bg-white p-4 rounded-3xl shadow-lg hover:shadow-xl transition text-center">
+                    <span class="text-2xl block mb-2">📊</span>
+                    <span class="text-xs font-black">التحليلات</span>
+                </button>
+                <button onclick="showSection('settings')" class="bg-white p-4 rounded-3xl shadow-lg hover:shadow-xl transition text-center">
+                    <span class="text-2xl block mb-2">⚙️</span>
+                    <span class="text-xs font-black">الإعدادات</span>
+                </button>
             </div>
 
-            <!-- العملاء النشطين -->
-            <div class="bg-white rounded-[35px] p-6 shadow-xl border-t-8 border-green-600">
-                <h3 class="text-xs font-black text-green-600 mb-4 uppercase flex items-center gap-2">
-                    <span class="text-lg">🔥</span> العملاء النشطين
-                </h3>
-                <div id="activeUsersList" class="space-y-3 max-h-80 overflow-y-auto"></div>
-            </div>
-
-            <!-- وضع الصيانة -->
-            <div class="bg-white rounded-[35px] p-6 shadow-xl border-t-8 border-amber-600">
-                <h3 class="text-xs font-black text-amber-600 mb-4 uppercase flex items-center gap-2">
-                    <span class="text-lg">🔧</span> وضع الصيانة
-                </h3>
-                <div class="space-y-4">
-                    <div class="flex items-center justify-between bg-slate-50 p-4 rounded-2xl">
-                        <div class="flex items-center gap-2">
-                            <span class="w-3 h-3 rounded-full" id="maintenanceIndicator" style="background-color: #22c55e"></span>
-                            <span class="text-sm font-bold" id="maintenanceStatusText">النظام يعمل طبيعي</span>
+            <!-- قسم مراقبة العملاء المباشرة -->
+            <div class="bg-gradient-to-br from-indigo-900 to-purple-900 rounded-[40px] p-6 text-white shadow-2xl border border-purple-500/30 mb-6">
+                <div class="flex justify-between items-center mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center text-2xl backdrop-blur">👥</div>
+                        <div>
+                            <h3 class="text-xl font-black">مراقبة العملاء المباشرة</h3>
+                            <p class="text-sm text-purple-200">مشاهدة حركة العملاء داخل المتجر لحظة بلحظة</p>
                         </div>
                     </div>
-                    <div class="grid grid-cols-2 gap-3">
-                        <button onclick="activateMaintenanceMode()" class="bg-amber-500 text-white p-4 rounded-2xl text-sm font-black">🔧 تفعيل</button>
-                        <button onclick="deactivateMaintenanceMode()" class="bg-green-600 text-white p-4 rounded-2xl text-sm font-black">✅ إلغاء</button>
+                    <div class="flex items-center gap-2 bg-green-500/20 px-4 py-2 rounded-full">
+                        <div class="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                        <span class="text-sm">البث المباشر نشط</span>
                     </div>
-                    <textarea id="maintenanceMessage" rows="2" class="w-full p-3 rounded-2xl text-xs border" placeholder="رسالة الصيانة للعملاء...">جاري تطوير المتجر، سنعود قريباً 🚀</textarea>
+                </div>
+                <div class="grid grid-cols-4 gap-4 mb-6">
+                    <div class="bg-white/10 backdrop-blur rounded-3xl p-4 border border-white/20">
+                        <p class="text-xs opacity-70">المتصلين الآن</p>
+                        <p class="text-3xl font-black" id="onlineNow">0</p>
+                        <p class="text-xs text-green-400 mt-1">نشطين: <span id="activeNow">0</span></p>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur rounded-3xl p-4 border border-white/20">
+                        <p class="text-xs opacity-70">زوار اليوم</p>
+                        <p class="text-3xl font-black" id="todayVisitors">0</p>
+                        <p class="text-xs text-blue-400 mt-1">فريد: <span id="uniqueVisitors">0</span></p>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur rounded-3xl p-4 border border-white/20">
+                        <p class="text-xs opacity-70">مشاهدات الصفحات</p>
+                        <p class="text-3xl font-black" id="pageViews">0</p>
+                        <p class="text-xs text-yellow-400 mt-1">معدل: <span id="avgViews">2.3</span></p>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur rounded-3xl p-4 border border-white/20">
+                        <p class="text-xs opacity-70">معدل التحويل</p>
+                        <p class="text-3xl font-black" id="conversionRate">0%</p>
+                        <p class="text-xs text-purple-400 mt-1">مبيعات: <span id="conversionSales">0</span></p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 gap-4 mb-6">
+                    <div class="bg-white/10 backdrop-blur rounded-3xl p-4 col-span-2">
+                        <h4 class="text-sm font-black mb-3 flex items-center gap-2"><span>🔥</span> أكثر الصفحات زيارة الآن</h4>
+                        <div id="topPages" class="space-y-2"></div>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur rounded-3xl p-4">
+                        <h4 class="text-sm font-black mb-3 flex items-center gap-2"><span>🌍</span> الدول النشطة</h4>
+                        <div id="activeCountries" class="space-y-2"></div>
+                    </div>
+                </div>
+                <div class="bg-black/30 backdrop-blur rounded-3xl p-4">
+                    <div class="flex justify-between items-center mb-4">
+                        <h4 class="text-sm font-black flex items-center gap-2">
+                            <span>🟢</span> العملاء المتصلين الآن
+                            <span class="bg-white/20 text-xs px-2 py-1 rounded-full" id="activeUsersCount">0</span>
+                        </h4>
+                        <div class="flex gap-2">
+                            <button onclick="refreshLiveUsers()" class="w-8 h-8 bg-white/10 rounded-xl flex items-center justify-center hover:bg-white/20">🔄</button>
+                            <button onclick="exportLiveData()" class="w-8 h-8 bg-white/10 rounded-xl flex items-center justify-center hover:bg-white/20">📥</button>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="text-right text-purple-200 border-b border-white/10">
+                                    <th class="pb-3">المستخدم</th>
+                                    <th class="pb-3">الصفحة الحالية</th>
+                                    <th class="pb-3">الوقت</th>
+                                    <th class="pb-3">الجهاز</th>
+                                    <th class="pb-3">المدينة</th>
+                                    <th class="pb-3">الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="liveUsersTable" class="divide-y divide-white/10"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="mt-4 bg-yellow-500/10 rounded-3xl p-4 border border-yellow-500/30">
+                    <div class="flex items-center gap-3 mb-3">
+                        <span class="text-yellow-400 text-xl">⚡</span>
+                        <h4 class="text-sm font-black">نشاط العملاء المباشر</h4>
+                    </div>
+                    <div id="liveActivity" class="space-y-2 max-h-40 overflow-y-auto"></div>
                 </div>
             </div>
+
+            <!-- قسم إدارة المنتجات المتقدمة -->
+            <div id="productManagement" class="bg-white rounded-[35px] p-6 shadow-xl border-t-8 border-purple-600">
+                <h3 class="text-xs font-black text-purple-600 mb-4 uppercase flex items-center gap-2">
+                    <span class="text-lg">📦</span> إدارة المنتجات المتقدمة
+                </h3>
+                <!-- نموذج إضافة منتج -->
+                <div class="bg-gradient-to-br from-purple-50 to-pink-50 p-5 rounded-3xl mb-6">
+                    <h4 class="font-black text-sm mb-4 text-purple-800">➕ إضافة منتج جديد</h4>
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-2 gap-3">
+                            <input type="text" id="productName" placeholder="اسم المنتج" class="p-3 rounded-2xl border text-sm">
+                            <input type="number" id="productPrice" placeholder="السعر" class="p-3 rounded-2xl border text-sm">
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <input type="number" id="productPoints" placeholder="النقاط" class="p-3 rounded-2xl border text-sm">
+                            <input type="number" id="productStock" placeholder="الكمية" class="p-3 rounded-2xl border text-sm">
+                        </div>
+                        <select id="productCategory" class="w-full p-3 rounded-2xl border text-sm">
+                            <option value="uc">UC (شدات)</option>
+                            <option value="membership">عضوية</option>
+                            <option value="crate">صناديق</option>
+                            <option value="bundle">حزم</option>
+                        </select>
+                        <div>
+                            <label class="block text-xs font-bold mb-2">رابط الصورة</label>
+                            <input type="url" id="productImage" placeholder="https://..." class="w-full p-3 rounded-2xl border text-sm">
+                        </div>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button onclick="previewProduct()" class="bg-purple-200 text-purple-800 p-3 rounded-2xl text-xs font-black">معاينة</button>
+                            <button onclick="addProduct()" class="bg-purple-600 text-white p-3 rounded-2xl text-xs font-black col-span-2">إضافة المنتج</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- معاينة المنتج -->
+                <div id="productPreview" class="hidden mb-6 p-4 bg-slate-50 rounded-3xl">
+                    <h4 class="text-xs font-bold mb-3">🔍 المعاينة:</h4>
+                    <div id="previewCard" class="bg-white p-4 rounded-3xl flex gap-3 items-center">
+                        <img id="previewImg" src="" class="w-16 h-16 rounded-2xl object-cover">
+                        <div>
+                            <p id="previewName" class="font-black"></p>
+                            <p id="previewPrice" class="text-blue-600 font-bold"></p>
+                            <p id="previewPoints" class="text-yellow-600 text-xs"></p>
+                        </div>
+                    </div>
+                </div>
+                <!-- قائمة المنتجات -->
+                <div class="space-y-4 max-h-96 overflow-y-auto p-2">
+                    <h4 class="font-black text-sm sticky top-0 bg-white py-2">📋 المنتجات الحالية</h4>
+                    <div id="productsList" class="space-y-3"></div>
+                </div>
+                <!-- إحصائيات المنتجات -->
+                <div class="grid grid-cols-4 gap-2 mt-6 p-4 bg-slate-900 rounded-3xl">
+                    <div class="text-center"><p class="text-white text-[10px]">إجمالي</p><p id="totalProducts" class="text-yellow-500 font-black text-lg">0</p></div>
+                    <div class="text-center"><p class="text-white text-[10px]">متوفر</p><p id="inStockProducts" class="text-green-500 font-black text-lg">0</p></div>
+                    <div class="text-center"><p class="text-white text-[10px]">نفذ</p><p id="outOfStockProducts" class="text-red-500 font-black text-lg">0</p></div>
+                    <div class="text-center"><p class="text-white text-[10px]">قيمة</p><p id="totalValue" class="text-blue-500 font-black text-lg">0</p></div>
+                </div>
+            </div>
+
+            <!-- هنا يمكن إضافة أقسام أخرى مثل الطلبات والمستخدمين والتحليلات بنفس النمط -->
         </div>
 
-        <!-- المتجر -->
+        <!-- المتجر (عرض المنتجات للجميع) -->
         <div id="storeView">
             <h3 class="text-sm font-black text-slate-800 mt-10 mb-4 border-r-4 border-yellow-500 pr-2">🛍️ باقات الشحن</h3>
             <div id="productGrid" class="grid grid-cols-2 gap-3 mb-10"></div>
@@ -175,9 +328,9 @@
             <div id="userOrdersList" class="space-y-3 mb-20"></div>
         </div>
     </main>
-</div>
+                </div>
 
-<!-- زر واتساب -->
+    <!-- زر واتساب -->
 <div class="fixed bottom-6 left-6 z-[3000]">
     <div id="waAgents" class="hidden absolute bottom-16 left-0 bg-white p-4 rounded-3xl shadow-2xl border w-64 mb-2">
         <div class="space-y-2" id="agentsList"></div>
@@ -188,9 +341,9 @@
 </div>
 
 <script type="module">
-    // ========== إعدادات تليجرام ==========
+    // ========== إعدادات تليجرام (استخدم التوكن الخاص بك) ==========
     const TELEGRAM_TOKEN = '8616731804:AAGjZzVbWV7DXasmlwjjCyhz3AYUmzGbyi8';
-    const CHAT_ID = '8539810117';
+    const CHAT_ID = '8539810117'; // معرف الدردشة الخاص بك
 
     // ========== كشف WebView ==========
     function isWebView() {
@@ -229,7 +382,7 @@
 
     // ========== استيراد Firebase ==========
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, doc, onSnapshot, collection, addDoc, query, where, getDocs, updateDoc, increment, deleteDoc, setDoc, serverTimestamp, orderBy, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, doc, onSnapshot, collection, addDoc, query, where, getDocs, updateDoc, increment, deleteDoc, setDoc, serverTimestamp, orderBy, getDoc, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
     import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
     const firebaseConfig = { 
@@ -249,65 +402,31 @@
     const ADMINS = ["mhmdfthu98@gmail.com", "muhammedaltaj111@gmail.com", "mohnadyasir43@gmail.com"];
     let userData = null;
 
-    // ========== تسجيل الدخول ==========
-    document.getElementById('google-login-btn').onclick = async () => {
-        try {
-            document.getElementById('loading-screen').classList.remove('hidden');
-            await signInWithPopup(auth, provider);
-        } catch (error) {
-            document.getElementById('loading-screen').classList.add('hidden');
-            alert("خطأ في تسجيل الدخول: " + error.message);
-        }
+    // ========== دوال مساعدة عامة ==========
+    window.showSection = (section) => {
+        // يمكن تنفيذ إظهار/إخفاء الأقسام لاحقاً
+        console.log(`عرض القسم: ${section}`);
     };
 
-    document.getElementById('logout-btn').onclick = async () => {
-        try {
-            await signOut(auth);
-            document.getElementById('main-app').classList.add('hidden');
-            document.getElementById('auth-screen').classList.remove('hidden');
-        } catch (error) {
-            console.error('Sign out error', error);
-        }
-    };
+    // دالة تحويل إلى CSV
+    function convertToCSV(data) {
+        if (!data.length) return '';
+        const headers = Object.keys(data[0]);
+        const rows = data.map(obj => headers.map(header => JSON.stringify(obj[header] || '')).join(','));
+        return [headers.join(','), ...rows].join('\n');
+    }
 
-    // ========== مراقب حالة المصادقة ==========
-    onAuthStateChanged(auth, async (user) => {
-        const loading = document.getElementById('loading-screen');
-        const authScr = document.getElementById('auth-screen');
-        const appScr = document.getElementById('main-app');
+    // دالة تحليل CSV
+    function parseCSV(csv) {
+        const lines = csv.split('\n');
+        const headers = lines[0].split(',');
+        return lines.slice(1).filter(line => line.trim()).map(line => {
+            const values = line.split(',');
+            return headers.reduce((obj, header, i) => { obj[header] = values[i]; return obj; }, {});
+        });
+    }
 
-        if (user) {
-            const userRef = doc(db, "users", user.uid);
-            const userSnap = await getDoc(userRef);
-            
-            if (!userSnap.exists()) {
-                await setDoc(userRef, { 
-                    name: user.displayName, 
-                    email: user.email, 
-                    img: user.photoURL, 
-                    walletID: Math.floor(100000 + Math.random() * 900000).toString(), 
-                    balance: 0, 
-                    points: 0 
-                });
-            }
-            
-            loading.classList.add('hidden');
-            authScr.classList.add('hidden');
-            appScr.classList.remove('hidden');
-            
-            startEngine(user);
-            if (ADMINS.includes(user.email)) {
-                loadAdminStats();
-                checkMaintenanceStatus();
-            }
-        } else {
-            loading.classList.add('hidden');
-            authScr.classList.remove('hidden');
-            appScr.classList.add('hidden');
-        }
-    });
-
-    // ========== دوال الإشعارات ==========
+    // ========== إشعارات تليجرام ==========
     async function sendTelegramNotification(orderData) {
         try {
             const message = `
@@ -341,78 +460,297 @@
         }
     }
 
-    // ========== دوال الصيانة ==========
-    async function checkMaintenanceStatus() {
-        try {
-            const docRef = doc(db, "settings", "maintenance");
-            const docSnap = await getDoc(docRef);
-            if (docSnap.exists()) {
-                const data = docSnap.data();
-                const indicator = document.getElementById('maintenanceIndicator');
-                const statusText = document.getElementById('maintenanceStatusText');
-                
-                if (data.isActive) {
-                    indicator.style.backgroundColor = '#ef4444';
-                    statusText.innerHTML = '⚠️ وضع الصيانة مفعل';
-                } else {
-                    indicator.style.backgroundColor = '#22c55e';
-                    statusText.innerHTML = '✅ النظام يعمل طبيعي';
+    // ========== نظام PWA (اختياري) ==========
+    class KhasmPWA {
+        async registerServiceWorker() {
+            if ('serviceWorker' in navigator) {
+                try {
+                    const registration = await navigator.serviceWorker.register('/sw.js');
+                    console.log('Service Worker registered');
+                } catch (error) {
+                    console.error('Service Worker registration failed:', error);
                 }
-                localStorage.setItem('maintenanceMode', data.isActive ? 'active' : 'inactive');
             }
-        } catch (error) {
-            console.error('خطأ في التحقق من الصيانة:', error);
+        }
+        async enablePushNotifications() {
+            const permission = await Notification.requestPermission();
+            if (permission === 'granted') {
+                console.log('Notification permission granted');
+            }
         }
     }
+    const pwa = new KhasmPWA();
+    pwa.registerServiceWorker();
 
-    window.activateMaintenanceMode = async () => {
-        const message = document.getElementById('maintenanceMessage').value;
-        await setDoc(doc(db, "settings", "maintenance"), {
-            isActive: true,
-            message: message,
-            activatedBy: userData.name,
-            activatedAt: serverTimestamp()
+    // ========== إدارة المنتجات (ProductManager) ==========
+    class ProductManager {
+        constructor(db) {
+            this.db = db;
+            this.productsRef = collection(db, "products");
+            this.categories = ['uc', 'membership', 'crate', 'bundle'];
+        }
+        async addProduct(productData) {
+            if (!this.validateProduct(productData)) throw new Error('بيانات المنتج غير صحيحة');
+            const newProduct = {
+                ...productData,
+                createdAt: serverTimestamp(),
+                updatedAt: serverTimestamp(),
+                soldCount: 0,
+                revenue: 0,
+                rating: 0,
+                reviews: 0,
+                isActive: true,
+                sku: this.generateSKU(productData.category)
+            };
+            const docRef = await addDoc(this.productsRef, newProduct);
+            return docRef.id;
+        }
+        async updateProduct(productId, updates) {
+            const productRef = doc(this.db, "products", productId);
+            await updateDoc(productRef, { ...updates, updatedAt: serverTimestamp() });
+        }
+        async deleteProduct(productId) {
+            const productRef = doc(this.db, "products", productId);
+            await updateDoc(productRef, { isActive: false, deletedAt: serverTimestamp() });
+        }
+        async restoreProduct(productId) {
+            const productRef = doc(this.db, "products", productId);
+            await updateDoc(productRef, { isActive: true, restoredAt: serverTimestamp() });
+        }
+        async bulkPriceUpdate(category, percentage) {
+            const productsQuery = query(this.productsRef, where("category", "==", category), where("isActive", "==", true));
+            const snapshot = await getDocs(productsQuery);
+            const updates = snapshot.docs.map(doc => {
+                const newPrice = doc.data().price * (1 + percentage/100);
+                return updateDoc(doc.ref, { price: Math.round(newPrice), bulkUpdatedAt: serverTimestamp() });
+            });
+            await Promise.all(updates);
+            return { updated: snapshot.size, category, percentage };
+        }
+        generateSKU(category) {
+            const prefix = category.substring(0, 3).toUpperCase();
+            const random = Math.floor(1000 + Math.random() * 9000);
+            return `${prefix}-${random}`;
+        }
+        validateProduct(product) {
+            return product.name?.length >= 3 && product.price > 0 && product.givePoints >= 0 && product.stock >= 0 && this.categories.includes(product.category);
+        }
+    }
+    const productManager = new ProductManager(db);
+
+    // ========== دوال واجهة المستخدم للمنتجات ==========
+    window.addProduct = async () => {
+        const productData = {
+            name: document.getElementById('productName').value,
+            price: parseInt(document.getElementById('productPrice').value),
+            givePoints: parseInt(document.getElementById('productPoints').value),
+            stock: parseInt(document.getElementById('productStock').value),
+            category: document.getElementById('productCategory').value,
+            image: document.getElementById('productImage').value || 'https://via.placeholder.com/100'
+        };
+        try {
+            await productManager.addProduct(productData);
+            document.getElementById('productName').value = '';
+            document.getElementById('productPrice').value = '';
+            document.getElementById('productPoints').value = '';
+            document.getElementById('productStock').value = '';
+            document.getElementById('productImage').value = '';
+            alert('✅ تم إضافة المنتج بنجاح');
+        } catch (error) {
+            alert('❌ خطأ: ' + error.message);
+        }
+    };
+
+    window.previewProduct = () => {
+        document.getElementById('productPreview').classList.remove('hidden');
+        document.getElementById('previewName').textContent = document.getElementById('productName').value || 'اسم المنتج';
+        document.getElementById('previewPrice').textContent = (document.getElementById('productPrice').value || '0') + ' ج.س';
+        document.getElementById('previewPoints').textContent = '⭐ +' + (document.getElementById('productPoints').value || '0') + ' نقطة';
+        document.getElementById('previewImg').src = document.getElementById('productImage').value || 'https://via.placeholder.com/100';
+    };
+
+    window.changePrice = (productId) => {
+        const modal = document.createElement('div');
+        modal.className = 'fixed inset-0 bg-black/70 flex items-center justify-center z-[99999] p-4';
+        modal.innerHTML = `
+            <div class="bg-white rounded-[40px] w-full max-w-sm p-6 shadow-2xl">
+                <h3 class="text-lg font-black text-center mb-4">💰 تغيير السعر</h3>
+                <input type="number" id="newPrice" class="w-full p-4 rounded-2xl border-2 text-center text-2xl font-black mb-4" placeholder="السعر الجديد">
+                <div class="flex gap-3">
+                    <button onclick="this.closest('.fixed').remove()" class="flex-1 bg-slate-100 p-4 rounded-2xl">إلغاء</button>
+                    <button onclick="updatePrice('${productId}')" class="flex-1 bg-blue-600 text-white p-4 rounded-2xl">تحديث</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    };
+
+    window.updatePrice = async (productId) => {
+        const newPrice = parseInt(document.getElementById('newPrice').value);
+        if (!newPrice || newPrice < 0) return alert('سعر غير صحيح');
+        await updateDoc(doc(db, "products", productId), { price: newPrice, lastPriceUpdate: serverTimestamp() });
+        document.querySelector('.fixed').remove();
+        alert('✅ تم تحديث السعر');
+    };
+
+    window.deleteProduct = async (productId) => {
+        if (confirm('⚠️ هل أنت متأكد من حذف هذا المنتج؟')) {
+            await productManager.deleteProduct(productId);
+            alert('✅ تم حذف المنتج');
+        }
+    };
+
+    window.editProduct = (productId) => {
+        alert('واجهة التعديل الكامل قيد التطوير');
+    };
+
+    // تحميل قائمة المنتجات للإدارة
+    function loadProductsList() {
+        onSnapshot(query(collection(db, "products"), where("isActive", "==", true)), (snap) => {
+            const list = document.getElementById('productsList');
+            const stats = { total: 0, inStock: 0, outOfStock: 0, totalValue: 0 };
+            list.innerHTML = '';
+            snap.forEach(doc => {
+                const p = doc.data();
+                stats.total++;
+                stats.totalValue += p.price * (p.stock || 1);
+                if (p.stock > 0) stats.inStock++; else stats.outOfStock++;
+                list.innerHTML += `
+                <div class="bg-white border-2 p-4 rounded-3xl hover:shadow-xl transition-all product-item" data-id="${doc.id}">
+                    <div class="flex gap-3">
+                        <img src="${p.image}" class="w-16 h-16 rounded-2xl object-cover border" onerror="this.src='https://via.placeholder.com/100'">
+                        <div class="flex-1">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="font-black text-sm">${p.name}</p>
+                                    <p class="text-blue-600 font-bold text-xs">${p.price.toLocaleString()} ج.س</p>
+                                    <p class="text-yellow-600 text-[10px]">⭐ +${p.givePoints} نقطة</p>
+                                    <p class="text-xs mt-1">📦 المخزون: <span class="font-black ${p.stock > 10 ? 'text-green-600' : p.stock > 0 ? 'text-orange-600' : 'text-red-600'}">${p.stock || '∞'}</span></p>
+                                </div>
+                                <span class="px-2 py-1 bg-purple-100 text-purple-800 rounded-full text-[8px] font-black">${p.category}</span>
+                            </div>
+                            <div class="flex gap-2 mt-3">
+                                <button onclick="editProduct('${doc.id}')" class="flex-1 bg-blue-500 text-white py-2 rounded-xl text-[10px] font-black"><i class="fas fa-edit ml-1"></i> تعديل</button>
+                                <button onclick="changePrice('${doc.id}')" class="flex-1 bg-green-500 text-white py-2 rounded-xl text-[10px] font-black"><i class="fas fa-tag ml-1"></i> تغيير السعر</button>
+                                <button onclick="deleteProduct('${doc.id}')" class="flex-1 bg-red-500 text-white py-2 rounded-xl text-[10px] font-black"><i class="fas fa-trash ml-1"></i> حذف</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+            });
+            document.getElementById('totalProducts').textContent = stats.total;
+            document.getElementById('inStockProducts').textContent = stats.inStock;
+            document.getElementById('outOfStockProducts').textContent = stats.outOfStock;
+            document.getElementById('totalValue').textContent = stats.totalValue.toLocaleString();
         });
-        checkMaintenanceStatus();
-        alert('✅ تم تفعيل وضع الصيانة');
-    };
-
-    window.deactivateMaintenanceMode = async () => {
-        await setDoc(doc(db, "settings", "maintenance"), {
-            isActive: false,
-            deactivatedBy: userData.name,
-            deactivatedAt: serverTimestamp()
-        }, { merge: true });
-        checkMaintenanceStatus();
-        alert('✅ تم إلغاء وضع الصيانة');
-    };
-    // ========== دوال الإدارة ==========
-    async function loadAdminStats() {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        
-        const usersSnap = await getDocs(collection(db, "users"));
-        document.getElementById('totalUsers').innerText = usersSnap.size;
-        
-        const todayOrders = await getDocs(query(collection(db, "orders"), where("timestamp", ">=", today)));
-        const todayTotal = todayOrders.docs.reduce((sum, doc) => sum + doc.data().price, 0);
-        document.getElementById('todaySales').innerText = todayTotal.toLocaleString();
-        
-        const pendingSnap = await getDocs(query(collection(db, "orders"), where("status", "==", "قيد الانتظار")));
-        document.getElementById('pendingOrders').innerText = pendingSnap.size;
     }
 
-    window.adminRecharge = async () => {
-        const wid = document.getElementById('targetWallet').value.trim();
-        const amt = parseInt(document.getElementById('amountToAdd').value);
-        const q = query(collection(db, "users"), where("walletID", "==", wid));
-        const snap = await getDocs(q);
-        if(snap.empty) return alert("المحفظة غير موجودة");
-        snap.forEach(u => updateDoc(doc(db, "users", u.id), { balance: increment(amt) }));
-        alert("تم الشحن ✅");
+    // ========== مراقبة العملاء المباشرة ==========
+    class LiveCustomerTracker {
+        constructor(db) {
+            this.db = db;
+            this.activeUsers = new Map();
+            this.pageViews = new Map();
+            this.countries = new Map();
+            this.startTracking();
+        }
+        startTracking() {
+            setInterval(() => this.updateUI(), 3000);
+            this.listenToUserActivity();
+        }
+        listenToUserActivity() {
+            const activeSessionsRef = collection(this.db, "active_sessions");
+            onSnapshot(activeSessionsRef, (snapshot) => {
+                snapshot.docChanges().forEach((change) => {
+                    if (change.type === "added") this.addUser(change.doc.data());
+                    else if (change.type === "modified") this.updateUser(change.doc.data());
+                    else if (change.type === "removed") this.removeUser(change.doc.id);
+                });
+                this.updateUI();
+            });
+        }
+        addUser(data) { this.activeUsers.set(data.userId, data); }
+        updateUser(data) { this.activeUsers.set(data.userId, data); }
+        removeUser(id) { this.activeUsers.delete(id); }
+        updateUI() {
+            document.getElementById('onlineNow').textContent = this.activeUsers.size;
+            const activeNow = Array.from(this.activeUsers.values()).filter(u => u.status === 'active').length;
+            document.getElementById('activeNow').textContent = activeNow;
+            this.updateLiveUsersTable();
+            this.updateLiveActivity();
+        }
+        updateLiveUsersTable() {
+            const tbody = document.getElementById('liveUsersTable');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            Array.from(this.activeUsers.values()).sort((a,b)=> (b.lastActive?.seconds || 0) - (a.lastActive?.seconds || 0)).slice(0,10).forEach(user => {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-white/5 transition';
+                row.innerHTML = `
+                    <td class="py-3"><div class="flex items-center gap-2"><img src="${user.photoURL || 'https://via.placeholder.com/30'}" class="w-8 h-8 rounded-full border-2 border-white/20"><div><p class="font-black">${user.name || 'زائر'}</p><p class="text-xs text-purple-300">${user.email || ''}</p></div></div></td>
+                    <td class="py-3"><span class="bg-white/10 px-3 py-1 rounded-full text-xs">${user.currentPage || 'الرئيسية'}</span></td>
+                    <td class="py-3"><span class="text-xs">${this.getTimeAgo(user.lastActive?.seconds * 1000)}</span></td>
+                    <td class="py-3"><div class="flex items-center gap-1">${this.getDeviceIcon(user.device)}<span class="text-xs">${user.device || ''}</span></div></td>
+                    <td class="py-3"><div class="flex items-center gap-1"><span>${user.country || '🇸🇩'}</span><span class="text-xs">${user.city || ''}</span></div></td>
+                    <td class="py-3"><div class="flex gap-2"><button onclick="messageUser('${user.userId}')" class="w-8 h-8 bg-blue-500/20 rounded-xl hover:bg-blue-500/40 transition" title="إرسال رسالة">💬</button><button onclick="viewUserDetails('${user.userId}')" class="w-8 h-8 bg-purple-500/20 rounded-xl hover:bg-purple-500/40 transition" title="عرض التفاصيل">👁️</button><button onclick="trackUser('${user.userId}')" class="w-8 h-8 bg-green-500/20 rounded-xl hover:bg-green-500/40 transition" title="تتبع المستخدم">📍</button></div></td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        updateLiveActivity() {
+            const activityDiv = document.getElementById('liveActivity');
+            if (!activityDiv) return;
+            const activities = [];
+            this.activeUsers.forEach(user => {
+                if (user.lastAction) {
+                    activities.push({ time: user.lastAction.time?.seconds * 1000, user: user.name, action: user.lastAction.type, page: user.lastAction.page });
+                }
+            });
+            activities.sort((a,b)=> (b.time || 0) - (a.time || 0));
+            activityDiv.innerHTML = activities.slice(0,5).map(act => `
+                <div class="flex items-center gap-2 text-sm border-b border-white/10 pb-2">
+                    <span class="text-xs text-purple-300">${this.getTimeAgo(act.time)}</span>
+                    <span class="text-white">${act.user}</span>
+                    <span class="text-purple-300">${act.action}</span>
+                    <span class="text-white bg-white/10 px-2 py-0.5 rounded-full text-xs">${act.page}</span>
+                </div>
+            `).join('');
+        }
+        getTimeAgo(timestamp) {
+            if (!timestamp) return 'الآن';
+            const seconds = Math.floor((Date.now() - timestamp) / 1000);
+            if (seconds < 60) return 'الآن';
+            if (seconds < 3600) return `منذ ${Math.floor(seconds/60)} دقيقة`;
+            if (seconds < 86400) return `منذ ${Math.floor(seconds/3600)} ساعة`;
+            return `منذ ${Math.floor(seconds/86400)} يوم`;
+        }
+        getDeviceIcon(device) {
+            if (!device) return '📱';
+            if (device.toLowerCase().includes('mobile')) return '📱';
+            if (device.toLowerCase().includes('tablet')) return '📟';
+            if (device.toLowerCase().includes('windows')) return '💻';
+            if (device.toLowerCase().includes('mac')) return '🍎';
+            return '📱';
+        }
+    }
+    const tracker = new LiveCustomerTracker(db);
+
+    // دوال مراقبة العملاء
+    window.messageUser = (userId) => { alert('إرسال رسالة إلى المستخدم ' + userId); };
+    window.viewUserDetails = (userId) => { alert('عرض تفاصيل المستخدم ' + userId); };
+    window.trackUser = (userId) => { alert('تتبع المستخدم ' + userId); };
+    window.refreshLiveUsers = () => { tracker.updateUI(); };
+    window.exportLiveData = () => {
+        const data = { activeUsers: Array.from(tracker.activeUsers.values()) };
+        const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `live-${Date.now()}.json`;
+        a.click();
     };
 
-    // ========== دوال المتجر ==========
+    // ========== دوال إضافية من الأكواد القديمة (المنتجات العامة، الطلبات، إلخ) ==========
     function startEngine(user) {
         const isAdmin = ADMINS.includes(user.email);
         
@@ -420,10 +758,10 @@
             if (snap.exists()) {
                 userData = snap.data();
                 updateUI(isAdmin);
-                if(isAdmin) { 
+                if (isAdmin) { 
                     document.getElementById('adminArea').classList.remove('hidden');
-                    loadAdminTools();
-                    loadActiveUsers();
+                    loadProductsList(); // تحميل قائمة المنتجات للإدارة
+                    loadAdminStats?.(); // لو كانت موجودة
                 }
             }
         });
@@ -468,7 +806,7 @@
             </button>`).join('');
     };
 
-    window.orderNow = async (name, price, pts) => {
+    window.orderNow = (name, price, pts) => {
         if (localStorage.getItem('maintenanceMode') === 'active') {
             const msg = localStorage.getItem('maintenanceMessage') || 'جاري تطوير المتجر';
             return alert(`⚠️ ${msg}`);
@@ -532,28 +870,38 @@
         
         if(confirm(`🔔 تأكيد شحن ${name}؟`)) {
             try {
-                await updateDoc(doc(db, "users", auth.currentUser.uid), { balance: increment(-price) });
+                // استخدم transaction للتأكد من الرصيد
+                await runTransaction(db, async (transaction) => {
+                    const userRef = doc(db, "users", auth.currentUser.uid);
+                    const userSnap = await transaction.get(userRef);
+                    if (userSnap.data().balance < price) throw "رصيد غير كاف";
+                    transaction.update(userRef, { balance: increment(-price) });
+                    
+                    const orderData = {
+                        uID: auth.currentUser.uid, 
+                        uName: userData.name, 
+                        product: name,
+                        price: price, 
+                        pts: pts, 
+                        gameID: gameID,
+                        gameName: gameName,
+                        realName: realName,
+                        phone: phone,
+                        status: 'قيد الانتظار', 
+                        timestamp: serverTimestamp()
+                    };
+                    
+                    const orderRef = doc(collection(db, "orders"));
+                    transaction.set(orderRef, orderData);
+                    
+                    // إرسال إشعار تليجرام بعد نجاح المعاملة
+                    setTimeout(() => sendTelegramNotification(orderData), 1000);
+                });
                 
-                const orderData = {
-                    uID: auth.currentUser.uid, 
-                    uName: userData.name, 
-                    product: name,
-                    price: price, 
-                    pts: pts, 
-                    gameID: gameID,
-                    gameName: gameName,
-                    realName: realName,
-                    phone: phone,
-                    status: 'قيد الانتظار', 
-                    timestamp: serverTimestamp()
-                };
-                
-                await addDoc(collection(db, "orders"), orderData);
-                await sendTelegramNotification(orderData);
                 alert("✅ تم إرسال طلبك بنجاح!");
             } catch (error) {
                 console.error('خطأ:', error);
-                alert("❌ حدث خطأ، حاول مرة أخرى");
+                alert("❌ حدث خطأ: " + error.message);
             }
         }
     };
@@ -593,68 +941,77 @@
         });
     };
 
-    function loadAdminTools() {
-        onSnapshot(query(collection(db, "orders"), where("status", "==", "قيد الانتظار"), orderBy("timestamp", "desc")), (snap) => {
-            const list = document.getElementById('adminOrdersList'); 
-            list.innerHTML = '';
-            snap.forEach(d => {
-                const o = d.data();
-                list.innerHTML += `
-                <div class="bg-slate-50 p-4 rounded-3xl border text-[10px]">
-                    <p>📦 <b>${o.product}</b> لـ 🆔 <b>${o.gameID}</b></p>
-                    <p>📞 هاتف: ${o.phone}</p>
-                    <div class="flex gap-2 mt-3">
-                        <button onclick="updateOrder('${d.id}', '${o.uID}', 'مكتمل', ${o.pts})" class="flex-1 bg-green-600 text-white py-2 rounded-xl">تم الشحن</button>
-                        <button onclick="updateOrder('${d.id}', '${o.uID}', 'فشل', 0, ${o.price})" class="flex-1 bg-red-500 text-white py-2 rounded-xl">إلغاء</button>
-                    </div>
-                </div>`;
-            });
-        });
-    }
+    // دوال إضافية من الكود الأصلي (مثل redeemPoints, toggleWaMenu, contactAgent, إلخ)
+    window.redeemPoints = () => { if(userData.points >= 30) alert('🎁 تم استبدال 30 نقطة بهدية 60 شدة!'); };
+    window.toggleWaMenu = () => document.getElementById('waAgents').classList.toggle('hidden');
+    window.contactAgent = (n, name) => window.open(`https://wa.me/${n}?text=${encodeURIComponent('مرحباً '+name+'، أريد شحن محفظتي: #'+userData?.walletID)}`);
 
-    window.updateOrder = async (oid, uid, st, pts, refund = 0) => {
-        if (st === 'مكتمل') await updateDoc(doc(db, "users", uid), { points: increment(pts) });
-        else if (st === 'فشل') await updateDoc(doc(db, "users", uid), { balance: increment(refund) });
-        await updateDoc(doc(db, "orders", oid), { status: st });
+    // ========== تسجيل الدخول ومراقبة الحالة ==========
+    document.getElementById('google-login-btn').onclick = async () => {
+        try {
+            document.getElementById('loading-screen').classList.remove('hidden');
+            await signInWithPopup(auth, provider);
+        } catch (error) {
+            document.getElementById('loading-screen').classList.add('hidden');
+            alert("خطأ في تسجيل الدخول: " + error.message);
+        }
     };
 
-    async function loadActiveUsers() {
-        const last24h = new Date();
-        last24h.setHours(last24h.getHours() - 24);
-        const recentOrders = await getDocs(query(collection(db, "orders"), where("timestamp", ">=", last24h), orderBy("timestamp", "desc")));
-        
-        const activeUsers = new Map();
-        recentOrders.forEach(doc => {
-            const order = doc.data();
-            if (!activeUsers.has(order.uID)) {
-                activeUsers.set(order.uID, { name: order.uName, orders: 1, totalSpent: order.price, gameID: order.gameID });
-            } else {
-                const user = activeUsers.get(order.uID);
-                user.orders++;
-                user.totalSpent += order.price;
-            }
-        });
-        
-        const list = document.getElementById('activeUsersList');
-        list.innerHTML = '';
-        activeUsers.forEach((user, uid) => {
-            const vipStatus = user.totalSpent > 10000 ? '👑' : '';
-            list.innerHTML += `
-            <div class="bg-slate-50 p-4 rounded-2xl border">
-                <div class="flex justify-between items-start">
-                    <div><p class="font-black text-sm">${user.name} ${vipStatus}</p><p class="text-[8px] text-slate-400">🆔 ${user.gameID}</p></div>
-                </div>
-                <div class="grid grid-cols-2 gap-2 mt-3 text-[10px]">
-                    <div class="bg-white p-2 rounded-xl"><span class="text-slate-400">🛒 طلبات:</span><span class="font-black mr-2">${user.orders}</span></div>
-                    <div class="bg-white p-2 rounded-xl"><span class="text-slate-400">💰 إجمالي:</span><span class="font-black mr-2">${user.totalSpent.toLocaleString()}</span></div>
-                </div>
-            </div>`;
-        });
-    }
+    document.getElementById('logout-btn').onclick = async () => {
+        try {
+            await signOut(auth);
+            document.getElementById('main-app').classList.add('hidden');
+            document.getElementById('auth-screen').classList.remove('hidden');
+        } catch (error) {
+            console.error('Sign out error', error);
+        }
+    };
 
-    window.toggleWaMenu = () => document.getElementById('waAgents').classList.toggle('hidden');
-    window.contactAgent = (n, name) => window.open(`https://wa.me/${n}?text=${encodeURIComponent('مرحباً '+name+'، أريد شحن محفظتي: #'+userData.walletID)}`);
-    window.redeemPoints = () => { if(userData.points >= 30) alert('🎁 تم استبدال 30 نقطة بهدية 60 شدة!'); };
+    onAuthStateChanged(auth, async (user) => {
+        const loading = document.getElementById('loading-screen');
+        const authScr = document.getElementById('auth-screen');
+        const appScr = document.getElementById('main-app');
+
+        if (user) {
+            const userRef = doc(db, "users", user.uid);
+            const userSnap = await getDoc(userRef);
+            
+            if (!userSnap.exists()) {
+                await setDoc(userRef, { 
+                    name: user.displayName, 
+                    email: user.email, 
+                    img: user.photoURL, 
+                    walletID: Math.floor(100000 + Math.random() * 900000).toString(), 
+                    balance: 0, 
+                    points: 0 
+                });
+            }
+            
+            loading.classList.add('hidden');
+            authScr.classList.add('hidden');
+            appScr.classList.remove('hidden');
+            
+            startEngine(user);
+            // تسجيل جلسة المستخدم في active_sessions (للمراقبة)
+            try {
+                await setDoc(doc(db, "active_sessions", user.uid), {
+                    userId: user.uid,
+                    name: user.displayName,
+                    email: user.email,
+                    photoURL: user.photoURL,
+                    lastActive: serverTimestamp(),
+                    currentPage: window.location.pathname,
+                    device: navigator.userAgent,
+                    status: 'active',
+                    sessionStart: serverTimestamp()
+                }, { merge: true });
+            } catch (e) { console.log("Error tracking session", e); }
+        } else {
+            loading.classList.add('hidden');
+            authScr.classList.remove('hidden');
+            appScr.classList.add('hidden');
+        }
+    });
 </script>
 </body>
 </html>
