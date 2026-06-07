@@ -1,136 +1,799 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>Wallet App</title>
-  <style>
-    body {
-      font-family: Arial;
-      background: #f4f4f4;
-      text-align: center;
-      padding: 20px;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>KhasmShop | PUBG Mobile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap');
+        * { font-family: 'Cairo', sans-serif; margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
 
-    .box {
-      background: white;
-      padding: 20px;
-      margin: 10px auto;
-      width: 300px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px #ccc;
-    }
+        /* تأثير زجاجي فخم */
+        .glass {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
 
-    input {
-      width: 90%;
-      padding: 10px;
-      margin: 5px 0;
-    }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 1.5rem;
+            transition: all 0.3s;
+        }
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+        }
 
-    button {
-      padding: 10px;
-      width: 95%;
-      margin-top: 5px;
-      cursor: pointer;
-    }
+        .wallet-card {
+            margin-top: -60px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 2rem;
+            box-shadow: 0 20px 35px -10px rgba(0,0,0,0.2);
+        }
 
-    .balance {
-      font-size: 22px;
-      color: green;
-    }
-  </style>
+        .product-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 1.5rem;
+            transition: all 0.25s;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 30px -12px rgba(0,0,0,0.3);
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -320px;
+            width: 320px;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: -5px 0 25px rgba(0,0,0,0.3);
+            padding: 1.5rem;
+            border-right: 1px solid rgba(255,255,255,0.1);
+        }
+        .sidebar.open { right: 0; }
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            z-index: 999;
+            display: none;
+        }
+        .sidebar-overlay.active { display: block; }
+
+        .menu-btn {
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 1rem;
+            padding: 0.5rem 1rem;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: white;
+            transition: 0.2s;
+        }
+        .menu-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.02);
+        }
+
+        .simple-banner {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            height: 130px;
+            border-radius: 0 0 40px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1.5rem;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.2);
+        }
+
+        input, select, textarea {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 1rem;
+            padding: 0.75rem 1rem;
+            width: 100%;
+            color: white;
+            transition: 0.2s;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #fbbf24;
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        button {
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .footer-links a {
+            color: #e2e8f0;
+            margin: 0 0.75rem;
+            text-decoration: none;
+            font-size: 0.75rem;
+            transition: 0.2s;
+        }
+        .footer-links a:hover {
+            color: #fbbf24;
+        }
+
+        /* أنيميشن التحميل */
+        .loader-spin {
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top: 4px solid #fbbf24;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* الوضع الداكن الليلي (يتم تفعيله عبر زر الشريط) */
+        .dark body {
+            background: linear-gradient(135deg, #0f172a, #1e1a3a);
+        }
+        .dark .glass, .dark .glass-card, .dark .wallet-card, .dark .product-card {
+            background: rgba(0, 0, 0, 0.4);
+            border-color: rgba(255,255,255,0.1);
+        }
+        .dark input, .dark select, .dark textarea {
+            background: rgba(0,0,0,0.3);
+            color: #e2e8f0;
+        }
+
+        /* تبويبات لوحة التحكم */
+        .admin-tab {
+            transition: all 0.2s;
+            border-bottom: 2px solid transparent;
+        }
+        .admin-tab.active {
+            border-bottom-color: #fbbf24;
+            color: #fbbf24;
+        }
+    </style>
 </head>
-
 <body>
 
-  <h1>💰 Wallet App</h1>
+<!-- شاشة تحذير WebView -->
+<div id="webview-warning" style="display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; background: #1e293b; text-align: center; position: fixed; top:0;left:0;right:0;bottom:0;z-index:20000; color: white;">
+    <h2>⛔ لا يمكن تسجيل الدخول من هذا التطبيق</h2>
+    <p>يرجى فتح هذا الرابط في متصفح خارجي مثل Chrome أو Safari.</p>
+    <button id="open-browser-btn" class="bg-yellow-500 text-black px-6 py-3 rounded-full mt-4 font-bold">فتح في المتصفح</button>
+    <button id="copy-link-btn" class="bg-gray-600 text-white px-6 py-3 rounded-full mt-2">نسخ الرابط</button>
+</div>
 
-  <div class="box">
-    <h3>Login</h3>
-    <input id="phone" placeholder="Phone">
-    <input id="password" placeholder="Password">
-    <button onclick="login()">Login</button>
-  </div>
+<!-- شاشة التحميل -->
+<div id="loading-screen" class="fixed inset-0 bg-black/70 backdrop-blur flex items-center justify-center z-50">
+    <div class="loader-spin"></div>
+</div>
 
-  <div class="box">
-    <h3>Balance</h3>
-    <div class="balance" id="balance">0</div>
-  </div>
+<!-- شاشة تسجيل الدخول -->
+<div id="auth-screen" class="fixed inset-0 bg-black/60 backdrop-blur flex items-center justify-center p-6 z-40 hidden">
+    <div class="glass w-full max-w-md p-8 rounded-3xl text-white">
+        <h1 class="text-4xl font-black text-center text-yellow-400 mb-2">KHASM SHOP</h1>
+        <p class="text-center text-gray-300 text-sm mb-6">أهلاً بك في متجر الشحن الرسمي</p>
+        <div class="flex gap-4 border-b border-white/20 mb-6">
+            <button class="auth-tab flex-1 py-2 text-center font-bold text-gray-300 active-tab" data-tab="login">تسجيل دخول</button>
+            <button class="auth-tab flex-1 py-2 text-center font-bold text-gray-300" data-tab="register">إنشاء حساب</button>
+        </div>
+        <div id="login-form" class="space-y-4">
+            <input type="email" id="login-email" placeholder="البريد الإلكتروني" dir="ltr">
+            <input type="password" id="login-password" placeholder="كلمة المرور" dir="ltr">
+            <button id="email-login-btn" class="w-full bg-yellow-500 text-black py-3 rounded-xl font-bold">تسجيل الدخول</button>
+        </div>
+        <div id="register-form" class="space-y-4 hidden">
+            <input type="text" id="reg-name" placeholder="الاسم الكامل">
+            <input type="email" id="reg-email" placeholder="البريد الإلكتروني" dir="ltr">
+            <input type="password" id="reg-password" placeholder="كلمة المرور" dir="ltr">
+            <button id="email-register-btn" class="w-full bg-green-500 text-white py-3 rounded-xl font-bold">إنشاء حساب</button>
+        </div>
+        <div class="relative my-6"><div class="absolute inset-0 flex items-center"><div class="w-full border-t border-white/20"></div></div><div class="relative flex justify-center text-xs"><span class="bg-black/40 px-2 text-gray-300">أو</span></div></div>
+        <button id="google-login-btn" class="w-full bg-white text-gray-800 py-3 rounded-xl font-bold flex items-center justify-center gap-2 mb-3"><i class="fab fa-google"></i> دخول عبر جوجل</button>
+        <button id="phone-login-btn" class="w-full bg-white/10 border border-white/20 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2"><i class="fas fa-phone-alt"></i> دخول برقم الهاتف</button>
+    </div>
+</div>
 
-  <div class="box">
-    <h3>Deposit</h3>
-    <input id="depositAmount" placeholder="Amount">
-    <button onclick="deposit()">Deposit</button>
-  </div>
+<!-- مودال رقم الهاتف -->
+<div id="phone-modal" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
+    <div class="glass w-full max-w-md p-6 rounded-3xl text-white">
+        <h3 class="text-2xl font-bold text-center mb-4">📱 تسجيل الدخول</h3>
+        <div id="phone-step-1">
+            <input type="tel" id="phone-number" placeholder="+249XXXXXXXXX" class="w-full text-center" dir="ltr">
+            <button id="send-otp-btn" class="w-full bg-yellow-500 text-black py-3 rounded-xl mt-4 font-bold">إرسال رمز التحقق</button>
+        </div>
+        <div id="phone-step-2" class="hidden">
+            <input type="text" id="otp-code" placeholder="رمز التحقق" class="w-full text-center" dir="ltr">
+            <button id="verify-otp-btn" class="w-full bg-green-500 text-white py-3 rounded-xl mt-4 font-bold">تحقق</button>
+        </div>
+        <button onclick="closePhoneModal()" class="mt-4 text-red-400 text-sm w-full">إلغاء</button>
+    </div>
+</div>
 
-  <div class="box">
-    <h3>Transfer</h3>
-    <input id="toPhone" placeholder="Send to phone">
-    <input id="transferAmount" placeholder="Amount">
-    <button onclick="transfer()">Send</button>
-  </div>
+<!-- المحتوى الرئيسي -->
+<div id="main-app" class="hidden pb-32">
+    <!-- البانر -->
+    <div class="simple-banner">
+        <button class="menu-btn" id="menuBtn"><i class="fas fa-bars text-2xl"></i> القائمة</button>
+        <h1 class="text-2xl font-black text-white">KHASM SHOP</h1>
+        <div style="width: 70px;"></div>
+    </div>
 
-<script>
-  // ===== Users (fake database) =====
-  let users = [
-    { id: 1, phone: "111", password: "1234", balance: 1000 },
-    { id: 2, phone: "222", password: "1234", balance: 500 }
-  ];
+    <main class="max-w-4xl mx-auto px-4 relative z-10">
+        <!-- بطاقة المحفظة -->
+        <div class="wallet-card p-6 text-white mb-8">
+            <div class="flex justify-between items-center mb-6">
+                <div class="flex items-center gap-3">
+                    <img id="uImg" class="w-14 h-14 rounded-full border-2 border-yellow-500 shadow-lg" src="">
+                    <div>
+                        <h2 id="uName" class="font-bold text-xl">...</h2>
+                        <div id="uWallet" class="text-xs text-yellow-300 bg-black/30 px-2 py-0.5 rounded-full mt-1">#000000</div>
+                    </div>
+                </div>
+                <button id="logout-btn" class="w-10 h-10 bg-red-500/30 text-red-300 rounded-full hover:bg-red-500/50"><i class="fas fa-power-off"></i></button>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <div class="bg-black/30 p-5 rounded-2xl text-center backdrop-blur-sm">
+                    <p class="text-xs text-gray-300">رصيدك</p>
+                    <p class="text-3xl font-black text-yellow-400"><span id="uBal">0</span> <small class="text-xs">ج.س</small></p>
+                </div>
+                <div class="bg-blue-600/40 p-5 rounded-2xl text-center">
+                    <p class="text-xs text-blue-100">نقاطك ⭐</p>
+                    <p class="text-3xl font-black"><span id="uPoints">0</span></p>
+                </div>
+            </div>
+            <div class="bg-yellow-500/20 p-4 rounded-2xl flex justify-between items-center">
+                <div><p class="text-sm font-bold text-yellow-300">🎁 هدية 60 شدة مجاناً</p><p class="text-xs text-gray-300">اجمع 30 نقطة للاستبدال</p></div>
+                <button id="redeemBtn" onclick="redeemPoints()" class="px-4 py-2 bg-yellow-500 text-black rounded-xl text-sm font-bold disabled:opacity-50" disabled>استرداد</button>
+            </div>
+        </div>
 
-  let currentUser = null;
+        <!-- لوحة التحكم (مقسمة بتبويبات، منفصلة عن المتجر) -->
+        <div id="adminArea" class="hidden mb-10">
+            <div class="glass p-4 rounded-2xl flex gap-4 mb-6 overflow-x-auto">
+                <button class="admin-tab px-4 py-2 font-bold text-white" data-admin-tab="stats">📊 الإحصائيات</button>
+                <button class="admin-tab px-4 py-2 font-bold text-white" data-admin-tab="balance">💰 شحن الرصيد</button>
+                <button class="admin-tab px-4 py-2 font-bold text-white" data-admin-tab="products">📦 المنتجات</button>
+                <button class="admin-tab px-4 py-2 font-bold text-white" data-admin-tab="orders">📋 الطلبات</button>
+                <button class="admin-tab px-4 py-2 font-bold text-white" data-admin-tab="maintenance">🔧 الصيانة</button>
+            </div>
 
-  // ===== Login =====
-  function login() {
-    let phone = document.getElementById("phone").value;
-    let pass = document.getElementById("password").value;
+            <!-- تبويب الإحصائيات -->
+            <div id="adminTabStats" class="admin-tab-content glass p-6 rounded-2xl">
+                <div class="grid grid-cols-3 gap-4">
+                    <div class="text-center"><p class="text-white/70">👥 المستخدمين</p><p id="totalUsers" class="text-3xl font-bold text-yellow-400">0</p></div>
+                    <div class="text-center"><p class="text-white/70">💰 مبيعات اليوم</p><p id="todaySales" class="text-3xl font-bold text-yellow-400">0</p></div>
+                    <div class="text-center"><p class="text-white/70">⏳ طلبات معلقة</p><p id="pendingOrders" class="text-3xl font-bold text-yellow-400">0</p></div>
+                </div>
+            </div>
 
-    let user = users.find(u => u.phone === phone && u.password === pass);
+            <!-- تبويب شحن الرصيد -->
+            <div id="adminTabBalance" class="admin-tab-content glass p-6 rounded-2xl hidden">
+                <h3 class="text-xl font-bold text-white mb-4">💸 شحن محفظة عميل</h3>
+                <div class="mb-4 relative">
+                    <input type="text" id="targetWallet" placeholder="رقم المحفظة" class="w-full">
+                    <div id="walletUserPreview" class="absolute left-3 top-full mt-1 text-sm text-yellow-300 hidden"></div>
+                </div>
+                <div class="flex gap-3">
+                    <input type="number" id="amountToAdd" placeholder="المبلغ" class="flex-1">
+                    <button onclick="adminRecharge()" class="bg-yellow-500 text-black px-6 py-2 rounded-xl font-bold">شحن</button>
+                </div>
+            </div>
 
-    if (!user) {
-      alert("Login failed");
-      return;
+            <!-- تبويب المنتجات -->
+            <div id="adminTabProducts" class="admin-tab-content glass p-6 rounded-2xl hidden">
+                <h3 class="text-xl font-bold text-white mb-4">➕ إضافة منتج جديد</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <input type="text" id="productName" placeholder="اسم المنتج">
+                    <input type="number" id="productPrice" placeholder="السعر">
+                    <input type="number" id="productPoints" placeholder="النقاط">
+                    <input type="number" id="productStock" placeholder="الكمية">
+                    <select id="productCategory">
+                        <option value="uc">UC (شدات)</option>
+                        <option value="membership">عضوية</option>
+                        <option value="crate">صندوق</option>
+                        <option value="bundle">حزمة</option>
+                    </select>
+                    <button onclick="addProduct()" class="bg-purple-600 text-white py-2 rounded-xl">إضافة المنتج</button>
+                </div>
+                <div id="productPreview" class="bg-white/10 p-3 rounded-xl mb-4 hidden">
+                    <p id="previewName" class="text-white"></p>
+                    <p id="previewPrice" class="text-yellow-400"></p>
+                    <p id="previewPoints" class="text-gray-300"></p>
+                </div>
+                <h4 class="text-lg font-bold text-white mt-4 mb-2">📋 قائمة المنتجات</h4>
+                <div id="productsList" class="space-y-3 max-h-96 overflow-y-auto"></div>
+            </div>
+
+            <!-- تبويب الطلبات -->
+            <div id="adminTabOrders" class="admin-tab-content glass p-6 rounded-2xl hidden">
+                <h3 class="text-xl font-bold text-white mb-4">📌 الطلبات المعلقة</h3>
+                <div id="adminOrdersList" class="space-y-3"></div>
+            </div>
+
+            <!-- تبويب الصيانة -->
+            <div id="adminTabMaintenance" class="admin-tab-content glass p-6 rounded-2xl hidden">
+                <h3 class="text-xl font-bold text-white mb-4">🔧 وضع الصيانة</h3>
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="w-3 h-3 rounded-full bg-green-500" id="maintenanceIndicator"></span>
+                    <span id="maintenanceStatusText" class="text-white">النظام يعمل طبيعي</span>
+                </div>
+                <div class="grid grid-cols-2 gap-3 mb-4">
+                    <button onclick="activateMaintenanceMode()" class="bg-amber-500 text-black py-2 rounded-xl font-bold">تفعيل</button>
+                    <button onclick="deactivateMaintenanceMode()" class="bg-green-600 text-white py-2 rounded-xl font-bold">إلغاء</button>
+                </div>
+                <textarea id="maintenanceMessage" rows="2" class="w-full" placeholder="رسالة الصيانة">جاري تطوير المتجر، سنعود قريباً 🚀</textarea>
+            </div>
+        </div>
+
+        <!-- المتجر (عرض المنتجات للجميع) -->
+        <div id="storeView">
+            <h3 class="text-2xl font-black text-white mb-4 border-r-4 border-yellow-500 pr-3">🛍️ باقات الشحن</h3>
+            <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-12"></div>
+            <h3 class="text-2xl font-black text-white mb-4 border-r-4 border-blue-500 pr-3">📋 تاريخ طلباتي</h3>
+            <div id="userOrdersList" class="space-y-4"></div>
+        </div>
+    </main>
+    <!-- الشريط الجانبي -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <div class="sidebar" id="sidebar">
+        <div class="text-center py-4 border-b border-white/20">
+            <img id="sidebarImg" class="w-20 h-20 rounded-full mx-auto border-2 border-yellow-500" src="">
+            <h4 id="sidebarName" class="font-bold text-white text-lg mt-2"></h4>
+            <p id="sidebarWallet" class="text-sm text-yellow-300"></p>
+        </div>
+        <a href="#" id="sidebarHome" class="flex items-center gap-3 p-3 hover:bg-white/10 rounded-xl text-white"><i class="fas fa-home w-6"></i> الرئيسية</a>
+        <a href="#" id="sidebarAccount" class="flex items-center gap-3 p-3 hover:bg-white/10 rounded-xl text-white"><i class="fas fa-user w-6"></i> حسابي</a>
+        <a href="#" id="sidebarWalletLink" class="flex items-center gap-3 p-3 hover:bg-white/10 rounded-xl text-white"><i class="fas fa-wallet w-6"></i> محفظتي</a>
+        <a href="#" id="sidebarOrders" class="flex items-center gap-3 p-3 hover:bg-white/10 rounded-xl text-white"><i class="fas fa-shopping-bag w-6"></i> طلباتي</a>
+        <div class="policy-btn flex items-center gap-3 p-3 hover:bg-white/10 rounded-xl cursor-pointer text-white" id="sidebarPolicies"><i class="fas fa-file-alt w-6"></i> السياسات</div>
+        <div class="theme-btn flex items-center gap-3 p-3 hover:bg-white/10 rounded-xl cursor-pointer text-white" id="themeToggleBtn"><i class="fas fa-moon w-6"></i> الوضع الليلي</div>
+        <a href="#" id="sidebarLogout" class="flex items-center gap-3 p-3 hover:bg-white/10 rounded-xl text-white"><i class="fas fa-sign-out-alt w-6"></i> تسجيل الخروج</a>
+    </div>
+
+    <footer class="fixed bottom-0 left-0 right-0 bg-black/40 backdrop-blur border-t border-white/10 py-3 text-center text-xs text-gray-300 footer-links">
+        <div class="flex justify-center gap-4 flex-wrap">
+            <a href="#" onclick="showPolicy('terms');return false;">شروط الخدمة</a>
+            <a href="#" onclick="showPolicy('privacy');return false;">سياسة الخصوصية</a>
+            <a href="#" onclick="showPolicy('refund');return false;">سياسة الاسترجاع</a>
+            <a href="#" onclick="showPolicy('about');return false;">عن المتجر</a>
+        </div>
+        <div class="mt-1">© 2025 KhasmShop - جميع الحقوق محفوظة</div>
+    </footer>
+</div>
+
+<!-- مودال السياسات -->
+<div id="policy-modal" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
+    <div class="glass w-full max-w-md p-6 rounded-3xl text-white">
+        <div class="flex justify-between items-center mb-4"><h3 id="policy-title" class="text-xl font-bold"></h3><button onclick="closePolicyModal()" class="text-gray-400 hover:text-white"><i class="fas fa-times text-2xl"></i></button></div>
+        <div id="policy-content" class="text-gray-300"></div>
+        <button onclick="closePolicyModal()" class="mt-6 w-full bg-white/20 py-2 rounded-xl">إغلاق</button>
+    </div>
+</div>
+
+<!-- مودال تفاصيل الطلب للمشرف -->
+<div id="orderDetailModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+    <div class="glass w-full max-w-md p-6 rounded-3xl text-white">
+        <h3 class="text-xl font-bold mb-4">📄 تفاصيل الطلب</h3>
+        <div id="orderDetailContent" class="space-y-2 text-sm"></div>
+        <button onclick="closeOrderDetailModal()" class="mt-6 w-full bg-white/20 py-2 rounded-xl">إغلاق</button>
+    </div>
+</div>
+
+<div id="agentsList" style="display: none;"></div>
+
+<script type="module">
+    // ========== Firebase Imports ==========
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, doc, onSnapshot, collection, addDoc, query, where, getDocs, updateDoc, increment, setDoc, serverTimestamp, orderBy, getDoc, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+    const firebaseConfig = { 
+        apiKey: "AIzaSyC0jzecEwKgHpxHpTi8Y-_bwwfzVdtgf3E", 
+        authDomain: "khasmshop.firebaseapp.com", 
+        projectId: "khasmshop", 
+        storageBucket: "khasmshop.firebasestorage.app", 
+        messagingSenderId: "238182001615", 
+        appId: "1:238182001615:web:d77391030a40a481b440ba" 
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+
+    const TELEGRAM_TOKEN = '8616731804:AAGjZzVbWV7DXasmlwjjCyhz3AYUmzGbyi8';
+    const TELEGRAM_CHAT_ID = '8539810117';
+
+    const ADMINS = ["mhmdfthu98@gmail.com", "muhammedaltaj111@gmail.com", "mohnadyasir43@gmail.com"]; // ضف بريدك هنا
+    let userData = null;
+    let recaptchaVerifier = null;
+    let confirmationResult = null;
+
+    // ========== دوال مساعدة ==========
+    async function sendTelegramNotification(orderData) {
+        const message = `🛒 **طلب جديد في KhasmShop!**\n━━━━━━━━━━━━━━━━━━\n📦 **المنتج:** ${orderData.product}\n💰 **السعر:** ${orderData.price} ج.س\n👤 **العميل:** ${orderData.uName}\n🆔 **أيدي اللعبة:** ${orderData.gameID}\n🎮 **اسم داخل اللعبة:** ${orderData.gameName}\n📞 **رقم الهاتف:** ${orderData.phone}\n👤 **الاسم الحقيقي:** ${orderData.realName}\n⏰ **الوقت:** ${new Date().toLocaleString('ar-SD')}`;
+        try {
+            await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: message, parse_mode: 'Markdown' })
+            });
+        } catch(e) { console.error(e); }
     }
 
-    currentUser = user;
-    updateBalance();
-    alert("Welcome " + phone);
-  }
-
-  // ===== Update balance =====
-  function updateBalance() {
-    if (currentUser) {
-      document.getElementById("balance").innerText = currentUser.balance;
+    function notifyCustomer(orderData) {
+        if ('Notification' in window && Notification.permission === 'granted') {
+            new Notification('✅ تم استلام طلبك بنجاح!', {
+                body: `المنتج: ${orderData.product}\nالمبلغ: ${orderData.price} ج.س`,
+                icon: 'https://i.ibb.co/chkhr746/unnamed-5.png'
+            });
+        }
     }
-  }
 
-  // ===== Deposit =====
-  function deposit() {
-    if (!currentUser) return alert("Login first");
+    // ========== السياسات ==========
+    const policies = {
+        terms: { title: "📜 شروط الخدمة", content: "<p>باستخدامك للمنصة توافق على الشروط التالية:</p><ul><li>جميع عمليات الشحن خلال 24 ساعة.</li><li>لا نضمن استرجاع الرصيد بعد إتمام الشراء.</li><li>يجب إدخال بيانات اللعبة بدقة.</li></ul>" },
+        privacy: { title: "?? سياسة الخصوصية", content: "<p>نلتزم بحماية بياناتك الشخصية:</p><ul><li>لا نشارك بياناتك مع أي طرف ثالث.</li><li>تُستخدم فقط لتأكيد الطلبات والتواصل.</li></ul>" },
+        refund: { title: "💰 سياسة الاسترجاع", content: "<p>في حال تأخر الشحن أكثر من 48 ساعة، يمكنك طلب استرجاع كامل.</p>" },
+        about: { title: "🏢 عن المتجر", content: "<p>KhasmShop متخصص في شحن PUBG Mobile في السودان.</p>" }
+    };
+    window.showPolicy = (type) => {
+        const p = policies[type];
+        document.getElementById('policy-title').innerText = p.title;
+        document.getElementById('policy-content').innerHTML = p.content;
+        document.getElementById('policy-modal').classList.remove('hidden');
+    };
+    window.closePolicyModal = () => document.getElementById('policy-modal').classList.add('hidden');
 
-    let amount = Number(document.getElementById("depositAmount").value);
-    currentUser.balance += amount;
+    // ========== إدارة المنتجات ==========
+    class ProductManager {
+        constructor(db) { this.db = db; this.productsRef = collection(db, "products"); this.categories = ['uc','membership','crate','bundle']; }
+        async addProduct(productData) { if (!this.validateProduct(productData)) throw new Error('بيانات المنتج غير صحيحة'); const newProduct = { ...productData, createdAt: serverTimestamp(), updatedAt: serverTimestamp(), soldCount: 0, revenue: 0, isActive: true }; const docRef = await addDoc(this.productsRef, newProduct); return docRef.id; }
+        async deleteProduct(productId) { await updateDoc(doc(this.db, "products", productId), { isActive: false, deletedAt: serverTimestamp() }); }
+        validateProduct(p) { return p.name?.length>=3 && p.price>0 && p.givePoints>=0 && p.stock>=0 && this.categories.includes(p.category); }
+    }
+    const productManager = new ProductManager(db);
 
-    updateBalance();
-  }
+    window.addProduct = async () => {
+        const data = { name: document.getElementById('productName').value, price: parseInt(document.getElementById('productPrice').value), givePoints: parseInt(document.getElementById('productPoints').value), stock: parseInt(document.getElementById('productStock').value), category: document.getElementById('productCategory').value };
+        try { await productManager.addProduct(data); document.getElementById('productName').value=''; document.getElementById('productPrice').value=''; document.getElementById('productPoints').value=''; document.getElementById('productStock').value=''; alert('✅ تم إضافة المنتج'); } catch(e) { alert('❌ خطأ: '+e.message); }
+    };
+    window.previewProduct = () => {
+        const previewDiv = document.getElementById('productPreview');
+        previewDiv.classList.remove('hidden');
+        document.getElementById('previewName').innerHTML = `📦 ${document.getElementById('productName').value || 'اسم المنتج'}`;
+        document.getElementById('previewPrice').innerHTML = `💰 ${document.getElementById('productPrice').value || '0'} ج.س`;
+        document.getElementById('previewPoints').innerHTML = `⭐ +${document.getElementById('productPoints').value || '0'} نقطة`;
+    };
+    window.changePrice = (productId) => {
+        const modal = document.createElement('div'); modal.className='fixed inset-0 bg-black/70 z-[99999] flex items-center justify-center p-4'; modal.innerHTML=`<div class="glass w-80 p-6 rounded-2xl"><h3 class="text-lg font-bold text-white text-center mb-4">💰 تغيير السعر</h3><input type="number" id="newPrice" class="w-full p-3 rounded-xl text-center" placeholder="السعر الجديد"><div class="flex gap-3 mt-4"><button onclick="this.closest(\'.fixed\').remove()" class="flex-1 bg-white/20 py-2 rounded-xl text-white">إلغاء</button><button onclick="updatePrice('${productId}')" class="flex-1 bg-yellow-500 text-black py-2 rounded-xl">تحديث</button></div></div>`;
+        document.body.appendChild(modal);
+    };
+    window.updatePrice = async (productId) => {
+        const newPrice = parseInt(document.getElementById('newPrice').value);
+        if(!newPrice||newPrice<0) return alert('سعر غير صحيح');
+        await updateDoc(doc(db,"products",productId), { price: newPrice });
+        document.querySelector('.fixed').remove();
+        alert('✅ تم تحديث السعر');
+    };
+    window.deleteProduct = async (productId) => {
+        if(confirm('⚠️ هل أنت متأكد من حذف هذا المنتج؟')) {
+            await productManager.deleteProduct(productId);
+            alert('✅ تم الحذف');
+        }
+    };
 
-  // ===== Transfer =====
-  function transfer() {
-    if (!currentUser) return alert("Login first");
+    function loadProductsList() {
+        onSnapshot(query(collection(db,"products"), where("isActive","==",true)), (snap) => {
+            const list = document.getElementById('productsList'); const stats = { total:0, inStock:0, outOfStock:0, totalValue:0 }; list.innerHTML='';
+            snap.forEach(doc => { const p=doc.data(); stats.total++; stats.totalValue += p.price*(p.stock||1); if(p.stock>0) stats.inStock++; else stats.outOfStock++;
+                list.innerHTML += `<div class="bg-white/10 p-4 rounded-2xl"><div class="flex justify-between items-start"><div><p class="font-bold text-white">${p.name}</p><p class="text-yellow-400 font-bold">${p.price} ج.س</p><p class="text-gray-300 text-xs">+${p.givePoints} نقطة | المخزون: ${p.stock||'∞'}</p></div><div><span class="bg-purple-500/30 text-white px-2 py-1 rounded-full text-xs">${p.category}</span></div></div><div class="flex gap-2 mt-3"><button onclick="changePrice('${doc.id}')" class="bg-blue-600 text-white px-3 py-1 rounded-xl text-xs">تغيير السعر</button><button onclick="deleteProduct('${doc.id}')" class="bg-red-500 text-white px-3 py-1 rounded-xl text-xs">حذف</button></div></div>`;
+            });
+            document.getElementById('totalProducts').textContent=stats.total;
+            document.getElementById('inStockProducts').textContent=stats.inStock;
+            document.getElementById('outOfStockProducts').textContent=stats.outOfStock;
+            document.getElementById('totalValue').textContent=stats.totalValue.toLocaleString();
+        });
+    }
 
-    let phone = document.getElementById("toPhone").value;
-    let amount = Number(document.getElementById("transferAmount").value);
+    // ========== الطلبات ==========
+    window.orderNow = (name, price, pts) => {
+        if(userData.balance < price) return alert("❌ الرصيد لا يكفي.");
+        const modal = document.createElement('div'); modal.className='fixed inset-0 bg-black/80 z-[99999] flex items-center justify-center p-4'; modal.style.direction='rtl';
+        modal.innerHTML = `<div class="glass w-full max-w-md p-6 rounded-3xl"><h2 class="text-xl font-bold text-center text-white mb-4">🛒 تأكيد بيانات الشحن</h2><div class="space-y-3"><input id="modalGameID" type="text" placeholder="أيدي اللعبة (Player ID)" class="w-full"><input id="modalGameName" type="text" placeholder="اسمك داخل اللعبة" class="w-full"><input id="modalRealName" type="text" placeholder="الاسم الحقيقي" class="w-full"><input id="modalPhone" type="tel" placeholder="رقم الهاتف" class="w-full"><div class="bg-yellow-500/20 p-3 rounded-xl"><p class="font-bold text-yellow-300">ملخص الطلب:</p><p>المنتج: ${name}</p><p>المبلغ: ${price} ج.س</p><p>النقاط: +${pts}</p></div><div class="flex gap-3 mt-4"><button onclick="this.closest(\'.fixed\').remove()" class="flex-1 bg-white/20 py-2 rounded-xl">إلغاء</button><button onclick="submitOrder('${name}', ${price}, ${pts})" class="flex-1 bg-yellow-500 text-black py-2 rounded-xl">تأكيد</button></div></div></div>`;
+        document.body.appendChild(modal);
+    };
+    window.submitOrder = async (name, price, pts) => {
+        const gameID = document.getElementById('modalGameID')?.value.trim(); const gameName = document.getElementById('modalGameName')?.value.trim(); const realName = document.getElementById('modalRealName')?.value.trim(); const phone = document.getElementById('modalPhone')?.value.trim();
+        if(!gameID||!gameName||!realName||!phone) return alert("❌ جميع الحقول مطلوبة!");
+        document.querySelector('.fixed')?.remove();
+        if(confirm(`🔔 تأكيد شحن ${name}؟`)) {
+            try {
+                await runTransaction(db, async (transaction) => {
+                    const userRef = doc(db,"users", auth.currentUser.uid);
+                    const userSnap = await transaction.get(userRef);
+                    if(userSnap.data().balance < price) throw "رصيد غير كاف";
+                    transaction.update(userRef, { balance: increment(-price) });
+                    const orderData = { uID: auth.currentUser.uid, uName: userData.name, product: name, price, pts, gameID, gameName, realName, phone, status: 'قيد الانتظار', timestamp: serverTimestamp() };
+                    const orderRef = doc(collection(db,"orders"));
+                    transaction.set(orderRef, orderData);
+                    setTimeout(() => sendTelegramNotification(orderData), 1000);
+                    setTimeout(() => notifyCustomer(orderData), 500);
+                });
+                alert("✅ تم إرسال طلبك بنجاح!");
+            } catch (error) { alert("❌ حدث خطأ: " + error.message); }
+        }
+    };
+    window.loadUserHistory = (uid) => {
+        onSnapshot(query(collection(db,"orders"), where("uID","==",uid), orderBy("timestamp","desc")), (snap) => {
+            const list = document.getElementById('userOrdersList'); list.innerHTML='';
+            if(snap.empty) { list.innerHTML='<div class="text-center text-gray-400 py-8">لا توجد طلبات سابقة</div>'; return; }
+            snap.forEach(d => { const o=d.data(); const config = o.status==='مكتمل' ? { color:'text-green-400', icon:'✅' } : { color:'text-yellow-400', icon:'⏳' };
+                list.innerHTML += `<div class="glass p-4 rounded-2xl"><div class="flex justify-between"><div><span class="text-2xl">${config.icon}</span><p class="font-bold text-white">${o.product}</p><p class="text-xs text-gray-300">🆔 ${o.gameID}</p></div><span class="px-2 py-1 rounded-full text-xs ${config.color} bg-black/30">${o.status}</span></div><div class="grid grid-cols-2 gap-2 mt-3 text-sm"><div>💰 ${o.price} ج.س</div><div>📞 ${o.phone}</div></div></div>`;
+            });
+        });
+    };
+    // ========== إحصائيات المشرف ==========
+    async function loadAdminStats() {
+        const today = new Date(); today.setHours(0,0,0,0);
+        const usersSnap = await getDocs(collection(db,"users"));
+        document.getElementById('totalUsers').innerText = usersSnap.size;
+        const todayOrders = await getDocs(query(collection(db,"orders"), where("timestamp", ">=", today)));
+        const todayTotal = todayOrders.docs.reduce((sum, doc) => sum + doc.data().price, 0);
+        document.getElementById('todaySales').innerText = todayTotal.toLocaleString();
+        const pendingSnap = await getDocs(query(collection(db,"orders"), where("status", "==", "قيد الانتظار")));
+        document.getElementById('pendingOrders').innerText = pendingSnap.size;
+    }
+    window.adminRecharge = async () => {
+        const wid = document.getElementById('targetWallet').value.trim();
+        const amt = parseInt(document.getElementById('amountToAdd').value);
+        const q = query(collection(db,"users"), where("walletID","==",wid));
+        const snap = await getDocs(q);
+        if(snap.empty) return alert("المحفظة غير موجودة");
+        const userDoc = snap.docs[0];
+        const userName = userDoc.data().name;
+        if(confirm(`شحن ${amt} ج.س للمستخدم ${userName}؟`)) {
+            await updateDoc(doc(db,"users",userDoc.id), { balance: increment(amt) });
+            alert("تم الشحن ✅");
+        }
+    };
+    function loadAdminOrders() {
+        onSnapshot(query(collection(db,"orders"), where("status","==","قيد الانتظار"), orderBy("timestamp","desc")), (snap) => {
+            const list = document.getElementById('adminOrdersList'); list.innerHTML='';
+            snap.forEach(d => { const o=d.data();
+                list.innerHTML += `<div class="bg-white/10 p-4 rounded-2xl"><div class="flex justify-between"><p><span class="font-bold">${o.product}</span> - 🆔 ${o.gameID}</p><span class="text-yellow-400 text-sm">${new Date(o.timestamp?.toDate()).toLocaleString()}</span></div><p>👤 ${o.uName} | 📞 ${o.phone}</p><div class="flex gap-2 mt-3"><button onclick="showOrderDetails('${d.id}')" class="bg-blue-600 text-white px-3 py-1 rounded-xl text-xs">📄 تفاصيل</button><button onclick="updateOrder('${d.id}', '${o.uID}', 'مكتمل', ${o.pts})" class="bg-green-600 text-white px-3 py-1 rounded-xl text-xs">تم الشحن</button><button onclick="updateOrder('${d.id}', '${o.uID}', 'فشل', 0, ${o.price})" class="bg-red-500 text-white px-3 py-1 rounded-xl text-xs">إلغاء</button></div></div>`;
+            });
+        });
+    }
+    window.showOrderDetails = async (orderId) => {
+        const orderSnap = await getDoc(doc(db,"orders", orderId));
+        if(orderSnap.exists()) {
+            const o = orderSnap.data();
+            const content = `
+                <p><strong>المنتج:</strong> ${o.product}</p>
+                <p><strong>السعر:</strong> ${o.price} ج.س</p>
+                <p><strong>العميل:</strong> ${o.uName}</p>
+                <p><strong>أيدي اللعبة:</strong> ${o.gameID}</p>
+                <p><strong>اسم داخل اللعبة:</strong> ${o.gameName}</p>
+                <p><strong>الاسم الحقيقي:</strong> ${o.realName}</p>
+                <p><strong>رقم الهاتف:</strong> ${o.phone}</p>
+                <p><strong>الحالة:</strong> ${o.status}</p>
+                <p><strong>التاريخ:</strong> ${new Date(o.timestamp?.toDate()).toLocaleString()}</p>
+            `;
+            document.getElementById('orderDetailContent').innerHTML = content;
+            document.getElementById('orderDetailModal').classList.remove('hidden');
+        }
+    };
+    window.closeOrderDetailModal = () => document.getElementById('orderDetailModal').classList.add('hidden');
 
-    let receiver = users.find(u => u.phone === phone);
+    window.updateOrder = async (oid, uid, st, pts, refund=0) => {
+        if(st==='مكتمل') await updateDoc(doc(db,"users",uid), { points: increment(pts) });
+        else if(st==='فشل') await updateDoc(doc(db,"users",uid), { balance: increment(refund) });
+        await updateDoc(doc(db,"orders",oid), { status: st });
+    };
 
-    if (!receiver) return alert("User not found");
-    if (currentUser.balance < amount) return alert("Not enough balance");
+    // البحث عن المستخدم برقم المحفظة (عرض الاسم)
+    document.getElementById('targetWallet').addEventListener('input', async (e) => {
+        const wid = e.target.value.trim();
+        const preview = document.getElementById('walletUserPreview');
+        if(wid.length < 4) { preview.classList.add('hidden'); return; }
+        const q = query(collection(db,"users"), where("walletID","==",wid));
+        const snap = await getDocs(q);
+        if(!snap.empty) {
+            const name = snap.docs[0].data().name;
+            preview.innerHTML = `👤 ${name}`;
+            preview.classList.remove('hidden');
+        } else {
+            preview.classList.add('hidden');
+        }
+    });
 
-    currentUser.balance -= amount;
-    receiver.balance += amount;
+    // ========== وضع الصيانة ==========
+    async function checkMaintenanceStatus() {
+        const docRef = doc(db, "settings", "maintenance");
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            const indicator = document.getElementById('maintenanceIndicator');
+            const statusText = document.getElementById('maintenanceStatusText');
+            if (data.isActive) {
+                indicator.style.backgroundColor = '#ef4444';
+                statusText.innerHTML = '⚠️ وضع الصيانة مفعل';
+                localStorage.setItem('maintenanceMode', 'active');
+                localStorage.setItem('maintenanceMessage', data.message || 'جاري التطوير');
+            } else {
+                indicator.style.backgroundColor = '#22c55e';
+                statusText.innerHTML = '✅ النظام يعمل طبيعي';
+                localStorage.setItem('maintenanceMode', 'inactive');
+            }
+        }
+    }
+    window.activateMaintenanceMode = async () => {
+        const message = document.getElementById('maintenanceMessage').value;
+        await setDoc(doc(db, "settings", "maintenance"), { isActive: true, message, activatedBy: auth.currentUser?.email, activatedAt: serverTimestamp() });
+        checkMaintenanceStatus();
+        alert('✅ تم تفعيل وضع الصيانة');
+    };
+    window.deactivateMaintenanceMode = async () => {
+        await setDoc(doc(db, "settings", "maintenance"), { isActive: false, deactivatedBy: auth.currentUser?.email, deactivatedAt: serverTimestamp() }, { merge: true });
+        checkMaintenanceStatus();
+        alert('✅ تم إلغاء وضع الصيانة');
+    };
 
-    updateBalance();
-    alert("Transfer successful");
-  }
+    // ========== تسجيل الدخول ==========
+    window.initRecaptcha = () => { if(!recaptchaVerifier) recaptchaVerifier = new RecaptchaVerifier(auth, 'send-otp-btn', { size: 'invisible', callback: () => {} }); };
+    window.sendOTP = async () => { const phoneNumber = document.getElementById('phone-number').value.trim(); if(!phoneNumber) return alert('أدخل رقم الهاتف مع رمز الدولة'); initRecaptcha(); try { confirmationResult = await signInWithPhoneNumber(auth, phoneNumber, recaptchaVerifier); document.getElementById('phone-step-1').classList.add('hidden'); document.getElementById('phone-step-2').classList.remove('hidden'); alert('تم إرسال رمز التحقق'); } catch(e) { alert('فشل إرسال الرمز: '+e.message); } };
+    window.verifyOTP = async () => { const code = document.getElementById('otp-code').value.trim(); if(!code) return alert('أدخل الرمز'); try { await confirmationResult.confirm(code); closePhoneModal(); } catch(e) { alert('رمز غير صحيح'); } };
+    function closePhoneModal() { document.getElementById('phone-modal').classList.add('hidden'); document.getElementById('phone-step-1').classList.remove('hidden'); document.getElementById('phone-step-2').classList.add('hidden'); document.getElementById('phone-number').value=''; document.getElementById('otp-code').value=''; }
+    window.closePhoneModal = closePhoneModal;
+    document.getElementById('send-otp-btn').onclick = sendOTP;
+    document.getElementById('verify-otp-btn').onclick = verifyOTP;
+
+    document.getElementById('email-login-btn').onclick = async () => { const email=document.getElementById('login-email').value; const pwd=document.getElementById('login-password').value; try { await signInWithEmailAndPassword(auth, email, pwd); } catch(e) { alert('خطأ في تسجيل الدخول: '+e.message); } };
+    document.getElementById('email-register-btn').onclick = async () => { const name=document.getElementById('reg-name').value; const email=document.getElementById('reg-email').value; const pwd=document.getElementById('reg-password').value; if(!name||!email||!pwd) return alert('جميع الحقول مطلوبة'); try { const cred = await createUserWithEmailAndPassword(auth, email, pwd); await setDoc(doc(db,"users",cred.user.uid), { name, email, img:'https://via.placeholder.com/100', walletID:Math.floor(100000+Math.random()*900000).toString(), balance:0, points:0 }); } catch(e) { alert('خطأ في إنشاء الحساب: '+e.message); } };
+    document.getElementById('google-login-btn').onclick = async () => { try { await signInWithPopup(auth, provider); } catch(e) { alert('خطأ: '+e.message); } };
+    document.getElementById('phone-login-btn').onclick = () => { document.getElementById('phone-modal').classList.remove('hidden'); };
+    document.getElementById('logout-btn').onclick = async () => { await signOut(auth); document.getElementById('main-app').classList.add('hidden'); document.getElementById('auth-screen').classList.remove('hidden'); };
+
+    // ========== الشريط الجانبي والثيم ==========
+    const menuBtn = document.getElementById('menuBtn');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    function toggleSidebar(open) { if(open) { sidebar.classList.add('open'); overlay.classList.add('active'); } else { sidebar.classList.remove('open'); overlay.classList.remove('active'); } }
+    menuBtn.onclick = () => toggleSidebar(true);
+    overlay.onclick = () => toggleSidebar(false);
+    document.getElementById('sidebarHome').onclick = (e) => { e.preventDefault(); toggleSidebar(false); window.scrollTo({top:0, behavior:'smooth'}); };
+    document.getElementById('sidebarAccount').onclick = (e) => { e.preventDefault(); toggleSidebar(false); alert('تفاصيل الحساب: الاسم: '+userData.name+' - البريد: '+auth.currentUser.email); };
+    document.getElementById('sidebarWalletLink').onclick = (e) => { e.preventDefault(); toggleSidebar(false); alert('محفظتك: #'+userData.walletID+' - الرصيد: '+userData.balance+' ج.س - النقاط: '+userData.points); };
+    document.getElementById('sidebarOrders').onclick = (e) => { e.preventDefault(); toggleSidebar(false); document.getElementById('userOrdersList').scrollIntoView({behavior:'smooth'}); };
+    document.getElementById('sidebarPolicies').onclick = (e) => { e.preventDefault(); toggleSidebar(false); showPolicy('terms'); };
+    document.getElementById('sidebarLogout').onclick = (e) => { e.preventDefault(); toggleSidebar(false); document.getElementById('logout-btn').click(); };
+
+    function setTheme(theme) {
+        if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+            localStorage.setItem('theme', 'dark');
+            document.getElementById('themeToggleBtn').innerHTML = '<i class="fas fa-sun w-6"></i> الوضع النهاري';
+        } else {
+            document.documentElement.classList.remove('dark');
+            localStorage.setItem('theme', 'light');
+            document.getElementById('themeToggleBtn').innerHTML = '<i class="fas fa-moon w-6"></i> الوضع الليلي';
+        }
+    }
+    function toggleTheme() { setTheme(document.documentElement.classList.contains('dark') ? 'light' : 'dark'); }
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') setTheme('dark'); else setTheme('light');
+    document.getElementById('themeToggleBtn').onclick = toggleTheme;
+
+    function updateSidebarUser() {
+        document.getElementById('sidebarImg').src = userData.img || 'https://via.placeholder.com/100';
+        document.getElementById('sidebarName').innerText = userData.name;
+        document.getElementById('sidebarWallet').innerText = `#${userData.walletID}`;
+    }
+
+    window.redeemPoints = () => { if(userData.points >= 30) alert('🎁 تم استبدال 30 نقطة بهدية 60 شدة!'); };
+    window.contactAgent = (n, name) => window.open(`https://wa.me/${n}?text=${encodeURIComponent('مرحباً '+name+'، أريد شحن محفظتي: #'+userData?.walletID)}`);
+
+    // ========== تبديل تبويبات لوحة التحكم ==========
+    function switchAdminTab(tabId) {
+        document.querySelectorAll('.admin-tab-content').forEach(el => el.classList.add('hidden'));
+        document.getElementById(`adminTab${tabId}`).classList.remove('hidden');
+        document.querySelectorAll('.admin-tab').forEach(btn => btn.classList.remove('active'));
+        document.querySelector(`.admin-tab[data-admin-tab="${tabId.toLowerCase()}"]`).classList.add('active');
+    }
+    document.querySelectorAll('.admin-tab').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const tab = btn.getAttribute('data-admin-tab');
+            const tabMap = { stats:'Stats', balance:'Balance', products:'Products', orders:'Orders', maintenance:'Maintenance' };
+            switchAdminTab(tabMap[tab]);
+        });
+    });
+
+    // ========== بدء التشغيل ==========
+    function startEngine(user) {
+        const isAdmin = ADMINS.includes(user.email);
+        onSnapshot(doc(db,"users",user.uid), (snap) => { if(snap.exists()) { userData = snap.data(); updateUI(isAdmin); updateSidebarUser(); if(isAdmin) { document.getElementById('adminArea').classList.remove('hidden'); loadProductsList(); loadAdminStats(); loadAdminOrders(); checkMaintenanceStatus(); } } });
+        onSnapshot(collection(db,"products"), (snap) => { const grid=document.getElementById('productGrid'); grid.innerHTML=''; snap.forEach(d=>{ const p=d.data(); grid.innerHTML+=`<div class="product-card p-5 text-white text-center"><div class="absolute -top-2 -right-2 bg-yellow-500 text-black text-xs font-bold px-2 py-1 rounded-full">+${p.givePoints}P</div><p class="font-bold text-lg">${p.name}</p><p class="text-2xl font-black text-yellow-400 my-2">${p.price} ج.س</p><button onclick="orderNow('${p.name}', ${p.price}, ${p.givePoints})" class="w-full bg-white/20 hover:bg-white/30 py-2 rounded-xl font-bold transition">شراء</button></div>`; }); });
+        loadUserHistory(user.uid);
+        if ('Notification' in window) Notification.requestPermission();
+    }
+    window.updateUI = (isAdmin) => {
+        document.getElementById('uName').innerText = userData.name;
+        document.getElementById('uImg').src = userData.img;
+        document.getElementById('uBal').innerText = (userData.balance||0).toLocaleString();
+        document.getElementById('uPoints').innerText = userData.points||0;
+        document.getElementById('uWallet').innerText = `المحفظة: #${userData.walletID}`;
+        const rb = document.getElementById('redeemBtn');
+        if(userData.points >= 30) { rb.disabled=false; rb.classList.remove('opacity-50'); rb.classList.add('bg-yellow-500','text-black'); rb.innerText="استرداد الآن! 🎁"; }
+        const agents = [{n:'249907760989', name:'محمد فتحي'}, {n:'249916581517', name:'محمد التاج'}, {n:'249914178935', name:'مهند ياسر'}];
+        document.getElementById('agentsList').innerHTML = agents.map(a => `<button onclick="contactAgent('${a.n}', '${a.name}')" class="w-full flex justify-between p-2 bg-white/10 rounded-xl text-xs text-white">${a.name} <i class="fab fa-whatsapp text-green-400"></i></button>`).join('');
+    };
+
+    if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js').catch(e=>console.log("SW not registered", e)); }
+
+    onAuthStateChanged(auth, async (user) => {
+        const loading = document.getElementById('loading-screen');
+        const authScr = document.getElementById('auth-screen');
+        const appScr = document.getElementById('main-app');
+        if (user) {
+            const userRef = doc(db, "users", user.uid);
+            const userSnap = await getDoc(userRef);
+            if (!userSnap.exists()) {
+                await setDoc(userRef, { name: user.displayName || user.email.split('@')[0], email: user.email, img: user.photoURL || 'https://via.placeholder.com/100', walletID: Math.floor(100000 + Math.random() * 900000).toString(), balance: 0, points: 0 });
+            }
+            loading.classList.add('hidden');
+            authScr.classList.add('hidden');
+            appScr.classList.remove('hidden');
+            startEngine(user);
+        } else {
+            loading.classList.add('hidden');
+            authScr.classList.remove('hidden');
+            appScr.classList.add('hidden');
+        }
+    });
+
+    document.querySelectorAll('.auth-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active-tab', 'text-yellow-400'));
+            tab.classList.add('active-tab', 'text-yellow-400');
+            const target = tab.getAttribute('data-tab');
+            document.getElementById('login-form').style.display = target==='login' ? 'block' : 'none';
+            document.getElementById('register-form').style.display = target==='register' ? 'block' : 'none';
+        });
+    });
+
+    function isWebView() { var ua = navigator.userAgent; if (ua.indexOf('wv') > -1) return true; if (/iPhone|iPad|iPod/.test(ua) && !ua.includes('Safari')) return true; return false; }
+    function showWebViewWarning() { document.getElementById('loading-screen').classList.add('hidden'); document.getElementById('auth-screen').classList.add('hidden'); document.getElementById('main-app').classList.add('hidden'); document.getElementById('webview-warning').style.display = 'flex'; }
+    if (isWebView()) showWebViewWarning();
+    document.getElementById('open-browser-btn').onclick = () => { window.location.href = window.location.href; };
+    document.getElementById('copy-link-btn').onclick = () => { navigator.clipboard.writeText(window.location.href).then(()=>alert('تم نسخ الرابط')); };
 </script>
-
 </body>
-</html>
+  </html>
