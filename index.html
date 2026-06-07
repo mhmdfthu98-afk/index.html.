@@ -21,18 +21,6 @@
             border-radius: 2rem;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 1.5rem;
-            transition: all 0.3s;
-        }
-        .glass-card:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-3px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
-        }
         .wallet-card {
             margin-top: -60px;
             background: rgba(255, 255, 255, 0.2);
@@ -143,10 +131,12 @@
             border-color: rgba(255,255,255,0.1);
         }
         .dark input, .dark select, .dark textarea { background: rgba(0,0,0,0.3); color: #e2e8f0; }
-        .admin-tab { transition: all 0.2s; border-bottom: 2px solid transparent; }
+        .admin-tab { transition: all 0.2s; border-bottom: 2px solid transparent; padding: 10px 16px; cursor: pointer; }
         .admin-tab.active { border-bottom-color: #fbbf24; color: #fbbf24; }
         .active-tab { color: #fbbf24 !important; }
         .hidden-category { display: none; }
+        .admin-panel { background: rgba(0,0,0,0.3); border-radius: 1.5rem; padding: 1rem; margin-bottom: 1rem; }
+        .product-item { background: rgba(255,255,255,0.1); border-radius: 1rem; padding: 0.75rem; margin-bottom: 0.5rem; }
     </style>
 </head>
 <body>
@@ -210,7 +200,7 @@
                 <button id="logout-btn" class="w-10 h-10 bg-red-500/30 text-red-300 rounded-full hover:bg-red-500/50"><i class="fas fa-power-off"></i></button>
             </div>
             <div class="grid grid-cols-2 gap-4 mb-4">
-                <div class="bg-black/30 p-5 rounded-2xl text-center backdrop-blur-sm">
+                <div class="bg-black/30 p-5 rounded-2xl text-center">
                     <p class="text-xs text-gray-300">رصيدك</p>
                     <p class="text-3xl font-black text-yellow-400"><span id="uBal">0</span> <small class="text-xs">ج.س</small></p>
                 </div>
@@ -222,6 +212,65 @@
             <div class="bg-yellow-500/20 p-4 rounded-2xl flex justify-between items-center">
                 <div><p class="text-sm font-bold text-yellow-300">🎁 هدية 60 شدة مجاناً</p><p class="text-xs text-gray-300">اجمع 30 نقطة للاستبدال</p></div>
                 <button id="redeemBtn" onclick="redeemPoints()" class="px-4 py-2 bg-yellow-500 text-black rounded-xl text-sm font-bold disabled:opacity-50" disabled>استرداد</button>
+            </div>
+        </div>
+
+        <!-- لوحة تحكم الأدمن -->
+        <div id="adminPanel" class="hidden mb-6">
+            <div class="glass p-4 rounded-2xl">
+                <h3 class="text-xl font-bold text-white mb-4 text-center">👑 لوحة تحكم الأدمن</h3>
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <button class="admin-tab bg-white/10 rounded-xl" data-admin-tab="stats">📊 إحصائيات</button>
+                    <button class="admin-tab bg-white/10 rounded-xl" data-admin-tab="add">➕ إضافة منتج</button>
+                    <button class="admin-tab bg-white/10 rounded-xl" data-admin-tab="manage">📦 إدارة المنتجات</button>
+                    <button class="admin-tab bg-white/10 rounded-xl" data-admin-tab="orders">📋 الطلبات</button>
+                    <button class="admin-tab bg-white/10 rounded-xl" data-admin-tab="recharge">💰 شحن رصيد</button>
+                </div>
+
+                <!-- تبويب الإحصائيات -->
+                <div id="adminStats" class="admin-tab-content">
+                    <div class="grid grid-cols-3 gap-3 text-center">
+                        <div class="bg-white/10 p-3 rounded-xl"><p class="text-xs">👥 المستخدمين</p><p id="totalUsers" class="text-2xl font-bold text-yellow-400">0</p></div>
+                        <div class="bg-white/10 p-3 rounded-xl"><p class="text-xs">💰 مبيعات اليوم</p><p id="todaySales" class="text-2xl font-bold text-yellow-400">0</p></div>
+                        <div class="bg-white/10 p-3 rounded-xl"><p class="text-xs">⏳ طلبات معلقة</p><p id="pendingOrders" class="text-2xl font-bold text-yellow-400">0</p></div>
+                    </div>
+                </div>
+
+                <!-- تبويب إضافة منتج -->
+                <div id="adminAdd" class="admin-tab-content hidden">
+                    <div class="space-y-3">
+                        <select id="productGame" class="w-full">
+                            <option value="pubg">ببجي PUBG</option>
+                            <option value="freefire">فري فاير FreeFire</option>
+                            <option value="clash">كلاش أوف كلانس</option>
+                        </select>
+                        <input type="text" id="productName" placeholder="اسم المنتج">
+                        <input type="number" id="productPrice" placeholder="السعر (جنيه)">
+                        <input type="number" id="productPoints" placeholder="النقاط">
+                        <button onclick="addNewProduct()" class="w-full bg-green-500 py-2 rounded-xl font-bold">➕ إضافة المنتج</button>
+                    </div>
+                </div>
+
+                <!-- تبويب إدارة المنتجات -->
+                <div id="adminManage" class="admin-tab-content hidden">
+                    <h4 class="text-white font-bold mb-2">📦 المنتجات الحالية</h4>
+                    <div id="manageProductsList" class="space-y-2 max-h-80 overflow-y-auto"></div>
+                </div>
+
+                <!-- تبويب الطلبات -->
+                <div id="adminOrders" class="admin-tab-content hidden">
+                    <h4 class="text-white font-bold mb-2">📋 الطلبات المعلقة</h4>
+                    <div id="adminOrdersList" class="space-y-2 max-h-80 overflow-y-auto"></div>
+                </div>
+
+                <!-- تبويب شحن الرصيد -->
+                <div id="adminRecharge" class="admin-tab-content hidden">
+                    <div class="space-y-3">
+                        <input type="text" id="targetWallet" placeholder="رقم المحفظة">
+                        <input type="number" id="amountToAdd" placeholder="المبلغ">
+                        <button onclick="adminRecharge()" class="w-full bg-yellow-500 text-black py-2 rounded-xl font-bold">💰 شحن الرصيد</button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -252,7 +301,7 @@
 
         <!-- منتجات Clash of Clans -->
         <div id="clash-products" class="product-category hidden-category">
-            <h3 class="text-2xl font-black text-white mb-4 border-r-4 border-purple-500 pr-3">👑 باقات كلاش أوف كلانس Clash of Clans</h3>
+            <h3 class="text-2xl font-black text-white mb-4 border-r-4 border-purple-500 pr-3">👑 باقات كلاش أوف كلانس</h3>
             <div id="clashGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-8"></div>
         </div>
 
@@ -305,6 +354,18 @@
     </div>
 </div>
 
+<!-- مودال تعديل السعر -->
+<div id="editPriceModal" class="hidden fixed inset-0 bg-black/80 z-[99999] flex items-center justify-center p-4">
+    <div class="glass w-full max-w-sm p-6 rounded-3xl text-white">
+        <h3 class="text-xl font-bold text-center mb-4">💰 تعديل السعر</h3>
+        <input type="number" id="editPriceInput" class="w-full text-center text-2xl" placeholder="السعر الجديد">
+        <div class="flex gap-3 mt-6">
+            <button onclick="closeEditModal()" class="flex-1 bg-white/20 py-2 rounded-xl">إلغاء</button>
+            <button id="savePriceBtn" class="flex-1 bg-yellow-500 text-black py-2 rounded-xl font-bold">حفظ</button>
+        </div>
+    </div>
+</div>
+
 <!-- مودال تأكيد الطلب -->
 <div id="orderModal" class="hidden fixed inset-0 bg-black/80 z-[99999] flex items-center justify-center p-4">
     <div class="glass w-full max-w-md p-6 rounded-3xl text-white">
@@ -330,7 +391,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, doc, onSnapshot, collection, addDoc, query, where, getDocs, updateDoc, increment, setDoc, serverTimestamp, orderBy, getDoc, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, doc, onSnapshot, collection, addDoc, query, where, getDocs, updateDoc, increment, setDoc, serverTimestamp, orderBy, getDoc, runTransaction, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
     import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
     const firebaseConfig = { 
@@ -352,37 +413,64 @@
     
     let userData = null;
     let currentOrder = null;
+    let editingProductId = null;
 
-    // منتجات كلاش أوف كلانس
-    const clashProducts = [
-        { id: "clash_gold_ticket_first", name: "🎫 التذكرة الذهبية (أول مرة)", price: 10000, points: 50, category: "clash" },
-        { id: "clash_gold_ticket", name: "🎫 التذكرة الذهبية", price: 27000, points: 100, category: "clash" }
+    // ========== المنتجات الأساسية ==========
+    let pubgProducts = [
+        { id: "pubg_60", name: "🎯 60 شدة", price: 4000, points: 5, category: "pubg", isActive: true },
+        { id: "pubg_120", name: "🎯 120 شدة", price: 8000, points: 10, category: "pubg", isActive: true },
+        { id: "pubg_180", name: "🎯 180 شدة", price: 12000, points: 15, category: "pubg", isActive: true },
+        { id: "pubg_240", name: "🎯 240 شدة", price: 16000, points: 20, category: "pubg", isActive: true },
+        { id: "pubg_325", name: "🎯 325 شدة", price: 20000, points: 25, category: "pubg", isActive: true }
     ];
 
-    // منتجات ببجي
-    const pubgProducts = [
-        { id: "pubg_60", name: "🎯 60 UC", price: 110, points: 5, category: "pubg" },
-        { id: "pubg_125", name: "🎯 125 UC", price: 210, points: 10, category: "pubg" },
-        { id: "pubg_325", name: "🎯 325 UC", price: 530, points: 20, category: "pubg" },
-        { id: "pubg_660", name: "🎯 660 UC", price: 1050, points: 40, category: "pubg" },
-        { id: "pubg_1800", name: "🎯 1800 UC", price: 2800, points: 100, category: "pubg" },
-        { id: "pubg_3850", name: "🎯 3850 UC", price: 5900, points: 200, category: "pubg" },
-        { id: "pubg_8100", name: "🎯 8100 UC", price: 12200, points: 400, category: "pubg" },
-        { id: "pubg_19800", name: "🎯 19800 UC", price: 29500, points: 900, category: "pubg" }
+    let freefireProducts = [
+        { id: "ff_110", name: "💎 110 جوهرة", price: 4500, points: 5, category: "freefire", isActive: true },
+        { id: "ff_231", name: "💎 231 جوهرة", price: 9000, points: 10, category: "freefire", isActive: true },
+        { id: "ff_583", name: "💎 583 جوهرة", price: 23000, points: 25, category: "freefire", isActive: true },
+        { id: "ff_1180", name: "💎 1180 جوهرة", price: 50000, points: 50, category: "freefire", isActive: true }
     ];
 
-    // منتجات فري فاير
-    const freefireProducts = [
-        { id: "ff_100", name: "💎 100 دايموند", price: 100, points: 5, category: "freefire" },
-        { id: "ff_310", name: "💎 310 دايموند", price: 300, points: 15, category: "freefire" },
-        { id: "ff_520", name: "💎 520 دايموند", price: 500, points: 25, category: "freefire" },
-        { id: "ff_1060", name: "💎 1060 دايموند", price: 1000, points: 50, category: "freefire" },
-        { id: "ff_2180", name: "💎 2180 دايموند", price: 2000, points: 100, category: "freefire" },
-        { id: "ff_5600", name: "💎 5600 دايموند", price: 5000, points: 250, category: "freefire" }
+    let clashProducts = [
+        { id: "clash_gold_first", name: "🎫 التذكرة الذهبية (أول مرة)", price: 10000, points: 50, category: "clash", isActive: true },
+        { id: "clash_gold", name: "🎫 التذكرة الذهبية", price: 27000, points: 100, category: "clash", isActive: true }
     ];
+
+    // حفظ المنتجات في Firestore
+    async function saveProductsToFirestore() {
+        const allProducts = [...pubgProducts, ...freefireProducts, ...clashProducts];
+        for (const product of allProducts) {
+            const productRef = doc(db, "products", product.id);
+            await setDoc(productRef, product, { merge: true });
+        }
+    }
+
+    // تحميل المنتجات من Firestore
+    async function loadProductsFromFirestore() {
+        const productsSnap = await getDocs(collection(db, "products"));
+        if (!productsSnap.empty) {
+            const newPubg = [];
+            const newFreefire = [];
+            const newClash = [];
+            productsSnap.forEach(doc => {
+                const p = doc.data();
+                if (p.isActive !== false) {
+                    if (p.category === 'pubg') newPubg.push({ ...p, id: doc.id });
+                    else if (p.category === 'freefire') newFreefire.push({ ...p, id: doc.id });
+                    else if (p.category === 'clash') newClash.push({ ...p, id: doc.id });
+                }
+            });
+            if (newPubg.length) pubgProducts = newPubg;
+            if (newFreefire.length) freefireProducts = newFreefire;
+            if (newClash.length) clashProducts = newClash;
+        } else {
+            await saveProductsToFirestore();
+        }
+        renderProducts();
+    }
 
     async function sendTelegramNotification(orderData) {
-        const message = `🛒 **طلب جديد في KhasmShop!**\n━━━━━━━━━━━━━━━━━━\n📦 **المنتج:** ${orderData.product}\n💰 **السعر:** ${orderData.price} ج.س\n🎮 **اللعبة:** ${orderData.game}\n👤 **العميل:** ${orderData.uName}\n🆔 **أيدي اللعبة:** ${orderData.gameID}\n🎮 **اسم داخل اللعبة:** ${orderData.gameName}\n📞 **رقم الهاتف:** ${orderData.phone}\n👤 **الاسم الحقيقي:** ${orderData.realName}\n⏰ **الوقت:** ${new Date().toLocaleString('ar-SD')}`;
+        const message = `🛒 **طلب جديد في KhasmShop!**\n━━━━━━━━━━━━━━━━━━\n📦 **المنتج:** ${orderData.product}\n💰 **السعر:** ${orderData.price} ج.س\n🎮 **اللعبة:** ${orderData.game}\n👤 **العميل:** ${orderData.uName}\n🆔 **الأيدي:** ${orderData.gameID}\n🎮 **الاسم:** ${orderData.gameName}\n📞 **الهاتف:** ${orderData.phone}\n⏰ **الوقت:** ${new Date().toLocaleString('ar-SD')}`;
         try {
             await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
                 method: 'POST',
@@ -392,14 +480,14 @@
         } catch(e) { console.error(e); }
     }
 
-    function showOrderModal(product, price, points, category) {
+    function showOrderModal(product, price, points, category, productId) {
         if(userData.balance < price) {
             alert("❌ الرصيد لا يكفي. يرجى شحن المحفظة.");
             return;
         }
-        currentOrder = { product, price, points, category };
+        currentOrder = { product, price, points, category, productId };
         document.getElementById('modalProductName').innerHTML = `المنتج: ${product}`;
-        document.getElementById('modalProductPrice').innerHTML = `المبلغ: ${price} ج.س`;
+        document.getElementById('modalProductPrice').innerHTML = `المبلغ: ${price.toLocaleString()} ج.س`;
         document.getElementById('modalProductPoints').innerHTML = `النقاط: +${points}`;
         document.getElementById('orderModal').classList.remove('hidden');
     }
@@ -456,8 +544,8 @@
 
     function renderProducts() {
         const pubgGrid = document.getElementById('pubgGrid');
-        pubgGrid.innerHTML = pubgProducts.map(p => `
-            <div class="product-card p-5 text-white text-center" onclick="window.showOrderModal('${p.name}', ${p.price}, ${p.points}, '${p.category}')">
+        pubgGrid.innerHTML = pubgProducts.filter(p => p.isActive !== false).map(p => `
+            <div class="product-card p-5 text-white text-center" onclick="window.showOrderModal('${p.name}', ${p.price}, ${p.points}, '${p.category}', '${p.id}')">
                 <div class="absolute -top-2 -right-2 bg-yellow-500 text-black text-xs font-bold px-2 py-1 rounded-full">+${p.points}P</div>
                 <p class="font-bold text-lg">${p.name}</p>
                 <p class="text-2xl font-black text-yellow-400 my-2">${p.price.toLocaleString()} ج.س</p>
@@ -466,8 +554,8 @@
         `).join('');
 
         const freefireGrid = document.getElementById('freefireGrid');
-        freefireGrid.innerHTML = freefireProducts.map(p => `
-            <div class="product-card p-5 text-white text-center" onclick="window.showOrderModal('${p.name}', ${p.price}, ${p.points}, '${p.category}')">
+        freefireGrid.innerHTML = freefireProducts.filter(p => p.isActive !== false).map(p => `
+            <div class="product-card p-5 text-white text-center" onclick="window.showOrderModal('${p.name}', ${p.price}, ${p.points}, '${p.category}', '${p.id}')">
                 <div class="absolute -top-2 -right-2 bg-yellow-500 text-black text-xs font-bold px-2 py-1 rounded-full">+${p.points}P</div>
                 <p class="font-bold text-lg">${p.name}</p>
                 <p class="text-2xl font-black text-yellow-400 my-2">${p.price.toLocaleString()} ج.س</p>
@@ -476,8 +564,8 @@
         `).join('');
 
         const clashGrid = document.getElementById('clashGrid');
-        clashGrid.innerHTML = clashProducts.map(p => `
-            <div class="product-card p-5 text-white text-center" onclick="window.showOrderModal('${p.name}', ${p.price}, ${p.points}, '${p.category}')">
+        clashGrid.innerHTML = clashProducts.filter(p => p.isActive !== false).map(p => `
+            <div class="product-card p-5 text-white text-center" onclick="window.showOrderModal('${p.name}', ${p.price}, ${p.points}, '${p.category}', '${p.id}')">
                 <div class="absolute -top-2 -right-2 bg-yellow-500 text-black text-xs font-bold px-2 py-1 rounded-full">+${p.points}P</div>
                 <p class="font-bold text-lg">${p.name}</p>
                 <p class="text-2xl font-black text-yellow-400 my-2">${p.price.toLocaleString()} ج.س</p>
@@ -487,6 +575,200 @@
     }
 
     window.showOrderModal = showOrderModal;
+
+    // ========== دوال الأدمن ==========
+    window.addNewProduct = async () => {
+        const game = document.getElementById('productGame').value;
+        const name = document.getElementById('productName').value.trim();
+        const price = parseInt(document.getElementById('productPrice').value);
+        const points = parseInt(document.getElementById('productPoints').value);
+        
+        if(!name || !price || !points) {
+            alert("❌ جميع الحقول مطلوبة");
+            return;
+        }
+        
+        const newId = `${game}_${Date.now()}`;
+        const newProduct = { id: newId, name, price, points, category: game, isActive: true, createdAt: serverTimestamp() };
+        
+        await setDoc(doc(db, "products", newId), newProduct);
+        
+        if(game === 'pubg') pubgProducts.push(newProduct);
+        else if(game === 'freefire') freefireProducts.push(newProduct);
+        else clashProducts.push(newProduct);
+        
+        renderProducts();
+        loadManageProducts();
+        
+        document.getElementById('productName').value = '';
+        document.getElementById('productPrice').value = '';
+        document.getElementById('productPoints').value = '';
+        alert("✅ تم إضافة المنتج");
+    };
+
+    window.editProductPrice = (productId, currentPrice) => {
+        editingProductId = productId;
+        document.getElementById('editPriceInput').value = currentPrice;
+        document.getElementById('editPriceModal').classList.remove('hidden');
+    };
+
+    window.closeEditModal = () => {
+        document.getElementById('editPriceModal').classList.add('hidden');
+        editingProductId = null;
+    };
+
+    document.getElementById('savePriceBtn').onclick = async () => {
+        if(!editingProductId) return;
+        const newPrice = parseInt(document.getElementById('editPriceInput').value);
+        if(!newPrice || newPrice < 0) {
+            alert("❌ سعر غير صحيح");
+            return;
+        }
+        
+        await updateDoc(doc(db, "products", editingProductId), { price: newPrice });
+        
+        // تحديث المصفوفات المحلية
+        let product = pubgProducts.find(p => p.id === editingProductId);
+        if(product) product.price = newPrice;
+        product = freefireProducts.find(p => p.id === editingProductId);
+        if(product) product.price = newPrice;
+        product = clashProducts.find(p => p.id === editingProductId);
+        if(product) product.price = newPrice;
+        
+        renderProducts();
+        loadManageProducts();
+        closeEditModal();
+        alert("✅ تم تحديث السعر");
+    };
+
+    window.deleteProduct = async (productId) => {
+        if(confirm("⚠️ هل أنت متأكد من حذف هذا المنتج؟")) {
+            await updateDoc(doc(db, "products", productId), { isActive: false });
+            
+            // إزالة من المصفوفات
+            pubgProducts = pubgProducts.filter(p => p.id !== productId);
+            freefireProducts = freefireProducts.filter(p => p.id !== productId);
+            clashProducts = clashProducts.filter(p => p.id !== productId);
+            
+            renderProducts();
+            loadManageProducts();
+            alert("✅ تم حذف المنتج");
+        }
+    };
+
+    async function loadManageProducts() {
+        const productsSnap = await getDocs(query(collection(db, "products"), where("isActive", "==", true)));
+        const list = document.getElementById('manageProductsList');
+        list.innerHTML = '';
+        productsSnap.forEach(doc => {
+            const p = doc.data();
+            list.innerHTML += `
+                <div class="product-item flex justify-between items-center">
+                    <div>
+                        <p class="text-white font-bold">${p.name}</p>
+                        <p class="text-yellow-400 text-sm">${p.price.toLocaleString()} ج.س | +${p.points} نقطة</p>
+                        <p class="text-gray-400 text-xs">${p.category === 'pubg' ? '🎮 ببجي' : p.category === 'freefire' ? '🔥 فري فاير' : '👑 كلاش'}</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="window.editProductPrice('${doc.id}', ${p.price})" class="bg-blue-500 text-white px-3 py-1 rounded-lg text-xs">تعديل السعر</button>
+                        <button onclick="window.deleteProduct('${doc.id}')" class="bg-red-500 text-white px-3 py-1 rounded-lg text-xs">حذف</button>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    async function loadAdminStats() {
+        const usersSnap = await getDocs(collection(db, "users"));
+        document.getElementById('totalUsers').innerText = usersSnap.size;
+        
+        const today = new Date(); today.setHours(0,0,0,0);
+        const todayOrders = await getDocs(query(collection(db, "orders"), where("timestamp", ">=", today)));
+        const todayTotal = todayOrders.docs.reduce((sum, doc) => sum + doc.data().price, 0);
+        document.getElementById('todaySales').innerText = todayTotal.toLocaleString();
+        
+        const pendingSnap = await getDocs(query(collection(db, "orders"), where("status", "==", "قيد الانتظار")));
+        document.getElementById('pendingOrders').innerText = pendingSnap.size;
+    }
+
+    function loadAdminOrders() {
+        onSnapshot(query(collection(db, "orders"), where("status", "==", "قيد الانتظار"), orderBy("timestamp", "desc")), (snap) => {
+            const list = document.getElementById('adminOrdersList');
+            list.innerHTML = '';
+            if(snap.empty) {
+                list.innerHTML = '<p class="text-gray-400 text-center">لا توجد طلبات معلقة</p>';
+                return;
+            }
+            snap.forEach(d => {
+                const o = d.data();
+                list.innerHTML += `
+                    <div class="bg-white/10 p-3 rounded-xl">
+                        <div class="flex justify-between">
+                            <p class="font-bold text-white">${o.product}</p>
+                            <span class="text-yellow-400 text-xs">${new Date(o.timestamp?.toDate()).toLocaleString()}</span>
+                        </div>
+                        <p class="text-sm">👤 ${o.uName} | 🆔 ${o.gameID}</p>
+                        <p class="text-sm">📞 ${o.phone}</p>
+                        <div class="flex gap-2 mt-2">
+                            <button onclick="updateOrderStatus('${d.id}', '${o.uID}', 'مكتمل', ${o.pts})" class="bg-green-500 text-white px-3 py-1 rounded-lg text-xs">✅ تم الشحن</button>
+                            <button onclick="updateOrderStatus('${d.id}', '${o.uID}', 'فشل', 0, ${o.price})" class="bg-red-500 text-white px-3 py-1 rounded-lg text-xs">❌ إلغاء</button>
+                            <button onclick="showOrderDetails('${d.id}')" class="bg-blue-500 text-white px-3 py-1 rounded-lg text-xs">📄 تفاصيل</button>
+                        </div>
+                    </div>
+                `;
+            });
+        });
+    }
+
+    window.updateOrderStatus = async (orderId, userId, status, points, refundAmount = 0) => {
+        if(status === 'مكتمل') {
+            await updateDoc(doc(db, "users", userId), { points: increment(points) });
+        } else if(status === 'فشل' && refundAmount > 0) {
+            await updateDoc(doc(db, "users", userId), { balance: increment(refundAmount) });
+        }
+        await updateDoc(doc(db, "orders", orderId), { status: status });
+        alert(`✅ تم تحديث الطلب إلى ${status}`);
+    };
+
+    window.showOrderDetails = async (orderId) => {
+        const orderSnap = await getDoc(doc(db, "orders", orderId));
+        if(orderSnap.exists()) {
+            const o = orderSnap.data();
+            document.getElementById('orderDetailContent').innerHTML = `
+                <p><strong>المنتج:</strong> ${o.product}</p>
+                <p><strong>السعر:</strong> ${o.price} ج.س</p>
+                <p><strong>العميل:</strong> ${o.uName}</p>
+                <p><strong>أيدي اللعبة:</strong> ${o.gameID}</p>
+                <p><strong>اسم اللاعب:</strong> ${o.gameName}</p>
+                <p><strong>الاسم الحقيقي:</strong> ${o.realName}</p>
+                <p><strong>رقم الهاتف:</strong> ${o.phone}</p>
+                <p><strong>الحالة:</strong> ${o.status}</p>
+            `;
+            document.getElementById('orderDetailModal').classList.remove('hidden');
+        }
+    };
+
+    window.adminRecharge = async () => {
+        const walletId = document.getElementById('targetWallet').value.trim();
+        const amount = parseInt(document.getElementById('amountToAdd').value);
+        if(!walletId || !amount) {
+            alert("❌ أدخل رقم المحفظة والمبلغ");
+            return;
+        }
+        const q = query(collection(db, "users"), where("walletID", "==", walletId));
+        const snap = await getDocs(q);
+        if(snap.empty) {
+            alert("❌ رقم المحفظة غير موجود");
+            return;
+        }
+        const userDoc = snap.docs[0];
+        if(confirm(`💰 شحن ${amount} ج.س للمستخدم ${userDoc.data().name}؟`)) {
+            await updateDoc(doc(db, "users", userDoc.id), { balance: increment(amount) });
+            alert("✅ تم شحن الرصيد بنجاح");
+            document.getElementById('targetWallet').value = '';
+            document.getElementById('amountToAdd').value = '';
+        }
+    };
 
     function loadUserHistory(uid) {
         onSnapshot(query(collection(db, "orders"), where("uID", "==", uid), orderBy("timestamp", "desc")), (snap) => {
@@ -498,15 +780,15 @@
             }
             snap.forEach(d => {
                 const o = d.data();
-                const config = o.status === 'مكتمل' ? { color: 'text-green-400', icon: '✅' } : { color: 'text-yellow-400', icon: '⏳' };
-                list.innerHTML += `<div class="glass p-4 rounded-2xl"><div class="flex justify-between"><div><span class="text-2xl">${config.icon}</span><p class="font-bold text-white">${o.product}</p><p class="text-xs text-gray-300">🆔 ${o.gameID}</p></div><span class="px-2 py-1 rounded-full text-xs ${config.color} bg-black/30">${o.status}</span></div><div class="grid grid-cols-2 gap-2 mt-3 text-sm"><div>💰 ${o.price} ج.س</div><div>📞 ${o.phone}</div></div></div>`;
+                const config = o.status === 'مكتمل' ? { color: 'text-green-400', icon: '✅' } : o.status === 'فشل' ? { color: 'text-red-400', icon: '❌' } : { color: 'text-yellow-400', icon: '⏳' };
+                list.innerHTML += `<div class="glass p-4 rounded-2xl"><div class="flex justify-between"><div><span class="text-2xl">${config.icon}</span><p class="font-bold text-white">${o.product}</p><p class="text-xs text-gray-300">🆔 ${o.gameID}</p></div><span class="px-2 py-1 rounded-full text-xs ${config.color} bg-black/30">${o.status}</span></div><div class="grid grid-cols-2 gap-2 mt-3 text-sm"><div>💰 ${o.price.toLocaleString()} ج.س</div><div>📞 ${o.phone}</div></div></div>`;
             });
         });
     }
 
     const policies = {
-        terms: { title: "📜 شروط الخدمة", content: "<p>باستخدامك للمنصة توافق على الشروط التالية:</p><ul><li>جميع عمليات الشحن خلال 24 ساعة.</li><li>لا نضمن استرجاع الرصيد بعد إتمام الشراء.</li><li>يجب إدخال بيانات اللعبة بدقة.</li></ul>" },
-        privacy: { title: "🔒 سياسة الخصوصية", content: "<p>نلتزم بحماية بياناتك الشخصية: لا نشارك بياناتك مع أي طرف ثالث.</p>" },
+        terms: { title: "📜 شروط الخدمة", content: "<p>باستخدامك للمنصة توافق على الشروط التالية: جميع عمليات الشحن خلال 24 ساعة، لا نضمن استرجاع الرصيد بعد إتمام الشراء.</p>" },
+        privacy: { title: "🔒 سياسة الخصوصية", content: "<p>نلتزم بحماية بياناتك الشخصية ولا نشاركها مع أي طرف ثالث.</p>" },
         refund: { title: "💰 سياسة الاسترجاع", content: "<p>في حال تأخر الشحن أكثر من 48 ساعة، يمكنك طلب استرجاع كامل.</p>" },
         about: { title: "🏢 عن المتجر", content: "<p>KhasmShop متخصص في شحن PUBG و FreeFire و Clash of Clans في السودان.</p>" }
     };
@@ -518,13 +800,14 @@
     };
     window.closePolicyModal = () => document.getElementById('policy-modal').classList.add('hidden');
     window.closeOrderDetailModal = () => document.getElementById('orderDetailModal').classList.add('hidden');
-    window.redeemPoints = () => { if(userData?.points >= 30) alert('🎁 تم استبدال 30 نقطة بهدية!'); };
+    window.redeemPoints = () => { if(userData?.points >= 30) alert('🎁 تم استبدال 30 نقطة بهدية 60 شدة!'); };
 
+    // ========== أحداث تسجيل الدخول ==========
     document.getElementById('email-login-btn').onclick = async () => {
         const email = document.getElementById('login-email').value;
         const pwd = document.getElementById('login-password').value;
         if (!email || !pwd) { alert('❌ الرجاء إدخال البريد الإلكتروني وكلمة المرور'); return; }
-        try { await signInWithEmailAndPassword(auth, email, pwd); } catch(e) { alert('❌ خطأ: البريد الإلكتروني أو كلمة المرور غير صحيحة'); }
+        try { await signInWithEmailAndPassword(auth, email, pwd); } catch(e) { alert('❌ البريد الإلكتروني أو كلمة المرور غير صحيحة'); }
     };
     document.getElementById('email-register-btn').onclick = async () => {
         const name = document.getElementById('reg-name').value.trim();
@@ -540,7 +823,7 @@
                 walletID: walletID, balance: 0, points: 0, createdAt: serverTimestamp()
             });
             alert('✅ تم إنشاء الحساب بنجاح!');
-        } catch(e) { alert('❌ خطأ: ' + (e.code === 'auth/email-already-in-use' ? 'البريد الإلكتروني مستخدم بالفعل' : e.message)); }
+        } catch(e) { alert('❌ البريد الإلكتروني مستخدم بالفعل'); }
     };
     document.getElementById('google-login-btn').onclick = async () => {
         try {
@@ -560,6 +843,7 @@
     };
     document.getElementById('logout-btn').onclick = async () => { await signOut(auth); document.getElementById('main-app').classList.add('hidden'); document.getElementById('auth-screen').classList.remove('hidden'); };
 
+    // ========== الشريط الجانبي ==========
     const menuBtn = document.getElementById('menuBtn');
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('sidebarOverlay');
@@ -567,21 +851,22 @@
     menuBtn.onclick = () => toggleSidebar(true);
     overlay.onclick = () => toggleSidebar(false);
     document.getElementById('sidebarHome').onclick = (e) => { e.preventDefault(); toggleSidebar(false); window.scrollTo({top:0, behavior:'smooth'}); };
-    document.getElementById('sidebarAccount').onclick = (e) => { e.preventDefault(); toggleSidebar(false); alert('تفاصيل الحساب: الاسم: '+userData?.name); };
-    document.getElementById('sidebarWalletLink').onclick = (e) => { e.preventDefault(); toggleSidebar(false); alert('محفظتك: #'+userData?.walletID+' - الرصيد: '+userData?.balance+' ج.س'); };
+    document.getElementById('sidebarAccount').onclick = (e) => { e.preventDefault(); toggleSidebar(false); alert('📱 حسابك\nالاسم: '+userData?.name+'\nالمحفظة: #'+userData?.walletID); };
+    document.getElementById('sidebarWalletLink').onclick = (e) => { e.preventDefault(); toggleSidebar(false); alert('💰 محفظتك\nالرصيد: '+userData?.balance+' ج.س\nالنقاط: '+userData?.points); };
     document.getElementById('sidebarOrders').onclick = (e) => { e.preventDefault(); toggleSidebar(false); document.getElementById('userOrdersList').scrollIntoView({behavior:'smooth'}); };
     document.getElementById('sidebarPolicies').onclick = (e) => { e.preventDefault(); toggleSidebar(false); showPolicy('terms'); };
     document.getElementById('sidebarLogout').onclick = (e) => { e.preventDefault(); toggleSidebar(false); document.getElementById('logout-btn').click(); };
 
+    // ========== الثيم ==========
     function setTheme(theme) {
         if (theme === 'dark') {
             document.documentElement.classList.add('dark');
             localStorage.setItem('theme', 'dark');
-            document.getElementById('themeToggleBtn').innerHTML = '<i class="fas fa-sun w-6"></i> الوضع النهاري';
+            document.getElementById('themeToggleBtn').innerHTML = '<i class="fas fa-sun w-6"></i> النهاري';
         } else {
             document.documentElement.classList.remove('dark');
             localStorage.setItem('theme', 'light');
-            document.getElementById('themeToggleBtn').innerHTML = '<i class="fas fa-moon w-6"></i> الوضع الليلي';
+            document.getElementById('themeToggleBtn').innerHTML = '<i class="fas fa-moon w-6"></i> الليلي';
         }
     }
     if (localStorage.getItem('theme') === 'dark') setTheme('dark'); else setTheme('light');
@@ -593,7 +878,7 @@
         document.getElementById('sidebarWallet').innerText = `#${userData?.walletID || ''}`;
     }
 
-    // تبديل أقسام الألعاب
+    // ========== تبديل أقسام الألعاب ==========
     document.querySelectorAll('.category-tab').forEach(btn => {
         btn.addEventListener('click', () => {
             document.querySelectorAll('.category-tab').forEach(b => b.classList.remove('active'));
@@ -607,7 +892,24 @@
     });
     document.querySelector('.category-tab').classList.add('active');
 
+    // ========== تبديل تبويبات الأدمن ==========
+    function switchAdminTab(tabId) {
+        document.querySelectorAll('.admin-tab-content').forEach(el => el.classList.add('hidden'));
+        document.getElementById(`admin${tabId}`).classList.remove('hidden');
+        document.querySelectorAll('.admin-tab').forEach(btn => btn.classList.remove('active'));
+        document.querySelector(`.admin-tab[data-admin-tab="${tabId.toLowerCase()}"]`).classList.add('active');
+    }
+    document.querySelectorAll('.admin-tab').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const tab = btn.getAttribute('data-admin-tab');
+            const tabMap = { stats:'Stats', add:'Add', manage:'Manage', orders:'Orders', recharge:'Recharge' };
+            switchAdminTab(tabMap[tab]);
+        });
+    });
+
+    // ========== بدء التشغيل ==========
     function startEngine(user) {
+        const isAdmin = ADMINS.includes(user.email);
         onSnapshot(doc(db, "users", user.uid), (snap) => {
             if(snap.exists()) {
                 userData = snap.data();
@@ -619,9 +921,15 @@
                 updateSidebarUser();
                 const rb = document.getElementById('redeemBtn');
                 if(userData.points >= 30) { rb.disabled = false; rb.classList.remove('opacity-50'); rb.innerText = "استرداد الآن! 🎁"; }
+                if(isAdmin) {
+                    document.getElementById('adminPanel').classList.remove('hidden');
+                    loadAdminStats();
+                    loadAdminOrders();
+                    loadManageProducts();
+                }
             }
         });
-        renderProducts();
+        loadProductsFromFirestore();
         loadUserHistory(user.uid);
         if ('Notification' in window) Notification.requestPermission();
     }
@@ -634,12 +942,12 @@
             const userRef = doc(db, "users", user.uid);
             const userSnap = await getDoc(userRef);
             if (!userSnap.exists()) {
+                const walletID = Math.floor(100000 + Math.random() * 900000).toString();
                 await setDoc(userRef, {
                     name: user.displayName || user.email?.split('@')[0] || 'مستخدم',
                     email: user.email,
                     img: user.photoURL || 'https://via.placeholder.com/100',
-                    walletID: Math.floor(100000 + Math.random() * 900000).toString(),
-                    balance: 0, points: 0
+                    walletID: walletID, balance: 0, points: 0
                 });
             }
             loading.classList.add('hidden');
@@ -677,4 +985,4 @@
     document.getElementById('copy-link-btn').onclick = () => { navigator.clipboard.writeText(window.location.href).then(()=>alert('تم نسخ الرابط')); };
 </script>
 </body>
-</html>
+    </html>
