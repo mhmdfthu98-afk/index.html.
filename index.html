@@ -155,7 +155,6 @@
         .admin-tab.active { border-bottom-color: #fbbf24; color: #fbbf24; }
         .active-tab { color: #fbbf24 !important; }
         .hidden-category { display: none; }
-        .admin-panel { background: rgba(0,0,0,0.3); border-radius: 1.5rem; padding: 1rem; margin-bottom: 1rem; }
         .product-item { background: rgba(255,255,255,0.1); border-radius: 1rem; padding: 0.75rem; margin-bottom: 0.5rem; }
         .payment-method {
             background: rgba(255,255,255,0.1);
@@ -261,19 +260,19 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <div class="payment-method">
                     <p class="font-bold text-yellow-400">🏦 تطبيق بنكك</p>
-                    <p class="text-sm">رقم الحساب: <span id="bankNumber" dir="ltr">4845774</span></p>
+                    <p class="text-sm">رقم الحساب: <span dir="ltr">4845774</span></p>
                     <p class="text-xs text-gray-300">أمنه محمد علي مساعد</p>
                     <button onclick="copyText('4845774')" class="copy-btn mt-2 w-full">📋 نسخ الرقم</button>
                 </div>
                 <div class="payment-method">
                     <p class="font-bold text-green-400">💚 تطبيق ماي كاشي</p>
-                    <p class="text-sm">رقم المحفظة: <span id="mycashiNumber" dir="ltr">401793722</span></p>
+                    <p class="text-sm">رقم المحفظة: <span dir="ltr">401793722</span></p>
                     <p class="text-xs text-gray-300">محمد فتحي حمزه مضوي</p>
                     <button onclick="copyText('401793722')" class="copy-btn mt-2 w-full">📋 نسخ الرقم</button>
                 </div>
                 <div class="payment-method">
                     <p class="font-bold text-blue-400">💙 تطبيق صح</p>
-                    <p class="text-sm">BBAN: <span id="sahNumber" dir="ltr">07169667404199</span></p>
+                    <p class="text-sm">BBAN: <span dir="ltr">07169667404199</span></p>
                     <p class="text-xs text-gray-300">محمد فتحي حمزه مضوي</p>
                     <button onclick="copyText('07169667404199')" class="copy-btn mt-2 w-full">📋 نسخ BBAN</button>
                 </div>
@@ -281,7 +280,7 @@
             <p class="text-center text-xs text-gray-400 mt-3">⚠️ بعد التحويل، أرسل إيصال الدفع على واتساب لتأكيد شحن رصيدك</p>
         </div>
 
-        <!-- لوحة تحكم الأدمن (تظهر فقط لـ mhmdfthu98@gmail.com) -->
+        <!-- لوحة تحكم الأدمن -->
         <div id="adminPanel" class="hidden mb-6">
             <div class="glass p-4 rounded-2xl">
                 <h3 class="text-xl font-bold text-white mb-4 text-center">👑 لوحة تحكم الأدمن</h3>
@@ -327,9 +326,10 @@
 
                 <div id="adminRecharge" class="admin-tab-content hidden">
                     <div class="space-y-3">
-                        <input type="text" id="targetWallet" placeholder="رقم المحفظة">
+                        <input type="text" id="targetWallet" placeholder="رقم المحفظة (مثال: 123456)">
                         <input type="number" id="amountToAdd" placeholder="المبلغ">
                         <button onclick="adminRecharge()" class="w-full bg-yellow-500 text-black py-2 rounded-xl font-bold">💰 شحن الرصيد</button>
+                        <button onclick="adminRechargeByEmail()" class="w-full bg-blue-500 text-white py-2 rounded-xl font-bold">🔍 شحن بالبريد الإلكتروني</button>
                     </div>
                 </div>
             </div>
@@ -453,7 +453,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, doc, onSnapshot, collection, addDoc, query, where, getDocs, updateDoc, increment, setDoc, serverTimestamp, orderBy, getDoc, runTransaction, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, doc, onSnapshot, collection, addDoc, query, where, getDocs, updateDoc, increment, setDoc, serverTimestamp, orderBy, getDoc, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
     import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
     const firebaseConfig = { 
@@ -471,14 +471,13 @@
 
     const TELEGRAM_TOKEN = '8616731804:AAGjZzVbWV7DXasmlwjjCyhz3AYUmzGbyi8';
     const TELEGRAM_CHAT_ID = '8539810117';
-    // فقط هذا الأدمن مسموح له
     const ADMINS = ["mhmdfthu98@gmail.com"];
     
     let userData = null;
     let currentOrder = null;
     let editingProductId = null;
 
-    // ========== المنتجات الأساسية ==========
+    // المنتجات
     let pubgProducts = [
         { id: "pubg_60", name: "🎯 60 شدة", price: 4000, points: 5, category: "pubg", isActive: true },
         { id: "pubg_120", name: "🎯 120 شدة", price: 8000, points: 10, category: "pubg", isActive: true },
@@ -499,13 +498,11 @@
         { id: "clash_gold", name: "🎫 التذكرة الذهبية", price: 27000, points: 100, category: "clash", isActive: true }
     ];
 
-    // دالة نسخ النص
     window.copyText = (text) => {
         navigator.clipboard.writeText(text);
         alert("✅ تم نسخ الرقم: " + text);
     };
 
-    // حفظ المنتجات في Firestore
     async function saveProductsToFirestore() {
         const allProducts = [...pubgProducts, ...freefireProducts, ...clashProducts];
         for (const product of allProducts) {
@@ -514,13 +511,10 @@
         }
     }
 
-    // تحميل المنتجات من Firestore
     async function loadProductsFromFirestore() {
         const productsSnap = await getDocs(collection(db, "products"));
         if (!productsSnap.empty) {
-            const newPubg = [];
-            const newFreefire = [];
-            const newClash = [];
+            const newPubg = [], newFreefire = [], newClash = [];
             productsSnap.forEach(doc => {
                 const p = doc.data();
                 if (p.isActive !== false) {
@@ -645,7 +639,7 @@
 
     window.showOrderModal = showOrderModal;
 
-    // ========== دوال الأدمن ==========
+    // دوال الأدمن
     window.addNewProduct = async () => {
         const game = document.getElementById('productGame').value;
         const name = document.getElementById('productName').value.trim();
@@ -712,11 +706,9 @@
     window.deleteProduct = async (productId) => {
         if(confirm("⚠️ هل أنت متأكد من حذف هذا المنتج؟")) {
             await updateDoc(doc(db, "products", productId), { isActive: false });
-            
             pubgProducts = pubgProducts.filter(p => p.id !== productId);
             freefireProducts = freefireProducts.filter(p => p.id !== productId);
             clashProducts = clashProducts.filter(p => p.id !== productId);
-            
             renderProducts();
             loadManageProducts();
             alert("✅ تم حذف المنتج");
@@ -815,25 +807,76 @@
         }
     };
 
+    // دالة شحن الرصيد المصححة
     window.adminRecharge = async () => {
         const walletId = document.getElementById('targetWallet').value.trim();
         const amount = parseInt(document.getElementById('amountToAdd').value);
+        
         if(!walletId || !amount) {
             alert("❌ أدخل رقم المحفظة والمبلغ");
             return;
         }
-        const q = query(collection(db, "users"), where("walletID", "==", walletId));
-        const snap = await getDocs(q);
-        if(snap.empty) {
-            alert("❌ رقم المحفظة غير موجود");
+        
+        if(isNaN(amount) || amount <= 0) {
+            alert("❌ المبلغ غير صحيح");
             return;
         }
-        const userDoc = snap.docs[0];
-        if(confirm(`💰 شحن ${amount} ج.س للمستخدم ${userDoc.data().name}؟`)) {
+        
+        const usersRef = collection(db, "users");
+        let q = query(usersRef, where("walletID", "==", walletId));
+        let querySnapshot = await getDocs(q);
+        
+        if(querySnapshot.empty) {
+            q = query(usersRef, where("walletID", "==", walletId.replace('#', '')));
+            querySnapshot = await getDocs(q);
+            
+            if(querySnapshot.empty) {
+                alert("❌ رقم المحفظة غير موجود\nتأكد من كتابة رقم المحفظة بشكل صحيح (مثال: 123456)");
+                return;
+            }
+        }
+        
+        const userDoc = querySnapshot.docs[0];
+        const userName = userDoc.data().name;
+        const currentBalance = userDoc.data().balance || 0;
+        
+        if(confirm(`💰 تأكيد شحن الرصيد\n\nالمستخدم: ${userName}\nالمبلغ: ${amount.toLocaleString()} ج.س\nالرصيد الحالي: ${currentBalance.toLocaleString()} ج.س\n\nهل تريد المتابعة؟`)) {
             await updateDoc(doc(db, "users", userDoc.id), { balance: increment(amount) });
-            alert("✅ تم شحن الرصيد بنجاح");
+            alert(`✅ تم شحن ${amount.toLocaleString()} ج.س بنجاح للمستخدم ${userName}`);
             document.getElementById('targetWallet').value = '';
             document.getElementById('amountToAdd').value = '';
+            loadAdminStats();
+        }
+    };
+
+    // شحن الرصيد بالبريد الإلكتروني
+    window.adminRechargeByEmail = async () => {
+        const email = prompt("📧 أدخل البريد الإلكتروني للمستخدم:");
+        if(!email) return;
+        
+        const q = query(collection(db, "users"), where("email", "==", email));
+        const snap = await getDocs(q);
+        
+        if(snap.empty) {
+            alert("❌ البريد الإلكتروني غير موجود");
+            return;
+        }
+        
+        const userDoc = snap.docs[0];
+        const amount = parseInt(prompt("💰 أدخل المبلغ المراد شحنه:"));
+        
+        if(!amount || amount <= 0) {
+            alert("❌ مبلغ غير صحيح");
+            return;
+        }
+        
+        const userName = userDoc.data().name;
+        const currentBalance = userDoc.data().balance || 0;
+        
+        if(confirm(`💰 تأكيد شحن الرصيد\n\nالمستخدم: ${userName}\nالمبلغ: ${amount.toLocaleString()} ج.س\nالرصيد الحالي: ${currentBalance.toLocaleString()} ج.س\n\nهل تريد المتابعة؟`)) {
+            await updateDoc(doc(db, "users", userDoc.id), { balance: increment(amount) });
+            alert(`✅ تم شحن ${amount.toLocaleString()} ج.س بنجاح للمستخدم ${userName}`);
+            loadAdminStats();
         }
     };
 
@@ -869,13 +912,14 @@
     window.closeOrderDetailModal = () => document.getElementById('orderDetailModal').classList.add('hidden');
     window.redeemPoints = () => { if(userData?.points >= 30) alert('🎁 تم استبدال 30 نقطة بهدية 60 شدة! اتصل على واتساب لاستلام الهدية'); };
 
-    // ========== أحداث تسجيل الدخول ==========
+    // أحداث تسجيل الدخول
     document.getElementById('email-login-btn').onclick = async () => {
         const email = document.getElementById('login-email').value;
         const pwd = document.getElementById('login-password').value;
         if (!email || !pwd) { alert('❌ الرجاء إدخال البريد الإلكتروني وكلمة المرور'); return; }
         try { await signInWithEmailAndPassword(auth, email, pwd); } catch(e) { alert('❌ البريد الإلكتروني أو كلمة المرور غير صحيحة'); }
     };
+    
     document.getElementById('email-register-btn').onclick = async () => {
         const name = document.getElementById('reg-name').value.trim();
         const email = document.getElementById('reg-email').value.trim();
@@ -884,7 +928,6 @@
         if (pwd.length < 6) { alert('❌ كلمة المرور يجب أن تكون 6 أحرف على الأقل'); return; }
         try {
             const cred = await createUserWithEmailAndPassword(auth, email, pwd);
-            // إنشاء رقم محفظة عشوائي تلقائي
             const walletID = Math.floor(100000 + Math.random() * 900000).toString();
             await setDoc(doc(db, "users", cred.user.uid), {
                 name: name, email: email, img: 'https://via.placeholder.com/100',
@@ -893,6 +936,7 @@
             alert(`✅ تم إنشاء الحساب بنجاح!\nرقم محفظتك: #${walletID}`);
         } catch(e) { alert('❌ البريد الإلكتروني مستخدم بالفعل'); }
     };
+    
     document.getElementById('google-login-btn').onclick = async () => {
         try {
             const result = await signInWithPopup(auth, provider);
@@ -910,9 +954,10 @@
             }
         } catch(e) { alert('❌ خطأ في تسجيل الدخول بجوجل'); }
     };
+    
     document.getElementById('logout-btn').onclick = async () => { await signOut(auth); document.getElementById('main-app').classList.add('hidden'); document.getElementById('auth-screen').classList.remove('hidden'); };
 
-    // ========== الشريط الجانبي ==========
+    // الشريط الجانبي
     const menuBtn = document.getElementById('menuBtn');
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('sidebarOverlay');
@@ -926,7 +971,7 @@
     document.getElementById('sidebarPolicies').onclick = (e) => { e.preventDefault(); toggleSidebar(false); showPolicy('terms'); };
     document.getElementById('sidebarLogout').onclick = (e) => { e.preventDefault(); toggleSidebar(false); document.getElementById('logout-btn').click(); };
 
-    // ========== الثيم ==========
+    // الثيم
     function setTheme(theme) {
         if (theme === 'dark') {
             document.documentElement.classList.add('dark');
@@ -947,7 +992,7 @@
         document.getElementById('sidebarWallet').innerText = `#${userData?.walletID || ''}`;
     }
 
-    // ========== تبديل أقسام الألعاب ==========
+    // تبديل أقسام الألعاب
     document.querySelectorAll('.category-tab').forEach(btn => {
         btn.addEventListener('click', () => {
             document.querySelectorAll('.category-tab').forEach(b => b.classList.remove('active'));
@@ -961,7 +1006,7 @@
     });
     document.querySelector('.category-tab').classList.add('active');
 
-    // ========== تبديل تبويبات الأدمن ==========
+    // تبديل تبويبات الأدمن
     function switchAdminTab(tabId) {
         document.querySelectorAll('.admin-tab-content').forEach(el => el.classList.add('hidden'));
         document.getElementById(`admin${tabId}`).classList.remove('hidden');
@@ -976,7 +1021,7 @@
         });
     });
 
-    // ========== بدء التشغيل ==========
+    // بدء التشغيل
     function startEngine(user) {
         const isAdmin = ADMINS.includes(user.email);
         onSnapshot(doc(db, "users", user.uid), (snap) => {
@@ -1011,7 +1056,6 @@
             const userRef = doc(db, "users", user.uid);
             const userSnap = await getDoc(userRef);
             if (!userSnap.exists()) {
-                // إنشاء رقم محفظة عشوائي تلقائي لأي مستخدم جديد
                 const walletID = Math.floor(100000 + Math.random() * 900000).toString();
                 await setDoc(userRef, {
                     name: user.displayName || user.email?.split('@')[0] || 'مستخدم',
@@ -1056,4 +1100,4 @@
     document.getElementById('copy-link-btn').onclick = () => { navigator.clipboard.writeText(window.location.href).then(()=>alert('تم نسخ الرابط')); };
 </script>
 </body>
-    </html>
+</html>
