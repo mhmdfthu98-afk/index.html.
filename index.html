@@ -16,29 +16,29 @@
             box-sizing: border-box;
         }
         body {
-            background: linear-gradient(135deg, #0f172a 0%, #1e1a3a 100%);
+            background: linear-gradient(135deg, #fef08a 0%, #fde047 30%, #fef9c3 60%, #fef08a 100%);
             min-height: 100vh;
             overflow-x: hidden;
         }
         .glass {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 1.5rem;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
         }
         .glass-card {
-            background: rgba(255, 255, 255, 0.04);
+            background: rgba(255, 255, 255, 0.6);
             backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 1.5rem;
             transition: all 0.3s ease;
             cursor: pointer;
         }
         .glass-card:hover {
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.8);
             transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
         }
         .service-icon {
             width: 100%;
@@ -53,41 +53,41 @@
             transform: scale(1.05);
         }
         .product-card {
-            background: rgba(255, 255, 255, 0.04);
+            background: rgba(255, 255, 255, 0.6);
             backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 1.5rem;
             transition: all 0.3s ease;
             cursor: pointer;
         }
         .product-card:hover {
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.8);
             transform: translateY(-3px);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
         }
         .back-btn {
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 1rem;
             padding: 0.5rem 1.5rem;
-            color: white;
+            color: #1e293b;
             transition: all 0.3s ease;
             cursor: pointer;
         }
         .back-btn:hover {
-            background: rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.8);
         }
         .page-title {
             font-size: 2rem;
             font-weight: 900;
-            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            background: linear-gradient(135deg, #f59e0b, #d97706);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
         .wallet-card {
-            background: rgba(255, 255, 255, 0.04);
+            background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 1.5rem;
         }
         .whatsapp-float {
@@ -124,20 +124,20 @@
         input,
         select,
         textarea {
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 1rem;
             padding: 0.75rem 1rem;
             width: 100%;
-            color: white;
+            color: #1e293b;
             transition: 0.2s;
         }
         input:focus,
         select:focus,
         textarea:focus {
             outline: none;
-            border-color: #fbbf24;
-            background: rgba(255, 255, 255, 0.1);
+            border-color: #f59e0b;
+            background: rgba(255, 255, 255, 0.8);
         }
         .service-grid {
             display: grid;
@@ -180,11 +180,12 @@
             padding: 8px 12px;
             cursor: pointer;
             border-radius: 0.5rem;
+            color: #1e293b;
         }
         .admin-tab.active {
-            border-bottom-color: #fbbf24;
-            color: #fbbf24;
-            background: rgba(251, 191, 36, 0.1);
+            border-bottom-color: #f59e0b;
+            color: #d97706;
+            background: rgba(245, 158, 11, 0.1);
         }
         .admin-tab-content {
             display: none;
@@ -193,11 +194,11 @@
             display: block;
         }
         .product-item {
-            background: rgba(255, 255, 255, 0.04);
+            background: rgba(255, 255, 255, 0.6);
             border-radius: 1rem;
             padding: 0.75rem;
             margin-bottom: 0.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
         .sidebar {
             position: fixed;
@@ -205,13 +206,13 @@
             right: -320px;
             width: 320px;
             height: 100%;
-            background: rgba(15, 23, 42, 0.95);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
             z-index: 1000;
             transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: -5px 0 25px rgba(0, 0, 0, 0.3);
+            box-shadow: -5px 0 25px rgba(0, 0, 0, 0.1);
             padding: 1.5rem;
-            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            border-right: 1px solid rgba(0, 0, 0, 0.05);
         }
         .sidebar.open {
             right: 0;
@@ -222,7 +223,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.3);
             backdrop-filter: blur(4px);
             z-index: 999;
             display: none;
@@ -231,54 +232,54 @@
             display: block;
         }
         .menu-btn {
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.6);
             backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 1rem;
             padding: 0.5rem 1rem;
             font-size: 1.2rem;
             cursor: pointer;
-            color: white;
+            color: #1e293b;
             transition: 0.2s;
         }
         .menu-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.8);
         }
         .simple-banner {
-            background: linear-gradient(135deg, #0f172a, #1e1a3a);
+            background: linear-gradient(135deg, #fef08a, #fde047);
             height: 80px;
             border-radius: 0 0 30px 30px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 0 1.5rem;
-            border-bottom: 2px solid rgba(251, 191, 36, 0.3);
+            border-bottom: 2px solid rgba(245, 158, 11, 0.3);
         }
         .footer-links a {
-            color: #94a3b8;
+            color: #64748b;
             margin: 0 0.75rem;
             text-decoration: none;
             font-size: 0.75rem;
             transition: 0.2s;
         }
         .footer-links a:hover {
-            color: #fbbf24;
+            color: #d97706;
         }
         .brand-name {
-            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            background: linear-gradient(135deg, #f59e0b, #d97706);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             font-weight: 900;
             font-size: 1.5rem;
         }
         .brand-name-white {
-            color: white;
+            color: #1e293b;
             font-weight: 900;
             font-size: 1.5rem;
         }
         .loader-spin {
-            border: 4px solid rgba(255, 255, 255, 0.1);
-            border-top: 4px solid #fbbf24;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-top: 4px solid #f59e0b;
             border-radius: 50%;
             width: 50px;
             height: 50px;
@@ -293,8 +294,8 @@
             }
         }
         .action-btn {
-            background: linear-gradient(135deg, #fbbf24, #f59e0b);
-            color: #0f172a;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
             font-weight: 800;
             padding: 0.75rem 1.5rem;
             border-radius: 1rem;
@@ -304,20 +305,20 @@
         }
         .action-btn:hover {
             transform: scale(1.02);
-            box-shadow: 0 8px 25px rgba(251, 191, 36, 0.3);
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
         }
         .action-btn-outline {
             background: transparent;
-            color: white;
+            color: #1e293b;
             font-weight: 700;
             padding: 0.75rem 1.5rem;
             border-radius: 1rem;
             transition: all 0.3s ease;
-            border: 2px solid #fbbf24;
+            border: 2px solid #f59e0b;
             cursor: pointer;
         }
         .action-btn-outline:hover {
-            background: rgba(251, 191, 36, 0.1);
+            background: rgba(245, 158, 11, 0.1);
             transform: scale(1.02);
         }
         .quick-actions {
@@ -332,33 +333,63 @@
             font-size: 0.9rem;
             padding: 0.6rem 0.5rem;
         }
+        .text-dark {
+            color: #1e293b;
+        }
+        .text-dark-light {
+            color: #475569;
+        }
+        .border-dark {
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+        .bg-dark-light {
+            background: rgba(0, 0, 0, 0.05);
+        }
+        .text-yellow-dark {
+            color: #d97706;
+        }
+        .border-yellow-dark {
+            border-color: #d97706;
+        }
+        .sidebar a {
+            color: #1e293b;
+        }
+        .sidebar a:hover {
+            background: rgba(245, 158, 11, 0.1);
+        }
+        .sidebar .text-yellow-300 {
+            color: #d97706;
+        }
+        .sidebar .border-yellow-500 {
+            border-color: #d97706;
+        }
     </style>
 </head>
 <body>
 
     <!-- شاشة تحذير WebView -->
-    <div id="webview-warning" style="display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; background: #1e293b; text-align: center; position: fixed; top:0;left:0;right:0;bottom:0;z-index:20000; color: white;">
+    <div id="webview-warning" style="display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; background: #fef08a; text-align: center; position: fixed; top:0;left:0;right:0;bottom:0;z-index:20000; color: #1e293b;">
         <h2 class="text-2xl font-bold mb-4">⛔ لا يمكن تسجيل الدخول من هذا التطبيق</h2>
         <p class="mb-4">يرجى فتح هذا الرابط في متصفح خارجي مثل Chrome أو Safari.</p>
-        <button id="open-browser-btn" class="bg-yellow-500 text-black px-6 py-3 rounded-full mt-4 font-bold">فتح في المتصفح</button>
-        <button id="copy-link-btn" class="bg-gray-600 text-white px-6 py-3 rounded-full mt-2">نسخ الرابط</button>
+        <button id="open-browser-btn" class="action-btn">فتح في المتصفح</button>
+        <button id="copy-link-btn" class="action-btn-outline mt-2">نسخ الرابط</button>
     </div>
 
     <!-- شاشة التحميل -->
-    <div id="loading-screen" class="fixed inset-0 bg-black/70 backdrop-blur flex items-center justify-center z-50">
+    <div id="loading-screen" class="fixed inset-0 bg-white/70 backdrop-blur flex items-center justify-center z-50">
         <div class="loader-spin"></div>
     </div>
 
     <!-- شاشة تسجيل الدخول -->
-    <div id="auth-screen" class="fixed inset-0 bg-black/60 backdrop-blur flex items-center justify-center p-6 z-40 hidden">
-        <div class="glass w-full max-w-md p-8 rounded-3xl text-white">
+    <div id="auth-screen" class="fixed inset-0 bg-white/60 backdrop-blur flex items-center justify-center p-6 z-40 hidden">
+        <div class="glass w-full max-w-md p-8 rounded-3xl text-dark">
             <h1 class="text-4xl font-black text-center">
                 <span class="brand-name">MORRE</span> <span class="brand-name-white">STORE</span>
             </h1>
-            <p class="text-center text-gray-300 text-sm mb-6">متجر شامل للخدمات الرقمية</p>
-            <div class="flex gap-4 border-b border-white/10 mb-6">
-                <button class="auth-tab flex-1 py-2 text-center font-bold text-gray-300" data-tab="login">تسجيل دخول</button>
-                <button class="auth-tab flex-1 py-2 text-center font-bold text-gray-300" data-tab="register">إنشاء حساب</button>
+            <p class="text-center text-dark-light text-sm mb-6">متجر شامل للخدمات الرقمية</p>
+            <div class="flex gap-4 border-b border-dark/10 mb-6">
+                <button class="auth-tab flex-1 py-2 text-center font-bold text-dark-light" data-tab="login">تسجيل دخول</button>
+                <button class="auth-tab flex-1 py-2 text-center font-bold text-dark-light" data-tab="register">إنشاء حساب</button>
             </div>
             <div id="login-form" class="space-y-4">
                 <input type="email" id="login-email" placeholder="البريد الإلكتروني" dir="ltr">
@@ -371,8 +402,8 @@
                 <input type="password" id="reg-password" placeholder="كلمة المرور" dir="ltr">
                 <button id="email-register-btn" class="w-full action-btn">إنشاء حساب</button>
             </div>
-            <div class="relative my-6"><div class="absolute inset-0 flex items-center"><div class="w-full border-t border-white/10"></div></div><div class="relative flex justify-center text-xs"><span class="bg-black/40 px-2 text-gray-300">أو</span></div></div>
-            <button id="google-login-btn" class="w-full bg-white text-gray-800 py-3 rounded-xl font-bold flex items-center justify-center gap-2"><i class="fab fa-google"></i> دخول عبر جوجل</button>
+            <div class="relative my-6"><div class="absolute inset-0 flex items-center"><div class="w-full border-t border-dark/10"></div></div><div class="relative flex justify-center text-xs"><span class="bg-white/60 px-2 text-dark-light">أو</span></div></div>
+            <button id="google-login-btn" class="w-full bg-white text-gray-800 py-3 rounded-xl font-bold flex items-center justify-center gap-2 border border-gray-200"><i class="fab fa-google"></i> دخول عبر جوجل</button>
         </div>
     </div>
 
@@ -389,26 +420,26 @@
 
         <main class="max-w-7xl mx-auto px-4 relative z-10">
             <!-- محفظة المستخدم والأزرار السريعة -->
-            <div class="wallet-card p-5 text-white mb-6 mt-4">
+            <div class="wallet-card p-5 text-dark mb-6 mt-4">
                 <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
                     <div class="flex items-center gap-3 w-full sm:w-auto">
-                        <img id="uImg" class="w-12 h-12 rounded-full border-2 border-yellow-500 shadow-lg" src="https://via.placeholder.com/100">
+                        <img id="uImg" class="w-12 h-12 rounded-full border-2 border-yellow-dark shadow-lg" src="https://via.placeholder.com/100">
                         <div>
-                            <h2 id="uName" class="font-bold text-lg">...</h2>
-                            <div id="uWallet" class="text-xs text-yellow-300 bg-black/30 px-2 py-0.5 rounded-full mt-1">#000000</div>
+                            <h2 id="uName" class="font-bold text-lg text-dark">...</h2>
+                            <div id="uWallet" class="text-xs text-yellow-dark bg-black/5 px-2 py-0.5 rounded-full mt-1">#000000</div>
                         </div>
                     </div>
                     <div class="flex items-center gap-3 w-full sm:w-auto">
-                        <div class="bg-black/30 px-4 py-2 rounded-xl text-center flex-1 sm:flex-none">
-                            <p class="text-xs text-gray-300">الرصيد</p>
-                            <p class="text-xl font-black text-yellow-400"><span id="uBal">0</span> <small class="text-xs">ج.س</small></p>
+                        <div class="bg-black/5 px-4 py-2 rounded-xl text-center flex-1 sm:flex-none">
+                            <p class="text-xs text-dark-light">الرصيد</p>
+                            <p class="text-xl font-black text-yellow-dark"><span id="uBal">0</span> <small class="text-xs">ج.س</small></p>
                         </div>
-                        <button id="logout-btn" class="w-10 h-10 bg-red-500/20 text-red-300 rounded-full hover:bg-red-500/30"><i class="fas fa-power-off"></i></button>
+                        <button id="logout-btn" class="w-10 h-10 bg-red-500/20 text-red-600 rounded-full hover:bg-red-500/30"><i class="fas fa-power-off"></i></button>
                     </div>
                 </div>
                 <!-- الأزرار السريعة -->
                 <div class="quick-actions mt-4">
-                    <a href="https://wa.me/2490991305468?text=مرحباً%20أريد%20شحن%20محفظتي%20رقم%20المحفظة:%20" target="_blank" class="action-btn text-center">
+                    <a href="#" onclick="openWalletWhatsApp()" class="action-btn text-center">
                         <i class="fas fa-wallet ml-1"></i> شحن المحفظة
                     </a>
                     <a href="https://wa.me/2490991305468?text=مرحباً%20أحتاج%20مساعدة" target="_blank" class="action-btn-outline text-center">
@@ -420,26 +451,26 @@
             <!-- لوحة تحكم الأدمن (للبريد المحدد فقط) -->
             <div id="adminPanel" class="hidden mb-6">
                 <div class="glass p-4 rounded-2xl">
-                    <h3 class="text-xl font-bold text-white mb-4 text-center">👑 لوحة تحكم الأدمن</h3>
+                    <h3 class="text-xl font-bold text-dark mb-4 text-center">👑 لوحة تحكم الأدمن</h3>
                     <div class="flex flex-wrap gap-2 mb-4">
-                        <button class="admin-tab text-white" data-admin-tab="stats">📊 إحصائيات</button>
-                        <button class="admin-tab text-white" data-admin-tab="add">➕ إضافة منتج</button>
-                        <button class="admin-tab text-white" data-admin-tab="manage">📦 إدارة المنتجات</button>
-                        <button class="admin-tab text-white" data-admin-tab="orders">📋 الطلبات</button>
-                        <button class="admin-tab text-white" data-admin-tab="recharge">💰 شحن رصيد</button>
+                        <button class="admin-tab" data-admin-tab="stats">📊 إحصائيات</button>
+                        <button class="admin-tab" data-admin-tab="add">➕ إضافة منتج</button>
+                        <button class="admin-tab" data-admin-tab="manage">📦 إدارة المنتجات</button>
+                        <button class="admin-tab" data-admin-tab="orders">📋 الطلبات</button>
+                        <button class="admin-tab" data-admin-tab="recharge">💰 شحن رصيد</button>
                     </div>
 
                     <div id="adminStats" class="admin-tab-content active">
                         <div class="grid grid-cols-3 gap-3 text-center">
-                            <div class="bg-white/5 p-3 rounded-xl"><p class="text-xs text-gray-300">👥 المستخدمين</p><p id="totalUsers" class="text-2xl font-bold text-yellow-400">0</p></div>
-                            <div class="bg-white/5 p-3 rounded-xl"><p class="text-xs text-gray-300">💰 مبيعات اليوم</p><p id="todaySales" class="text-2xl font-bold text-yellow-400">0</p></div>
-                            <div class="bg-white/5 p-3 rounded-xl"><p class="text-xs text-gray-300">⏳ طلبات معلقة</p><p id="pendingOrders" class="text-2xl font-bold text-yellow-400">0</p></div>
+                            <div class="bg-white/5 p-3 rounded-xl"><p class="text-xs text-dark-light">👥 المستخدمين</p><p id="totalUsers" class="text-2xl font-bold text-yellow-dark">0</p></div>
+                            <div class="bg-white/5 p-3 rounded-xl"><p class="text-xs text-dark-light">💰 مبيعات اليوم</p><p id="todaySales" class="text-2xl font-bold text-yellow-dark">0</p></div>
+                            <div class="bg-white/5 p-3 rounded-xl"><p class="text-xs text-dark-light">⏳ طلبات معلقة</p><p id="pendingOrders" class="text-2xl font-bold text-yellow-dark">0</p></div>
                         </div>
                     </div>
 
                     <div id="adminAdd" class="admin-tab-content">
                         <div class="space-y-3">
-                            <select id="productGame" class="w-full text-white">
+                            <select id="productGame" class="w-full">
                                 <option value="pubg">🎮 ببجي PUBG</option>
                                 <option value="freefire">🔥 فري فاير FreeFire</option>
                                 <option value="clash">👑 كلاش أوف كلانس</option>
@@ -450,26 +481,26 @@
                                 <option value="tiktok">🎵 تيك توك</option>
                                 <option value="ai">🤖 الذكاء الاصطناعي</option>
                             </select>
-                            <input type="text" id="productName" placeholder="اسم المنتج" class="text-white">
-                            <input type="number" id="productPrice" placeholder="السعر (جنيه)" class="text-white">
+                            <input type="text" id="productName" placeholder="اسم المنتج">
+                            <input type="number" id="productPrice" placeholder="السعر (جنيه)">
                             <button onclick="addNewProduct()" class="w-full action-btn">➕ إضافة المنتج</button>
                         </div>
                     </div>
 
                     <div id="adminManage" class="admin-tab-content">
-                        <h4 class="text-white font-bold mb-2">📦 المنتجات الحالية</h4>
+                        <h4 class="text-dark font-bold mb-2">📦 المنتجات الحالية</h4>
                         <div id="manageProductsList" class="space-y-2 max-h-80 overflow-y-auto"></div>
                     </div>
 
                     <div id="adminOrders" class="admin-tab-content">
-                        <h4 class="text-white font-bold mb-2">📋 الطلبات المعلقة</h4>
+                        <h4 class="text-dark font-bold mb-2">📋 الطلبات المعلقة</h4>
                         <div id="adminOrdersList" class="space-y-2 max-h-80 overflow-y-auto"></div>
                     </div>
 
                     <div id="adminRecharge" class="admin-tab-content">
                         <div class="space-y-3">
-                            <input type="text" id="targetWallet" placeholder="رقم المحفظة (مثال: 123456)" class="text-white">
-                            <input type="number" id="amountToAdd" placeholder="المبلغ" class="text-white">
+                            <input type="text" id="targetWallet" placeholder="رقم المحفظة (مثال: 123456)">
+                            <input type="number" id="amountToAdd" placeholder="المبلغ">
                             <button onclick="adminRecharge()" class="w-full action-btn">💰 شحن الرصيد</button>
                             <button onclick="adminRechargeByEmail()" class="w-full action-btn-outline">🔍 شحن بالبريد الإلكتروني</button>
                         </div>
@@ -479,69 +510,69 @@
 
             <!-- الصفحة الرئيسية -->
             <div id="homePage" class="home-page">
-                <h2 class="text-2xl font-black text-white mb-6 text-center">🌟 جميع الخدمات</h2>
+                <h2 class="text-2xl font-black text-dark mb-6 text-center">🌟 جميع الخدمات</h2>
                 <div class="service-grid">
                     <!-- PUBG -->
                     <div class="glass-card p-4 text-center service-card" onclick="showCategory('pubg')">
                         <img src="https://i.ibb.co/Pzxr7M06/IMG.png" alt="PUBG" class="service-icon">
-                        <h3 class="text-white font-bold mt-2">ببجي PUBG</h3>
-                        <p class="text-gray-400 text-xs">شحن فوري</p>
+                        <h3 class="text-dark font-bold mt-2">ببجي PUBG</h3>
+                        <p class="text-dark-light text-xs">شحن فوري</p>
                     </div>
 
                     <!-- FreeFire -->
                     <div class="glass-card p-4 text-center service-card" onclick="showCategory('freefire')">
                         <img src="https://i.ibb.co/JwTt6xQS/IMG.png" alt="FreeFire" class="service-icon">
-                        <h3 class="text-white font-bold mt-2">فري فاير FreeFire</h3>
-                        <p class="text-gray-400 text-xs">شحن فوري</p>
+                        <h3 class="text-dark font-bold mt-2">فري فاير FreeFire</h3>
+                        <p class="text-dark-light text-xs">شحن فوري</p>
                     </div>
 
                     <!-- eFootball -->
                     <div class="glass-card p-4 text-center service-card" onclick="showCategory('efootball')">
                         <img src="https://i.ibb.co/HfxMcj4T/IMG.png" alt="eFootball" class="service-icon">
-                        <h3 class="text-white font-bold mt-2">eFootball شحن</h3>
-                        <p class="text-gray-400 text-xs">كوينز وباقات</p>
+                        <h3 class="text-dark font-bold mt-2">eFootball شحن</h3>
+                        <p class="text-dark-light text-xs">كوينز وباقات</p>
                     </div>
 
                     <!-- Clash of Clans -->
                     <div class="glass-card p-4 text-center service-card" onclick="showCategory('clash')">
                         <img src="https://i.ibb.co/8DWbJvFL/IMG.png" alt="Clash of Clans" class="service-icon">
-                        <h3 class="text-white font-bold mt-2">كلاش أوف كلانس</h3>
-                        <p class="text-gray-400 text-xs">تذاكر وجواهر</p>
+                        <h3 class="text-dark font-bold mt-2">كلاش أوف كلانس</h3>
+                        <p class="text-dark-light text-xs">تذاكر وجواهر</p>
                     </div>
 
                     <!-- Netflix -->
                     <div class="glass-card p-4 text-center service-card" onclick="showCategory('netflix')">
                         <img src="https://i.ibb.co/PsqRGPHR/IMG.png" alt="Netflix" class="service-icon">
-                        <h3 class="text-white font-bold mt-2">نتفليكس Netflix</h3>
-                        <p class="text-gray-400 text-xs">اشتراكات شهرية</p>
+                        <h3 class="text-dark font-bold mt-2">نتفليكس Netflix</h3>
+                        <p class="text-dark-light text-xs">اشتراكات شهرية</p>
                     </div>
 
                     <!-- Google Play -->
                     <div class="glass-card p-4 text-center service-card" onclick="showCategory('googleplay')">
                         <img src="https://i.ibb.co/cSm7F7Ry/IMG.png" alt="Google Play" class="service-icon">
-                        <h3 class="text-white font-bold mt-2">جوجل بلاي</h3>
-                        <p class="text-gray-400 text-xs">بطاقات شحن</p>
+                        <h3 class="text-dark font-bold mt-2">جوجل بلاي</h3>
+                        <p class="text-dark-light text-xs">بطاقات شحن</p>
                     </div>
 
                     <!-- Redotpay -->
                     <div class="glass-card p-4 text-center service-card" onclick="showCategory('redotpay')">
                         <img src="https://i.ibb.co/yFkwNDTV/IMG.png" alt="Redotpay" class="service-icon">
-                        <h3 class="text-white font-bold mt-2">فيزا Redotpay</h3>
-                        <p class="text-gray-400 text-xs">بطاقة افتراضية</p>
+                        <h3 class="text-dark font-bold mt-2">فيزا Redotpay</h3>
+                        <p class="text-dark-light text-xs">بطاقة افتراضية</p>
                     </div>
 
                     <!-- TikTok -->
                     <div class="glass-card p-4 text-center service-card" onclick="showCategory('tiktok')">
                         <img src="https://i.ibb.co/B2Vhg5vw/IMG.png" alt="TikTok" class="service-icon">
-                        <h3 class="text-white font-bold mt-2">تيك توك TikTok</h3>
-                        <p class="text-gray-400 text-xs">عملات تيك توك</p>
+                        <h3 class="text-dark font-bold mt-2">تيك توك TikTok</h3>
+                        <p class="text-dark-light text-xs">عملات تيك توك</p>
                     </div>
 
                     <!-- AI -->
                     <div class="glass-card p-4 text-center service-card" onclick="showCategory('ai')">
                         <img src="https://i.ibb.co/8DZGctQM/IMG.png" alt="AI" class="service-icon">
-                        <h3 class="text-white font-bold mt-2">الذكاء الاصطناعي</h3>
-                        <p class="text-gray-400 text-xs">ChatGPT - Gemini</p>
+                        <h3 class="text-dark font-bold mt-2">الذكاء الاصطناعي</h3>
+                        <p class="text-dark-light text-xs">ChatGPT - Gemini</p>
                     </div>
                 </div>
             </div>
@@ -630,7 +661,7 @@
 
             <!-- سجل الطلبات -->
             <div class="mt-8">
-                <h3 class="text-2xl font-black text-white mb-4 border-r-4 border-yellow-500 pr-3">📋 تاريخ طلباتي</h3>
+                <h3 class="text-2xl font-black text-dark mb-4 border-r-4 border-yellow-dark pr-3">📋 تاريخ طلباتي</h3>
                 <div id="userOrdersList" class="space-y-4"></div>
             </div>
         </main>
@@ -638,24 +669,24 @@
         <!-- الشريط الجانبي -->
         <div class="sidebar-overlay" id="sidebarOverlay"></div>
         <div class="sidebar" id="sidebar">
-            <div class="text-center py-4 border-b border-white/10">
-                <img id="sidebarImg" class="w-20 h-20 rounded-full mx-auto border-2 border-yellow-500" src="https://via.placeholder.com/100">
-                <h4 id="sidebarName" class="font-bold text-white text-lg mt-2"></h4>
-                <p id="sidebarWallet" class="text-sm text-yellow-300"></p>
+            <div class="text-center py-4 border-b border-dark/10">
+                <img id="sidebarImg" class="w-20 h-20 rounded-full mx-auto border-2 border-yellow-dark" src="https://via.placeholder.com/100">
+                <h4 id="sidebarName" class="font-bold text-dark text-lg mt-2"></h4>
+                <p id="sidebarWallet" class="text-sm text-yellow-dark"></p>
             </div>
-            <a href="#" onclick="goHome(); toggleSidebar(false);" class="flex items-center gap-3 p-3 hover:bg-white/5 rounded-xl text-white"><i class="fas fa-home w-6"></i> الرئيسية</a>
-            <a href="#" onclick="toggleSidebar(false);" class="flex items-center gap-3 p-3 hover:bg-white/5 rounded-xl text-white"><i class="fas fa-user w-6"></i> حسابي</a>
-            <a href="#" onclick="toggleSidebar(false);" class="flex items-center gap-3 p-3 hover:bg-white/5 rounded-xl text-white"><i class="fas fa-wallet w-6"></i> محفظتي</a>
-            <a href="#" onclick="toggleSidebar(false); document.getElementById('userOrdersList').scrollIntoView({behavior:'smooth'});" class="flex items-center gap-3 p-3 hover:bg-white/5 rounded-xl text-white"><i class="fas fa-shopping-bag w-6"></i> طلباتي</a>
-            <a href="https://wa.me/2490991305468?text=مرحباً%20أحتاج%20مساعدة" target="_blank" class="flex items-center gap-3 p-3 hover:bg-white/5 rounded-xl text-white"><i class="fab fa-whatsapp w-6 text-green-400"></i> خدمة العملاء</a>
-            <a href="https://wa.me/2490991305468?text=مرحباً%20أريد%20شحن%20محفظتي%20رقم%20المحفظة:%20" target="_blank" class="flex items-center gap-3 p-3 hover:bg-white/5 rounded-xl text-white"><i class="fas fa-wallet w-6 text-yellow-400"></i> شحن المحفظة</a>
-            <div onclick="toggleSidebar(false); showPolicy('terms');" class="flex items-center gap-3 p-3 hover:bg-white/5 rounded-xl cursor-pointer text-white"><i class="fas fa-file-alt w-6"></i> السياسات</div>
-            <div onclick="toggleTheme()" class="flex items-center gap-3 p-3 hover:bg-white/5 rounded-xl cursor-pointer text-white" id="themeToggleBtn"><i class="fas fa-moon w-6"></i> الوضع الليلي</div>
-            <a href="#" onclick="document.getElementById('logout-btn').click(); toggleSidebar(false);" class="flex items-center gap-3 p-3 hover:bg-white/5 rounded-xl text-white"><i class="fas fa-sign-out-alt w-6"></i> تسجيل الخروج</a>
+            <a href="#" onclick="goHome(); toggleSidebar(false);" class="flex items-center gap-3 p-3 hover:bg-yellow-50 rounded-xl"><i class="fas fa-home w-6"></i> الرئيسية</a>
+            <a href="#" onclick="toggleSidebar(false);" class="flex items-center gap-3 p-3 hover:bg-yellow-50 rounded-xl"><i class="fas fa-user w-6"></i> حسابي</a>
+            <a href="#" onclick="toggleSidebar(false);" class="flex items-center gap-3 p-3 hover:bg-yellow-50 rounded-xl"><i class="fas fa-wallet w-6"></i> محفظتي</a>
+            <a href="#" onclick="toggleSidebar(false); document.getElementById('userOrdersList').scrollIntoView({behavior:'smooth'});" class="flex items-center gap-3 p-3 hover:bg-yellow-50 rounded-xl"><i class="fas fa-shopping-bag w-6"></i> طلباتي</a>
+            <a href="#" onclick="openWalletWhatsApp(); toggleSidebar(false);" class="flex items-center gap-3 p-3 hover:bg-yellow-50 rounded-xl"><i class="fas fa-wallet w-6 text-yellow-dark"></i> شحن المحفظة</a>
+            <a href="https://wa.me/2490991305468?text=مرحباً%20أحتاج%20مساعدة" target="_blank" class="flex items-center gap-3 p-3 hover:bg-yellow-50 rounded-xl"><i class="fab fa-whatsapp w-6 text-green-500"></i> خدمة العملاء</a>
+            <div onclick="toggleSidebar(false); showPolicy('terms');" class="flex items-center gap-3 p-3 hover:bg-yellow-50 rounded-xl cursor-pointer"><i class="fas fa-file-alt w-6"></i> السياسات</div>
+            <div onclick="toggleTheme()" class="flex items-center gap-3 p-3 hover:bg-yellow-50 rounded-xl cursor-pointer" id="themeToggleBtn"><i class="fas fa-moon w-6"></i> الوضع الليلي</div>
+            <a href="#" onclick="document.getElementById('logout-btn').click(); toggleSidebar(false);" class="flex items-center gap-3 p-3 hover:bg-yellow-50 rounded-xl"><i class="fas fa-sign-out-alt w-6"></i> تسجيل الخروج</a>
         </div>
 
         <!-- الفوتر -->
-        <footer class="fixed bottom-0 left-0 right-0 bg-black/40 backdrop-blur border-t border-white/5 py-3 text-center text-xs text-gray-400 footer-links">
+        <footer class="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur border-t border-dark/10 py-3 text-center text-xs text-dark-light footer-links">
             <div class="flex justify-center gap-4 flex-wrap">
                 <a href="#" onclick="showPolicy('terms');return false;">شروط الخدمة</a>
                 <a href="#" onclick="showPolicy('privacy');return false;">سياسة الخصوصية</a>
@@ -667,51 +698,51 @@
     </div>
 
     <!-- مودال السياسات -->
-    <div id="policy-modal" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
-        <div class="glass w-full max-w-md p-6 rounded-3xl text-white">
-            <div class="flex justify-between items-center mb-4"><h3 id="policy-title" class="text-xl font-bold"></h3><button onclick="closePolicyModal()" class="text-gray-400 hover:text-white"><i class="fas fa-times text-2xl"></i></button></div>
-            <div id="policy-content" class="text-gray-300"></div>
-            <button onclick="closePolicyModal()" class="mt-6 w-full bg-white/10 py-2 rounded-xl">إغلاق</button>
+    <div id="policy-modal" class="hidden fixed inset-0 bg-black/30 backdrop-blur z-50 flex items-center justify-center p-4">
+        <div class="glass w-full max-w-md p-6 rounded-3xl text-dark">
+            <div class="flex justify-between items-center mb-4"><h3 id="policy-title" class="text-xl font-bold"></h3><button onclick="closePolicyModal()" class="text-dark-light hover:text-dark"><i class="fas fa-times text-2xl"></i></button></div>
+            <div id="policy-content" class="text-dark-light"></div>
+            <button onclick="closePolicyModal()" class="mt-6 w-full bg-dark/5 py-2 rounded-xl">إغلاق</button>
         </div>
     </div>
 
     <!-- مودال تفاصيل الطلب -->
-    <div id="orderDetailModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-        <div class="glass w-full max-w-md p-6 rounded-3xl text-white">
+    <div id="orderDetailModal" class="hidden fixed inset-0 bg-black/30 backdrop-blur z-50 flex items-center justify-center p-4">
+        <div class="glass w-full max-w-md p-6 rounded-3xl text-dark">
             <h3 class="text-xl font-bold mb-4">📄 تفاصيل الطلب</h3>
             <div id="orderDetailContent" class="space-y-2 text-sm"></div>
-            <button onclick="closeOrderDetailModal()" class="mt-6 w-full bg-white/10 py-2 rounded-xl">إغلاق</button>
+            <button onclick="closeOrderDetailModal()" class="mt-6 w-full bg-dark/5 py-2 rounded-xl">إغلاق</button>
         </div>
     </div>
 
     <!-- مودال تعديل السعر -->
-    <div id="editPriceModal" class="hidden fixed inset-0 bg-black/80 z-[99999] flex items-center justify-center p-4">
-        <div class="glass w-full max-w-sm p-6 rounded-3xl text-white">
+    <div id="editPriceModal" class="hidden fixed inset-0 bg-black/30 backdrop-blur z-[99999] flex items-center justify-center p-4">
+        <div class="glass w-full max-w-sm p-6 rounded-3xl text-dark">
             <h3 class="text-xl font-bold text-center mb-4">💰 تعديل السعر</h3>
-            <input type="number" id="editPriceInput" class="w-full text-center text-2xl text-white" placeholder="السعر الجديد">
+            <input type="number" id="editPriceInput" class="w-full text-center text-2xl" placeholder="السعر الجديد">
             <div class="flex gap-3 mt-6">
-                <button onclick="closeEditModal()" class="flex-1 bg-white/10 py-2 rounded-xl">إلغاء</button>
+                <button onclick="closeEditModal()" class="flex-1 bg-dark/5 py-2 rounded-xl">إلغاء</button>
                 <button id="savePriceBtn" class="flex-1 action-btn">حفظ</button>
             </div>
         </div>
     </div>
 
     <!-- مودال تأكيد الطلب -->
-    <div id="orderModal" class="hidden fixed inset-0 bg-black/80 z-[99999] flex items-center justify-center p-4">
-        <div class="glass w-full max-w-md p-6 rounded-3xl text-white">
-            <h2 class="text-xl font-bold text-center text-white mb-4">🛒 تأكيد بيانات الشحن</h2>
+    <div id="orderModal" class="hidden fixed inset-0 bg-black/30 backdrop-blur z-[99999] flex items-center justify-center p-4">
+        <div class="glass w-full max-w-md p-6 rounded-3xl text-dark">
+            <h2 class="text-xl font-bold text-center text-dark mb-4">🛒 تأكيد بيانات الشحن</h2>
             <div class="space-y-3">
-                <input id="modalGameID" type="text" placeholder="أيدي اللعبة (Player ID)" class="w-full text-white">
-                <input id="modalGameName" type="text" placeholder="اسمك داخل اللعبة" class="w-full text-white">
-                <input id="modalRealName" type="text" placeholder="الاسم الحقيقي" class="w-full text-white">
-                <input id="modalPhone" type="tel" placeholder="رقم الهاتف" class="w-full text-white">
-                <div class="bg-yellow-500/10 p-3 rounded-xl border border-yellow-500/20">
-                    <p class="font-bold text-yellow-300">ملخص الطلب:</p>
-                    <p id="modalProductName" class="text-white">المنتج: --</p>
-                    <p id="modalProductPrice" class="text-white">المبلغ: -- ج.س</p>
+                <input id="modalGameID" type="text" placeholder="أيدي اللعبة (Player ID)">
+                <input id="modalGameName" type="text" placeholder="اسمك داخل اللعبة">
+                <input id="modalRealName" type="text" placeholder="الاسم الحقيقي">
+                <input id="modalPhone" type="tel" placeholder="رقم الهاتف">
+                <div class="bg-yellow-50 p-3 rounded-xl border border-yellow-200">
+                    <p class="font-bold text-yellow-dark">ملخص الطلب:</p>
+                    <p id="modalProductName" class="text-dark">المنتج: --</p>
+                    <p id="modalProductPrice" class="text-dark">المبلغ: -- ج.س</p>
                 </div>
                 <div class="flex gap-3 mt-4">
-                    <button onclick="closeOrderModal()" class="flex-1 bg-white/10 py-2 rounded-xl">إلغاء</button>
+                    <button onclick="closeOrderModal()" class="flex-1 bg-dark/5 py-2 rounded-xl">إلغاء</button>
                     <button id="confirmOrderBtn" class="flex-1 action-btn">تأكيد</button>
                 </div>
             </div>
@@ -743,6 +774,17 @@
         let userData = null;
         let currentOrder = null;
         let editingProductId = null;
+
+        // ========== دالة فتح واتساب مع رقم المحفظة ==========
+        window.openWalletWhatsApp = function() {
+            if (userData && userData.walletID) {
+                const walletNumber = userData.walletID;
+                const message = `مرحباً أريد شحن محفظتي رقم المحفظة: ${walletNumber}`;
+                window.open(`https://wa.me/2490991305468?text=${encodeURIComponent(message)}`, '_blank');
+            } else {
+                alert('❌ يرجى تسجيل الدخول أولاً للحصول على رقم محفظتك');
+            }
+        };
 
         // ========== المنتجات ==========
         let allProducts = {
@@ -921,9 +963,9 @@
                 if (!grid) return;
                 const products = allProducts[cat]?.filter(p => p.isActive !== false) || [];
                 grid.innerHTML = products.map(p => `
-                            <div class="product-card p-5 text-white text-center" onclick="window.showOrderModal('${p.name}', ${p.price}, '${p.category}', '${p.id}')">
+                            <div class="product-card p-5 text-dark text-center" onclick="window.showOrderModal('${p.name}', ${p.price}, '${p.category}', '${p.id}')">
                                 <p class="font-bold text-lg">${p.name}</p>
-                                <p class="text-2xl font-black text-yellow-400 my-2">${p.price.toLocaleString()} ج.س</p>
+                                <p class="text-2xl font-black text-yellow-dark my-2">${p.price.toLocaleString()} ج.س</p>
                                 <button class="w-full action-btn">شراء</button>
                             </div>
                         `).join('');
@@ -1011,7 +1053,7 @@
             const list = document.getElementById('manageProductsList');
             list.innerHTML = '';
             if (productsSnap.empty) {
-                list.innerHTML = '<p class="text-gray-400 text-center">لا توجد منتجات</p>';
+                list.innerHTML = '<p class="text-dark-light text-center">لا توجد منتجات</p>';
                 return;
             }
             productsSnap.forEach(doc => {
@@ -1028,15 +1070,15 @@
                     ai: '🤖 ذكاء اصطناعي'
                 };
                 list.innerHTML += `
-                            <div class="product-item flex justify-between items-center p-3 bg-white/5 rounded-xl">
+                            <div class="product-item flex justify-between items-center p-3 bg-white/50 rounded-xl">
                                 <div>
-                                    <p class="text-white font-bold">${p.name}</p>
-                                    <p class="text-yellow-400 text-sm">${p.price.toLocaleString()} ج.س</p>
-                                    <p class="text-gray-400 text-xs">${catNames[p.category] || p.category}</p>
+                                    <p class="text-dark font-bold">${p.name}</p>
+                                    <p class="text-yellow-dark text-sm">${p.price.toLocaleString()} ج.س</p>
+                                    <p class="text-dark-light text-xs">${catNames[p.category] || p.category}</p>
                                 </div>
                                 <div class="flex gap-2">
-                                    <button onclick="window.editProductPrice('${doc.id}', ${p.price})" class="bg-blue-500 text-white px-3 py-1 rounded-lg text-xs">تعديل</button>
-                                    <button onclick="window.deleteProduct('${doc.id}')" class="bg-red-500 text-white px-3 py-1 rounded-lg text-xs">حذف</button>
+                                    <button onclick="window.editProductPrice('${doc.id}', ${p.price})" class="bg-yellow-500 text-white px-3 py-1 rounded-lg text-xs font-bold">تعديل السعر</button>
+                                    <button onclick="window.deleteProduct('${doc.id}')" class="bg-red-500 text-white px-3 py-1 rounded-lg text-xs font-bold">حذف</button>
                                 </div>
                             </div>
                         `;
@@ -1065,23 +1107,23 @@
                 const list = document.getElementById('adminOrdersList');
                 list.innerHTML = '';
                 if (snap.empty) {
-                    list.innerHTML = '<p class="text-gray-400 text-center">لا توجد طلبات معلقة</p>';
+                    list.innerHTML = '<p class="text-dark-light text-center">لا توجد طلبات معلقة</p>';
                     return;
                 }
                 snap.forEach(d => {
                     const o = d.data();
                     list.innerHTML += `
-                                <div class="bg-white/5 p-3 rounded-xl">
+                                <div class="bg-white/50 p-3 rounded-xl">
                                     <div class="flex justify-between">
-                                        <p class="font-bold text-white">${o.product}</p>
-                                        <span class="text-yellow-400 text-xs">${o.timestamp?.toDate ? new Date(o.timestamp.toDate()).toLocaleString() : 'الآن'}</span>
+                                        <p class="font-bold text-dark">${o.product}</p>
+                                        <span class="text-yellow-dark text-xs">${o.timestamp?.toDate ? new Date(o.timestamp.toDate()).toLocaleString() : 'الآن'}</span>
                                     </div>
-                                    <p class="text-sm text-gray-300">👤 ${o.uName} | 🆔 ${o.gameID}</p>
-                                    <p class="text-sm text-gray-300">📞 ${o.phone}</p>
+                                    <p class="text-sm text-dark-light">👤 ${o.uName} | 🆔 ${o.gameID}</p>
+                                    <p class="text-sm text-dark-light">📞 ${o.phone}</p>
                                     <div class="flex gap-2 mt-2 flex-wrap">
-                                        <button onclick="updateOrderStatus('${d.id}', '${o.uID}', 'مكتمل')" class="bg-green-500 text-white px-3 py-1 rounded-lg text-xs">✅ تم الشحن</button>
-                                        <button onclick="updateOrderStatus('${d.id}', '${o.uID}', 'فشل', ${o.price})" class="bg-red-500 text-white px-3 py-1 rounded-lg text-xs">❌ إلغاء</button>
-                                        <button onclick="showOrderDetails('${d.id}')" class="bg-blue-500 text-white px-3 py-1 rounded-lg text-xs">📄 تفاصيل</button>
+                                        <button onclick="updateOrderStatus('${d.id}', '${o.uID}', 'مكتمل')" class="bg-green-500 text-white px-3 py-1 rounded-lg text-xs font-bold">✅ تم الشحن</button>
+                                        <button onclick="updateOrderStatus('${d.id}', '${o.uID}', 'فشل', ${o.price})" class="bg-red-500 text-white px-3 py-1 rounded-lg text-xs font-bold">❌ إلغاء</button>
+                                        <button onclick="showOrderDetails('${d.id}')" class="bg-blue-500 text-white px-3 py-1 rounded-lg text-xs font-bold">📄 تفاصيل</button>
                                     </div>
                                 </div>
                             `;
@@ -1195,16 +1237,16 @@
                 const list = document.getElementById('userOrdersList');
                 list.innerHTML = '';
                 if (snap.empty) {
-                    list.innerHTML = '<div class="text-center text-gray-400 py-8">لا توجد طلبات سابقة</div>';
+                    list.innerHTML = '<div class="text-center text-dark-light py-8">لا توجد طلبات سابقة</div>';
                     return;
                 }
                 snap.forEach(d => {
                     const o = d.data();
-                    const config = o.status === 'مكتمل' ? { color: 'text-green-400', icon: '✅' } : o.status ===
-                        'فشل' ? { color: 'text-red-400', icon: '❌' } : { color: 'text-yellow-400',
+                    const config = o.status === 'مكتمل' ? { color: 'text-green-600', icon: '✅' } : o.status ===
+                        'فشل' ? { color: 'text-red-600', icon: '❌' } : { color: 'text-yellow-dark',
                         icon: '⏳' };
                     list.innerHTML +=
-                        `<div class="glass p-4 rounded-2xl"><div class="flex justify-between"><div><span class="text-2xl">${config.icon}</span><p class="font-bold text-white">${o.product}</p><p class="text-xs text-gray-300">🆔 ${o.gameID}</p></div><span class="px-2 py-1 rounded-full text-xs ${config.color} bg-black/30">${o.status}</span></div><div class="grid grid-cols-2 gap-2 mt-3 text-sm"><div class="text-white">💰 ${o.price.toLocaleString()} ج.س</div><div class="text-white">📞 ${o.phone}</div></div></div>`;
+                        `<div class="glass p-4 rounded-2xl"><div class="flex justify-between"><div><span class="text-2xl">${config.icon}</span><p class="font-bold text-dark">${o.product}</p><p class="text-xs text-dark-light">🆔 ${o.gameID}</p></div><span class="px-2 py-1 rounded-full text-xs ${config.color} bg-black/5">${o.status}</span></div><div class="grid grid-cols-2 gap-2 mt-3 text-sm"><div class="text-dark">💰 ${o.price.toLocaleString()} ج.س</div><div class="text-dark">📞 ${o.phone}</div></div></div>`;
                 });
             });
         }
@@ -1358,7 +1400,6 @@
 
         // ========== بدء التشغيل ==========
         function startEngine(user) {
-            // التحقق من أن البريد هو الأدمن المحدد فقط
             const isAdmin = ADMINS.includes(user.email);
             onSnapshot(doc(db, "users", user.uid), (snap) => {
                 if (snap.exists()) {
@@ -1444,4 +1485,4 @@
         };
     </script>
 </body>
-</html>
+    </html>
