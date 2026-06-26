@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>KhasmShop | متجر شامل للخدمات الرقمية</title>
+    <title>MORRE STORE | متجر شامل للخدمات الرقمية</title>
     <script src="https://cdn.tailwindcss.com">
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -21,22 +21,22 @@
             overflow-x: hidden;
         }
         .glass {
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 1.5rem;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
         .glass-card {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.04);
             backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 1.5rem;
             transition: all 0.3s ease;
             cursor: pointer;
         }
         .glass-card:hover {
-            background: rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.08);
             transform: translateY(-5px) scale(1.02);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         }
@@ -53,21 +53,21 @@
             transform: scale(1.05);
         }
         .product-card {
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.04);
             backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 1.5rem;
             transition: all 0.3s ease;
             cursor: pointer;
         }
         .product-card:hover {
-            background: rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.08);
             transform: translateY(-3px);
             box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
         }
         .back-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 1rem;
             padding: 0.5rem 1.5rem;
             color: white;
@@ -75,7 +75,7 @@
             cursor: pointer;
         }
         .back-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.12);
         }
         .page-title {
             font-size: 2rem;
@@ -85,9 +85,9 @@
             -webkit-text-fill-color: transparent;
         }
         .wallet-card {
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.04);
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 1.5rem;
         }
         .whatsapp-float {
@@ -124,8 +124,8 @@
         input,
         select,
         textarea {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 1rem;
             padding: 0.75rem 1rem;
             width: 100%;
@@ -137,119 +137,26 @@
         textarea:focus {
             outline: none;
             border-color: #fbbf24;
-            background: rgba(255, 255, 255, 0.15);
-        }
-        .payment-method {
-            background: rgba(255, 255, 255, 0.06);
-            border-radius: 1rem;
-            padding: 0.75rem;
-            margin-bottom: 0.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-        .copy-btn {
             background: rgba(255, 255, 255, 0.1);
-            padding: 0.25rem 0.75rem;
-            border-radius: 0.5rem;
-            font-size: 0.75rem;
-            cursor: pointer;
-        }
-        .copy-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-        .loader-spin {
-            border: 4px solid rgba(255, 255, 255, 0.1);
-            border-top: 4px solid #fbbf24;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-        .sidebar {
-            position: fixed;
-            top: 0;
-            right: -320px;
-            width: 320px;
-            height: 100%;
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(20px);
-            z-index: 1000;
-            transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: -5px 0 25px rgba(0, 0, 0, 0.3);
-            padding: 1.5rem;
-            border-right: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        .sidebar.open {
-            right: 0;
-        }
-        .sidebar-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(4px);
-            z-index: 999;
-            display: none;
-        }
-        .sidebar-overlay.active {
-            display: block;
-        }
-        .menu-btn {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 1rem;
-            padding: 0.5rem 1rem;
-            font-size: 1.2rem;
-            cursor: pointer;
-            color: white;
-            transition: 0.2s;
-        }
-        .menu-btn:hover {
-            background: rgba(255, 255, 255, 0.15);
-        }
-        .simple-banner {
-            background: linear-gradient(135deg, #1e293b, #0f172a);
-            height: 80px;
-            border-radius: 0 0 30px 30px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 1.5rem;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
-        }
-        .footer-links a {
-            color: #94a3b8;
-            margin: 0 0.75rem;
-            text-decoration: none;
-            font-size: 0.75rem;
-            transition: 0.2s;
-        }
-        .footer-links a:hover {
-            color: #fbbf24;
         }
         .service-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        @media (min-width: 640px) {
+            .service-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
         @media (min-width: 768px) {
             .service-grid {
-                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+                grid-template-columns: repeat(3, 1fr);
             }
         }
         @media (min-width: 1024px) {
             .service-grid {
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                grid-template-columns: repeat(4, 1fr);
             }
         }
         .product-grid {
@@ -285,28 +192,149 @@
         .admin-tab-content.active {
             display: block;
         }
-        .order-item {
-            background: rgba(255, 255, 255, 0.05);
+        .product-item {
+            background: rgba(255, 255, 255, 0.04);
             border-radius: 1rem;
             padding: 0.75rem;
             margin-bottom: 0.5rem;
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
-        .product-item {
-            background: rgba(255, 255, 255, 0.05);
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -320px;
+            width: 320px;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: -5px 0 25px rgba(0, 0, 0, 0.3);
+            padding: 1.5rem;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .sidebar.open {
+            right: 0;
+        }
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 999;
+            display: none;
+        }
+        .sidebar-overlay.active {
+            display: block;
+        }
+        .menu-btn {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 1rem;
-            padding: 0.75rem;
-            margin-bottom: 0.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 0.5rem 1rem;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: white;
+            transition: 0.2s;
+        }
+        .menu-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .simple-banner {
+            background: linear-gradient(135deg, #0f172a, #1e1a3a);
+            height: 80px;
+            border-radius: 0 0 30px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1.5rem;
+            border-bottom: 2px solid rgba(251, 191, 36, 0.3);
+        }
+        .footer-links a {
+            color: #94a3b8;
+            margin: 0 0.75rem;
+            text-decoration: none;
+            font-size: 0.75rem;
+            transition: 0.2s;
+        }
+        .footer-links a:hover {
+            color: #fbbf24;
+        }
+        .brand-name {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+            font-size: 1.5rem;
+        }
+        .brand-name-white {
+            color: white;
+            font-weight: 900;
+            font-size: 1.5rem;
+        }
+        .loader-spin {
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top: 4px solid #fbbf24;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        .action-btn {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #0f172a;
+            font-weight: 800;
+            padding: 0.75rem 1.5rem;
+            border-radius: 1rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        .action-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(251, 191, 36, 0.3);
+        }
+        .action-btn-outline {
+            background: transparent;
+            color: white;
+            font-weight: 700;
+            padding: 0.75rem 1.5rem;
+            border-radius: 1rem;
+            transition: all 0.3s ease;
+            border: 2px solid #fbbf24;
+            cursor: pointer;
+        }
+        .action-btn-outline:hover {
+            background: rgba(251, 191, 36, 0.1);
+            transform: scale(1.02);
+        }
+        .quick-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+        .quick-actions .action-btn,
+        .quick-actions .action-btn-outline {
+            text-align: center;
+            font-size: 0.9rem;
+            padding: 0.6rem 0.5rem;
         }
     </style>
 </head>
 <body>
-
-    <!-- زر واتساب ثابت -->
-    <a href="https://wa.me/249907760989" target="_blank" class="whatsapp-float">
-        <i class="fab fa-whatsapp text-white text-3xl"></i>
-    </a>
 
     <!-- شاشة تحذير WebView -->
     <div id="webview-warning" style="display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; background: #1e293b; text-align: center; position: fixed; top:0;left:0;right:0;bottom:0;z-index:20000; color: white;">
@@ -324,7 +352,9 @@
     <!-- شاشة تسجيل الدخول -->
     <div id="auth-screen" class="fixed inset-0 bg-black/60 backdrop-blur flex items-center justify-center p-6 z-40 hidden">
         <div class="glass w-full max-w-md p-8 rounded-3xl text-white">
-            <h1 class="text-4xl font-black text-center text-yellow-400 mb-2">KHASM SHOP</h1>
+            <h1 class="text-4xl font-black text-center">
+                <span class="brand-name">MORRE</span> <span class="brand-name-white">STORE</span>
+            </h1>
             <p class="text-center text-gray-300 text-sm mb-6">متجر شامل للخدمات الرقمية</p>
             <div class="flex gap-4 border-b border-white/10 mb-6">
                 <button class="auth-tab flex-1 py-2 text-center font-bold text-gray-300" data-tab="login">تسجيل دخول</button>
@@ -333,13 +363,13 @@
             <div id="login-form" class="space-y-4">
                 <input type="email" id="login-email" placeholder="البريد الإلكتروني" dir="ltr">
                 <input type="password" id="login-password" placeholder="كلمة المرور" dir="ltr">
-                <button id="email-login-btn" class="w-full bg-yellow-500 text-black py-3 rounded-xl font-bold">تسجيل الدخول</button>
+                <button id="email-login-btn" class="w-full action-btn">تسجيل الدخول</button>
             </div>
             <div id="register-form" class="space-y-4 hidden">
                 <input type="text" id="reg-name" placeholder="الاسم الكامل">
                 <input type="email" id="reg-email" placeholder="البريد الإلكتروني" dir="ltr">
                 <input type="password" id="reg-password" placeholder="كلمة المرور" dir="ltr">
-                <button id="email-register-btn" class="w-full bg-green-500 text-white py-3 rounded-xl font-bold">إنشاء حساب</button>
+                <button id="email-register-btn" class="w-full action-btn">إنشاء حساب</button>
             </div>
             <div class="relative my-6"><div class="absolute inset-0 flex items-center"><div class="w-full border-t border-white/10"></div></div><div class="relative flex justify-center text-xs"><span class="bg-black/40 px-2 text-gray-300">أو</span></div></div>
             <button id="google-login-btn" class="w-full bg-white text-gray-800 py-3 rounded-xl font-bold flex items-center justify-center gap-2"><i class="fab fa-google"></i> دخول عبر جوجل</button>
@@ -351,58 +381,43 @@
         <!-- الهيدر -->
         <div class="simple-banner">
             <button class="menu-btn" id="menuBtn"><i class="fas fa-bars text-xl"></i></button>
-            <h1 class="text-xl font-black text-white">KHASM SHOP</h1>
+            <div>
+                <span class="brand-name">MORRE</span> <span class="brand-name-white">STORE</span>
+            </div>
             <div style="width: 70px;"></div>
         </div>
 
         <main class="max-w-7xl mx-auto px-4 relative z-10">
-            <!-- محفظة المستخدم -->
+            <!-- محفظة المستخدم والأزرار السريعة -->
             <div class="wallet-card p-5 text-white mb-6 mt-4">
-                <div class="flex justify-between items-center">
-                    <div class="flex items-center gap-3">
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+                    <div class="flex items-center gap-3 w-full sm:w-auto">
                         <img id="uImg" class="w-12 h-12 rounded-full border-2 border-yellow-500 shadow-lg" src="https://via.placeholder.com/100">
                         <div>
                             <h2 id="uName" class="font-bold text-lg">...</h2>
                             <div id="uWallet" class="text-xs text-yellow-300 bg-black/30 px-2 py-0.5 rounded-full mt-1">#000000</div>
                         </div>
                     </div>
-                    <div class="flex items-center gap-3">
-                        <div class="bg-black/30 px-4 py-2 rounded-xl text-center">
+                    <div class="flex items-center gap-3 w-full sm:w-auto">
+                        <div class="bg-black/30 px-4 py-2 rounded-xl text-center flex-1 sm:flex-none">
                             <p class="text-xs text-gray-300">الرصيد</p>
                             <p class="text-xl font-black text-yellow-400"><span id="uBal">0</span> <small class="text-xs">ج.س</small></p>
                         </div>
                         <button id="logout-btn" class="w-10 h-10 bg-red-500/20 text-red-300 rounded-full hover:bg-red-500/30"><i class="fas fa-power-off"></i></button>
                     </div>
                 </div>
-            </div>
-
-            <!-- طرق الدفع -->
-            <div class="glass p-4 rounded-2xl mb-6">
-                <h3 class="text-lg font-bold text-white mb-3 text-center">💳 طرق الدفع المتاحة</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <div class="payment-method">
-                        <p class="font-bold text-yellow-400">🏦 تطبيق بنكك</p>
-                        <p class="text-sm text-white">رقم الحساب: <span dir="ltr">4845774</span></p>
-                        <p class="text-xs text-gray-400">أمنه محمد علي مساعد</p>
-                        <button onclick="copyText('4845774')" class="copy-btn mt-2 w-full text-white">📋 نسخ الرقم</button>
-                    </div>
-                    <div class="payment-method">
-                        <p class="font-bold text-green-400">💚 تطبيق ماي كاشي</p>
-                        <p class="text-sm text-white">رقم المحفظة: <span dir="ltr">401793722</span></p>
-                        <p class="text-xs text-gray-400">محمد فتحي حمزه مضوي</p>
-                        <button onclick="copyText('401793722')" class="copy-btn mt-2 w-full text-white">📋 نسخ الرقم</button>
-                    </div>
-                    <div class="payment-method">
-                        <p class="font-bold text-blue-400">💙 تطبيق صح</p>
-                        <p class="text-sm text-white">BBAN: <span dir="ltr">07169667404199</span></p>
-                        <p class="text-xs text-gray-400">محمد فتحي حمزه مضوي</p>
-                        <button onclick="copyText('07169667404199')" class="copy-btn mt-2 w-full text-white">📋 نسخ BBAN</button>
-                    </div>
+                <!-- الأزرار السريعة -->
+                <div class="quick-actions mt-4">
+                    <a href="https://wa.me/2490991305468?text=مرحباً%20أريد%20شحن%20محفظتي%20رقم%20المحفظة:%20" target="_blank" class="action-btn text-center">
+                        <i class="fas fa-wallet ml-1"></i> شحن المحفظة
+                    </a>
+                    <a href="https://wa.me/2490991305468?text=مرحباً%20أحتاج%20مساعدة" target="_blank" class="action-btn-outline text-center">
+                        <i class="fas fa-headset ml-1"></i> خدمة العملاء
+                    </a>
                 </div>
-                <p class="text-center text-xs text-gray-400 mt-3">⚠️ بعد التحويل، أرسل إيصال الدفع على واتساب لتأكيد شحن رصيدك</p>
             </div>
 
-            <!-- لوحة تحكم الأدمن -->
+            <!-- لوحة تحكم الأدمن (للبريد المحدد فقط) -->
             <div id="adminPanel" class="hidden mb-6">
                 <div class="glass p-4 rounded-2xl">
                     <h3 class="text-xl font-bold text-white mb-4 text-center">👑 لوحة تحكم الأدمن</h3>
@@ -437,7 +452,7 @@
                             </select>
                             <input type="text" id="productName" placeholder="اسم المنتج" class="text-white">
                             <input type="number" id="productPrice" placeholder="السعر (جنيه)" class="text-white">
-                            <button onclick="addNewProduct()" class="w-full bg-green-500 text-white py-2 rounded-xl font-bold">➕ إضافة المنتج</button>
+                            <button onclick="addNewProduct()" class="w-full action-btn">➕ إضافة المنتج</button>
                         </div>
                     </div>
 
@@ -455,8 +470,8 @@
                         <div class="space-y-3">
                             <input type="text" id="targetWallet" placeholder="رقم المحفظة (مثال: 123456)" class="text-white">
                             <input type="number" id="amountToAdd" placeholder="المبلغ" class="text-white">
-                            <button onclick="adminRecharge()" class="w-full bg-yellow-500 text-black py-2 rounded-xl font-bold">💰 شحن الرصيد</button>
-                            <button onclick="adminRechargeByEmail()" class="w-full bg-blue-500 text-white py-2 rounded-xl font-bold">🔍 شحن بالبريد الإلكتروني</button>
+                            <button onclick="adminRecharge()" class="w-full action-btn">💰 شحن الرصيد</button>
+                            <button onclick="adminRechargeByEmail()" class="w-full action-btn-outline">🔍 شحن بالبريد الإلكتروني</button>
                         </div>
                     </div>
                 </div>
@@ -615,7 +630,7 @@
 
             <!-- سجل الطلبات -->
             <div class="mt-8">
-                <h3 class="text-2xl font-black text-white mb-4 border-r-4 border-blue-500 pr-3">📋 تاريخ طلباتي</h3>
+                <h3 class="text-2xl font-black text-white mb-4 border-r-4 border-yellow-500 pr-3">📋 تاريخ طلباتي</h3>
                 <div id="userOrdersList" class="space-y-4"></div>
             </div>
         </main>
@@ -632,7 +647,8 @@
             <a href="#" onclick="toggleSidebar(false);" class="flex items-center gap-3 p-3 hover:bg-white/5 rounded-xl text-white"><i class="fas fa-user w-6"></i> حسابي</a>
             <a href="#" onclick="toggleSidebar(false);" class="flex items-center gap-3 p-3 hover:bg-white/5 rounded-xl text-white"><i class="fas fa-wallet w-6"></i> محفظتي</a>
             <a href="#" onclick="toggleSidebar(false); document.getElementById('userOrdersList').scrollIntoView({behavior:'smooth'});" class="flex items-center gap-3 p-3 hover:bg-white/5 rounded-xl text-white"><i class="fas fa-shopping-bag w-6"></i> طلباتي</a>
-            <a href="https://wa.me/249907760989" target="_blank" class="flex items-center gap-3 p-3 hover:bg-white/5 rounded-xl text-white"><i class="fab fa-whatsapp w-6 text-green-400"></i> تواصل واتساب</a>
+            <a href="https://wa.me/2490991305468?text=مرحباً%20أحتاج%20مساعدة" target="_blank" class="flex items-center gap-3 p-3 hover:bg-white/5 rounded-xl text-white"><i class="fab fa-whatsapp w-6 text-green-400"></i> خدمة العملاء</a>
+            <a href="https://wa.me/2490991305468?text=مرحباً%20أريد%20شحن%20محفظتي%20رقم%20المحفظة:%20" target="_blank" class="flex items-center gap-3 p-3 hover:bg-white/5 rounded-xl text-white"><i class="fas fa-wallet w-6 text-yellow-400"></i> شحن المحفظة</a>
             <div onclick="toggleSidebar(false); showPolicy('terms');" class="flex items-center gap-3 p-3 hover:bg-white/5 rounded-xl cursor-pointer text-white"><i class="fas fa-file-alt w-6"></i> السياسات</div>
             <div onclick="toggleTheme()" class="flex items-center gap-3 p-3 hover:bg-white/5 rounded-xl cursor-pointer text-white" id="themeToggleBtn"><i class="fas fa-moon w-6"></i> الوضع الليلي</div>
             <a href="#" onclick="document.getElementById('logout-btn').click(); toggleSidebar(false);" class="flex items-center gap-3 p-3 hover:bg-white/5 rounded-xl text-white"><i class="fas fa-sign-out-alt w-6"></i> تسجيل الخروج</a>
@@ -646,7 +662,7 @@
                 <a href="#" onclick="showPolicy('refund');return false;">سياسة الاسترجاع</a>
                 <a href="#" onclick="showPolicy('about');return false;">عن المتجر</a>
             </div>
-            <div class="mt-1">© 2025 KhasmShop - جميع الحقوق محفوظة</div>
+            <div class="mt-1">© 2025 MORRE STORE - جميع الحقوق محفوظة</div>
         </footer>
     </div>
 
@@ -675,7 +691,7 @@
             <input type="number" id="editPriceInput" class="w-full text-center text-2xl text-white" placeholder="السعر الجديد">
             <div class="flex gap-3 mt-6">
                 <button onclick="closeEditModal()" class="flex-1 bg-white/10 py-2 rounded-xl">إلغاء</button>
-                <button id="savePriceBtn" class="flex-1 bg-yellow-500 text-black py-2 rounded-xl font-bold">حفظ</button>
+                <button id="savePriceBtn" class="flex-1 action-btn">حفظ</button>
             </div>
         </div>
     </div>
@@ -696,7 +712,7 @@
                 </div>
                 <div class="flex gap-3 mt-4">
                     <button onclick="closeOrderModal()" class="flex-1 bg-white/10 py-2 rounded-xl">إلغاء</button>
-                    <button id="confirmOrderBtn" class="flex-1 bg-yellow-500 text-black py-2 rounded-xl font-bold">تأكيد</button>
+                    <button id="confirmOrderBtn" class="flex-1 action-btn">تأكيد</button>
                 </div>
             </div>
         </div>
@@ -781,11 +797,6 @@
             ]
         };
 
-        window.copyText = (text) => {
-            navigator.clipboard.writeText(text);
-            alert("✅ تم نسخ الرقم: " + text);
-        };
-
         async function saveProductsToFirestore() {
             for (const category in allProducts) {
                 for (const product of allProducts[category]) {
@@ -823,7 +834,7 @@
 
         async function sendTelegramNotification(orderData) {
             const message =
-                `🛒 **طلب جديد في KhasmShop!**\n━━━━━━━━━━━━━━━━━━\n📦 **المنتج:** ${orderData.product}\n💰 **السعر:** ${orderData.price} ج.س\n🎮 **اللعبة:** ${orderData.game}\n👤 **العميل:** ${orderData.uName}\n🆔 **الأيدي:** ${orderData.gameID}\n🎮 **الاسم:** ${orderData.gameName}\n📞 **الهاتف:** ${orderData.phone}\n⏰ **الوقت:** ${new Date().toLocaleString('ar-SD')}`;
+                `🛒 **طلب جديد في MORRE STORE!**\n━━━━━━━━━━━━━━━━━━\n📦 **المنتج:** ${orderData.product}\n💰 **السعر:** ${orderData.price} ج.س\n🎮 **اللعبة:** ${orderData.game}\n👤 **العميل:** ${orderData.uName}\n🆔 **الأيدي:** ${orderData.gameID}\n🎮 **الاسم:** ${orderData.gameName}\n📞 **الهاتف:** ${orderData.phone}\n⏰ **الوقت:** ${new Date().toLocaleString('ar-SD')}`;
             try {
                 await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
                     method: 'POST',
@@ -836,7 +847,7 @@
         function showOrderModal(product, price, category, productId) {
             if (userData.balance < price) {
                 alert(
-                    `❌ رصيدك غير كافي!\n\nرصيدك الحالي: ${userData.balance.toLocaleString()} ج.س\nسعر المنتج: ${price.toLocaleString()} ج.س\n\nيرجى شحن محفظتك عبر طرق الدفع أعلاه والتواصل على واتساب`);
+                    `❌ رصيدك غير كافي!\n\nرصيدك الحالي: ${userData.balance.toLocaleString()} ج.س\nسعر المنتج: ${price.toLocaleString()} ج.س\n\nيرجى شحن محفظتك عبر زر "شحن المحفظة"`);
                 return;
             }
             currentOrder = { product, price, category, productId };
@@ -913,7 +924,7 @@
                             <div class="product-card p-5 text-white text-center" onclick="window.showOrderModal('${p.name}', ${p.price}, '${p.category}', '${p.id}')">
                                 <p class="font-bold text-lg">${p.name}</p>
                                 <p class="text-2xl font-black text-yellow-400 my-2">${p.price.toLocaleString()} ج.س</p>
-                                <button class="w-full bg-yellow-500/20 hover:bg-yellow-500/30 py-2 rounded-xl font-bold transition">شراء</button>
+                                <button class="w-full action-btn">شراء</button>
                             </div>
                         `).join('');
             });
@@ -1205,7 +1216,7 @@
             content: "<p>نلتزم بحماية بياناتك الشخصية ولا نشاركها مع أي طرف ثالث.</p>" },
             refund: { title: "💰 سياسة الاسترجاع",
             content: "<p>في حال تأخر الشحن أكثر من 48 ساعة، يمكنك طلب استرجاع كامل.</p>" },
-            about: { title: "🏢 عن المتجر", content: "<p>KhasmShop متخصص في شحن الألعاب والخدمات الرقمية في السودان.</p>" }
+            about: { title: "🏢 عن المتجر", content: "<p>MORRE STORE متخصص في شحن الألعاب والخدمات الرقمية في السودان.</p>" }
         };
         window.showPolicy = (type) => {
             const p = policies[type];
@@ -1257,7 +1268,7 @@
                     balance: 0,
                     createdAt: serverTimestamp()
                 });
-                alert(`✅ تم إنشاء الحساب بنجاح!\nرقم محفظتك: #${walletID}\nللشحن تواصل واتساب`);
+                alert(`✅ تم إنشاء الحساب بنجاح!\nرقم محفظتك: #${walletID}\nللشحن اضغط على زر "شحن المحفظة"`);
             } catch (e) { alert('❌ البريد الإلكتروني مستخدم بالفعل'); }
         };
 
@@ -1276,7 +1287,7 @@
                         balance: 0,
                         createdAt: serverTimestamp()
                     });
-                    alert(`✅ تم إنشاء حسابك!\nرقم محفظتك: #${walletID}\nللشحن تواصل واتساب`);
+                    alert(`✅ تم إنشاء حسابك!\nرقم محفظتك: #${walletID}\nللشحن اضغط على زر "شحن المحفظة"`);
                 }
             } catch (e) { alert('❌ خطأ في تسجيل الدخول بجوجل'); }
         };
@@ -1347,6 +1358,7 @@
 
         // ========== بدء التشغيل ==========
         function startEngine(user) {
+            // التحقق من أن البريد هو الأدمن المحدد فقط
             const isAdmin = ADMINS.includes(user.email);
             onSnapshot(doc(db, "users", user.uid), (snap) => {
                 if (snap.exists()) {
@@ -1361,6 +1373,8 @@
                         loadAdminStats();
                         loadAdminOrders();
                         loadManageProducts();
+                    } else {
+                        document.getElementById('adminPanel').classList.add('hidden');
                     }
                 }
             });
@@ -1385,7 +1399,7 @@
                         walletID: walletID,
                         balance: 0
                     });
-                    alert(`✨ مرحباً بك في KhasmShop!\n📱 رقم محفظتك: #${walletID}\n💰 للشحن تواصل واتساب`);
+                    alert(`✨ مرحباً بك في MORRE STORE!\n📱 رقم محفظتك: #${walletID}\n💰 للشحن اضغط على زر "شحن المحفظة"`);
                 }
                 loading.classList.add('hidden');
                 authScr.classList.add('hidden');
