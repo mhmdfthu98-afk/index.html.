@@ -4,119 +4,333 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MORRE STORE | الرئيسية</title>
+    <!-- مكتبة Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- مكتبة الأيقونات (FontAwesome) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
+        /* الخط العربي المناسب */
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap');
-        * { font-family: 'Cairo', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: linear-gradient(135deg, #fef08a 0%, #fde047 30%, #fef9c3 60%, #fef08a 100%); min-height: 100vh; padding-bottom: 80px; }
         
-        /* تنسيق الأزرار */
-        .action-btn { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; font-weight: 800; padding: 0.75rem 1.5rem; border-radius: 1rem; transition: all 0.3s ease; border: none; cursor: pointer; }
-        .action-btn:hover { transform: scale(1.02); }
+        * { 
+            font-family: 'Cairo', sans-serif; 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+        }
         
-        /* الشريط السفلي */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); border-top: 1px solid rgba(0, 0, 0, 0.05); display: flex; justify-content: space-around; align-items: center; padding: 6px 0 10px 0; z-index: 9999; }
-        .bottom-nav .nav-item { display: flex; flex-direction: column; align-items: center; gap: 2px; color: #94a3b8; font-size: 0.55rem; font-weight: 600; cursor: pointer; padding: 4px 12px; background: transparent; border: none; transition: 0.3s; }
-        .bottom-nav .nav-item.active { color: #d97706; transform: translateY(-3px); }
-        .bottom-nav .nav-item i { font-size: 1.3rem; }
+        body { 
+            background-color: #fcfcfc; /* لون خلفية فاتح نظيف */
+            min-height: 100vh; 
+            padding-bottom: 100px; /* مساحة للشريط السفلي */
+        }
 
-        .glass-card { background: rgba(255, 255, 255, 0.6); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 1.5rem; transition: all 0.3s ease; cursor: pointer; padding: 1.5rem; text-align: center; }
-        .glass-card:hover { background: rgba(255, 255, 255, 0.8); transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); }
+        /* تنسيق الشريط السفلي العائم */
+        .bottom-nav { 
+            position: fixed; 
+            bottom: 0; 
+            left: 0; 
+            right: 0; 
+            background: white; 
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.05); 
+            display: flex; 
+            justify-content: space-around; 
+            align-items: center; 
+            padding: 10px 0 15px 0; 
+            z-index: 9999; 
+            border-top: 1px solid #f1f5f9;
+        }
+        
+        .bottom-nav .nav-item { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 4px; 
+            color: #94a3b8; 
+            font-size: 0.65rem; 
+            font-weight: 600; 
+            cursor: pointer; 
+            padding: 4px 12px; 
+            background: transparent; 
+            border: none; 
+            transition: 0.3s; 
+        }
+        
+        .bottom-nav .nav-item.active { 
+            color: #f59e0b; /* لون أصفر ذهبي */
+        }
+        .bottom-nav .nav-item i { font-size: 1.4rem; }
+
+        /* تنسيق بطاقات العروض والمنتجات */
+        .product-card {
+            background: white;
+            border-radius: 16px;
+            padding: 15px;
+            border: 1px solid #f1f5f9;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .product-card:hover {
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            transform: translateY(-3px);
+        }
+        .product-card img {
+            width: 100%;
+            height: 140px;
+            object-fit: contain;
+            margin-bottom: 10px;
+        }
+        .badge-discount {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #fef08a;
+            color: #854d0e;
+            font-size: 0.65rem;
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 20px;
+        }
+
+        .game-category-card {
+            background: white;
+            border-radius: 16px;
+            padding: 15px;
+            border: 1px solid #f1f5f9;
+            text-align: center;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        .game-category-card:hover {
+            border-color: #f59e0b;
+            box-shadow: 0 5px 15px rgba(245, 158, 11, 0.1);
+        }
+        .game-category-card img {
+            width: 100%;
+            height: 120px;
+            object-fit: contain;
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
 
-    <!-- الهيدر -->
-    <div class="simple-banner" style="background: linear-gradient(135deg, #fef08a, #fde047); padding: 15px 20px; display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid #eab308;">
-        <div style="font-weight: 900; font-size: 1.5rem; color: #1e293b;">MORRE <span style="color:#d97706;">STORE</span></div>
-        <div style="display: flex; gap: 10px;">
-            <button onclick="window.location.href='account.html'" style="background:white; padding: 6px 15px; border-radius: 20px; font-weight:bold; border:1px solid #f59e0b; cursor:pointer;">دخول</button>
+    <!-- الهيدر العلوي (شريط التنقل) -->
+    <header class="bg-white sticky top-0 z-50 shadow-sm py-4 px-5 flex justify-between items-center">
+        <div class="flex items-center gap-4">
+            <i class="fas fa-bars text-gray-600 text-xl cursor-pointer"></i>
+            <div class="relative">
+                <i class="fas fa-search absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                <input type="text" placeholder="ابحث عن منتج..." class="bg-gray-100 rounded-full py-2 pl-4 pr-10 text-sm w-32 md:w-48 outline-none focus:ring-2 focus:ring-yellow-400">
+            </div>
         </div>
-    </div>
+        
+        <div class="flex items-center gap-4">
+            <i class="fas fa-shopping-cart text-gray-600 text-xl cursor-pointer relative">
+                <span class="absolute -top-1 -right-2 bg-yellow-500 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">0</span>
+            </i>
+            <div class="text-xl font-black tracking-tight text-gray-900">
+                MORRE <span class="text-yellow-500">STORE</span>
+            </div>
+        </div>
+    </header>
 
-    <main class="max-w-7xl mx-auto px-4 relative z-10 mt-6">
-        <!-- محفظة المستخدم -->
-        <div style="background: white; border-radius: 1.5rem; padding: 15px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display:flex; justify-content:space-between; align-items:center;">
-            <div>
-                <h3 style="font-weight:bold; color:#1e293b;" id="uName">زائر</h3>
-                <p style="color:#d97706; font-size: 0.85rem; font-weight: bold;">المحفظة: <span id="uWallet">000000</span></p>
+    <!-- المحتوى الرئيسي -->
+    <main class="max-w-7xl mx-auto px-4 mt-6">
+
+        <!-- القائمة العلوية المتنقلة -->
+        <div class="flex flex-wrap justify-center gap-6 text-sm font-bold text-gray-600 border-b pb-3 mb-6 overflow-x-auto whitespace-nowrap">
+            <a href="#" class="text-yellow-500 border-b-2 border-yellow-500 pb-1">الرئيسية</a>
+            <a href="#" class="hover:text-yellow-500">الألعاب</a>
+            <a href="#" class="hover:text-yellow-500">الاشتراكات</a>
+            <a href="#" class="hover:text-yellow-500">البطاقات</a>
+            <a href="#" class="hover:text-yellow-500">العروض</a>
+            <a href="#" class="hover:text-yellow-500">الدعم</a>
+        </div>
+
+        <!-- ========== 1. البانر الرئيسي (الصورة رقم 1) ========== -->
+        <div class="relative bg-[#fefce8] rounded-3xl p-6 md:p-10 flex flex-col md:flex-row items-center justify-between mb-10 overflow-hidden border border-yellow-100">
+            
+            <!-- النص -->
+            <div class="z-10 md:w-1/2 text-right">
+                <h1 class="text-3xl md:text-5xl font-black text-gray-900 leading-tight">
+                    شحن الألعاب <br>
+                    <span class="text-yellow-500">بأفضل الأسعار</span>
+                </h1>
+                <p class="text-gray-500 mt-4 text-sm md:text-base max-w-md">اشحن شدات ببجي، وجواهر فري فاير، بطاقات جوجل بلاي والمزيد بخطوات سهلة وآمنة 100%</p>
+                
+                <div class="flex gap-3 mt-6">
+                    <button class="bg-yellow-500 text-white font-bold py-3 px-8 rounded-xl shadow-lg hover:bg-yellow-600 transition">
+                        تسوق الآن <i class="fas fa-arrow-left mr-2"></i>
+                    </button>
+                    <button class="bg-white border border-gray-200 text-gray-700 font-bold py-3 px-8 rounded-xl hover:bg-gray-50 transition">
+                        <i class="fab fa-whatsapp text-green-500 ml-2"></i> تواصل معنا
+                    </button>
+                </div>
+
+                <!-- التقييمات -->
+                <div class="flex items-center gap-3 mt-6">
+                    <div class="flex -space-x-2">
+                        <img src="https://i.pravatar.cc/40?img=1" class="w-8 h-8 rounded-full border-2 border-white">
+                        <img src="https://i.pravatar.cc/40?img=2" class="w-8 h-8 rounded-full border-2 border-white">
+                        <img src="https://i.pravatar.cc/40?img=3" class="w-8 h-8 rounded-full border-2 border-white">
+                    </div>
+                    <div>
+                        <div class="text-yellow-500 text-xs"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                        <p class="text-xs text-gray-500 font-bold">+50K عميل يثقون بنا</p>
+                    </div>
+                </div>
             </div>
-            <div style="background: #fef3c7; padding: 8px 15px; border-radius: 12px;">
-                <p style="font-size:0.65rem; color:#475569; text-align:center;">الرصيد</p>
-                <p style="font-weight:900; color:#d97706; font-size:1.1rem;"><span id="uBal">0</span> <small style="font-size:0.7rem;">ج.س</small></p>
+
+            <!-- الصورة (3D Promo) -->
+            <div class="md:w-1/2 flex justify-center mt-6 md:mt-0 relative">
+                <img src="https://i.ibb.co/LMh98T2/4bf2c240-db85-47c5-b211-3d0a5cf192df.png" alt="Games Promo" class="w-full max-w-md drop-shadow-2xl animate-bounce-slow">
             </div>
         </div>
 
-        <!-- الأقسام الرئيسية -->
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
-            <div class="glass-card" onclick="window.location.href='games.html'">
-                <div class="text-5xl mb-2">🎮</div><h3 class="font-bold text-dark text-lg">الألعاب</h3>
-                <p class="text-xs text-gray-500">ببجي - فري فاير - كلاش</p>
+        <!-- ========== 2. صف المميزات (أيقونات تحت البانر) ========== -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+            <div class="bg-white p-4 rounded-2xl border border-gray-100 flex items-center gap-3">
+                <div class="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-600"><i class="fas fa-bolt text-lg"></i></div>
+                <div><h4 class="font-bold text-sm text-gray-800">شحن فوري</h4><p class="text-[10px] text-gray-500">توصيل سريع في ثواني</p></div>
             </div>
-            <div class="glass-card" onclick="window.location.href='wallet.html'">
-                <div class="text-5xl mb-2">💰</div><h3 class="font-bold text-dark text-lg">محفظتي</h3>
-                <p class="text-xs text-gray-500">رصيد - شحن - معاملات</p>
+            <div class="bg-white p-4 rounded-2xl border border-gray-100 flex items-center gap-3">
+                <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-600"><i class="fas fa-shield-alt text-lg"></i></div>
+                <div><h4 class="font-bold text-sm text-gray-800">100% أمان</h4><p class="text-[10px] text-gray-500">معاملات آمنة ومشفرة</p></div>
             </div>
-            <div class="glass-card" onclick="window.location.href='orders.html'">
-                <div class="text-5xl mb-2">📦</div><h3 class="font-bold text-dark text-lg">طلباتي</h3>
-                <p class="text-xs text-gray-500">تتبع طلباتك</p>
+            <div class="bg-white p-4 rounded-2xl border border-gray-100 flex items-center gap-3">
+                <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600"><i class="fas fa-headset text-lg"></i></div>
+                <div><h4 class="font-bold text-sm text-gray-800">دعم 24/7</h4><p class="text-[10px] text-gray-500">فريق متواجد دائماً</p></div>
             </div>
-            <div class="glass-card" onclick="window.location.href='support.html'">
-                <div class="text-5xl mb-2">📞</div><h3 class="font-bold text-dark text-lg">الدعم</h3>
-                <p class="text-xs text-gray-500">واتساب - مساعدة</p>
-            </div>
-            <div class="glass-card" onclick="window.location.href='admin.html'">
-                <div class="text-5xl mb-2">⚙️</div><h3 class="font-bold text-dark text-lg">الأدمن</h3>
-                <p class="text-xs text-gray-500">إدارة المتجر</p>
-            </div>
-            <div class="glass-card" onclick="window.location.href='account.html'">
-                <div class="text-5xl mb-2">👤</div><h3 class="font-bold text-dark text-lg">حسابي</h3>
-                <p class="text-xs text-gray-500">الملف الشخصي</p>
+            <div class="bg-white p-4 rounded-2xl border border-gray-100 flex items-center gap-3">
+                <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center text-purple-600"><i class="fas fa-tags text-lg"></i></div>
+                <div><h4 class="font-bold text-sm text-gray-800">أفضل الأسعار</h4><p class="text-[10px] text-gray-500">نضمن لك أقل الأسعار</p></div>
             </div>
         </div>
+
+        <!-- ========== 3. الألعاب الأكثر شيوعاً (Game Cards) ========== -->
+        <div class="mb-12">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-black text-gray-900">الألعاب الأكثر شيوعاً</h2>
+                <a href="#" class="text-yellow-500 text-sm font-bold hover:underline">عرض الكل <i class="fas fa-arrow-left"></i></a>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                <div class="game-category-card">
+                    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/44/Free_Fire_Logo.png/180px-Free_Fire_Logo.png">
+                    <p class="font-bold text-gray-800 text-sm">فري فاير</p>
+                </div>
+                <div class="game-category-card">
+                    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/44/PUBG_Mobile_Logo.png/180px-PUBG_Mobile_Logo.png">
+                    <p class="font-bold text-gray-800 text-sm">ببجي موبايل</p>
+                </div>
+                <div class="game-category-card">
+                    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/9/93/Clash_of_Clans_logo.png/180px-Clash_of_Clans_logo.png">
+                    <p class="font-bold text-gray-800 text-sm">كلاش أوف كلانس</p>
+                </div>
+                <div class="game-category-card">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/PlayStation_logo.svg/180px-PlayStation_logo.svg.png">
+                    <p class="font-bold text-gray-800 text-sm">بلايستيشن</p>
+                </div>
+                <div class="game-category-card">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Google_Play_Store_badge_EN.svg/180px-Google_Play_Store_badge_EN.svg.png">
+                    <p class="font-bold text-gray-800 text-sm">جوجل بلاي</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== 4. أفضل العروض (Best Offers) ========== -->
+        <div class="mb-10">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-black text-gray-900">أفضل العروض</h2>
+                <a href="#" class="text-yellow-500 text-sm font-bold hover:underline">عرض الكل <i class="fas fa-arrow-left"></i></a>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                <!-- منتج 1 -->
+                <div class="product-card">
+                    <div class="badge-discount">خصم 10%</div>
+                    <img src="https://i.ibb.co/20tqyP6s/4ff592f1-0de2-421f-bd99-514dd525d512.png">
+                    <h4 class="font-bold text-gray-800 text-sm mb-1">شدات ببجي</h4>
+                    <div class="flex justify-between items-center mt-2">
+                        <div>
+                            <span class="text-xs text-gray-400 line-through block">55.00</span>
+                            <span class="text-yellow-600 font-bold">$50.00</span>
+                        </div>
+                        <button class="bg-yellow-500 text-white text-xs px-3 py-1 rounded-lg hover:bg-yellow-600"><i class="fas fa-shopping-cart"></i> شراء الآن</button>
+                    </div>
+                </div>
+
+                <!-- منتج 2 -->
+                <div class="product-card">
+                    <div class="badge-discount">خصم 20%</div>
+                    <img src="https://i.ibb.co/LMh98T2/4bf2c240-db85-47c5-b211-3d0a5cf192df.png">
+                    <h4 class="font-bold text-gray-800 text-sm mb-1">جواهر فري فاير</h4>
+                    <div class="flex justify-between items-center mt-2">
+                        <div>
+                            <span class="text-xs text-gray-400 line-through block">6.25</span>
+                            <span class="text-yellow-600 font-bold">$4.99</span>
+                        </div>
+                        <button class="bg-yellow-500 text-white text-xs px-3 py-1 rounded-lg hover:bg-yellow-600"><i class="fas fa-shopping-cart"></i> شراء الآن</button>
+                    </div>
+                </div>
+
+                <!-- منتج 3 -->
+                <div class="product-card">
+                    <div class="badge-discount">خصم 15%</div>
+                    <img src="https://i.ibb.co/ZpS1L23Z/71ce3435-2342-43ff-aad3-0f65c7e6e837.png">
+                    <h4 class="font-bold text-gray-800 text-sm mb-1">جواهر كلاش</h4>
+                    <div class="flex justify-between items-center mt-2">
+                        <div>
+                            <span class="text-xs text-gray-400 line-through block">12.50</span>
+                            <span class="text-yellow-600 font-bold">$9.99</span>
+                        </div>
+                        <button class="bg-yellow-500 text-white text-xs px-3 py-1 rounded-lg hover:bg-yellow-600"><i class="fas fa-shopping-cart"></i> شراء الآن</button>
+                    </div>
+                </div>
+
+                <!-- منتج 4 -->
+                <div class="product-card">
+                    <div class="badge-discount">خصم 20%</div>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Netflix_2015_logo.svg/180px-Netflix_2015_logo.svg.png">
+                    <h4 class="font-bold text-gray-800 text-sm mb-1">نتفليكس شهر</h4>
+                    <div class="flex justify-between items-center mt-2">
+                        <div>
+                            <span class="text-xs text-gray-400 line-through block">6.00</span>
+                            <span class="text-yellow-600 font-bold">$4.99</span>
+                        </div>
+                        <button class="bg-yellow-500 text-white text-xs px-3 py-1 rounded-lg hover:bg-yellow-600"><i class="fas fa-shopping-cart"></i> شراء الآن</button>
+                    </div>
+                </div>
+                
+                <!-- منتج 5 -->
+                <div class="product-card">
+                    <div class="badge-discount">خصم 25%</div>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Netflix_2015_logo.svg/180px-Netflix_2015_logo.svg.png">
+                    <h4 class="font-bold text-gray-800 text-sm mb-1">نتفليكس شهر</h4>
+                    <div class="flex justify-between items-center mt-2">
+                        <div>
+                            <span class="text-xs text-gray-400 line-through block">6.00</span>
+                            <span class="text-yellow-600 font-bold">$4.99</span>
+                        </div>
+                        <button class="bg-yellow-500 text-white text-xs px-3 py-1 rounded-lg hover:bg-yellow-600"><i class="fas fa-shopping-cart"></i> شراء الآن</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </main>
 
-    <!-- الشريط السفلي (يجب نسخه في كل صفحة) -->
+    <!-- ========== الشريط السفلي العائم (Bottom Navigation) ========== -->
     <div class="bottom-nav">
-        <button onclick="window.location.href='index.html'" class="nav-item active"><i class="fas fa-home"></i><span>الرئيسية</span></button>
-        <button onclick="window.location.href='wallet.html'" class="nav-item"><i class="fas fa-wallet"></i><span>المحفظة</span></button>
-        <button onclick="window.location.href='orders.html'" class="nav-item"><i class="fas fa-box"></i><span>طلباتي</span></button>
-        <button onclick="window.location.href='support.html'" class="nav-item"><i class="fas fa-headset"></i><span>الدعم</span></button>
-        <button onclick="window.location.href='account.html'" class="nav-item"><i class="fas fa-user"></i><span>الحساب</span></button>
+        <button class="nav-item active"><i class="fas fa-home"></i><span>الرئيسية</span></button>
+        <button class="nav-item"><i class="fas fa-wallet"></i><span>المحفظة</span></button>
+        <button class="nav-item"><i class="fas fa-shopping-bag"></i><span>طلباتي</span></button>
+        <button class="nav-item"><i class="fas fa-headset"></i><span>الدعم</span></button>
+        <button class="nav-item"><i class="fas fa-user"></i><span>الحساب</span></button>
     </div>
-
-    <!-- سكريبت الاتصال بـ Firebase لجلب بيانات المستخدم -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyC0jzecEwKgHpxHpTi8Y-_bwwfzVdtgf3E",
-            authDomain: "khasmshop.firebaseapp.com",
-            projectId: "khasmshop",
-            storageBucket: "khasmshop.firebasestorage.app",
-            messagingSenderId: "238182001615",
-            appId: "1:238182001615:web:d77391030a40a481b440ba"
-        };
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
-
-        // مراقبة حالة المستخدم
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                onSnapshot(doc(db, "users", user.uid), (snap) => {
-                    if (snap.exists()) {
-                        const u = snap.data();
-                        document.getElementById('uName').innerText = u.name || "مستخدم";
-                        document.getElementById('uBal').innerText = (u.balance || 0).toLocaleString();
-                        document.getElementById('uWallet').innerText = u.walletID || "000000";
-                    }
-                });
-            }
-        });
-    </script>
+    
 </body>
 </html>
