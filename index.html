@@ -2,335 +2,668 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MORRE STORE | الرئيسية</title>
-    <!-- مكتبة Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- مكتبة الأيقونات (FontAwesome) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>MORRE STORE | متجر شامل للخدمات الرقمية</title>
+    <!-- Tailwind via CDN (lightweight) -->
+    <script src="https://cdn.tailwindcss.com">
+    </script>
+    <!-- Font Awesome 6 (free) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* الخط العربي المناسب */
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap');
-        
-        * { 
-            font-family: 'Cairo', sans-serif; 
-            box-sizing: border-box; 
-            margin: 0; 
-            padding: 0; 
-        }
-        
-        body { 
-            background-color: #fcfcfc; /* لون خلفية فاتح نظيف */
-            min-height: 100vh; 
-            padding-bottom: 100px; /* مساحة للشريط السفلي */
+
+        * {
+            font-family: 'Cairo', sans-serif;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
-        /* تنسيق الشريط السفلي العائم */
-        .bottom-nav { 
-            position: fixed; 
-            bottom: 0; 
-            left: 0; 
-            right: 0; 
-            background: white; 
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.05); 
-            display: flex; 
-            justify-content: space-around; 
-            align-items: center; 
-            padding: 10px 0 15px 0; 
-            z-index: 9999; 
-            border-top: 1px solid #f1f5f9;
+        body {
+            background: #faf9f6;
+            /* خلفية موحدة فاتحة */
+            overflow-x: hidden;
+            scroll-behavior: smooth;
         }
-        
-        .bottom-nav .nav-item { 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            gap: 4px; 
-            color: #94a3b8; 
-            font-size: 0.65rem; 
-            font-weight: 600; 
-            cursor: pointer; 
-            padding: 4px 12px; 
-            background: transparent; 
-            border: none; 
-            transition: 0.3s; 
-        }
-        
-        .bottom-nav .nav-item.active { 
-            color: #f59e0b; /* لون أصفر ذهبي */
-        }
-        .bottom-nav .nav-item i { font-size: 1.4rem; }
 
-        /* تنسيق بطاقات العروض والمنتجات */
-        .product-card {
-            background: white;
-            border-radius: 16px;
-            padding: 15px;
-            border: 1px solid #f1f5f9;
-            transition: all 0.3s ease;
-            position: relative;
+        /* اللون الأساسي الأصفر #FFC107 */
+        .bg-primary {
+            background-color: #FFC107;
         }
-        .product-card:hover {
-            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-            transform: translateY(-3px);
+        .text-primary {
+            color: #FFC107;
         }
-        .product-card img {
-            width: 100%;
-            height: 140px;
-            object-fit: contain;
-            margin-bottom: 10px;
+        .border-primary {
+            border-color: #FFC107;
         }
-        .badge-discount {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: #fef08a;
-            color: #854d0e;
-            font-size: 0.65rem;
-            font-weight: bold;
-            padding: 4px 8px;
+        .hover\:bg-primary-dark:hover {
+            background-color: #e0a800;
+        }
+        .shadow-primary {
+            box-shadow: 0 8px 24px rgba(255, 193, 7, 0.25);
+        }
+
+        /* كاردات و glass effect خفيف */
+        .card-glass {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 20px;
         }
 
-        .game-category-card {
-            background: white;
-            border-radius: 16px;
-            padding: 15px;
-            border: 1px solid #f1f5f9;
-            text-align: center;
-            transition: 0.3s;
-            cursor: pointer;
+        .card-modern {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px -8px rgba(0, 0, 0, 0.06);
+            transition: all 0.25s ease;
+            border: 1px solid rgba(0, 0, 0, 0.02);
+            overflow: hidden;
         }
-        .game-category-card:hover {
-            border-color: #f59e0b;
-            box-shadow: 0 5px 15px rgba(245, 158, 11, 0.1);
+
+        .card-modern:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.12);
         }
-        .game-category-card img {
+
+        /* transition سلسة */
+        .smooth-transition {
+            transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        /* زر رئيسي */
+        .btn-primary {
+            background: #FFC107;
+            color: #1e1e2a;
+            font-weight: 800;
+            padding: 12px 28px;
+            border-radius: 60px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+            border: none;
+            box-shadow: 0 6px 16px rgba(255, 193, 7, 0.3);
+        }
+        .btn-primary:hover {
+            background: #f0b800;
+            transform: scale(1.02);
+            box-shadow: 0 10px 24px rgba(255, 193, 7, 0.4);
+        }
+
+        .btn-outline-dark {
+            background: transparent;
+            color: #1e1e2a;
+            border: 2px solid #1e1e2a;
+            font-weight: 700;
+            padding: 10px 24px;
+            border-radius: 60px;
+            transition: all 0.2s;
+        }
+        .btn-outline-dark:hover {
+            background: #1e1e2a;
+            color: white;
+        }
+
+        /* الهيدر الثابت */
+        .header-sticky {
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+        }
+
+        /* Banner رئيسي مع صورة PUBG */
+        .banner-hero {
+            background: linear-gradient(145deg, #f5f0e8 0%, #ffffff 100%);
+            border-radius: 32px;
+            position: relative;
+            overflow: hidden;
+            min-height: 380px;
+        }
+
+        .banner-hero .hero-image {
+            position: absolute;
+            left: 0;
+            top: 0;
             width: 100%;
-            height: 120px;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.7;
+            mix-blend-mode: multiply;
+        }
+
+        .banner-hero .hero-content {
+            position: relative;
+            z-index: 2;
+            padding: 30px 28px;
+        }
+
+        /* أيقونات الخدمات */
+        .service-icon-box {
+            background: white;
+            border-radius: 24px;
+            padding: 16px 12px;
+            text-align: center;
+            transition: all 0.2s;
+            border: 1px solid rgba(0, 0, 0, 0.02);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+            cursor: default;
+        }
+        .service-icon-box:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.08);
+            border-color: #FFC107;
+        }
+
+        .service-icon-box i {
+            font-size: 2.4rem;
+            color: #1e1e2a;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .service-icon-box span {
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #1e1e2a;
+        }
+
+        /* منتجات */
+        .product-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+            transition: all 0.3s;
+            border: 1px solid rgba(0, 0, 0, 0.02);
+        }
+
+        .product-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px -16px rgba(0, 0, 0, 0.1);
+            border-color: #FFC107;
+        }
+
+        .product-card .product-img {
+            width: 100%;
+            height: 170px;
             object-fit: contain;
-            border-radius: 12px;
+            background: #faf9f6;
+            padding: 12px;
+        }
+
+        .product-card .product-body {
+            padding: 12px 14px 16px;
+        }
+
+        .product-card .product-name {
+            font-weight: 800;
+            font-size: 1rem;
+            color: #1e1e2a;
+            margin-bottom: 2px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .product-card .product-price {
+            font-weight: 900;
+            font-size: 1.2rem;
+            color: #1e1e2a;
+        }
+        .product-card .product-price small {
+            font-weight: 400;
+            font-size: 0.7rem;
+            color: #6b6b7a;
+        }
+
+        .product-card .product-bonus {
+            font-size: 0.7rem;
+            color: #FFC107;
+            background: #fff7e0;
+            padding: 2px 10px;
+            border-radius: 30px;
+            display: inline-block;
+            margin-top: 2px;
+            font-weight: 700;
+        }
+
+        .product-card .btn-buy {
+            background: #1e1e2a;
+            color: white;
+            border: none;
+            border-radius: 40px;
+            padding: 8px 18px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            transition: 0.2s;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .product-card .btn-buy:hover {
+            background: #FFC107;
+            color: #1e1e2a;
+        }
+
+        /* قسم المميزات */
+        .feature-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 18px 8px;
+        }
+        .feature-item i {
+            font-size: 2.2rem;
+            color: #1e1e2a;
+            background: #fff7e0;
+            padding: 14px;
+            border-radius: 60px;
             margin-bottom: 10px;
+        }
+        .feature-item h4 {
+            font-weight: 800;
+            font-size: 1rem;
+            color: #1e1e2a;
+        }
+        .feature-item p {
+            color: #6b6b7a;
+            font-size: 0.8rem;
+        }
+
+        /* عداد تنازلي */
+        .countdown-item {
+            background: #1e1e2a;
+            color: white;
+            border-radius: 16px;
+            padding: 6px 12px;
+            min-width: 60px;
+            text-align: center;
+        }
+        .countdown-item span {
+            display: block;
+            font-weight: 900;
+            font-size: 1.5rem;
+            line-height: 1.2;
+        }
+        .countdown-item small {
+            font-size: 0.6rem;
+            opacity: 0.7;
+        }
+
+        /* الفوتر */
+        .footer-dark {
+            background: #1e1e2a;
+            color: #cbd5e1;
+            border-radius: 32px 32px 0 0;
+            margin-top: 40px;
+            padding: 40px 24px 24px;
+        }
+        .footer-dark a {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+        .footer-dark a:hover {
+            color: #FFC107;
+        }
+        .footer-dark .social-icon {
+            background: rgba(255, 255, 255, 0.06);
+            width: 40px;
+            height: 40px;
+            border-radius: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+        }
+        .footer-dark .social-icon:hover {
+            background: #FFC107;
+            color: #1e1e2a;
+        }
+
+        /* تنسيقات عامة */
+        .section-title {
+            font-weight: 900;
+            font-size: 1.6rem;
+            color: #1e1e2a;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section-title i {
+            color: #FFC107;
+        }
+
+        .container-custom {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+
+        /* كارت السلة */
+        .cart-badge {
+            background: #FFC107;
+            color: #1e1e2a;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            font-size: 0.7rem;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: -6px;
+            right: -8px;
+        }
+
+        /* استجابة */
+        @media (max-width: 640px) {
+            .banner-hero {
+                min-height: 280px;
+            }
+            .banner-hero .hero-content {
+                padding: 20px 16px;
+            }
+            .section-title {
+                font-size: 1.3rem;
+            }
+            .product-card .product-img {
+                height: 130px;
+            }
+            .countdown-item {
+                min-width: 48px;
+                padding: 4px 8px;
+            }
+            .countdown-item span {
+                font-size: 1.2rem;
+            }
+        }
+
+        /* تحسين lazy load */
+        img[loading="lazy"] {
+            background: #f0ede8;
+        }
+
+        /* scroll smooth */
+        ::-webkit-scrollbar {
+            width: 6px;
+            background: #eaeaea;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #FFC107;
+            border-radius: 20px;
         }
     </style>
 </head>
 <body>
 
-    <!-- الهيدر العلوي (شريط التنقل) -->
-    <header class="bg-white sticky top-0 z-50 shadow-sm py-4 px-5 flex justify-between items-center">
-        <div class="flex items-center gap-4">
-            <i class="fas fa-bars text-gray-600 text-xl cursor-pointer"></i>
-            <div class="relative">
-                <i class="fas fa-search absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                <input type="text" placeholder="ابحث عن منتج..." class="bg-gray-100 rounded-full py-2 pl-4 pr-10 text-sm w-32 md:w-48 outline-none focus:ring-2 focus:ring-yellow-400">
+    <!-- ===== الإعلان العلوي ===== -->
+    <div class="bg-primary text-[#1e1e2a] text-center py-2 text-xs font-bold tracking-wide">
+        <i class="fas fa-bolt ml-1"></i> خصم 15% على أول طلب | كود: <span dir="ltr" class="bg-white/30 px-2 py-0.5 rounded">MORRE15</span>
+    </div>
+
+    <!-- ===== الهيدر ===== -->
+    <header class="header-sticky">
+        <div class="container-custom flex justify-between items-center py-3">
+            <!-- الشعار + القائمة -->
+            <div class="flex items-center gap-5">
+                <div class="text-2xl font-black tracking-tight flex items-center">
+                    <span class="text-primary">MORRE</span><span class="text-[#1e1e2a]">STORE</span>
+                </div>
+                <nav class="hidden md:flex gap-6 text-sm font-bold text-[#1e1e2a]">
+                    <a href="#" class="hover:text-primary transition">الرئيسية</a>
+                    <a href="#" class="hover:text-primary transition">الألعاب</a>
+                    <a href="#" class="hover:text-primary transition">البطاقات</a>
+                    <a href="#" class="hover:text-primary transition">خدمات</a>
+                </nav>
             </div>
-        </div>
-        
-        <div class="flex items-center gap-4">
-            <i class="fas fa-shopping-cart text-gray-600 text-xl cursor-pointer relative">
-                <span class="absolute -top-1 -right-2 bg-yellow-500 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">0</span>
-            </i>
-            <div class="text-xl font-black tracking-tight text-gray-900">
-                MORRE <span class="text-yellow-500">STORE</span>
+            <!-- أزرار الهيدر -->
+            <div class="flex items-center gap-3">
+                <a href="#" class="hidden md:inline-block text-sm font-bold text-[#1e1e2a] hover:text-primary transition">تسجيل الدخول</a>
+                <div class="relative cursor-pointer">
+                    <i class="fas fa-shopping-cart text-xl text-[#1e1e2a]"></i>
+                    <span class="cart-badge">3</span>
+                </div>
+                <button class="md:hidden text-2xl"><i class="fas fa-bars"></i></button>
             </div>
         </div>
     </header>
 
-    <!-- المحتوى الرئيسي -->
-    <main class="max-w-7xl mx-auto px-4 mt-6">
+    <main class="container-custom mt-5">
 
-        <!-- القائمة العلوية المتنقلة -->
-        <div class="flex flex-wrap justify-center gap-6 text-sm font-bold text-gray-600 border-b pb-3 mb-6 overflow-x-auto whitespace-nowrap">
-            <a href="#" class="text-yellow-500 border-b-2 border-yellow-500 pb-1">الرئيسية</a>
-            <a href="#" class="hover:text-yellow-500">الألعاب</a>
-            <a href="#" class="hover:text-yellow-500">الاشتراكات</a>
-            <a href="#" class="hover:text-yellow-500">البطاقات</a>
-            <a href="#" class="hover:text-yellow-500">العروض</a>
-            <a href="#" class="hover:text-yellow-500">الدعم</a>
-        </div>
-
-        <!-- ========== 1. البانر الرئيسي (الصورة رقم 1) ========== -->
-        <div class="relative bg-[#fefce8] rounded-3xl p-6 md:p-10 flex flex-col md:flex-row items-center justify-between mb-10 overflow-hidden border border-yellow-100">
-            
-            <!-- النص -->
-            <div class="z-10 md:w-1/2 text-right">
-                <h1 class="text-3xl md:text-5xl font-black text-gray-900 leading-tight">
-                    شحن الألعاب <br>
-                    <span class="text-yellow-500">بأفضل الأسعار</span>
-                </h1>
-                <p class="text-gray-500 mt-4 text-sm md:text-base max-w-md">اشحن شدات ببجي، وجواهر فري فاير، بطاقات جوجل بلاي والمزيد بخطوات سهلة وآمنة 100%</p>
-                
-                <div class="flex gap-3 mt-6">
-                    <button class="bg-yellow-500 text-white font-bold py-3 px-8 rounded-xl shadow-lg hover:bg-yellow-600 transition">
-                        تسوق الآن <i class="fas fa-arrow-left mr-2"></i>
-                    </button>
-                    <button class="bg-white border border-gray-200 text-gray-700 font-bold py-3 px-8 rounded-xl hover:bg-gray-50 transition">
-                        <i class="fab fa-whatsapp text-green-500 ml-2"></i> تواصل معنا
-                    </button>
-                </div>
-
-                <!-- التقييمات -->
-                <div class="flex items-center gap-3 mt-6">
-                    <div class="flex -space-x-2">
-                        <img src="https://i.pravatar.cc/40?img=1" class="w-8 h-8 rounded-full border-2 border-white">
-                        <img src="https://i.pravatar.cc/40?img=2" class="w-8 h-8 rounded-full border-2 border-white">
-                        <img src="https://i.pravatar.cc/40?img=3" class="w-8 h-8 rounded-full border-2 border-white">
-                    </div>
-                    <div>
-                        <div class="text-yellow-500 text-xs"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                        <p class="text-xs text-gray-500 font-bold">+50K عميل يثقون بنا</p>
+        <!-- ===== بانر رئيسي (PUBG + هاتف) ===== -->
+        <section class="banner-hero card-modern relative">
+            <!-- خلفية توحي بـ PUBG وشخصية -->
+            <div class="absolute inset-0 bg-gradient-to-l from-[#f5f0e8] via-white to-[#faf9f6]"></div>
+            <img class="hero-image" src="https://i.ibb.co/20tqyP6s/4ff592f1-0de2-421f-bd99-514dd525d512.png" alt="PUBG Character" loading="lazy" style="opacity:0.2; object-fit:contain; object-position: left;">
+            <div class="hero-content flex flex-col md:flex-row items-center justify-between">
+                <div class="max-w-xl text-right md:pr-8">
+                    <div class="inline-block bg-primary/20 text-primary font-extrabold px-4 py-1 rounded-full text-xs mb-3">🔥 عرض محدود</div>
+                    <h1 class="text-3xl md:text-5xl font-black leading-tight text-[#1e1e2a]">
+                        شحن <span class="text-primary">PUBG</span> وكل الألعاب
+                    </h1>
+                    <p class="text-[#4a4a5a] text-base md:text-lg mt-2 max-w-md">أفضل الأسعار، تسليم فوري، دعم 24/7. أكثر من 10,000 عميل يثقون بنا.</p>
+                    <div class="flex flex-wrap gap-3 mt-5">
+                        <a href="#" class="btn-primary"><i class="fas fa-bolt"></i> ابدأ الشحن الآن</a>
+                        <a href="#" class="btn-outline-dark hidden sm:inline-flex"><i class="fas fa-play-circle"></i> شاهد العرض</a>
                     </div>
                 </div>
+                <!-- صورة هاتف تعرض الموقع (mockup) -->
+                <div class="relative mt-4 md:mt-0 flex-shrink-0">
+                    <img src="https://i.ibb.co/HTqk43z8/4054fb24-7c84-445b-b62e-c15d5ed4fe8b.png" alt="Phone mockup" class="w-48 md:w-64 drop-shadow-2xl" loading="lazy" style="transform: perspective(600px) rotateY(-6deg);">
+                </div>
             </div>
+        </section>
 
-            <!-- الصورة (3D Promo) -->
-            <div class="md:w-1/2 flex justify-center mt-6 md:mt-0 relative">
-                <img src="https://i.ibb.co/LMh98T2/4bf2c240-db85-47c5-b211-3d0a5cf192df.png" alt="Games Promo" class="w-full max-w-md drop-shadow-2xl animate-bounce-slow">
+        <!-- ===== بطاقات الخدمات (الألعاب - Google Play - iTunes - بطاقات) ===== -->
+        <section class="mt-10">
+            <div class="section-title"><i class="fas fa-th-large"></i> خدماتنا</div>
+            <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4">
+                <div class="service-icon-box"><i class="fas fa-gamepad"></i><span>ألعاب</span></div>
+                <div class="service-icon-box"><i class="fab fa-google-play"></i><span>جوجل بلاي</span></div>
+                <div class="service-icon-box"><i class="fab fa-apple"></i><span>iTunes</span></div>
+                <div class="service-icon-box"><i class="fas fa-credit-card"></i><span>بطاقات</span></div>
+                <div class="service-icon-box"><i class="fab fa-twitch"></i><span>تويش</span></div>
+                <div class="service-icon-box"><i class="fas fa-gem"></i><span>شحن</span></div>
             </div>
-        </div>
+        </section>
 
-        <!-- ========== 2. صف المميزات (أيقونات تحت البانر) ========== -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
-            <div class="bg-white p-4 rounded-2xl border border-gray-100 flex items-center gap-3">
-                <div class="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-600"><i class="fas fa-bolt text-lg"></i></div>
-                <div><h4 class="font-bold text-sm text-gray-800">شحن فوري</h4><p class="text-[10px] text-gray-500">توصيل سريع في ثواني</p></div>
+        <!-- ===== قسم المنتجات (بطاقات) ===== -->
+        <section class="mt-12">
+            <div class="flex justify-between items-center">
+                <div class="section-title"><i class="fas fa-fire"></i> الأكثر طلباً</div>
+                <a href="#" class="text-sm font-bold text-primary hover:underline">عرض الكل <i class="fas fa-arrow-left mr-1"></i></a>
             </div>
-            <div class="bg-white p-4 rounded-2xl border border-gray-100 flex items-center gap-3">
-                <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-600"><i class="fas fa-shield-alt text-lg"></i></div>
-                <div><h4 class="font-bold text-sm text-gray-800">100% أمان</h4><p class="text-[10px] text-gray-500">معاملات آمنة ومشفرة</p></div>
-            </div>
-            <div class="bg-white p-4 rounded-2xl border border-gray-100 flex items-center gap-3">
-                <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600"><i class="fas fa-headset text-lg"></i></div>
-                <div><h4 class="font-bold text-sm text-gray-800">دعم 24/7</h4><p class="text-[10px] text-gray-500">فريق متواجد دائماً</p></div>
-            </div>
-            <div class="bg-white p-4 rounded-2xl border border-gray-100 flex items-center gap-3">
-                <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center text-purple-600"><i class="fas fa-tags text-lg"></i></div>
-                <div><h4 class="font-bold text-sm text-gray-800">أفضل الأسعار</h4><p class="text-[10px] text-gray-500">نضمن لك أقل الأسعار</p></div>
-            </div>
-        </div>
-
-        <!-- ========== 3. الألعاب الأكثر شيوعاً (Game Cards) ========== -->
-        <div class="mb-12">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-black text-gray-900">الألعاب الأكثر شيوعاً</h2>
-                <a href="#" class="text-yellow-500 text-sm font-bold hover:underline">عرض الكل <i class="fas fa-arrow-left"></i></a>
-            </div>
-            
-            <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
-                <div class="game-category-card">
-                    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/44/Free_Fire_Logo.png/180px-Free_Fire_Logo.png">
-                    <p class="font-bold text-gray-800 text-sm">فري فاير</p>
-                </div>
-                <div class="game-category-card">
-                    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/44/PUBG_Mobile_Logo.png/180px-PUBG_Mobile_Logo.png">
-                    <p class="font-bold text-gray-800 text-sm">ببجي موبايل</p>
-                </div>
-                <div class="game-category-card">
-                    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/9/93/Clash_of_Clans_logo.png/180px-Clash_of_Clans_logo.png">
-                    <p class="font-bold text-gray-800 text-sm">كلاش أوف كلانس</p>
-                </div>
-                <div class="game-category-card">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/PlayStation_logo.svg/180px-PlayStation_logo.svg.png">
-                    <p class="font-bold text-gray-800 text-sm">بلايستيشن</p>
-                </div>
-                <div class="game-category-card">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Google_Play_Store_badge_EN.svg/180px-Google_Play_Store_badge_EN.svg.png">
-                    <p class="font-bold text-gray-800 text-sm">جوجل بلاي</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- ========== 4. أفضل العروض (Best Offers) ========== -->
-        <div class="mb-10">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-black text-gray-900">أفضل العروض</h2>
-                <a href="#" class="text-yellow-500 text-sm font-bold hover:underline">عرض الكل <i class="fas fa-arrow-left"></i></a>
-            </div>
-            
-            <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
-                <!-- منتج 1 -->
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <!-- بطاقة 1 -->
                 <div class="product-card">
-                    <div class="badge-discount">خصم 10%</div>
-                    <img src="https://i.ibb.co/20tqyP6s/4ff592f1-0de2-421f-bd99-514dd525d512.png">
-                    <h4 class="font-bold text-gray-800 text-sm mb-1">شدات ببجي</h4>
-                    <div class="flex justify-between items-center mt-2">
-                        <div>
-                            <span class="text-xs text-gray-400 line-through block">55.00</span>
-                            <span class="text-yellow-600 font-bold">$50.00</span>
-                        </div>
-                        <button class="bg-yellow-500 text-white text-xs px-3 py-1 rounded-lg hover:bg-yellow-600"><i class="fas fa-shopping-cart"></i> شراء الآن</button>
+                    <img class="product-img" src="https://i.ibb.co/20tqyP6s/4ff592f1-0de2-421f-bd99-514dd525d512.png" alt="PUBG UC" loading="lazy">
+                    <div class="product-body">
+                        <div class="product-name">شدة ببجي 325</div>
+                        <div class="product-price">20,000 <small>ج.س</small></div>
+                        <div class="product-bonus"><i class="fas fa-gift"></i> بونص 5%</div>
+                        <button class="btn-buy"><i class="fas fa-shopping-bag ml-1"></i> اشترِ الآن</button>
                     </div>
                 </div>
-
-                <!-- منتج 2 -->
+                <!-- بطاقة 2 -->
                 <div class="product-card">
-                    <div class="badge-discount">خصم 20%</div>
-                    <img src="https://i.ibb.co/LMh98T2/4bf2c240-db85-47c5-b211-3d0a5cf192df.png">
-                    <h4 class="font-bold text-gray-800 text-sm mb-1">جواهر فري فاير</h4>
-                    <div class="flex justify-between items-center mt-2">
-                        <div>
-                            <span class="text-xs text-gray-400 line-through block">6.25</span>
-                            <span class="text-yellow-600 font-bold">$4.99</span>
-                        </div>
-                        <button class="bg-yellow-500 text-white text-xs px-3 py-1 rounded-lg hover:bg-yellow-600"><i class="fas fa-shopping-cart"></i> شراء الآن</button>
+                    <img class="product-img" src="https://i.ibb.co/LMh98T2/4bf2c240-db85-47c5-b211-3d0a5cf192df.png" alt="FreeFire" loading="lazy">
+                    <div class="product-body">
+                        <div class="product-name">جوهرة فري فاير 110</div>
+                        <div class="product-price">4,500 <small>ج.س</small></div>
+                        <div class="product-bonus"><i class="fas fa-gift"></i> بونص 10</div>
+                        <button class="btn-buy"><i class="fas fa-shopping-bag ml-1"></i> اشترِ الآن</button>
                     </div>
                 </div>
-
-                <!-- منتج 3 -->
+                <!-- بطاقة 3 -->
                 <div class="product-card">
-                    <div class="badge-discount">خصم 15%</div>
-                    <img src="https://i.ibb.co/ZpS1L23Z/71ce3435-2342-43ff-aad3-0f65c7e6e837.png">
-                    <h4 class="font-bold text-gray-800 text-sm mb-1">جواهر كلاش</h4>
-                    <div class="flex justify-between items-center mt-2">
-                        <div>
-                            <span class="text-xs text-gray-400 line-through block">12.50</span>
-                            <span class="text-yellow-600 font-bold">$9.99</span>
-                        </div>
-                        <button class="bg-yellow-500 text-white text-xs px-3 py-1 rounded-lg hover:bg-yellow-600"><i class="fas fa-shopping-cart"></i> شراء الآن</button>
+                    <img class="product-img" src="https://i.ibb.co/ZpS1L23Z/71ce3435-2342-43ff-aad3-0f65c7e6e837.png" alt="Clash" loading="lazy">
+                    <div class="product-body">
+                        <div class="product-name">كلاش أوف كلانس تذكرة ذهبية</div>
+                        <div class="product-price">27,000 <small>ج.س</small></div>
+                        <div class="product-bonus"><i class="fas fa-gift"></i> مجانية</div>
+                        <button class="btn-buy"><i class="fas fa-shopping-bag ml-1"></i> اشترِ الآن</button>
                     </div>
                 </div>
-
-                <!-- منتج 4 -->
+                <!-- بطاقة 4 -->
                 <div class="product-card">
-                    <div class="badge-discount">خصم 20%</div>
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Netflix_2015_logo.svg/180px-Netflix_2015_logo.svg.png">
-                    <h4 class="font-bold text-gray-800 text-sm mb-1">نتفليكس شهر</h4>
-                    <div class="flex justify-between items-center mt-2">
-                        <div>
-                            <span class="text-xs text-gray-400 line-through block">6.00</span>
-                            <span class="text-yellow-600 font-bold">$4.99</span>
-                        </div>
-                        <button class="bg-yellow-500 text-white text-xs px-3 py-1 rounded-lg hover:bg-yellow-600"><i class="fas fa-shopping-cart"></i> شراء الآن</button>
-                    </div>
-                </div>
-                
-                <!-- منتج 5 -->
-                <div class="product-card">
-                    <div class="badge-discount">خصم 25%</div>
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Netflix_2015_logo.svg/180px-Netflix_2015_logo.svg.png">
-                    <h4 class="font-bold text-gray-800 text-sm mb-1">نتفليكس شهر</h4>
-                    <div class="flex justify-between items-center mt-2">
-                        <div>
-                            <span class="text-xs text-gray-400 line-through block">6.00</span>
-                            <span class="text-yellow-600 font-bold">$4.99</span>
-                        </div>
-                        <button class="bg-yellow-500 text-white text-xs px-3 py-1 rounded-lg hover:bg-yellow-600"><i class="fas fa-shopping-cart"></i> شراء الآن</button>
+                    <img class="product-img" src="https://i.ibb.co/RkCSn7yX/a7934c4c-ed36-4662-b9cc-7bc04c57abf3.png" alt="eFootball" loading="lazy">
+                    <div class="product-body">
+                        <div class="product-name">كوينز eFootball 300</div>
+                        <div class="product-price">15,000 <small>ج.س</small></div>
+                        <div class="product-bonus"><i class="fas fa-gift"></i> +30 كوينز</div>
+                        <button class="btn-buy"><i class="fas fa-shopping-bag ml-1"></i> اشترِ الآن</button>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
+
+        <!-- ===== عرض الأسبوع + عداد تنازلي ===== -->
+        <section class="mt-12 card-modern p-6 bg-white">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div>
+                    <span class="text-xs font-bold text-primary bg-primary/20 px-4 py-1 rounded-full">عرض الأسبوع</span>
+                    <h3 class="text-2xl font-black mt-2">🔹 خصم 40% على بطاقات جوجل بلاي</h3>
+                    <p class="text-[#4a4a5a]">انتهاء العرض خلال:</p>
+                </div>
+                <div class="flex gap-3">
+                    <div class="countdown-item"><span id="days">03</span><small>يوم</small></div>
+                    <div class="countdown-item"><span id="hours">12</span><small>ساعة</small></div>
+                    <div class="countdown-item"><span id="minutes">45</span><small>دقيقة</small></div>
+                    <div class="countdown-item"><span id="seconds">30</span><small>ثانية</small></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== المميزات (تسليم فوري - دعم - أسعار - أمان) ===== -->
+        <section class="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="feature-item"><i class="fas fa-bolt"></i><h4>تسليم فوري</h4><p>في ثوان معدودة</p></div>
+            <div class="feature-item"><i class="fas fa-headset"></i><h4>دعم 24/7</h4><p>فريق محترف</p></div>
+            <div class="feature-item"><i class="fas fa-tag"></i><h4>أسعار منافسة</h4><p>أفضل العروض</p></div>
+            <div class="feature-item"><i class="fas fa-shield-alt"></i><h4>أمان كامل</h4><p>حماية بياناتك</p></div>
+        </section>
+
+        <!-- ===== الإحصائيات ===== -->
+        <section class="mt-12 grid grid-cols-3 gap-4 text-center">
+            <div class="card-modern p-4 bg-white"><span class="text-3xl font-black text-primary">+10K</span><p class="text-sm">عميل</p></div>
+            <div class="card-modern p-4 bg-white"><span class="text-3xl font-black text-primary">+50K</span><p class="text-sm">طلب</p></div>
+            <div class="card-modern p-4 bg-white"><span class="text-3xl font-black text-primary">99.9%</span><p class="text-sm">نجاح</p></div>
+        </section>
+
+        <!-- ===== الاشتراك بالبريد ===== -->
+        <section class="mt-12 card-modern p-6 bg-white flex flex-col md:flex-row items-center justify-between gap-4">
+            <div><i class="fas fa-envelope text-primary text-3xl ml-3"></i> <span class="font-bold text-lg">اشترك في النشرة</span></div>
+            <div class="flex w-full md:w-auto gap-2">
+                <input type="email" placeholder="بريدك الإلكتروني" class="flex-1 border border-gray-200 rounded-full px-5 py-2 bg-gray-50 focus:outline-none focus:border-primary">
+                <button class="btn-primary text-sm px-6 py-2">اشتراك</button>
+            </div>
+        </section>
 
     </main>
 
-    <!-- ========== الشريط السفلي العائم (Bottom Navigation) ========== -->
-    <div class="bottom-nav">
-        <button class="nav-item active"><i class="fas fa-home"></i><span>الرئيسية</span></button>
-        <button class="nav-item"><i class="fas fa-wallet"></i><span>المحفظة</span></button>
-        <button class="nav-item"><i class="fas fa-shopping-bag"></i><span>طلباتي</span></button>
-        <button class="nav-item"><i class="fas fa-headset"></i><span>الدعم</span></button>
-        <button class="nav-item"><i class="fas fa-user"></i><span>الحساب</span></button>
-    </div>
-    
+    <!-- ===== فوتر احترافي ===== -->
+    <footer class="footer-dark">
+        <div class="container-custom grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div>
+                <h5 class="text-white font-extrabold text-lg mb-3">MORRE STORE</h5>
+                <p class="text-sm opacity-80">متجر رقمي شامل للشحن والخدمات في السودان.</p>
+                <div class="flex gap-3 mt-4">
+                    <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+            <div>
+                <h6 class="text-white font-bold mb-2">روابط سريعة</h6>
+                <ul class="space-y-1 text-sm opacity-80">
+                    <li><a href="#">الرئيسية</a></li>
+                    <li><a href="#">الألعاب</a></li>
+                    <li><a href="#">البطاقات</a></li>
+                    <li><a href="#">خدمات</a></li>
+                </ul>
+            </div>
+            <div>
+                <h6 class="text-white font-bold mb-2">معلومات</h6>
+                <ul class="space-y-1 text-sm opacity-80">
+                    <li><a href="#">من نحن</a></li>
+                    <li><a href="#">الشروط</a></li>
+                    <li><a href="#">الخصوصية</a></li>
+                    <li><a href="#">الأسئلة الشائعة</a></li>
+                </ul>
+            </div>
+            <div>
+                <h6 class="text-white font-bold mb-2">وسائل الدفع</h6>
+                <div class="flex flex-wrap gap-2 text-3xl opacity-70">
+                    <i class="fab fa-cc-visa"></i>
+                    <i class="fab fa-cc-mastercard"></i>
+                    <i class="fas fa-wallet"></i>
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <p class="text-xs opacity-60 mt-2">شحن عبر Bankly / MTN / Zain</p>
+            </div>
+        </div>
+        <div class="border-t border-white/10 mt-8 pt-4 text-center text-xs opacity-60">
+            &copy; 2026 MORRE STORE. جميع الحقوق محفوظة.
+        </div>
+    </footer>
+
+    <!-- ===== عداد تنازلي بسيط ===== -->
+    <script>
+        (function() {
+            // عداد تنازلي (تجريبي) 
+            let totalSeconds = 3 * 24 * 60 * 60 + 12 * 60 * 60 + 45 * 60 + 30; // 3d 12h 45m 30s
+            const daysEl = document.getElementById('days');
+            const hoursEl = document.getElementById('hours');
+            const minutesEl = document.getElementById('minutes');
+            const secondsEl = document.getElementById('seconds');
+
+            function updateCountdown() {
+                if (totalSeconds <= 0) {
+                    daysEl.textContent = '00';
+                    hoursEl.textContent = '00';
+                    minutesEl.textContent = '00';
+                    secondsEl.textContent = '00';
+                    return;
+                }
+                const d = Math.floor(totalSeconds / 86400);
+                const h = Math.floor((totalSeconds % 86400) / 3600);
+                const m = Math.floor((totalSeconds % 3600) / 60);
+                const s = totalSeconds % 60;
+                daysEl.textContent = String(d).padStart(2, '0');
+                hoursEl.textContent = String(h).padStart(2, '0');
+                minutesEl.textContent = String(m).padStart(2, '0');
+                secondsEl.textContent = String(s).padStart(2, '0');
+                totalSeconds--;
+            }
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+        })();
+
+        // تحسين lazy loading للصور (اختياري)
+        document.addEventListener('DOMContentLoaded', function() {
+            const imgs = document.querySelectorAll('img[loading="lazy"]');
+            if ('IntersectionObserver' in window) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const img = entry.target;
+                            img.src = img.src; // trigger load
+                            observer.unobserve(img);
+                        }
+                    });
+                });
+                imgs.forEach(img => observer.observe(img));
+            }
+        });
+    </script>
 </body>
 </html>
