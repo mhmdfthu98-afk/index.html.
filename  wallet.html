@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>MORRE STORE | محفظتي</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap');
+
+        /* =============================================
+                   CSS VARIABLES & RESET
+                   ============================================= */
+        :root {
+            --primary: #F59E0B;
+            --primary-dark: #D97706;
+            --primary-light: #FBBF24;
+            --bg: #FFFFFF;
+            --white: #FFFFFF;
+            --dark: #1E293B;
+            --gray: #64748B;
+            --gray-light: #F1F5F9;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.08);
+            --radius: 16px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background: var(--bg);
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        /* =============================================
+                   DARK MODE
+                   ============================================= */
+        [data-theme="dark"] {
+            --bg: #0F172A;
+            --white: #1E293B;
+            --gray-light: #334155;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        /* =============================================
+                   CONTAINER
+                   ============================================= */
+        .container {
+            max-width: 550px;
+            margin: 0 auto;
+            padding: 0 16px 20px;
+        }
+
+        /* =============================================
+                   HEADER
+                   ============================================= */
+        .page-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            background: var(--bg);
+            z-index: 100;
+        }
+
+        .back-btn {
+            background: var(--white);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            border-radius: 12px;
+            padding: 8px 16px;
+            color: var(--dark);
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9rem;
+        }
+
+        .back-btn:hover {
+            background: var(--gray-light);
+        }
+
+        .page-title {
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: var(--dark);
+        }
+
+        /* =============================================
+                   BALANCE CARD
+                   ============================================= */
+        .balance-card {
+            background: linear-gradient(135deg, #F59E0B, #D97706);
+            border-radius: var(--radius);
+            padding: 24px;
+            color: white;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(245, 158, 11, 0.25);
+        }
+
+        .balance-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .balance-label {
+            font-size: 0.85rem;
+            opacity: 0.85;
+        }
+
+        .hide-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .hide-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .balance-amount {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin: 8px 0 16px;
+        }
+
+        .balance-amount .currency {
+            font-size: 1.2rem;
+            font-weight: 700;
+            opacity: 0.85;
+        }
+
+        .balance-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .wallet-id {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .copy-btn {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .copy-btn:hover {
+            color: white;
+        }
+
+        .wallet-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        .wallet-status.active {
+            background: rgba(34, 197, 94, 0.25);
+            color: #86EFAC;
+        }
+
+        .wallet-status.inactive {
+            background: rgba(239, 68, 68, 0.25);
+            color: #FCA5A5;
+        }
+
+        /* =============================================
+                   SECTION HEADER
+                   ============================================= */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 16px 0 12px;
+        }
+
+        .section-header i {
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .section-header h3 {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--dark);
+        }
+
+        /* =============================================
+                   PAYMENT GRID
+                   ============================================= */
+        .payment-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .payment-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 16px;
+            background: var(--white);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+        }
+
+        .payment-card:hover {
+            transform: translateX(-4px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--primary);
+        }
+
+        .payment-logo {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: var(--gray-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .payment-info {
+            flex: 1;
+        }
+
+        .payment-info h4 {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: var(--dark);
+        }
+
+        .payment-info p {
+            font-size: 0.75rem;
+            color: var(--gray);
+        }
+
+        .payment-card .fa-chevron-left {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        /* =============================================
+                   QUICK ACTIONS
+                   ============================================= */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 16px 0;
+        }
+
+        .q-btn {
+            padding: 14px;
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            border-radius: var(--radius);
+            background: var(--white);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        .q-btn:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .q-btn i {
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        /* =============================================
+                   FILTER SECTION
+                   ============================================= */
+        .filter-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+
+        .filter-btn {
+            padding: 6px 14px;
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            border-radius: 20px;
+            background: var(--white);
+            color: var(--gray);
+            font-weight: 700;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .filter-btn:hover:not(.active) {
+            border-color: var(--primary);
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--white);
+            padding: 0 14px;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            transition: var(--transition);
+        }
+
+        .search-box:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+        }
+
+        .search-box i {
+            color: var(--gray);
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 12px 0;
+            border: none;
+            background: transparent;
+            font-size: 0.9rem;
+            color: var(--dark);
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .search-box input:focus {
+            outline: none;
+        }
+
+        /* =============================================
+                   TRANSACTIONS
+                   ============================================= */
+        .transaction-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .transaction-item:hover {
+            background: rgba(245, 158, 11, 0.03);
+            margin: 0 -8px;
+            padding: 12px 8px;
+            border-radius: 8px;
+        }
+
+        .tx-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .tx-icon.deposit {
+            background: #D1FAE5;
+            color: #059669;
+        }
+        .tx-icon.withdraw {
+            background: #FEE2E2;
+            color: #DC2626;
+        }
+        .tx-icon.purchase {
+            background: #DBEAFE;
+            color: #2563EB;
+        }
+        .tx-icon.refund {
+            background: #FEF3C7;
+            color: var(--primary);
+        }
+
+        .tx-info {
+            flex: 1;
+        }
+
+        .tx-title {
+            font-weight: 700;
+            color: var(--dark);
+            font-size: 0.85rem;
+        }
+
+        .tx-date {
+            font-size: 0.65rem;
+            color: var(--gray);
+        }
+
+        .tx-amount {
+            font-weight: 900;
+            font-size: 0.9rem;
+        }
+
+        .tx-amount.positive {
+            color: #059669;
+        }
+        .tx-amount.negative {
+            color: #DC2626;
+        }
+
+        .tx-status {
+            font-size: 0.55rem;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .tx-status.pending {
+            background: #FEF3C7;
+            color: var(--primary);
+        }
+        .tx-status.completed {
+            background: #D1FAE5;
+            color: #059669;
+        }
+        .tx-status.rejected {
+            background: #FEE2E2;
+            color: #DC2626;
+        }
+
+        /* =============================================
+                   EMPTY STATE
+                   ============================================= */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            color: #CBD5E1;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .empty-state h4 {
+            color: var(--dark);
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .empty-state p {
+            font-size: 0.85rem;
+        }
+
+        /* =============================================
+                   SKELETON LOADER
+                   ============================================= */
+        .skeleton {
+            background: linear-gradient(90deg, var(--gray-light) 25%, #e2e8f0 50%, var(--gray-light) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 8px;
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: -200% 0;
+            }
+            100% {
+                background-position: 200% 0;
+            }
+        }
+
+        .skeleton-loader .skeleton {
+            height: 60px;
+            margin-bottom: 10px;
+        }
+
+        /* =============================================
+                   BOTTOM NAV
+                   ============================================= */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--white);
+            border-top: 1px solid rgba(0, 0, 0, 0.04);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 0 12px 0;
+            z-index: 9999;
+            box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.04);
+        }
+
+        .bottom-nav .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            color: var(--gray);
+            font-size: 0.55rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            padding: 4px 12px;
+            border-radius: 12px;
+            text-decoration: none;
+        }
+
+        .bottom-nav .nav-item i {
+            font-size: 1.3rem;
+            transition: var(--transition);
+        }
+
+        .bottom-nav .nav-item.active {
+            color: var(--primary);
+        }
+
+        .bottom-nav .nav-item.active i {
+            transform: translateY(-2px);
+        }
+
+        .bottom-nav .nav-item:hover {
+            color: var(--primary);
+        }
+
+        /* =============================================
+                   TOAST
+                   ============================================= */
+        .toast {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--dark);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            z-index: 999999;
+            opacity: 0;
+            transition: 0.3s;
+            pointer-events: none;
+            font-size: 0.9rem;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-10px);
+        }
+
+        /* =============================================
+                   RESPONSIVE
+                   ============================================= */
+        @media (max-width: 480px) {
+            .balance-amount {
+                font-size: 2rem;
+            }
+
+            .quick-actions {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .filter-btn {
+                font-size: 0.65rem;
+                padding: 4px 10px;
+            }
+
+            .payment-card {
+                padding: 12px;
+            }
+        }
+
+        /* =============================================
+                   DARK MODE ADJUSTMENTS
+                   ============================================= */
+        [data-theme="dark"] .balance-card {
+            background: linear-gradient(135deg, #0F172A, #1E293B);
+        }
+
+        [data-theme="dark"] .payment-card {
+            background: var(--white);
+        }
+
+        [data-theme="dark"] .q-btn {
+            background: var(--white);
+        }
+
+        [data-theme="dark"] .filter-btn {
+            background: var(--white);
+        }
+
+        [data-theme="dark"] .search-box {
+            background: var(--white);
+        }
+
+        [data-theme="dark"] .tx-icon.deposit {
+            background: #064E3B;
+            color: #34D399;
+        }
+        [data-theme="dark"] .tx-icon.withdraw {
+            background: #7F1D1D;
+            color: #F87171;
+        }
+        [data-theme="dark"] .tx-icon.purchase {
+            background: #1E3A5F;
+            color: #60A5FA;
+        }
+        [data-theme="dark"] .tx-icon.refund {
+            background: #78350F;
+            color: #FBBF24;
+        }
+
+        [data-theme="dark"] .tx-status.pending {
+            background: #78350F;
+            color: #FBBF24;
+        }
+        [data-theme="dark"] .tx-status.completed {
+            background: #064E3B;
+            color: #34D399;
+        }
+        [data-theme="dark"] .tx-status.rejected {
+            background: #7F1D1D;
+            color: #F87171;
+        }
+
+        /* =============================================
+                   TOAST DARK MODE
+                   ============================================= */
+        [data-theme="dark"] .toast {
+            background: #F1F5F9;
+            color: var(--dark);
+        }
+
+        /* =============================================
+                   RIPPLE EFFECT
+                   ============================================= */
+        .ripple {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ripple::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            padding-top: 100%;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(0);
+            opacity: 0;
+            pointer-events: none;
+            left: var(--x, 50%);
+            top: var(--y, 50%);
+            transform-origin: center;
+        }
+
+        .ripple:active::after {
+            animation: rippleAnim 0.6s ease-out;
+        }
+
+        @keyframes rippleAnim {
+            from {
+                transform: scale(0);
+                opacity: 1;
+            }
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- ===== HEADER ===== -->
+        <header class="page-header">
+            <a href="/" class="back-btn">
+                <i class="fas fa-arrow-right"></i> رجوع
+            </a>
+            <div class="page-title">💰 محفظتي</div>
+            <button onclick="toggleTheme()" style="margin-right:auto;background:none;border:none;color:var(--dark);font-size:1.2rem;cursor:pointer;">
+                <i class="fas fa-moon" id="themeIcon"></i>
+            </button>
+        </header>
+
+        <!-- ===== BALANCE CARD ===== -->
+        <div class="balance-card">
+            <div class="balance-header">
+                <span class="balance-label">💳 الرصيد الحالي</span>
+                <button class="hide-btn" onclick="toggleBalance()" id="hideBtn">
+                    <i class="fas fa-eye" id="eyeIcon"></i>
+                </button>
+            </div>
+            <div class="balance-amount">
+                <span id="balanceDisplay">0</span>
+                <span class="currency">ج.س</span>
+            </div>
+            <div class="balance-footer">
+                <div class="wallet-id">
+                    <span>🔑</span>
+                    <span id="walletId">#123456789</span>
+                    <button class="copy-btn" onclick="copyWalletId()">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                </div>
+                <span class="wallet-status active" id="walletStatus">✅ نشطة</span>
+            </div>
+        </div>
+
+        <!-- ===== PAYMENT METHODS ===== -->
+        <div class="section-header">
+            <i class="fas fa-plus-circle"></i>
+            <h3>طرق الإيداع</h3>
+        </div>
+        <div class="payment-grid" id="paymentMethods"></div>
+
+        <!-- ===== QUICK ACTIONS ===== -->
+        <div class="quick-actions">
+            <button class="q-btn ripple" onclick="openWithdraw()">
+                <i class="fas fa-arrow-up"></i>
+                سحب رصيد
+            </button>
+            <button class="q-btn ripple" onclick="refreshData()">
+                <i class="fas fa-sync"></i>
+                تحديث
+            </button>
+        </div>
+
+        <!-- ===== TRANSACTIONS ===== -->
+        <div class="section-header" style="margin-top:20px;">
+            <i class="fas fa-list"></i>
+            <h3>سجل المعاملات</h3>
+        </div>
+
+        <!-- ===== FILTERS & SEARCH ===== -->
+        <div class="filter-section">
+            <div class="filter-tabs" id="filterTabs">
+                <button class="filter-btn active" data-filter="all">الكل</button>
+                <button class="filter-btn" data-filter="deposit">💳 إيداع</button>
+                <button class="filter-btn" data-filter="purchase">🛒 شراء</button>
+                <button class="filter-btn" data-filter="withdraw">💰 سحب</button>
+                <button class="filter-btn" data-filter="refund">🔄 استرداد</button>
+            </div>
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="ابحث في المعاملات...">
+            </div>
+        </div>
+
+        <!-- ===== TRANSACTIONS LIST ===== -->
+        <div id="transactionsList">
+            <div class="skeleton-loader">
+                <div class="skeleton"></div>
+                <div class="skeleton"></div>
+                <div class="skeleton"></div>
+                <div class="skeleton"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ===== BOTTOM NAV ===== -->
+    <nav class="bottom-nav">
+        <a href="/" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>الرئيسية</span>
+        </a>
+        <a href="orders.html" class="nav-item">
+            <i class="fas fa-box"></i>
+            <span>طلباتي</span>
+        </a>
+        <a href="wallet.html" class="nav-item active">
+            <i class="fas fa-wallet"></i>
+            <span>محفظتي</span>
+        </a>
+        <a href="support.html" class="nav-item">
+            <i class="fas fa-headset"></i>
+            <span>الدعم</span>
+        </a>
+        <a href="account.html" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>الحساب</span>
+        </a>
+    </nav>
+
+    <!-- ===== TOAST ===== -->
+    <div id="toast" class="toast"></div>
+
+    <!-- =============================================
+    JAVASCRIPT
+    ============================================= -->
+    <script type="importmap">
+        {
+            "imports": {
+                "firebase/app": "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js",
+                "firebase/firestore": "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js",
+                "firebase/auth": "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js",
+                "firebase/storage": "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js"
+            }
+        }
+    </script>
+
+    <script type="module">
+        // =============================================
+        // FIREBASE IMPORTS
+        // =============================================
+        import { initializeApp } from "firebase/app";
+        import {
+            getFirestore,
+            collection,
+            doc,
+            addDoc,
+            getDoc,
+            getDocs,
+            setDoc,
+            updateDoc,
+            deleteDoc,
+            query,
+            where,
+            orderBy,
+            onSnapshot,
+            serverTimestamp,
+            increment,
+            runTransaction
+        } from "firebase/firestore";
+        import {
+            getAuth,
+            onAuthStateChanged,
+            signInWithEmailAndPassword,
+            createUserWithEmailAndPassword,
+            signOut,
+            signInWithPopup,
+            GoogleAuthProvider
+        } from "firebase/auth";
+        import {
+            getStorage,
+            ref,
+            uploadBytes,
+            getDownloadURL,
+            deleteObject
+        } from "firebase/storage";
+
+        // =============================================
+        // FIREBASE CONFIG
+        // =============================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyC0jzecEwKgHpxHpTi8Y-_bwwfzVdtgf3E",
+            authDomain: "khasmshop.firebaseapp.com",
+            projectId: "khasmshop",
+            storageBucket: "khasmshop.firebasestorage.app",
+            messagingSenderId: "238182001615",
+            appId: "1:238182001615:web:d77391030a40a481b440ba"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        const storage = getStorage(app);
+        const provider = new GoogleAuthProvider();
+
+        // =============================================
+        // VARIABLES
+        // =============================================
+        let userData = null;
+        let allTransactions = [];
+        let currentFilter = 'all';
+        let searchQuery = '';
+
+        // =============================================
+        // PAYMENT METHODS (من Firestore)
+        // =============================================
+        const paymentMethodsData = [{
+            id: 'bankak',
+            name: '🏦 بنكك',
+            description: 'تحويل بنكي مباشر',
+            logo: '🏦'
+        }, {
+            id: 'mycash',
+            name: '📱 MyCash',
+            description: 'محفظة إلكترونية',
+            logo: '📱'
+        }, {
+            id: 'binance',
+            name: '🟡 Binance',
+            description: 'عملات رقمية',
+            logo: '🟡'
+        }, {
+            id: 'redotpay',
+            name: '💳 RedotPay',
+            description: 'بطاقة افتراضية',
+            logo: '💳'
+        }];
+
+        // =============================================
+        // TOAST
+        // =============================================
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            clearTimeout(toast._timeout);
+            toast._timeout = setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+        window.showToast = showToast;
+
+        // =============================================
+        // TOGGLE BALANCE
+        // =============================================
+        window.toggleBalance = function() {
+            const display = document.getElementById('balanceDisplay');
+            const eye = document.getElementById('eyeIcon');
+            if (display.textContent === '••••') {
+                display.textContent = userData?.balance?.toLocaleString() || '0';
+                eye.className = 'fas fa-eye';
+            } else {
+                display.textContent = '••••';
+                eye.className = 'fas fa-eye-slash';
+            }
+        };
+
+        // =============================================
+        // COPY WALLET ID
+        // =============================================
+        window.copyWalletId = function() {
+            const id = document.getElementById('walletId').textContent;
+            navigator.clipboard.writeText(id).then(() => {
+                showToast('✅ تم نسخ رقم المحفظة');
+            });
+        };
+
+        // =============================================
+        // OPEN WITHDRAW
+        // =============================================
+        window.openWithdraw = function() {
+            window.location.href = 'pages/withdraw.html';
+        };
+
+        // =============================================
+        // REFRESH DATA
+        // =============================================
+        window.refreshData = function() {
+            showToast('🔄 جاري تحديث البيانات...');
+            setTimeout(() => showToast('✅ تم تحديث البيانات'), 1000);
+        };
+
+        // =============================================
+        // TOGGLE THEME
+        // =============================================
+        window.toggleTheme = function() {
+            const html = document.documentElement;
+            const icon = document.getElementById('themeIcon');
+            if (html.getAttribute('data-theme') === 'dark') {
+                html.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+                icon.className = 'fas fa-moon';
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                icon.className = 'fas fa-sun';
+            }
+        };
+
+        // =============================================
+        // LOAD PAYMENT METHODS
+        // =============================================
+        function loadPaymentMethods() {
+            const container = document.getElementById('paymentMethods');
+            container.innerHTML = '';
+            paymentMethodsData.forEach(method => {
+                const div = document.createElement('div');
+                div.className = 'payment-card ripple';
+                div.innerHTML = `
+                        <div class="payment-logo">${method.logo}</div>
+                        <div class="payment-info">
+                            <h4>${method.name}</h4>
+                            <p>${method.description}</p>
+                        </div>
+                        <i class="fas fa-chevron-left"></i>
+                    `;
+                div.addEventListener('click', () => {
+                    window.location.href = `pages/deposit-${method.id}.html`;
+                });
+                container.appendChild(div);
+            });
+        }
+
+        // =============================================
+        // LOAD USER BALANCE
+        // =============================================
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                const userRef = doc(db, "users", user.uid);
+                onSnapshot(userRef, (snap) => {
+                    if (snap.exists()) {
+                        userData = snap.data();
+                        document.getElementById('balanceDisplay').textContent = userData.balance?.toLocaleString() ||
+                            '0';
+                        document.getElementById('walletId').textContent = `#${userData.walletID || '123456789'}`;
+                        const status = document.getElementById('walletStatus');
+                        if (userData.walletActive !== false) {
+                            status.className = 'wallet-status active';
+                            status.textContent = '✅ نشطة';
+                        } else {
+                            status.className = 'wallet-status inactive';
+                            status.textContent = '⛔ موقوفة';
+                        }
+                    }
+                });
+                loadTransactions(user.uid);
+            } else {
+                showToast('❌ يرجى تسجيل الدخول أولاً');
+                setTimeout(() => window.location.href = '/', 2000);
+            }
+        });
+
+        // =============================================
+        // LOAD TRANSACTIONS
+        // =============================================
+        function loadTransactions(userId) {
+            const q = query(
+                collection(db, "transactions"),
+                where("userId", "==", userId),
+                orderBy("createdAt", "desc")
+            );
+
+            onSnapshot(q, (snapshot) => {
+                allTransactions = [];
+                snapshot.forEach(doc => {
+                    allTransactions.push({ id: doc.id, ...doc.data() });
+                });
+                renderTransactions();
+            }, (error) => {
+                console.error('Error loading transactions:', error);
+                showToast('❌ حدث خطأ في تحميل المعاملات');
+            });
+        }
+
+        // =============================================
+        // RENDER TRANSACTIONS
+        // =============================================
+        function renderTransactions() {
+            const container = document.getElementById('transactionsList');
+            let filtered = allTransactions;
+
+            if (currentFilter !== 'all') {
+                filtered = filtered.filter(t => t.type === currentFilter);
+            }
+
+            if (searchQuery) {
+                const q = searchQuery.toLowerCase();
+                filtered = filtered.filter(t =>
+                    t.title?.toLowerCase().includes(q) ||
+                    t.reference?.toLowerCase().includes(q) ||
+                    t.method?.toLowerCase().includes(q)
+                );
+            }
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-receipt"></i>
+                            <h4>لا توجد معاملات</h4>
+                            <p>قم بإجراء عملية شراء أو إيداع</p>
+                        </div>
+                    `;
+                return;
+            }
+
+            container.innerHTML = filtered.map(t => {
+                const icons = {
+                    deposit: 'fa-plus-circle',
+                    purchase: 'fa-shopping-cart',
+                    withdraw: 'fa-arrow-up',
+                    refund: 'fa-undo'
+                };
+                const colors = {
+                    deposit: 'deposit',
+                    purchase: 'purchase',
+                    withdraw: 'withdraw',
+                    refund: 'refund'
+                };
+                const statusText = {
+                    pending: '⏳ قيد المراجعة',
+                    completed: '✅ مكتمل',
+                    rejected: '❌ مرفوض'
+                };
+                const date = t.createdAt?.toDate ? new Date(t.createdAt.toDate()) : new Date();
+
+                return `
+                        <div class="transaction-item" onclick="showTransactionDetail('${t.id}')">
+                            <div class="tx-icon ${colors[t.type] || 'deposit'}">
+                                <i class="fas ${icons[t.type] || 'fa-circle'}"></i>
+                            </div>
+                            <div class="tx-info">
+                                <div class="tx-title">${t.title || t.type}</div>
+                                <div class="tx-date">${date.toLocaleDateString('ar-SD')} - ${date.toLocaleTimeString('ar-SD', {hour:'2-digit',minute:'2-digit'})}</div>
+                            </div>
+                            <div class="tx-amount ${t.amount > 0 ? 'positive' : 'negative'}">
+                                ${t.amount > 0 ? '+' : ''}${t.amount.toLocaleString()} ج.س
+                            </div>
+                            <span class="tx-status ${t.status || 'pending'}">${statusText[t.status] || '⏳ قيد المراجعة'}</span>
+                        </div>
+                    `;
+            }).join('');
+        }
+
+        // =============================================
+        // SHOW TRANSACTION DETAIL
+        // =============================================
+        window.showTransactionDetail = function(id) {
+            const tx = allTransactions.find(t => t.id === id);
+            if (!tx) return;
+
+            const statusText = {
+                pending: '⏳ قيد المراجعة',
+                completed: '✅ مكتمل',
+                rejected: '❌ مرفوض'
+            };
+            const date = tx.createdAt?.toDate ? new Date(tx.createdAt.toDate()) : new Date();
+
+            alert(`📋 تفاصيل المعاملة
+
+        📌 العنوان: ${tx.title || tx.type}
+        💰 المبلغ: ${tx.amount.toLocaleString()} ج.س
+        📅 التاريخ: ${date.toLocaleDateString('ar-SD')}
+        🕐 الوقت: ${date.toLocaleTimeString('ar-SD', {hour:'2-digit',minute:'2-digit'})}
+        📊 الحالة: ${statusText[tx.status] || '⏳ قيد المراجعة'}
+        📝 طريقة الدفع: ${tx.method || 'غير محدد'}
+        🔢 المرجع: ${tx.reference || 'غير محدد'}
+        📎 ملاحظات: ${tx.note || 'لا توجد ملاحظات'}`);
+        };
+
+        // =============================================
+        // FILTERS & SEARCH
+        // =============================================
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentFilter = this.dataset.filter;
+                renderTransactions();
+            });
+        });
+
+        document.getElementById('searchInput')?.addEventListener('input', function() {
+            searchQuery = this.value.trim();
+            renderTransactions();
+        });
+
+        // =============================================
+        // THEME ON LOAD
+        // =============================================
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.getElementById('themeIcon').className = 'fas fa-sun';
+        }
+
+        // =============================================
+        // INIT
+        // =============================================
+        loadPaymentMethods();
+
+        console.log('🚀 MORRE STORE Wallet loaded successfully!');
+        console.log('📦 Payment Methods:', paymentMethodsData.length);
+        console.log('💳 Firebase connected');
+    </script>
+
+</body>
+</html>
